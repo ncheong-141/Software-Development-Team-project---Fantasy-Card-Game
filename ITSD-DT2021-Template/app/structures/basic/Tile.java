@@ -28,6 +28,9 @@ public class Tile {
 	int tilex;
 	int tiley;
 	
+	boolean free;
+	Monster monsterOnTile;
+	
 	public Tile() {}
 	
 	public Tile(String tileTexture, int xpos, int ypos, int width, int height, int tilex, int tiley) {
@@ -40,6 +43,8 @@ public class Tile {
 		this.height = height;
 		this.tilex = tilex;
 		this.tiley = tiley;
+		this.free = true;
+		this.monsterOnTile = null;
 	}
 	
 	public Tile(List<String> tileTextures, int xpos, int ypos, int width, int height, int tilex, int tiley) {
@@ -93,6 +98,24 @@ public class Tile {
 	}
 	public void setTiley(int tiley) {
 		this.tiley = tiley;
+	}
+	
+	public boolean addMonster (Monster m) {
+		if (!(this.free) || !(this.monsterOnTile==null)) return false;
+		else {
+			this.free = false;
+			this.monsterOnTile = m;
+			return true;			
+		}
+	}
+	
+	public boolean removeMonster () {
+		if (this.free || this.monsterOnTile==null) return false;
+		else {
+			this.free = true;
+			this.monsterOnTile = null;
+			return true;
+		}
 	}
 	
 	/**
