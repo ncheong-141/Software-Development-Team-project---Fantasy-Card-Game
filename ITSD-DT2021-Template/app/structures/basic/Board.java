@@ -35,5 +35,9 @@ public class Board {
 	public Tile[][] getGameBoard() {
 		return gameBoard;
 	}
+	
+	public Tile getTile (int a, int b) {
+		return gameBoard[a][b];
+	}
 
 }
