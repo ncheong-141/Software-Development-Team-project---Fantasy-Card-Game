@@ -5,6 +5,7 @@ import java.io.File;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import structures.basic.Avatar;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Tile;
@@ -75,6 +76,20 @@ public class BasicObjectBuilders {
 		
 		try {
 			Unit unit = mapper.readValue(new File(configFile), classType);
+			unit.setId(id);
+			return unit;
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return null;
+		
+	}
+	
+	public static Avatar loadAvatar(String configFile, int id,  Class<? extends Avatar> classType) {
+		
+		try {
+			Avatar unit = mapper.readValue(new File(configFile), classType);
 			unit.setId(id);
 			return unit;
 		} catch (Exception e) {
