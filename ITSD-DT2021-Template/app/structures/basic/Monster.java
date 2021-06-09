@@ -1,62 +1,96 @@
 package structures.basic;
 
-import akka.actor.ActorRef;
-import commands.BasicCommands;
-import utils.BasicObjectBuilders;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Board {
-	private Tile [][] gameBoard;
-	private final int width;
-	private final int heigth;
-	private Tile humanStart;
-	private Tile computerStart;
-	private ActorRef out;
+public class Monster extends Unit{
+
 	
-	public Board(ActorRef o) {
-		width = 9;
-		heigth = 5;
-		this.out = o;
-		gameBoard = new Tile[heigth][width];
-		for (int i = 0; i<gameBoard.length; i++) {
-			for (int k = 0; k<gameBoard[0].length; k++) {
-				gameBoard [i][k] = BasicObjectBuilders.loadTile(i, k);
-				gameBoard [i][k].free = true; 	
-			}
-		}
+	@JsonIgnore
+	protected static ObjectMapper mapper = new ObjectMapper(); // Jackson Java Object Serializer, is used to read java objects from a file
+	
+	
+	/* Sub class attributes */
+	public String name; 
+	private int HP; 
+	private int attackValue; 
+	private int manaCost; 
+	//private Skills skills; 
+	private int skillID; 
+	
+	boolean 	selected;
+	
+	/* Constructor(s) */
+	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
 		
-		humanStart = gameBoard[3][2];
-		computerStart = gameBoard[3][8];
-	}
-
-	public Tile getHumanStart() {
-		return humanStart;
-	}
-
-	public Tile getComputerStart() {
-		return computerStart;
-	}
-
-	public void drawBoard() {
-		for (int i = 0; i<heigth; i++) {
-			for (int k = 0; k<width; k++) {
-				BasicCommands.drawTile(out, gameBoard [i][k],0);
-						
-			}
-		}
+		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
+		
+		// No attribute setting here as Monsters are initially created with a Unit reference, which could be required by the ObjectMapper which loads the Json files 
 	}
 	
+	// Empty constructor for testing 
+	public Monster() {
+		super(); 
+	}
+
+
+	/* Class methods */ 
 	
-	public Tile[][] getGameBoard() {
-		return gameBoard;
-	}
-
-	public void setGameBoard(Tile[][] gameBoard) {
-		this.gameBoard = gameBoard;
-	}
+	// Move unit
+	// Attack unit
+	// Defend from unit (counter attack and HP reduction if hit) 
+	// Use their ability
 	
-	public Tile getTile(int h, int w) {
-		return gameBoard[h][w];
+	
+	/* Getters and setters */ 
+	
+	public String getName() {
+		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public int getHP() {
+		return HP;
+	}
+
+	public void setHP(int hP) {
+		HP = hP;
+	}
+
+	public int getAttackValue() {
+		return attackValue;
+	}
+
+	public void setAttackValue(int attackValue) {
+		this.attackValue = attackValue;
+	}
+
+	public int getManaCost() {
+		return manaCost;
+	}
+
+	public void setManaCost(int manaCost) {
+		this.manaCost = manaCost;
+	}
+
+//	public Skills getSkills() {
+//		return skills;
+//	}
+//
+//	public void setSkills(Skills skills) {
+//		this.skills = skills;
+//	}
+
+	public int getSkillID() {
+		return skillID;
+	}
+
+	public void setSkillID(int skillID) {
+		this.skillID = skillID;
+	}
+
+	
 }

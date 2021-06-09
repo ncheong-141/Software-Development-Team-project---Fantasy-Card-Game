@@ -15,7 +15,7 @@ import utils.BasicObjectBuilders;
  * clicked. Tile indices start at 1.
  * 
  * { 
- *   messageType = “tileClicked”
+ *   messageType = â€œtileClickedâ€
  *   tilex = <x index of the tile>
  *   tiley = <y index of the tile>
  * }
