@@ -20,7 +20,7 @@ public class Board {
 		for (int i = 0; i<gameBoard.length; i++) {
 			for (int k = 0; k<gameBoard[0].length; k++) {
 				gameBoard [i][k] = BasicObjectBuilders.loadTile(i, k);
-						
+				gameBoard [i][k].free = true; 	
 			}
 		}
 		
@@ -57,7 +57,6 @@ public class Board {
 	public Tile getTile(int h, int w) {
 		return gameBoard[h][w];
 	}
-	
-	
+
 
 }

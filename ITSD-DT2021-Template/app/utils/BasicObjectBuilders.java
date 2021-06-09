@@ -5,9 +5,11 @@ import java.io.File;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import structures.basic.Avatar;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
+import structures.basic.Monster;
+import structures.basic.Skills;
+import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
 
@@ -75,9 +77,35 @@ public class BasicObjectBuilders {
 	public static Unit loadUnit(String configFile, int id,  Class<? extends Unit> classType) {
 		
 		try {
+			
 			Unit unit = mapper.readValue(new File(configFile), classType);
-			unit.setId(id);
+			//unit.setId(id);
+			
+			// Condition to check if Monster or Spell 
+			if (classType == Monster.class) {
+				
+				// Cast to monster to access class attributes
+				Monster mUnit = (Monster)mapper.readValue(new File(configFile), classType);
+				mUnit.setId(id);
+				
+				// Set monster attributes (need to put actual attributes sometime)
+				mUnit.setName("Name 1");
+				mUnit.setHP(10);
+				mUnit.setAttackValue(2);
+				mUnit.setSkillID(0);
+				//mUnit.setSkills(new Skills());
+				
+				// Cast sub-class to super class for exporting out the method
+				Unit returnUnit_M = (Unit)mUnit; 
+				
+				return returnUnit_M; 
+			}
+			else if (classType == Spell.class) {
+			}
+			
 			return unit;
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -85,6 +113,7 @@ public class BasicObjectBuilders {
 		return null;
 		
 	}
+	
 	
 	public static Avatar loadAvatar(String configFile, int id,  Class<? extends Avatar> classType) {
 		
@@ -99,7 +128,7 @@ public class BasicObjectBuilders {
 		return null;
 		
 	}
-	
+
 	/**
 	 * Generates a tile object with x and y indices
 	 * @param x

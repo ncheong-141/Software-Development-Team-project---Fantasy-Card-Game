@@ -28,9 +28,11 @@ public class Tile {
 	int tilex;
 	int tiley;
 	
+	// Added attribute
 	boolean free;
-	Monster monsterOnTile;
-	
+	Monster monsterOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
+
+
 	public Tile() {}
 	
 	public Tile(String tileTexture, int xpos, int ypos, int width, int height, int tilex, int tiley) {
@@ -43,8 +45,8 @@ public class Tile {
 		this.height = height;
 		this.tilex = tilex;
 		this.tiley = tiley;
+		
 		this.free = true;
-		this.monsterOnTile = null;
 	}
 	
 	public Tile(List<String> tileTextures, int xpos, int ypos, int width, int height, int tilex, int tiley) {
@@ -56,6 +58,8 @@ public class Tile {
 		this.height = height;
 		this.tilex = tilex;
 		this.tiley = tiley;
+		
+		this.free = true;
 	}
 	public List<String> getTileTextures() {
 		return tileTextures;
@@ -99,16 +103,25 @@ public class Tile {
 	public void setTiley(int tiley) {
 		this.tiley = tiley;
 	}
+	public boolean getFreeStatus() {
+		return free; 
+	}
+	public Monster getMonsterReference() {
+		return monsterOnTile; 
+	}
+	
 	
 	public boolean addMonster (Monster m) {
-		if (!(this.free) || !(this.monsterOnTile==null)) return false;
+		if (!(this.free) || !(this.monsterOnTile==null)) {
+			return false;
+		}
 		else {
 			this.free = false;
 			this.monsterOnTile = m;
 			return true;			
 		}
 	}
-	
+
 	public boolean removeMonster () {
 		if (this.free || this.monsterOnTile==null) return false;
 		else {
@@ -117,7 +130,7 @@ public class Tile {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Loads a tile from a configuration file
 	 * parameters.
