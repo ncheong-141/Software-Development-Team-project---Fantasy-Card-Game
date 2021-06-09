@@ -108,12 +108,12 @@ public class Tile {
 	public boolean getFreeStatus() {
 		return free; 
 	}
-	public Unit getMonsterReference() {
+	public Unit getUnitOnTile() {
 		return unitOnTile; 
 	}
 	
 	
-	public boolean addMonster (Monster m) {
+	public boolean addUnit (Monster m) {
 		if (!(this.free) || !(this.unitOnTile==null)) {
 			return false;
 		}
@@ -124,7 +124,7 @@ public class Tile {
 		}
 	}
 
-	public boolean removeMonster () {
+	public boolean removeUnit () {
 		if (this.free || this.unitOnTile==null) return false;
 		else {
 			this.free = true;

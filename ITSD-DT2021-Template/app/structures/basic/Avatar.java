@@ -52,8 +52,12 @@ public class Avatar extends Unit {
 	public int getAttack() {
 		return attack;
 	}
+	
+	public Player getOwner() {
+		return this.owner;
+	}
 
-	private ArrayList<Tile> possibleMoves() {
+	public ArrayList<Tile> possibleMoves() {
 		ArrayList<Tile> moveList = new ArrayList<Tile>();
 		
 		for (int i = 0; i<moveH.length; i++) {
