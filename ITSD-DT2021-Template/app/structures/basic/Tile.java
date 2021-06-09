@@ -47,6 +47,7 @@ public class Tile {
 		this.tiley = tiley;
 		
 		this.free = true;
+		this.monsterOnTile = null;
 	}
 	
 	public Tile(List<String> tileTextures, int xpos, int ypos, int width, int height, int tilex, int tiley) {
@@ -60,6 +61,7 @@ public class Tile {
 		this.tiley = tiley;
 		
 		this.free = true;
+		this.monsterOnTile = null;
 	}
 	public List<String> getTileTextures() {
 		return tileTextures;
