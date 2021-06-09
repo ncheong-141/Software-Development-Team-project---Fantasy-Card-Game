@@ -15,7 +15,7 @@ public class HumanPlayer extends Player {
 	private String name;
 	private Hand hand;
 	private Deck deck;
-	private ActorRef out;
+	//private ActorRef out;
 	private Unit unit;  //Unitcard Spellcard
 	private int position; //card in hand position
 	private Tile tile;
