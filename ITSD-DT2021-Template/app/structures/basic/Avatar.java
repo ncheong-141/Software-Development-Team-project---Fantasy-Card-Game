@@ -59,10 +59,16 @@ public class Avatar extends Unit {
 
 	public ArrayList<Tile> possibleMoves() {
 		ArrayList<Tile> moveList = new ArrayList<Tile>();
-		
+		int xPos = this.position.getTilex()-1;
+		int yPos = this.position.getTiley()-1;
 		for (int i = 0; i<moveH.length; i++) {
-			Tile t = board.getTile(moveH[i], moveW[i]);
-			if (t.free == true) moveList.add(t);
+			if (xPos + moveW[i] <0 || xPos + moveW[i] > 8 || yPos + moveH[i]<0 || yPos + moveH[i] > 4) continue;
+			
+			else{
+				Tile t = board.getTile(moveW[i]+xPos, moveH[i]+ yPos);
+				moveList.add(t);
+			}
+			
 		}
 		
 		return moveList;
