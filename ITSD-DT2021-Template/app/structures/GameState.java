@@ -107,6 +107,17 @@ public class GameState {
 		turnCount++;
 	}
 	
+	Board board; 
 	
+	public GameState(ActorRef out) {
+		
+		board = new Board(out); 
+	}
+	
+	
+	/* Getters*/ 
+	public Board getBoard() {
+		return board; 
+	}
 	
 }

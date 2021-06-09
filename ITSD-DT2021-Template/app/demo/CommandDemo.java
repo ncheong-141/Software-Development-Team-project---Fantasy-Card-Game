@@ -2,8 +2,10 @@ package demo;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import structures.GameState;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
+import structures.basic.Monster;
 import structures.basic.Player;
 import structures.basic.Tile;
 import structures.basic.Unit;
@@ -424,4 +426,30 @@ public class CommandDemo {
 
 	}
 
+	public static void executeDemoUnits(ActorRef out, GameState gameState) {
+		
+		// drawTile
+		BasicCommands.addPlayer1Notification(out, "drawTile[3,2]", 2);
+		Tile tile = BasicObjectBuilders.loadTile(3, 2);
+		BasicCommands.drawTile(out, tile, 0);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// drawUnit
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadUnit(StaticConfFiles.u_fire_spitter, 1, Monster.class);
+		fire_spitter.setPositionByTile(tile); 
+		BasicCommands.drawUnit(out, fire_spitter, tile);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// Add unit to tile ON BOARD
+		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
+		gameState.getBoard().getTile(3, 2).addMonster(fire_spitter);
+
+	}
+	public static void executeDemoBoard(ActorRef out) {
+	}
+	public static void executeDemoPlayer(ActorRef out) {
+	}
+	public static void executeDemoDeckHand(ActorRef out) {
+	}
 }
