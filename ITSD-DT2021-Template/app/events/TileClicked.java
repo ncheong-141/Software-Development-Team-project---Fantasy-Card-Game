@@ -15,7 +15,7 @@ import utils.BasicObjectBuilders;
  * clicked. Tile indices start at 1.
  * 
  * { 
- *   messageType = “tileClicked”
+ *   
  *   tilex = <x index of the tile>
  *   tiley = <y index of the tile>
  * }
@@ -33,7 +33,7 @@ public class TileClicked implements EventProcessor{
 		
 		
 		// Check if Unit present
-		if (gameState.getBoard().getTile(tilex , tiley).getMonsterReference() != null) {
+		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null) {
 			
 			// Do something like highlight unit etc. 
 			System.out.println("Monster clicked");
