@@ -443,7 +443,7 @@ public class CommandDemo {
 		
 		// Add unit to tile ON BOARD
 		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
-		gameState.getBoard().getTile(3, 2).addMonster(fire_spitter);
+		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
 
 	}
 	public static void executeDemoBoard(ActorRef out) {

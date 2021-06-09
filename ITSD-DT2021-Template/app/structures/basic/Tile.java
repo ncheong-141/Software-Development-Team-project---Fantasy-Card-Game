@@ -113,7 +113,7 @@ public class Tile {
 	}
 	
 	
-	public boolean addUnit (Monster m) {
+	public boolean addUnit (Unit m) {
 		if (!(this.free) || !(this.unitOnTile==null)) {
 			return false;
 		}
