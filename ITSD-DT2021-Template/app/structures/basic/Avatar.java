@@ -1,45 +1,21 @@
 package structures.basic;
 
+import java.util.ArrayList;
+
 public class Avatar extends Unit {
-	int attack, health;
-	Position avatarPos;
 	Player owner;
-	int range;
 	Board board;
+	int health, attack;
+	static final int[] moveH = {0,0,0,0,1,1,1,2,-1,-1,-1,-2};
+	static final int[] moveW = {2,1,-1,-2,-1,0,1,0,-1,0,1,0};
 	
 	
 	public Avatar() {}
 	
-	public Avatar(int id, UnitAnimationSet animations, ImageCorrection correction) {
+	public Avatar(Player p, Board b) {
 		super();
-		this.id = id;
-		this.animation = UnitAnimationType.idle;
-		
-		position = new Position(0,0,0,0);
-		this.correction = correction;
-		this.animations = animations;
-	}
-	
-	public Avatar(int id, UnitAnimationSet animations, ImageCorrection correction, Tile currentTile) {
-		super();
-		this.id = id;
-		this.animation = UnitAnimationType.idle;
-		
-		position = new Position(currentTile.getXpos(),currentTile.getYpos(),currentTile.getTilex(),currentTile.getTiley());
-		this.correction = correction;
-		this.animations = animations;
-	}
-	
-	
-	
-	public Avatar(int id, UnitAnimationType animation, Position position, UnitAnimationSet animations,
-			ImageCorrection correction) {
-		super();
-		this.id = id;
-		this.animation = animation;
-		this.position = position;
-		this.animations = animations;
-		this.correction = correction;
+		this.owner = p;
+		this.board = b;
 	}
 
 	
@@ -48,17 +24,49 @@ public class Avatar extends Unit {
 		board = b;
 		this.setPositionByPlayer();
 		this.health = p.getHealth();
-		this.attack = 2;
+		
 	}
 	
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public void setAttack(int attack) {
+		this.attack = attack;
+	}
+
 	private void setPositionByPlayer () {
 		if (this.owner instanceof HumanPlayer) {
-			this.setPositionByTile(board.getTile(2,3));
+			this.setPositionByTile(board.getTile(2,1));
 		}
 		
 		else if (this.owner instanceof ComputerPlayer) {
-			this.setPositionByTile(board.getTile(8,3));
+			this.setPositionByTile(board.getTile(2,7));
 		}
 	}
+	
+	public int getHealth() {
+		return health;
+	}
+
+	public int getAttack() {
+		return attack;
+	}
+
+	private ArrayList<Tile> possibleMoves() {
+		ArrayList<Tile> moveList = new ArrayList<Tile>();
+		
+		for (int i = 0; i<moveH.length; i++) {
+			Tile t = board.getTile(moveH[i], moveW[i]);
+			if (t.free == true) moveList.add(t);
+		}
+		
+		return moveList;
+	}
+	
+	public void move(Tile t) {
+		this.setPositionByTile(t);	
+	}
+	
 	
 }
