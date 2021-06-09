@@ -7,7 +7,7 @@ public class Avatar extends Unit {
 	Board board;
 	int health, attack;
 	static final int[] moveH = {0,0,0,0,-2,-1,1,2,1,-1,-1,1};
-	static final int[] moveW = {-2,-1,1,2,0,0,0,0,1,-1,-1,1};
+	static final int[] moveW = {-2,-1,1,2,0,0,0,0,1,-1,1,-1};
 	
 	
 	public Avatar() {}
