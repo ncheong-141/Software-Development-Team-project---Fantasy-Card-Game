@@ -9,7 +9,6 @@ import structures.basic.Avatar;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
-import structures.basic.Skills;
 import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
