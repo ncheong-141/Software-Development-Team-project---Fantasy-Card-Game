@@ -26,47 +26,41 @@ import utils.StaticConfFiles;
 public class Initalize implements EventProcessor{
 
 	@Override
-	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
+public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		//CommandDemo.executeDemo(out); // this executes the command demo, comment out this when implementing your solution
-		//create board
-				Board board = new Board(out);
-				board.drawBoard();
-				//try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-				
-				HumanPlayer p1 = new HumanPlayer();
-				ComputerPlayer p2 = new ComputerPlayer();
-				//create players (human and computer) --> player instantiation should trigger avatar instantiation 
-				//to test placing avatar on board here avatar are instantiated manually
-				
-				Avatar humanAvatar =  (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
-				humanAvatar.setOwner(p1, board);//assigning avatar to player and board - this could be done within player's class
-				
-				
-				Avatar computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
-				computerAvatar.setOwner(p2, board);
-				
-				
-				//display avatars on board
-				Tile tOne = board.getTile(2, 1);
-				Tile tTwo = board.getTile(2, 7);
-				
-				BasicCommands.drawUnit(out, humanAvatar, tOne);
-				try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-				
-				BasicCommands.drawUnit(out, computerAvatar, tTwo);	
-				try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-				
-				humanAvatar.setAttack(2);
-				computerAvatar.setAttack(2);
-				
-				BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttack());
-				BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHealth());
-				try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-				
-				
-				BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttack());
-				BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHealth());
+		
+		//draw board
+		Tile[][] board = gameState.getGameBoard().getGameBoard();
+		for (int i = 0; i<board.length; i++) {
+			for (int k =0; k<board[0].length; k++) {
+				BasicCommands.drawTile(out, board[i][k], 0);;
+			}
+		}
+		
+
+		
+		//display avatars on board
+		Tile tOne = gameState.getGameBoard().getTile(2, 1);
+		Tile tTwo = gameState.getGameBoard().getTile(2, 7);
+		
+		BasicCommands.drawUnit(out, gameState.getHumanAvatar(), tOne);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		BasicCommands.drawUnit(out, gameState.getComputerAvatar(), tTwo);	
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		gameState.getHumanAvatar().setAttack(2);
+		gameState.getComputerAvatar().setAttack(2);
+		
+		BasicCommands.setUnitAttack(out, gameState.getHumanAvatar(), gameState.getHumanAvatar().getAttack());
+		BasicCommands.setUnitHealth(out, gameState.getHumanAvatar(), gameState.getHumanAvatar().getHealth());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		
+		BasicCommands.setUnitAttack(out, gameState.getComputerAvatar(), gameState.getComputerAvatar().getAttack());
+		BasicCommands.setUnitHealth(out, gameState.getComputerAvatar(), gameState.getComputerAvatar().getHealth());
+		
 	}
 
 }

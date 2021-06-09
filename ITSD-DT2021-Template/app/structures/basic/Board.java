@@ -10,12 +10,11 @@ public class Board {
 	private final int X;
 	private Tile humanStart;
 	private Tile computerStart;
-	private ActorRef out;
 	
-	public Board(ActorRef o) {
+	public Board() {
 		X = 9;
 		Y = 5;
-		this.out = o;
+		//this.out = o;
 		gameBoard = new Tile[Y][X];
 		for (int i = 0; i<Y; i++) {
 			for (int k = 0; k<X; k++) {
@@ -36,15 +35,6 @@ public class Board {
 		return computerStart;
 	}
 
-	public void drawBoard() {
-		for (int i = 0; i<Y; i++) {
-			for (int k = 0; k<X; k++) {
-				BasicCommands.drawTile(out, gameBoard [i][k],0);
-						
-			}
-		}
-	}
-	
 	
 	public Tile[][] getGameBoard() {
 		return gameBoard;
@@ -57,6 +47,7 @@ public class Board {
 	public Tile getTile(int h, int w) {
 		return gameBoard[h][w];
 	}
+	
 	
 
 }
