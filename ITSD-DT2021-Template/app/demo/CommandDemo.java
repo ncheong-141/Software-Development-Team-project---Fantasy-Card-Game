@@ -3,6 +3,8 @@ package demo;
 import akka.actor.ActorRef;
 import commands.BasicCommands;
 import structures.GameState;
+import structures.basic.Avatar;
+import structures.basic.Board;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
@@ -446,7 +448,35 @@ public class CommandDemo {
 		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
 
 	}
-	public static void executeDemoBoard(ActorRef out) {
+	public static void executeDemoBoard(ActorRef out, GameState g) {
+		Board gameBoard = new Board();
+		
+		for (int i = 0; i<9; i++) {
+			for (int k = 0; k<5; k++) {
+				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+			}
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		Avatar humanAvatar = g.getHumanAvatar();
+		Avatar computerAvatar = g.getComputerAvatar();
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		Tile tHum = g.getGameBoard().getTile(2, 1);
+		Tile tCom = g.getGameBoard().getTile(7, 2);
+		
+		humanAvatar.setAttack(2);
+		computerAvatar.setAttack(2);
+		
+		BasicCommands.drawUnit(out, computerAvatar, tCom);
+		BasicCommands.drawUnit(out, humanAvatar, tHum);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, computerAvatar, 2);
+		BasicCommands.setUnitHealth(out, computerAvatar, 20);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitHealth(out, humanAvatar, 20);
+		BasicCommands.setUnitAttack(out, humanAvatar, 2);
+	
 	}
 	public static void executeDemoPlayer(ActorRef out) {
 	}
