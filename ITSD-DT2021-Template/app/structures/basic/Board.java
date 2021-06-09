@@ -6,11 +6,10 @@ import utils.BasicObjectBuilders;
 
 public class Board {
 	private Tile [][] gameBoard;
-	private final int width;
-	private final int heigth;
+	private final int Y;
+	private final int X;
 	private Tile humanStart;
 	private Tile computerStart;
-	private ActorRef out;
 	
 	public Board(ActorRef o) {
 		width = 9;
@@ -24,8 +23,8 @@ public class Board {
 			}
 		}
 		
-		humanStart = gameBoard[3][2];
-		computerStart = gameBoard[3][8];
+		//humanStart = gameBoard[3][2];
+		//computerStart = gameBoard[3][8];
 	}
 
 	public Tile getHumanStart() {
@@ -36,15 +35,6 @@ public class Board {
 		return computerStart;
 	}
 
-	public void drawBoard() {
-		for (int i = 0; i<heigth; i++) {
-			for (int k = 0; k<width; k++) {
-				BasicCommands.drawTile(out, gameBoard [i][k],0);
-						
-			}
-		}
-	}
-	
 	
 	public Tile[][] getGameBoard() {
 		return gameBoard;
