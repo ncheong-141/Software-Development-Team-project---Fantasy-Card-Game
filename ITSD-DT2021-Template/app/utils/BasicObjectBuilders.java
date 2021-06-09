@@ -5,6 +5,7 @@ import java.io.File;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import structures.basic.Avatar;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
