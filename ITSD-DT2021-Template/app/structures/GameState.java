@@ -23,7 +23,7 @@ public class GameState {
 	private Avatar humanAvatar;
 	private Avatar computerAvatar;
 	private int turnCount;
-	private boolean playerDead;
+	private static boolean playerDead;
 	private Player turnOwner;
 	
 	public GameState() {
@@ -91,7 +91,7 @@ public class GameState {
 		playerTwo = c;
 	}
 	
-	public void gameOver() {
+	public static void gameOver() {
 		playerDead = true;
 		
 		// call method to finish game
