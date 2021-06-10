@@ -118,8 +118,9 @@ public class Tile {
 			return false;
 		}
 		else {
-			this.free = false;
 			this.unitOnTile = m;
+			this.free = false;
+			
 			return true;			
 		}
 	}

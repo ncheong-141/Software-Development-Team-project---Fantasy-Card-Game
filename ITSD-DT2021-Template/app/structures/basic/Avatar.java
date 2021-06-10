@@ -38,10 +38,12 @@ public class Avatar extends Unit {
 	private void setPositionByPlayer () {
 		if (this.owner instanceof HumanPlayer) {
 			this.setPositionByTile(board.getTile(2,1));
+			board.getTile(2, 1).addUnit(this);
 		}
 		
 		else if (this.owner instanceof ComputerPlayer) {
 			this.setPositionByTile(board.getTile(2,7));
+			board.getTile(2, 7).addUnit(this);
 		}
 	}
 	
@@ -59,13 +61,15 @@ public class Avatar extends Unit {
 
 	public ArrayList<Tile> possibleMoves() {
 		ArrayList<Tile> moveList = new ArrayList<Tile>();
-		int xPos = this.position.getTilex()-1;
-		int yPos = this.position.getTiley()-1;
+		int xPos = this.position.getTilex();
+		int yPos = this.position.getTiley();
+		
+		System.out.println(xPos + " " + yPos);
 		for (int i = 0; i<moveH.length; i++) {
 			if (xPos + moveW[i] <0 || xPos + moveW[i] > 8 || yPos + moveH[i]<0 || yPos + moveH[i] > 4) continue;
 			
 			else{
-				Tile t = board.getTile(moveW[i]+xPos, moveH[i]+ yPos);
+				Tile t = board.getTile( moveH[i]+ yPos, moveW[i]+xPos);
 				moveList.add(t);
 			}
 			
@@ -77,6 +81,5 @@ public class Avatar extends Unit {
 	public void move(Tile t) {
 		this.setPositionByTile(t);	
 	}
-	
 	
 }
