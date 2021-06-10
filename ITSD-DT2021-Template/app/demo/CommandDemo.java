@@ -451,32 +451,38 @@ public class CommandDemo {
 	public static void executeDemoBoard(ActorRef out, GameState g) {
 		Board gameBoard = new Board();
 		
-		for (int i = 0; i<9; i++) {
-			for (int k = 0; k<5; k++) {
+		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
 				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
 			}
 		}
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		Avatar humanAvatar = g.getHumanAvatar();
-		Avatar computerAvatar = g.getComputerAvatar();
+		//Avatar humanAvatar = g.getHumanAvatar();
+		//Avatar computerAvatar = g.getComputerAvatar();
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		Tile tHum = g.getGameBoard().getTile(2, 1);
-		Tile tCom = g.getGameBoard().getTile(7, 2);
+		g.getHumanAvatar().setAttack(2);
+		g.getComputerAvatar().setAttack(2);
 		
-		humanAvatar.setAttack(2);
-		computerAvatar.setAttack(2);
-		
-		BasicCommands.drawUnit(out, computerAvatar, tCom);
-		BasicCommands.drawUnit(out, humanAvatar, tHum);
+		//display avatars on board
+		Tile tOne = g.getGameBoard().getTile(2, 1);
+		Tile tTwo = g.getGameBoard().getTile(2, 7);
+				
+		BasicCommands.drawUnit(out, g.getHumanAvatar(), tOne);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		BasicCommands.setUnitAttack(out, computerAvatar, 2);
-		BasicCommands.setUnitHealth(out, computerAvatar, 20);
+				
+		BasicCommands.drawUnit(out, g.getComputerAvatar(), tTwo);	
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		BasicCommands.setUnitHealth(out, humanAvatar, 20);
-		BasicCommands.setUnitAttack(out, humanAvatar, 2);
-	
+				
+		BasicCommands.setUnitAttack(out, g.getHumanAvatar(), g.getHumanAvatar().getAttack());
+		BasicCommands.setUnitHealth(out, g.getHumanAvatar(), g.getHumanAvatar().getHealth());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}				
+				
+		BasicCommands.setUnitAttack(out, g.getComputerAvatar(), g.getComputerAvatar().getAttack());
+		BasicCommands.setUnitHealth(out, g.getComputerAvatar(), g.getComputerAvatar().getHealth());
+				
+		System.out.println(g.getHumanAvatar().getAttack()+ " " + g.getHumanAvatar().getHealth() + "\n Compo: "+ g.getComputerAvatar().getAttack() + " " + g.getComputerAvatar().getHealth());
 	}
 	public static void executeDemoPlayer(ActorRef out) {
 	}
