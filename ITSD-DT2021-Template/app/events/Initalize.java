@@ -38,6 +38,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//CommandDemo.executeDemo(out); // this executes the command demo, comment out this when implementing your solution
 
 		CommandDemo.executeDemoUnits(out, gameState);
+		CommandDemo.executeDemoBoard(out, gameState);
 	}
 
 }

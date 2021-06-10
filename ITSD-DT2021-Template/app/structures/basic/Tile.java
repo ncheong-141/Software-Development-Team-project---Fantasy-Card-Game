@@ -30,7 +30,7 @@ public class Tile {
 	
 	// Added attribute
 	boolean free;
-	Monster monsterOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
+	Unit unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
 
 
 	public Tile() {}
@@ -47,7 +47,7 @@ public class Tile {
 		this.tiley = tiley;
 		
 		this.free = true;
-		this.monsterOnTile = null;
+		this.unitOnTile = null;
 	}
 	
 	public Tile(List<String> tileTextures, int xpos, int ypos, int width, int height, int tilex, int tiley) {
@@ -61,7 +61,7 @@ public class Tile {
 		this.tiley = tiley;
 		
 		this.free = true;
-		this.monsterOnTile = null;
+		this.unitOnTile = null;
 	}
 	public List<String> getTileTextures() {
 		return tileTextures;
@@ -108,27 +108,27 @@ public class Tile {
 	public boolean getFreeStatus() {
 		return free; 
 	}
-	public Monster getMonsterReference() {
-		return monsterOnTile; 
+	public Unit getUnitOnTile() {
+		return unitOnTile; 
 	}
 	
 	
-	public boolean addMonster (Monster m) {
-		if (!(this.free) || !(this.monsterOnTile==null)) {
+	public boolean addUnit (Unit m) {
+		if (!(this.free) || !(this.unitOnTile==null)) {
 			return false;
 		}
 		else {
 			this.free = false;
-			this.monsterOnTile = m;
+			this.unitOnTile = m;
 			return true;			
 		}
 	}
 
-	public boolean removeMonster () {
-		if (this.free || this.monsterOnTile==null) return false;
+	public boolean removeUnit () {
+		if (this.free || this.unitOnTile==null) return false;
 		else {
 			this.free = true;
-			this.monsterOnTile = null;
+			this.unitOnTile = null;
 			return true;
 		}
 	}
