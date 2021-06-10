@@ -22,8 +22,11 @@ public class Player {
 		super();
 		this.health = 20;
 		this.mana = 0;
+		deck = new Deck();
+		// not sure how to initialize the hand here
+		this.dead = false;
+		this.turn = false;		
 		avatar = new Avatar();
-		
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		//not sure how to use this
 	}
@@ -32,8 +35,14 @@ public class Player {
 		super();
 		this.health = health;
 		this.mana = mana;
-		avatar = new Avatar();
 		deck = new Deck();
+		// not sure how to initialize the hand here
+		this.dead = false;
+		this.turn = false;		
+		avatar = new Avatar();
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		//not sure how to use this
+	
 	}
 		
 	public int getHealth() {
