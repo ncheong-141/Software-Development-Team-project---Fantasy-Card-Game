@@ -37,15 +37,17 @@ public class TileClicked implements EventProcessor{
 		
 		
 		// Check if Unit present
-		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null &&
-				gameState.getBoard().getTile(tilex, tiley).getUnitOnTile() instanceof Avatar) {
-			Avatar a = (Avatar) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
+		if (gameState.getBoard().getTile(tiley , tilex).getUnitOnTile() != null &&
+				gameState.getBoard().getTile(tiley, tilex).getUnitOnTile() instanceof Avatar) {
+			System.out.println("avatar clicked");
+			Avatar a = (Avatar) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
 			avatarLogic(a, gameState, out);
 		}
 		
-		else if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null &&
-				gameState.getBoard().getTile(tilex, tiley).getUnitOnTile() instanceof Avatar) {
-			Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
+		else if (gameState.getBoard().getTile(tiley , tilex).getUnitOnTile() != null &&
+				gameState.getBoard().getTile(tiley, tilex).getUnitOnTile() instanceof Avatar) {
+			System.out.println("Monster clicked");
+			Monster m = (Monster) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
 			monsterLogic(m, gameState, out);
 		}	
 			
