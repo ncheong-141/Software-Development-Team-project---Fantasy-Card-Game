@@ -431,23 +431,31 @@ public class CommandDemo {
 	public static void executeDemoUnits(ActorRef out, GameState gameState) {
 		
 		// drawTile
-		BasicCommands.addPlayer1Notification(out, "drawTile[3,2]", 2);
-		Tile tile = BasicObjectBuilders.loadTile(3, 2);
-		BasicCommands.drawTile(out, tile, 0);
+		Board gameBoard = new Board();
+		
+		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+			}
+		}
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
 		
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Monster fire_spitter = (Monster) BasicObjectBuilders.loadUnit(StaticConfFiles.u_fire_spitter, 1, Monster.class);
-		fire_spitter.setPositionByTile(tile); 
-		BasicCommands.drawUnit(out, fire_spitter, tile);
+		Unit fire_spitter = (Monster) BasicObjectBuilders.loadUnit(StaticConfFiles.u_fire_spitter, 1, Monster.class);
+		fire_spitter.setPositionByTile(gameBoard.getTile(3,2)); 
+		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		// Add unit to tile ON BOARD
 		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
 		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
 	}
+	
+	
 	public static void executeDemoBoard(ActorRef out, GameState g) {
 		Board gameBoard = new Board();
 		

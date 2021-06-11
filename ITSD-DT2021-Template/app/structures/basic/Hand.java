@@ -8,7 +8,7 @@ import structures.basic.Card;
 
 public class Hand {
 	private int curr;
-	private ArrayList hand;
+	private ArrayList<Card> hand;
 	
 	public Hand( ArrayList<Card> hand) {
 		super();
