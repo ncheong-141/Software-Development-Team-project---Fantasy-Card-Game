@@ -148,6 +148,8 @@ public class TileClicked implements EventProcessor{
 				System.out.println("Monster clicked");
 				monsterLogic(m, gameState, out);
 			}
+		} else {
+			System.out.println("Empty tile clicked");
 		}
 	}
 	
@@ -195,10 +197,38 @@ public class TileClicked implements EventProcessor{
 		System.out.println("Monster HP: " + m.getHP());
 		System.out.println("Monster attack: " + m.getAttackValue());
 		System.out.println("Monster mana cost: " + m.getManaCost());
-
-		// Change/access monster here
-//		Tile tile = BasicObjectBuilders.loadTile(3, 2);
-//		BasicCommands.drawTile(o, tile, 1);
+		
+		// Note that currently Monster's do not auto-set their owners,
+		// Do this manually with .setOwner(Player p) before trying to select
+		if (m.getOwner() == g.getTurnOwner()) {
+			System.out.println("You own this monster");
+			
+			// Deselect monster if already selected + apply visual
+			if(m.isSelected()) {
+				m.toggleSelect();
+				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTiley(), (m.getPosition()).getTilex()), 0);
+				System.out.println("Have deselected monster on Tile " + m.getPosition().getTiley() + "," + m.getPosition().getTilex());
+				System.out.println("Monster selected: " + m.isSelected());
+				
+				// Update movement + attack range tiles
+				
+			}
+			// Select monster + apply visual
+			else {
+				
+				m.toggleSelect();
+				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTiley(), (m.getPosition()).getTilex()), 1);
+				System.out.println("Have selected monster on Tile " + m.getPosition().getTiley() + "," + m.getPosition().getTilex());
+				System.out.println("Monster selected: " + m.isSelected());
+				
+				// Movement + attack range tiles are displayed
+				
+			}
+			
+		} else {
+			System.out.println("You do not own this monster");
+		}
+		
 	}
 	
 	static void avatarLogic (Avatar a, GameState g, ActorRef o) {
