@@ -440,11 +440,12 @@ public class CommandDemo {
 		}
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Unit fire_spitter = (Monster) BasicObjectBuilders.loadUnit(StaticConfFiles.u_fire_spitter, 1, Monster.class);
-		fire_spitter.setPositionByTile(gameBoard.getTile(3,2)); 
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadUnit(StaticConfFiles.u_fire_spitter, 1, Monster.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
+		fire_spitter.setOwner(gameState.getTurnOwner());
 		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
