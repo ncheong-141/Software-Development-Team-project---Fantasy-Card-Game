@@ -18,14 +18,17 @@ public class Monster extends Unit{
 	//private Skills skills; 
 	private int skillID; 
 	
-	boolean 	selected;
+	private boolean 	selected;
+	private Player		owner;
 	
 	/* Constructor(s) */
 	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
 		
 		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
+		this.setStatus();
 		
-		// No attribute setting here as Monsters are initially created with a Unit reference, which could be required by the ObjectMapper which loads the Json files 
+		// No attribute setting here as Monsters are initially created with a Unit reference, 
+		// which could be required by the ObjectMapper which loads the Json files 
 	}
 	
 	// Empty constructor for testing 
@@ -38,7 +41,7 @@ public class Monster extends Unit{
 	
 	// Move unit
 	// Attack unit
-	// Defend from unit (counter attack and HP reduction if hit) 
+	// Receive damage (HP reduction, counter attack if not from Spell) 
 	// Use their ability
 	
 	
@@ -91,6 +94,26 @@ public class Monster extends Unit{
 	public void setSkillID(int skillID) {
 		this.skillID = skillID;
 	}
+	
+	private void setStatus() {
+		selected = false;
+	}
+	
+	public boolean isSelected() {
+		return selected;
+	}
 
+	public void toggleSelect() {
+		selected = !selected;
+	}
+	
+	public Player getOwner() {
+		return owner;
+	}
+	
+	// Will be removing this when Vic can get owner to be set at object instantiation
+	public void setOwner(Player p) {
+		owner = p;
+	}
 	
 }
