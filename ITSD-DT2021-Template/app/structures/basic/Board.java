@@ -66,6 +66,7 @@ public class Board {
 		return gameBoard[y][x];
 	}
 	
+<<<<<<< HEAD
 	//=====================PLAYABLE TILES METHODS==================//
 	
 		//methods showing where player can summon monster/cast spell
@@ -147,6 +148,7 @@ public class Board {
 		}
 		
 		//3) casting spell on own avatar(i.e. returning own avatar position)
+
 		
 		//4) casting spell on opponent avatar
 	}
