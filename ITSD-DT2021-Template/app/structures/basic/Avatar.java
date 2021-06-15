@@ -12,13 +12,22 @@ public class Avatar extends Monster {
 	
 	public Avatar() {}
 	
+	
 	public Avatar(Board b) {
 		super();
 		
 		this.board = b;
 	}
+	
+	//when the owner is set for an avatar, this method also takes care of assigning the avatar to the relevant 
+	//starting position, which is based on the type of owner
+	public void setOwner(Player p, Board b) {
+		this.owner = p;
+		this.setPositionByPlayer();
+	}
 
-
+	//this method is used by the method above to check if the avatar's owner is a human or computer player
+	//depending on the type the the right starting position is assigned to the avatar
 	private void setPositionByPlayer () {
 		if (this.owner instanceof HumanPlayer) {
 			this.setPositionByTile(board.getTile(2,1));
