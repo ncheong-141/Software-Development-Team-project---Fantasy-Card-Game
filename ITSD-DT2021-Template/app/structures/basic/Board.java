@@ -1,5 +1,7 @@
 package structures.basic;
 
+import java.util.ArrayList;
+
 import akka.actor.ActorRef;
 import commands.BasicCommands;
 import utils.BasicObjectBuilders;
@@ -22,6 +24,9 @@ public class Board {
 	//note: still to be implemented, not a fundamental feature
 	private Tile humanStart;
 	private Tile computerStart;
+
+	private final int[] rangeH = {0,0,1,-1,1,-1,1,-1};
+	private final int[] rangeW = {1,-1,0,0,1,-1,1,-1};
 	
 	public Board() {
 		X = 9;
@@ -61,5 +66,47 @@ public class Board {
 		return gameBoard[y][x];
 	}
 	
+	//=====================PLAYABLE TILE METHODS==================//
+	
+		//methods showing where player can summon monster/cast spell
+		
+		//1) summoning of monster near friendly unit
+		
+		public ArrayList<Tile> showSummonMonster(Player p){
+			ArrayList <Tile> tilesToHighlight = new ArrayList<Tile>();
+			for (int i = 0; i <gameBoard.length; i++) {
+				for (int k =0; k<gameBoard[0].length; k++) {
+					if (gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+						tilesToHighlight.addAll(this.calcRange(gameBoard[i][k]));
+					}
+				}
+			}
+			return tilesToHighlight;
+		}
+		
+		private ArrayList<Tile> calcRange(Tile t){
+			ArrayList<Tile> tileRange = new ArrayList<Tile>();
+			int xPos = t.getTilex();
+			int yPos = t.getTiley();
+			
+			System.out.println(xPos + " " + yPos);
+			for (int i = 0; i<rangeH.length; i++) {
+				if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
+				else {
+					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
+					tileRange.add(posTile);
+				}
+			}
+			return tileRange;
+		}
+		
+		//2) summoning monster / casting spell anywhere on the board
+		
+		//return all free tiles
+		
+		//3) casting spell on own avatar
+		
+		//4) casting spell on opponent avatar
+	}
 
-}
+
