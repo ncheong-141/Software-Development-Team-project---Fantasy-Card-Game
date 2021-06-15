@@ -66,7 +66,7 @@ public class Board {
 		return gameBoard[y][x];
 	}
 	
-<<<<<<< HEAD
+
 	//=====================PLAYABLE TILES METHODS==================//
 	
 		//methods showing where player can summon monster/cast spell
