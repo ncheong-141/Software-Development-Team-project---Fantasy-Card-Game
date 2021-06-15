@@ -12,14 +12,14 @@ public class Monster extends Unit{
 	
 	/* Sub class attributes */
 	public String name; 
-	private int HP; 
-	private int attackValue; 
-	private int manaCost; 
-	//private Skills skills; 
-	private int skillID; 
+	protected int HP; 
+	protected int attackValue; 
+	protected int manaCost; 
+	//protected Skills skills; 
+	protected int skillID; 
 	
-	private boolean 	selected;
-	private Player		owner;
+	protected boolean 	selected;
+	protected Player		owner;
 	
 	/* Constructor(s) */
 	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
