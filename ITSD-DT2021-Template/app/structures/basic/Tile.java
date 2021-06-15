@@ -112,8 +112,11 @@ public class Tile {
 		return unitOnTile; 
 	}
 	
-	
-	public boolean addUnit (Unit m) {
+	//added method to be able to add and remove any unit to/ from a tile
+	//the method takes in a Monster type object (which could be a Monster or Avatar)
+	//both methods check that the tile is actually free when adding a moster
+	//and there there is a monster to be removed when trying to remove a monster
+	public boolean addUnit (Monster m) {
 		if (!(this.free) || !(this.unitOnTile==null)) {
 			return false;
 		}
