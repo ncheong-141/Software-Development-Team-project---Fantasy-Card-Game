@@ -30,7 +30,7 @@ public class Tile {
 	
 	// Added attribute
 	boolean free;
-	Unit unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
+	Monster unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
 
 
 	public Tile() {}
@@ -108,7 +108,7 @@ public class Tile {
 	public boolean getFreeStatus() {
 		return free; 
 	}
-	public Unit getUnitOnTile() {
+	public Monster getUnitOnTile() {
 		return unitOnTile; 
 	}
 	
