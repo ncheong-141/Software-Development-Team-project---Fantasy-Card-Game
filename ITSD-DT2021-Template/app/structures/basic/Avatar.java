@@ -23,6 +23,7 @@ public class Avatar extends Monster {
 	//starting position, which is based on the type of owner
 	public void setOwner(Player p, Board b) {
 		this.owner = p;
+		this.board = b;
 		this.setPositionByPlayer();
 	}
 
