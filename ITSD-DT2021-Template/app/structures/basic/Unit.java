@@ -26,6 +26,8 @@ public class Unit {
 	UnitAnimationSet animations;
 	ImageCorrection correction;
 	
+	int dummyVariableToTestIfAutoUpdatesOnLocalRepo; 
+	
 	public Unit() {}
 	
 	public Unit(int id, UnitAnimationSet animations, ImageCorrection correction) {
