@@ -9,9 +9,11 @@ import akka.actor.ActorRef;
 import commands.BasicCommands;
 import structures.GameState;
 import structures.basic.Avatar;
+import structures.basic.Board;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import utils.BasicObjectBuilders;
+import utils.StaticConfFiles;
 
 /**
  * Indicates that the user has clicked an object on the game canvas, in this case a tile.
@@ -106,15 +108,18 @@ public class TileClicked implements EventProcessor{
 				avatarLogic(a, gameState, out);
 			}
 			else {
-				System.out.println("Monster clicked");
 				Monster m = (Monster) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
 				
 				// Do something like highlight unit etc. 
 				System.out.println("Monster clicked");
 				monsterLogic(m, gameState, out);
-
 			}
 		}
+		// IF NO UNIT IS PRESENT JUST SUMMON THIS UNIT
+		else {
+			summonMonster(gameState, out, StaticConfFiles.u_fire_spitter,tilex,tiley);
+		}
+		
 	}
 	
 	private void yufenImpl(ActorRef out, GameState gameState, JsonNode message) {
@@ -227,9 +232,31 @@ public class TileClicked implements EventProcessor{
 			
 		} else {
 			System.out.println("You do not own this monster");
-		}
-		
+		}	
 	}
+	
+	
+	// Summon monster method (for u_configFile, insert StaticConfFiles.u_..")
+	public void summonMonster(GameState gameState, ActorRef out, String u_configFile, int tilex, int tiley) {
+		
+		// Summon the Monster (instantiate)
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadUnit(u_configFile, 1, Monster.class);		
+		summonedMonster.setPositionByTile(gameState.getBoard().getTile(tilex,tiley));
+		summonedMonster.setOwner(gameState.getTurnOwner());
+		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// Drawing the monster on the board
+		BasicCommands.drawUnit(out, summonedMonster, gameState.getBoard().getTile(tilex,tiley));
+		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// Add unit to tile ON BOARD
+		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
+		gameState.getBoard().getTile(tilex,tiley).addUnit(summonedMonster);
+		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+	}
+	
+	
 	
 	static void avatarLogic (Avatar a, GameState g, ActorRef o) {
 		if (a.getOwner() == g.getTurnOwner()) {
