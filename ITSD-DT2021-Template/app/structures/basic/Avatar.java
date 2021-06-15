@@ -1,8 +1,13 @@
 package structures.basic;
 
 import java.util.ArrayList;
+//=============================Class description =============================//
+//this represent the avatar that both the human player and computer player will use to play the game
+//this class stores a reference to the board where the avatar are placed (at specific positions)
+//this class stores a reference to the owner of the avatar, human or computer player
+//==========================================================================//
 
-public class Avatar extends Unit {
+public class Avatar extends Monster {
 	Player owner;
 	Board board;
 	int health, attack;
