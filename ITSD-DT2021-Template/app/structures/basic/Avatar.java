@@ -1,40 +1,34 @@
 package structures.basic;
 
 import java.util.ArrayList;
+//=============================Class description =============================//
+//this represent the avatar that both the human player and computer player will use to play the game
+//this class stores a reference to the board where the avatar are placed (at specific positions)
+//this class stores a reference to the owner of the avatar, human or computer player
+//==========================================================================//
 
-public class Avatar extends Unit {
-	Player owner;
+public class Avatar extends Monster {
 	Board board;
-	int health, attack;
-	static final int[] moveH = {0,0,0,0,-2,-1,1,2,1,-1,-1,1};
-	static final int[] moveW = {-2,-1,1,2,0,0,0,0,1,-1,1,-1};
-	
 	
 	public Avatar() {}
 	
-	public Avatar(Player p, Board b) {
+	
+	public Avatar(Board b) {
 		super();
-		this.owner = p;
+		
 		this.board = b;
 	}
-
 	
-	public void setOwner (Player p, Board b) {
-		owner = p;
-		board = b;
+	//when the owner is set for an avatar, this method also takes care of assigning the avatar to the relevant 
+	//starting position, which is based on the type of owner
+	public void setOwner(Player p, Board b) {
+		this.owner = p;
+		this.board = b;
 		this.setPositionByPlayer();
-		this.health = p.getHealth();
-		
-	}
-	
-	public void setHealth(int health) {
-		this.health = health;
 	}
 
-	public void setAttack(int attack) {
-		this.attack = attack;
-	}
-
+	//this method is used by the method above to check if the avatar's owner is a human or computer player
+	//depending on the type the the right starting position is assigned to the avatar
 	private void setPositionByPlayer () {
 		if (this.owner instanceof HumanPlayer) {
 			this.setPositionByTile(board.getTile(2,1));
@@ -46,40 +40,6 @@ public class Avatar extends Unit {
 			board.getTile(2, 7).addUnit(this);
 		}
 	}
-	
-	public int getHealth() {
-		return health;
-	}
 
-	public int getAttack() {
-		return attack;
-	}
-	
-	public Player getOwner() {
-		return this.owner;
-	}
-
-	public ArrayList<Tile> possibleMoves() {
-		ArrayList<Tile> moveList = new ArrayList<Tile>();
-		int xPos = this.position.getTilex();
-		int yPos = this.position.getTiley();
-		
-		System.out.println(xPos + " " + yPos);
-		for (int i = 0; i<moveH.length; i++) {
-			if (xPos + moveW[i] <0 || xPos + moveW[i] > 8 || yPos + moveH[i]<0 || yPos + moveH[i] > 4) continue;
-			
-			else{
-				Tile t = board.getTile( moveH[i]+ yPos, moveW[i]+xPos);
-				moveList.add(t);
-			}
-			
-		}
-		
-		return moveList;
-	}
-	
-	public void move(Tile t) {
-		this.setPositionByTile(t);	
-	}
 	
 }

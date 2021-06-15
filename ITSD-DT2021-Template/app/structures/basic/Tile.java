@@ -30,7 +30,7 @@ public class Tile {
 	
 	// Added attribute
 	boolean free;
-	Unit unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
+	Monster unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
 
 
 	public Tile() {}
@@ -108,12 +108,15 @@ public class Tile {
 	public boolean getFreeStatus() {
 		return free; 
 	}
-	public Unit getUnitOnTile() {
+	public Monster getUnitOnTile() {
 		return unitOnTile; 
 	}
 	
-	
-	public boolean addUnit (Unit m) {
+	//added method to be able to add and remove any unit to/ from a tile
+	//the method takes in a Monster type object (which could be a Monster or Avatar)
+	//both methods check that the tile is actually free when adding a moster
+	//and there there is a monster to be removed when trying to remove a monster
+	public boolean addUnit (Monster m) {
 		if (!(this.free) || !(this.unitOnTile==null)) {
 			return false;
 		}

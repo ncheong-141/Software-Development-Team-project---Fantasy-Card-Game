@@ -1,22 +1,36 @@
 package structures.basic;
 
+import java.util.ArrayList;
+
 import akka.actor.ActorRef;
 import commands.BasicCommands;
 import utils.BasicObjectBuilders;
 
+//=============================Class description =============================//
+// this class builds the board that the player will play on
+// this class stores a 2D array of Tile objects that represent the board
+// this class contains methods to access different tiles on the board
+//==========================================================================//
+
 public class Board {
 
-	
+	//class variables
 	private Tile [][] gameBoard;
+	//since the board for this version of the game is set to given constant values
+	//the board lenght on the X and Y axis is represented by constant integer values
 	private final int Y;
 	private final int X;
+	//storing references to the tile where the human and computer avatar will start for ease of access
+	//note: still to be implemented, not a fundamental feature
 	private Tile humanStart;
 	private Tile computerStart;
+
+	private final int[] rangeH = {0,0,1,-1,1,-1,1,-1};
+	private final int[] rangeW = {1,-1,0,0,1,-1,1,-1};
 	
 	public Board() {
 		X = 9;
 		Y = 5;
-		//this.out = o;
 		gameBoard = new Tile[Y][X];
 		for (int i = 0; i<Y; i++) {
 			for (int k = 0; k<X; k++) {
@@ -38,7 +52,7 @@ public class Board {
 		return computerStart;
 	}
 
-	
+	//getter method to access the 2D array of Tiles
 	public Tile[][] getGameBoard() {
 		return gameBoard;
 	}
@@ -47,9 +61,52 @@ public class Board {
 		this.gameBoard = gameBoard;
 	}
 	
-	public Tile getTile(int h, int w) {
-		return gameBoard[h][w];
+	//Method to access a specific tile on the board given the X and Y coordinates
+	public Tile getTile(int x, int y) {
+		return gameBoard[y][x];
 	}
 	
+	//=====================PLAYABLE TILE METHODS==================//
+	
+		//methods showing where player can summon monster/cast spell
+		
+		//1) summoning of monster near friendly unit
+		
+		public ArrayList<Tile> showSummonMonster(Player p){
+			ArrayList <Tile> tilesToHighlight = new ArrayList<Tile>();
+			for (int i = 0; i <gameBoard.length; i++) {
+				for (int k =0; k<gameBoard[0].length; k++) {
+					if (gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+						tilesToHighlight.addAll(this.calcRange(gameBoard[i][k]));
+					}
+				}
+			}
+			return tilesToHighlight;
+		}
+		
+		private ArrayList<Tile> calcRange(Tile t){
+			ArrayList<Tile> tileRange = new ArrayList<Tile>();
+			int xPos = t.getTilex();
+			int yPos = t.getTiley();
+			
+			System.out.println(xPos + " " + yPos);
+			for (int i = 0; i<rangeH.length; i++) {
+				if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
+				else {
+					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
+					tileRange.add(posTile);
+				}
+			}
+			return tileRange;
+		}
+		
+		//2) summoning monster / casting spell anywhere on the board
+		
+		//return all free tiles
+		
+		//3) casting spell on own avatar
+		
+		//4) casting spell on opponent avatar
+	}
 
-}
+
