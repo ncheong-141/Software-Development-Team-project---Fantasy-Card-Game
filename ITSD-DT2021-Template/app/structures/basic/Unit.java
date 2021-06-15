@@ -27,6 +27,8 @@ public class Unit {
 	ImageCorrection correction;
 	
 	int dummyVariableToTestIfAutoUpdatesOnLocalRepo; 
+	int dummyVariableToTestIfAutoUpdatesOnLocalRepo_forLocal; 
+
 	
 	public Unit() {}
 	
