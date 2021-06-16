@@ -65,8 +65,7 @@ public class Board {
 	public Tile getTile(int x, int y) {
 		return gameBoard[y][x];
 	}
-	
-<<<<<<< HEAD
+
 	//=====================PLAYABLE TILES METHODS==================//
 	
 		//methods showing where player can summon monster/cast spell
@@ -148,7 +147,12 @@ public class Board {
 		}
 		
 		//3) casting spell on own avatar(i.e. returning own avatar position)
-
+		public Tile ownAvatar (Player p) {
+			Tile theTile;
+			//need a get avatar method in player
+			
+			return theTile;
+		}
 		
 		//4) casting spell on opponent avatar
 	}
