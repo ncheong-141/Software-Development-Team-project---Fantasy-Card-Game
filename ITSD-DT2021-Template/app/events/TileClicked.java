@@ -236,9 +236,10 @@ public class TileClicked implements EventProcessor{
 	}
 	
 	
-	// Summon monster method (for u_configFile, insert StaticConfFiles.u_..")
+	// Summon monster method (for u_configFile, insert StaticConfFiles.u_.."
 	public void summonMonster(GameState gameState, ActorRef out, String u_configFile, int tilex, int tiley) {
 		
+
 		// Summon the Monster (instantiate)
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		Monster summonedMonster = (Monster) BasicObjectBuilders.loadUnit(u_configFile, 1, Monster.class);		
