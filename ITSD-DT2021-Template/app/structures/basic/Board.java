@@ -65,13 +65,17 @@ public class Board {
 	public Tile getTile(int x, int y) {
 		return gameBoard[y][x];
 	}
-	
-	//=====================PLAYABLE TILE METHODS==================//
+
+
+	//=====================PLAYABLE TILES METHODS==================//
 	
 		//methods showing where player can summon monster/cast spell
 		
 		//1) summoning of monster near friendly unit
 		
+		//this method can be called from elsewhere in the program
+		//it returns a list of tiles where a given Player can summon a unit
+		//Players clicks on a card >> this method is called
 		public ArrayList<Tile> showSummonMonster(Player p){
 			ArrayList <Tile> tilesToHighlight = new ArrayList<Tile>();
 			for (int i = 0; i <gameBoard.length; i++) {
@@ -84,6 +88,9 @@ public class Board {
 			return tilesToHighlight;
 		}
 		
+		//helper method to showSummonMonster
+		//for any given tile it returns a list of tile in range
+		//the range here is based on game specifications (any tile adjacent to a friendly unit)
 		private ArrayList<Tile> calcRange(Tile t){
 			ArrayList<Tile> tileRange = new ArrayList<Tile>();
 			int xPos = t.getTilex();
@@ -102,9 +109,51 @@ public class Board {
 		
 		//2) summoning monster / casting spell anywhere on the board
 		
-		//return all free tiles
+		//returns all free tiles
+		public ArrayList<Tile> summonAnywhere (){
+			ArrayList<Tile> tileRange = new ArrayList<Tile>();
+			for (int i = 0; i <gameBoard.length; i++) {
+				for (int k =0; k<gameBoard[0].length; k++) {
+					if (gameBoard[i][k].free) tileRange.add(gameBoard[i][k]);
+				}
+			}
+			return tileRange;
+		}
 		
-		//3) casting spell on own avatar
+		//2A)Casting a spell on any of the enemy units (excl. avatar)
+			//this same logic could be applied for unit that can attack anywhere on the board
+		public ArrayList<Tile> enemyTile(Player p){
+			ArrayList<Tile> tileRange = new ArrayList<Tile>();
+			for (int i = 0; i <gameBoard.length; i++) {
+				for (int k =0; k<gameBoard[0].length; k++) {
+					if ((!(gameBoard[i][k].getUnitOnTile() instanceof Avatar)) && gameBoard[i][k].getUnitOnTile().getOwner()!=p) {
+						tileRange.add(gameBoard[i][k]);
+					}
+				}	
+			}
+			return tileRange;
+		}
+		
+		//2B)Casting a spell on any friendly unit (excl. avatar)
+		public ArrayList<Tile> friendlyTile(Player p){	
+			ArrayList<Tile> tileRange = new ArrayList<Tile>();
+			for (int i = 0; i <gameBoard.length; i++) {
+				for (int k =0; k<gameBoard[0].length; k++) {
+					if ((!(gameBoard[i][k].getUnitOnTile() instanceof Avatar)) && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+						tileRange.add(gameBoard[i][k]);
+					}
+				}	
+			}
+			return tileRange;
+		}
+		
+		//3) casting spell on own avatar(i.e. returning own avatar position)
+		public Tile ownAvatar (Player p) {
+			Tile theTile;
+			//need a get avatar method in player
+			
+			return theTile;
+		}
 		
 		//4) casting spell on opponent avatar
 	}
