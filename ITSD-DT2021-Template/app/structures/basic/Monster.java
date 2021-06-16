@@ -3,6 +3,10 @@ package structures.basic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import commands.BasicCommands;
+import utils.BasicObjectBuilders;
+import utils.StaticConfFiles;
+
 public class Monster extends Unit{
 
 	
@@ -110,6 +114,7 @@ public class Monster extends Unit{
 	public Player getOwner() {
 		return owner;
 	}
+	
 	
 	// Will be removing this when Vic can get owner to be set at object instantiation
 	public void setOwner(Player p) {
