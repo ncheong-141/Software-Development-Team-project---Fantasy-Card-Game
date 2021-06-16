@@ -8,10 +8,10 @@ public class Deck{//class used to create and manage player and ai decks
 	private ArrayList<Card> deck;// array of card objects that comprise the deck
 	
 	public Deck() { //constructor for deck
-		this.deck = null;
+		this.deck = new ArrayList<Card>();
 	}
 	
-	private ArrayList<Card> deckOne() {// creates an instance of the human player deck
+	public void deckOne() {// creates an instance of the human player deck
 		Card card;
 		String[] cardList= {// list of cards in player deck
 				StaticConfFiles.c_azure_herald,
@@ -30,10 +30,11 @@ public class Deck{//class used to create and manage player and ai decks
 			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
 			deck.add(card);
 			}
-		return deck;
+		
+		
 		}
 		
-	private ArrayList<Card> deckTwo() {// creates AI player deck
+	public void deckTwo() {// creates AI player deck
 		Card card;
 		String[] cardList= {//list of cards in AI player deck
 				StaticConfFiles.c_blaze_hound,
@@ -52,7 +53,6 @@ public class Deck{//class used to create and manage player and ai decks
 			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
 			deck.add(card);
 			}
-		return deck;
 		}
 		
 	public void delCard(int i){// removes card from the deck
@@ -66,4 +66,16 @@ public class Deck{//class used to create and manage player and ai decks
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
+	
+	
+	//method to test deck creation in eclipse
+	public void pod(Deck deck) {
+		ArrayList<Card> check= new ArrayList<Card>();
+		check=deck.getDeck();
+		for(int i=0; i<check.size();i++) {
+			System.out.print(check.get(i).getCardname());
+		}
+	}
+	
+	
 }
