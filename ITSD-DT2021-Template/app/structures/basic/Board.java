@@ -120,13 +120,13 @@ public class Board {
 			return tileRange;
 		}
 		
-		//2A)Casting a spell on any of the enemy units (includes avatar)
+		//2A)Casting a spell on any of the enemy units (excl. avatar)
 			//this same logic could be applied for unit that can attack anywhere on the board
 		public ArrayList<Tile> enemyTile(Player p){
 			ArrayList<Tile> tileRange = new ArrayList<Tile>();
 			for (int i = 0; i <gameBoard.length; i++) {
 				for (int k =0; k<gameBoard[0].length; k++) {
-					if (gameBoard[i][k].getUnitOnTile().getOwner()!=p) {
+					if ((!(gameBoard[i][k].getUnitOnTile() instanceof Avatar)) && gameBoard[i][k].getUnitOnTile().getOwner()!=p) {
 						tileRange.add(gameBoard[i][k]);
 					}
 				}	
@@ -134,12 +134,12 @@ public class Board {
 			return tileRange;
 		}
 		
-		//2B)Casting a spell on any friendly unit (includes avatar)
+		//2B)Casting a spell on any friendly unit (excl. avatar)
 		public ArrayList<Tile> friendlyTile(Player p){	
 			ArrayList<Tile> tileRange = new ArrayList<Tile>();
 			for (int i = 0; i <gameBoard.length; i++) {
 				for (int k =0; k<gameBoard[0].length; k++) {
-					if (gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+					if ((!(gameBoard[i][k].getUnitOnTile() instanceof Avatar)) && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
 						tileRange.add(gameBoard[i][k]);
 					}
 				}	
