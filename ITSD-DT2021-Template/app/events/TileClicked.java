@@ -94,20 +94,20 @@ public class TileClicked implements EventProcessor{
 		
 		
 		// Check if Unit present
-		if (gameState.getBoard().getTile(tiley , tilex).getUnitOnTile() != null) {
+		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null) {
 			
 			System.out.println("Unit present");
 		
 			// Check if avatar  (i dont think we need to distinguish between avatar or monster here but for the sake of the print) 
-			if (gameState.getBoard().getTile(tiley, tilex).getUnitOnTile() instanceof Avatar) {
+			if (gameState.getBoard().getTile(tilex, tiley).getUnitOnTile() instanceof Avatar) {
 				
 				System.out.println("Avatar clicked");
-				Avatar a = (Avatar) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
+				Avatar a = (Avatar) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
 				avatarLogic(a, gameState, out);
 			}
 			else {
 				System.out.println("Monster clicked");
-				Monster m = (Monster) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
+				Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
 				
 				// Do something like highlight unit etc. 
 				System.out.println("Monster clicked");
@@ -129,20 +129,20 @@ public class TileClicked implements EventProcessor{
 		int tiley = message.get("tiley").asInt();
 		
 		// Check if Unit present
-		if (gameState.getBoard().getTile(tiley , tilex).getUnitOnTile() != null) {
+		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null) {
 			
 			System.out.println("Unit present");
 		
 			// Check if avatar  (i dont think we need to distinguish between avatar or monster here but for the sake of the print) 
-			if (gameState.getBoard().getTile(tiley, tilex).getUnitOnTile() instanceof Avatar) {
+			if (gameState.getBoard().getTile(tilex, tiley).getUnitOnTile() instanceof Avatar) {
 				
 				System.out.println("Avatar clicked");
-				Avatar a = (Avatar) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
+				Avatar a = (Avatar) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
 				avatarLogic(a, gameState, out);
 			}
 			else {
 				System.out.println("Monster clicked");
-				Monster m = (Monster) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
+				Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
 				
 				// Do something like highlight unit etc. 
 				System.out.println("Monster clicked");
@@ -159,20 +159,20 @@ public class TileClicked implements EventProcessor{
 		int tiley = message.get("tiley").asInt();
 		
 		// Check if Unit present
-		if (gameState.getBoard().getTile(tiley , tilex).getUnitOnTile() != null) {
+		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null) {
 			
 			System.out.println("Unit present");
 		
 			// Check if avatar  (i dont think we need to distinguish between avatar or monster here but for the sake of the print) 
-			if (gameState.getBoard().getTile(tiley, tilex).getUnitOnTile() instanceof Avatar) {
+			if (gameState.getBoard().getTile(tilex, tiley).getUnitOnTile() instanceof Avatar) {
 				
 				System.out.println("Avatar clicked");
-				Avatar a = (Avatar) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
+				Avatar a = (Avatar) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
 				avatarLogic(a, gameState, out);
 			}
 			else {
 				System.out.println("Monster clicked");
-				Monster m = (Monster) gameState.getBoard().getTile(tiley, tilex).getUnitOnTile();
+				Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
 				
 				// Do something like highlight unit etc. 
 				System.out.println("Monster clicked");
@@ -232,10 +232,7 @@ public class TileClicked implements EventProcessor{
 	}
 	
 	static void avatarLogic (Avatar a, GameState g, ActorRef o) {
-		if (a.getOwner() == g.getTurnOwner()) {
-			ArrayList<Tile> moveList = a.possibleMoves();
-			for (Tile t : moveList) BasicCommands.drawTile(o, t, 2);
-		}
+	
 	}
 
 	
