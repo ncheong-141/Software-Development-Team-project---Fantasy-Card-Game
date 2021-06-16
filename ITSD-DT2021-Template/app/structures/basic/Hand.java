@@ -44,8 +44,40 @@ public class Hand {
 	}
 	//allows players to draw card on round end
 	public void drawCard(ActorRef out, Deck deck) {
-		curr=getCurr();//gets current hand size
+		curr=getCurr();
 		if (curr<6) {//checks that hand is not full
-		ArrayList<Card> drawDeck= deck.getDeck();//creates temporary copy of deck
-		Card drawn= drawDeck.get(0);// finds top card of deck
+		
+		//creates temporary deck and finds top card	
+		ArrayList<Card> drawDeck= deck.getDeck();
+		Card drawn= drawDeck.get(0);
+		
+		//draws top card from deck and increments current card count
+		BasicCommands.drawCard(out, drawn, curr, 0);
+		curr++;
+		
+		deck.delCard(0);//removes card from deck
+		setCurr(curr);//sets new no of cards in hand
+		}
+		else {//warns player if hand is full
+			BasicCommands.addPlayer1Notification(out, "Hand Full", 2);
+		}
+	}
+	
+	
+	//getters and setters
+	public int getCurr() {
+		return curr;
+	}
+	public void setCurr(int curr) {
+		this.curr = curr;
+	}
+	public ArrayList<Card> getHand() {
+		return hand;
+	}
+	public void setHand(ArrayList<Card> hand) {
+		this.hand = hand;
+	}
+}
+		
+		
 		
