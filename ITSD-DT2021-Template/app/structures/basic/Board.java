@@ -138,5 +138,5 @@ public class Board {
 		}
 
 		//methods for getting avatars tiles to be added when changes to player are made
-
+}
 
