@@ -477,8 +477,8 @@ public class CommandDemo {
 		computerAvatar.setAttackValue(2);
 		
 		//display avatars on board
-		Tile tOne = g.getGameBoard().getTile(2, 1);
-		Tile tTwo = g.getGameBoard().getTile(2, 7);
+		Tile tOne = g.getGameBoard().getTile(1, 2);
+		Tile tTwo = g.getGameBoard().getTile(7, 2);
 				
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
