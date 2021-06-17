@@ -31,13 +31,13 @@ public class Avatar extends Monster {
 	//depending on the type the the right starting position is assigned to the avatar
 	private void setPositionByPlayer () {
 		if (this.owner instanceof HumanPlayer) {
-			this.setPositionByTile(board.getTile(2,1));
-			board.getTile(2, 1).addUnit(this);
+			this.setPositionByTile(board.getTile(1,2));
+			board.getTile(1, 2).addUnit(this);
 		}
 		
 		else if (this.owner instanceof ComputerPlayer) {
-			this.setPositionByTile(board.getTile(2,7));
-			board.getTile(2, 7).addUnit(this);
+			this.setPositionByTile(board.getTile(7,2));
+			board.getTile(7,2).addUnit(this);
 		}
 	}
 
