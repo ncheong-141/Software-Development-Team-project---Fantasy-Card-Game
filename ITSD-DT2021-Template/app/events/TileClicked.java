@@ -85,8 +85,8 @@ public class TileClicked implements EventProcessor{
 			// Deselect monster if already selected + apply visual
 			if(m.isSelected()) {
 				m.toggleSelect();
-				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTiley(), (m.getPosition()).getTilex()), 0);
-				System.out.println("Have deselected monster on Tile " + m.getPosition().getTiley() + "," + m.getPosition().getTilex());
+				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
+				System.out.println("Have deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 				System.out.println("Monster selected: " + m.isSelected());
 				
 				// Update movement + attack range tiles
@@ -96,8 +96,8 @@ public class TileClicked implements EventProcessor{
 			else {
 				
 				m.toggleSelect();
-				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTiley(), (m.getPosition()).getTilex()), 1);
-				System.out.println("Have selected monster on Tile " + m.getPosition().getTiley() + "," + m.getPosition().getTilex());
+				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
+				System.out.println("Have selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 				System.out.println("Monster selected: " + m.isSelected());
 				
 				// Movement + attack range tiles are displayed
