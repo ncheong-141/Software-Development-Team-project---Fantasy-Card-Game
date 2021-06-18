@@ -99,8 +99,6 @@ public class BasicObjectBuilders {
 				
 				return returnUnit_M; 
 			}
-			else if (classType == Spell.class) {
-			}
 			
 			return unit;
 			
