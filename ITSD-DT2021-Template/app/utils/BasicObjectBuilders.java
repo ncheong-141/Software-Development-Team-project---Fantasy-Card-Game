@@ -92,7 +92,6 @@ public class BasicObjectBuilders {
 				mUnit.setName("Name 1");
 				mUnit.setHP(10);
 				mUnit.setAttackValue(2);
-				mUnit.setSkillID(0);
 				//mUnit.setSkills(new Skills());
 				
 				// Cast sub-class to super class for exporting out the method

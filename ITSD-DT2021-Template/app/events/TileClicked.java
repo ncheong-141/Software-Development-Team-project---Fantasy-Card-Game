@@ -14,6 +14,8 @@ import structures.basic.Tile;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
+import structures.basic.abilities.*;
+
 /**
  * Indicates that the user has clicked an object on the game canvas, in this case a tile.
  * The event returns the x (horizontal) and y (vertical) indices of the tile that was
@@ -30,9 +32,23 @@ import utils.StaticConfFiles;
  */
 public class TileClicked implements EventProcessor{
 
+	
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
+		
+		/*
+		 *  Testing set up area 
+		 */ 
+		// ---------------------------------------------------------------
+		ArrayList<Ability> abilitySelection = new ArrayList<Ability>(10); 
+		abilitySelection.add(new A_Truestrike()); 
+		abilitySelection.add(new A_SundropElixir()); 
+		
+		Ability selectedAbility = abilitySelection.get(0);
+		// ---------------------------------------------------------------
+		
+		
 		int tilex = message.get("tilex").asInt();
 		int tiley = message.get("tiley").asInt();
 		
@@ -41,21 +57,29 @@ public class TileClicked implements EventProcessor{
 		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null) {
 			
 			System.out.println("Unit present");
-		
-			// Check if avatar  (i dont think we need to distinguish between avatar or monster here but for the sake of the print) 
-			if (gameState.getBoard().getTile(tilex, tiley).getUnitOnTile() instanceof Avatar) {
+			System.out.println("Free status: " + gameState.getBoard().getTile(tilex, tiley).getFreeStatus());
+			
+			// Create reference for monster on tile 
+			Monster tileMonster = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
+
+			// Do something like highlight unit etc. 
+			System.out.println("Monster clicked");
+			System.out.println("Monster name: " + tileMonster.getName());
+			System.out.println("Monster HP: " + tileMonster.getHP());
+			System.out.println("Monster attack: " + tileMonster.getAttackValue());
+			System.out.println("Monster mana cost: " + tileMonster.getManaCost());
+
+			// Atm this is only highlight tiles and de-highlight 
+			monsterClickedProcedure(tileMonster, gameState, out);
+
+			// Hit the monster with a spell 
+			selectedAbility.execute(tileMonster);
+			System.out.println("Monster HP after ability hitting it: " + tileMonster.getHP());
+
+			// Update display 
+			updateMonsterDisplay(out,tileMonster);
 				
-				System.out.println("Avatar clicked");
-				Avatar a = (Avatar) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
-				//avatarLogic(a, gameState, out);
-			}
-			else {
-				Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
-				
-				// Do something like highlight unit etc. 
-				System.out.println("Monster clicked");
-				monsterLogic(m, gameState, out);
-			}
+
 		}
 		// IF NO UNIT IS PRESENT JUST SUMMON THIS UNIT
 		else {
@@ -64,18 +88,12 @@ public class TileClicked implements EventProcessor{
 	
 	}
 
-
-
 	
 	
 	/* Helper methods such as highlight unit, display unit stats etc */
 
-	static void monsterLogic(Monster m, GameState g, ActorRef o) {
+	private void monsterClickedProcedure(Monster m, GameState g, ActorRef o) {
 
-		System.out.println("Monster name: " + m.getName());
-		System.out.println("Monster HP: " + m.getHP());
-		System.out.println("Monster attack: " + m.getAttackValue());
-		System.out.println("Monster mana cost: " + m.getManaCost());
 		
 		// Note that currently Monster's do not auto-set their owners,
 		// Do this manually with .setOwner(Player p) before trying to select
@@ -88,7 +106,8 @@ public class TileClicked implements EventProcessor{
 				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
 				System.out.println("Have deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 				System.out.println("Monster selected: " + m.isSelected());
-				
+				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+
 				// Update movement + attack range tiles
 				
 			}
@@ -99,7 +118,8 @@ public class TileClicked implements EventProcessor{
 				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
 				System.out.println("Have selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 				System.out.println("Monster selected: " + m.isSelected());
-				
+				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+
 				// Movement + attack range tiles are displayed
 				
 			}
@@ -111,12 +131,12 @@ public class TileClicked implements EventProcessor{
 	
 	
 	// Summon monster method (for u_configFile, insert StaticConfFiles.u_.."
-	public void summonMonster(GameState gameState, ActorRef out, String u_configFile, int tilex, int tiley) {
+	private void summonMonster(GameState gameState, ActorRef out, String u_configFile, int tilex, int tiley) {
 		
 
 		// Summon the Monster (instantiate)
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Monster summonedMonster = (Monster) BasicObjectBuilders.loadUnit(u_configFile, 1, Monster.class);		
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadUnit(u_configFile, 1, Monster.class);
 		summonedMonster.setPositionByTile(gameState.getBoard().getTile(tilex,tiley));
 		summonedMonster.setOwner(gameState.getTurnOwner());
 		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
@@ -129,9 +149,19 @@ public class TileClicked implements EventProcessor{
 		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
 		gameState.getBoard().getTile(tilex,tiley).addUnit(summonedMonster);
 		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// Update the display 
+		updateMonsterDisplay(out, summonedMonster);
 	}
 	
 	
+	// Update display after effects have been applied
+	private void updateMonsterDisplay(ActorRef out, Monster mUnit) {
+
+		BasicCommands.setUnitAttack(out, mUnit, mUnit.getAttackValue());
+		BasicCommands.setUnitHealth(out, mUnit, mUnit.getHP());
+		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}	
+	}
 	
 //	static void avatarLogic (Avatar a, GameState g, ActorRef o) {
 //		if (a.getOwner() == g.getTurnOwner()) {

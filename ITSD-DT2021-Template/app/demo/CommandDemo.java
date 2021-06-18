@@ -443,16 +443,23 @@ public class CommandDemo {
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		Monster fire_spitter = (Monster) BasicObjectBuilders.loadUnit(StaticConfFiles.u_fire_spitter, 1, Monster.class);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+		
 		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
 		fire_spitter.setOwner(gameState.getTurnOwner());
 		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		// Add unit to tile ON BOARD
 		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
 		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// Display unit stats
+		BasicCommands.addPlayer1Notification(out, "Displaying stats of monster", 2);
+		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}	
 
 	}
 	
