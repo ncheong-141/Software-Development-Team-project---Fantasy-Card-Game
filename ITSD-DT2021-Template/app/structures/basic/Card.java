@@ -31,6 +31,14 @@ public class Card {
 		this.bigCard = bigCard;
 	}
 	
+	public Unit getUnitById(int cardId) {
+		//write method
+	}
+	
+	
+	
+	
+	
 	public int getId() {
 		return id;
 	}
