@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import structures.GameState;
 import utils.BasicObjectBuilders;
 
 //=============================Class description =============================//
@@ -67,7 +68,7 @@ public class Board {
 	}
 
 
-	//=====================PLAYABLE TILES METHODS==================//
+		//=====================PLAYABLE TILES METHODS==================//
 	
 		//=====================PLAYABLE TILES METHODS==================//
 	
@@ -137,6 +138,21 @@ public class Board {
 			return tileRange;
 		}
 
-		//methods for getting avatars tiles to be added when changes to player are made
+		/*
+		 * //3)Method returns player's avatar tile position public Tile ownAvatarTile
+		 * (Player p) {
+		 * 
+		 * int x = p.getAvatar().getPosition().getTilex(); int y =
+		 * p.getAvatar().getPosition().getTiley();
+		 * 
+		 * return this.getTile(x, y); }
+		 * 
+		 * //4) Method return enemy avatar's tile position public Tile enemyAvatarTile
+		 * (Player p, GameState g) { if (p instanceof HumanPlayer) { int x =
+		 * g.getComputerAvatar().getPosition().getTilex(); int y =
+		 * g.getComputerAvatar().getPosition().getTiley(); return this.getTile(x, y); }
+		 * else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
+		 * g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }
+		 */
 }
 
