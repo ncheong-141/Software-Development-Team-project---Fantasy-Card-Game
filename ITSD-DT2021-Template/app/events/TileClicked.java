@@ -9,7 +9,9 @@ import commands.BasicCommands;
 import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.Board;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
+import structures.basic.Spell;
 import structures.basic.Tile;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
@@ -46,6 +48,8 @@ public class TileClicked implements EventProcessor{
 		abilitySelection.add(new A_SundropElixir()); 
 		
 		Ability selectedAbility = abilitySelection.get(0);
+		//Spell Truestrike = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike,0, Spell.class);
+		//Truestrike.setAbility("Truestrike", selectedAbility, "Does 2 damage");
 		// ---------------------------------------------------------------
 		
 		
@@ -78,7 +82,10 @@ public class TileClicked implements EventProcessor{
 
 			// Update display 
 			updateMonsterDisplay(out,tileMonster);
-				
+			
+			// Need to try and get Truestrike effect animation, its immolation in the card file but how to link it to the static conf file?
+			EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
+			BasicCommands.playEffectAnimation(out, ef, gameState.getBoard().getTile(tilex , tiley));
 
 		}
 		// IF NO UNIT IS PRESENT JUST SUMMON THIS UNIT
