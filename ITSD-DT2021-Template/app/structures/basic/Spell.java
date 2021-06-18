@@ -1,7 +1,7 @@
 package structures.basic;
 import structures.basic.abilities.Ability;
 
-public class Spell extends Unit{
+public class Spell extends Card {
 
 	/* Sub class attributes */
 	String spellName; 
@@ -10,10 +10,10 @@ public class Spell extends Unit{
 	Ability spellAbility; 
 	
 	/* Constructor */
-	public Spell(int id, UnitAnimationSet animations, ImageCorrection correction) {
+	public Spell(int id, String cardname, int manacost, MiniCard miniCard, BigCard bigCard) {
 		
 		// Super class constructor (Unit) 
-		super(id, animations, correction); 
+		super(id, cardname, manacost, miniCard, bigCard); 
 	}
 
 	/* Class methods */
