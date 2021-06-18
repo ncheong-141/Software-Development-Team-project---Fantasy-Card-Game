@@ -26,9 +26,8 @@ public class CardClicked implements EventProcessor{
 		int handPosition = message.get("position").asInt();
 		gameState.getPlayerOne().getHand().getCardFromHand(handPosition).getBigCard();
 		//display bigcard
-		
-				//add statement to check tileclicked and play card to board
-				//TileClicked->getCardName->getUnit(from CardName)->method to play unit called
+        //add statement to check tileclicked and play card to board
+		//TileClicked->getCardName->getUnit(from ID, deck)->method to play unit called
 		
 	}
 

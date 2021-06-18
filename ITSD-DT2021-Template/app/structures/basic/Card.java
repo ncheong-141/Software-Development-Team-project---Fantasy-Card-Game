@@ -31,8 +31,14 @@ public class Card {
 		this.bigCard = bigCard;
 	}
 	
-	public Unit getUnitById(int cardId) {
-		//write method
+	public Unit getUnitById(int cardId, Deck deck) {
+		ArrayList<Unit> list= new ArrayList<Unit>();
+		list=deck.getUnitDeck(); 
+		for(Unit: list) {
+		if(Unit.getId()==cardId) {
+			return Unit;
+		}
+		}
 	}
 	
 	

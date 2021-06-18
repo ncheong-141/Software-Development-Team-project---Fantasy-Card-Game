@@ -101,7 +101,14 @@ public class Deck{//class used to create and manage player and ai decks
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
-	
+
+	public ArrayList<Unit> getUnitDeck() {
+		return unitDeck;
+	}
+	public void setUnitDeck(ArrayList<Unit> unitDeck) {
+		this.unitDeck = unitDeck;
+	}
+
 	//method to test deck creation in eclipse
 	public void pod(Deck deck) {
 		ArrayList<Card> check= new ArrayList<Card>();
