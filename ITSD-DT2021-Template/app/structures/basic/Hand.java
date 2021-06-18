@@ -63,7 +63,7 @@ public class Hand {
 		}
 	}
 	
-	public static Card getCardFromHand(int i) {
+	public Card getCardFromHand(int i) {
 		return Hand.getCardFromHand(i);
 	}
 	
