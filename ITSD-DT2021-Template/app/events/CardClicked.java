@@ -9,6 +9,8 @@ import structures.GameState;
 import structures.basic.Card;
 import structures.basic.Hand;
 import java.util.ArrayList;
+import structures.basic.Tile;
+import structures.basic.Board;
 
 /**
  * Indicates that the user has clicked an object on the game canvas, in this case a card.
@@ -30,22 +32,23 @@ public class CardClicked implements EventProcessor{
 
 		ArrayList<Card> tempHand= new ArrayList<Card>;
 		Card tempSelect= new Card;
-		tempHand=gameState.getPlayerOne().getHand();
+		gameState.getPlayerOne().getHand();
 		tempSelect=tempHand.setSelectedCard(getCardFromHand(handPosition));
 
 		
 		
 		//method for if no card is currently selected
-		if
-		(gameState.getTurnOwner()==gameState.getPlayerOne && gameState.getPlayerOne().getHand().getClicked==false)
+		if(gameState.getTurnOwner()==gameState.getPlayerOne && gameState.getPlayerOne().getHand().getClicked==false)
 		{
-		tempHand.getCardFromHand(handPosition).setClicked(true);
-		tempHand.setPlayingMode(true);
-		
+		gameState.getPlayerOne().getHand().getCardFromHand(handPosition).setClicked(true);
+		gameState.getPlayerOne().getHand().setPlayingMode(true);
+		gameState.getPlayerOne().getHand()setSelectedCard(getCardFromHand(handPosition));
+		//if tempSelect is type monster{}
 		ArrayList<Tile> display= GameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
-		for(Tile t: display) {BasicCommands.DrawTile(out,t,2);}
+		for(Tile t: display) {
+			BasicCommands.DrawTile(out,t,2);
+			}//else if tempSelect is type spell{}
 		}
-		
 		
 		// switch to new card when one already selected
 		//else if{
