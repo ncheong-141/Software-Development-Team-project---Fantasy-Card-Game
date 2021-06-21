@@ -9,15 +9,19 @@ import structures.basic.Card;
 public class Hand {
 	private int curr;//keeps track of no of cards in hand
 	private ArrayList<Card> hand;// array of card objects comprising the hand
+	private boolean playingMode;
+	private Card selectedCard;
 	
-	public Hand( ArrayList<Card> hand) {//constructor for hand 
+	public Hand(ArrayList<Card> hand) {//constructor for hand 
 		super();
 		this.curr = 0;
 		this.hand = hand;
+		this.playingMode=false;
+		this.selectedCard=null;
 	}
 	
 	public void initialHand(ActorRef out, Deck deck) { //allows player to receive initial hand
-		ArrayList<Card> drawDeck= deck.getDeck();//create temporary instance of palyer deck
+		ArrayList<Card> drawDeck= deck.getDeck();//create temporary instance of player deck
 		
 		//finds top three cards from deck
 		Card cardOne= drawDeck.get(0);
@@ -80,6 +84,18 @@ public class Hand {
 	}
 	public void setHand(ArrayList<Card> hand) {
 		this.hand = hand;
+	}
+	public boolean isPlayingMode() {
+		return playingMode;
+	}
+	public void setPlayingMode(boolean playingMode) {
+		this.playingMode = playingMode;
+	}
+	public Card getSelectedCard() {
+		return selectedCard;
+	}
+	public void setSelectedCard(Card selectedCard) {
+		this.selectedCard = selectedCard;
 	}
 }
 		
