@@ -30,23 +30,26 @@ public class CardClicked implements EventProcessor{
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		int handPosition = message.get("position").asInt();
 
-		ArrayList<Card> tempHand= new ArrayList<Card>;
-		Card tempSelect= new Card;
-		tempHand=gameState.getPlayerOne().getHand();
-		tempSelect=tempHand.setSelectedCard(tempHand.getCardFromHand(handPosition));
+		//ArrayList<Card> tempHand= new ArrayList<Card>;
+		//Card tempSelect= new Card;
+		//tempHand=gameState.getPlayerOne().getHand();
+		//tempSelect=tempHand.setSelectedCard(tempHand.getCardFromHand(handPosition));
 
 		//method for if no card is currently selected
 		if(gameState.getTurnOwner()==gameState.getPlayerOne && gameState.getPlayerOne().getHand().getClicked==false)
 		{
-		gameState.getPlayerOne().getHand().getCardFromHand(handPosition).setClicked(true);
-		gameState.getPlayerOne().getHand().setPlayingMode(true);
-		gameState.getPlayerOne().getHand().setSelectedCard(tempHand.getCardFromHand(handPosition));
-		if (tempSelect.getBigCard().getAttack() > 0){
+			Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
+			
+			clickedCard.setClicked(true);
+			gameState.getPlayerOne().getHand().setPlayingMode(true);
+			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
+		
+		if (clickedCard.getBigCard().getAttack() > 0){
 			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
 		for(Tile t: display) {
 			BasicCommands.DrawTile(out,t,2);
 			}
-		}else if (tempSelect.getBigCard().getAttack() < 0) {
+		}else if (clickedCard.getBigCard().getAttack() < 0) {
 			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
 			for(Tile t: display) {
 				BasicCommands.DrawTile(out,t,2);
