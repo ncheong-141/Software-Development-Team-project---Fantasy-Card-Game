@@ -20,6 +20,8 @@ public class Card {
 	MiniCard miniCard;
 	BigCard bigCard;
 	
+	boolean clicked;
+	
 	public Card() {};
 	
 	public Card(int id, String cardname, int manacost, MiniCard miniCard, BigCard bigCard) {
@@ -29,6 +31,7 @@ public class Card {
 		this.manacost = manacost;
 		this.miniCard = miniCard;
 		this.bigCard = bigCard;
+		this.clicked=false;
 	}
 	
 	public Unit getUnitById(int cardId, Deck deck) {
