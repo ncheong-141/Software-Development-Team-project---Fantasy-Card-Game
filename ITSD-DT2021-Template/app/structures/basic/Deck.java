@@ -6,7 +6,7 @@ import utils.StaticConfFiles;
 
 public class Deck{//class used to create and manage player and ai decks
 	private ArrayList<Card> deck;// array of card objects that comprise the deck
-	private ArrayList<Unit> unitDeck;
+	private ArrayList<Unit> unitDeck;//array of unit objects to complement deck
 	
 	public Deck() { //constructor for deck
 		this.deck = new ArrayList<Card>();
@@ -44,11 +44,12 @@ public class Deck{//class used to create and manage player and ai decks
 			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
 			deck.add(card);
 			}
-		for(int j=0; j<=7; j++)//cycles through unit list and creates two of each unit
+		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit
 			unit= BasicObjectBuilders.loadUnit(unitList[j], j+1, Unit.class);
 			unitDeck.add(unit);
 			unit= BasicObjectBuilders.loadUnit(unitList[j], j+11, Unit.class);
 			unitDeck.add(unit);
+		}
 		}
 		
 	public void deckTwo() {// creates AI player deck
@@ -81,7 +82,7 @@ public class Deck{//class used to create and manage player and ai decks
 			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
 			deck.add(card);
 			}
-		for(int j=0; j<=7; j++)//cycles through unit list and creates two of each unit
+		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit
 			unit= BasicObjectBuilders.loadUnit(unitList[j], j+1, Unit.class);
 			unitDeck.add(unit);
 			unit= BasicObjectBuilders.loadUnit(unitList[j], j+11, Unit.class);
@@ -89,8 +90,9 @@ public class Deck{//class used to create and manage player and ai decks
 		}
 		}
 		
-	public void delCard(int i){// removes card from the deck
+	public void delCard(int i){// removes card from the deck and corresponding unit
 		deck.remove(i);
+		unitDeck.remove(i);
 	}
 	
 	//getters and setters
@@ -100,8 +102,14 @@ public class Deck{//class used to create and manage player and ai decks
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
-	
-	
+
+	public ArrayList<Unit> getUnitDeck() {
+		return unitDeck;
+	}
+	public void setUnitDeck(ArrayList<Unit> unitDeck) {
+		this.unitDeck = unitDeck;
+	}
+
 	//method to test deck creation in eclipse
 	public void pod(Deck deck) {
 		ArrayList<Card> check= new ArrayList<Card>();
@@ -109,6 +117,12 @@ public class Deck{//class used to create and manage player and ai decks
 		for(int i=0; i<check.size();i++) {
 			System.out.print(check.get(i).getCardname());
 		}
+	}
+	
+	public void shuffleDeck() {
+		//write in sprint 4
+		//connect to gameState for both decks to shuffle before game commences
+		//shuffle deck, reorder unitDeck to match shuffled deck?
 	}
 	
 	
