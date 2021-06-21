@@ -53,90 +53,90 @@ public class TileClicked implements EventProcessor{
 
 		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null) {
 		
-			System.out.println("Unit present");
-			
-			// If there is a card selected in hand: 
-			if (gameState.getTurnOwner().getHand().getPlayingMode()) {
-				
-				// Retrieve selected card
-				Card selected = gameState.getTurnOwner().getHand().getSelectedCard();
-				
-				// If Card is a Monster
-				// Temp way of identifying, Card could contain a more useful Monster/Spell identifier
-				if(selected.getBigCard().getAttack() < 0) {			
-					System.out.println("Tile is already occupied.");	
-				} 
-				
-				// If Card is Spell
-				else {	
-					System.out.println("Selected card is a Spell card.");
-					
-					// Mana check: player mana vs mana cost
-					// Spell checks: can this spell be applied to this Unit
-					// Apply to target
-				}
-				
-			}
-			
-			// If there is no card selected in hand, run Monster logic; no difference in Av/Mon here
-			else {			
+//			System.out.println("Unit present");
+//			
+//			// If there is a card selected in hand: 
+//			if (gameState.getTurnOwner().getHand().getPlayingMode()) {
+//				
+//				// Retrieve selected card
+//				Card selected = gameState.getTurnOwner().getHand().getSelectedCard();
+//				
+//				// If Card is a Monster
+//				// Temp way of identifying, Card could contain a more useful Monster/Spell identifier
+//				if(selected.getBigCard().getAttack() < 0) {			
+//					System.out.println("Tile is already occupied.");	
+//				} 
+//				
+//				// If Card is Spell
+//				else {	
+//					System.out.println("Selected card is a Spell card.");
+//					
+//					// Mana check: player mana vs mana cost
+//					// Spell checks: can this spell be applied to this Unit
+//					// Apply to target
+//				}
+//				
+//			}
+//			
+//			// If there is no card selected in hand, run Monster logic; no difference in Av/Mon here
+//			else {			
 				System.out.println("Unit clicked");
-				Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
-				
-				// Moveable check here
-					
-				monsterLogic(m, gameState, out);	
-			}	
+//				Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
+//				
+//				// Moveable check here
+//					
+//				monsterLogic(m, gameState, out);	
+//			}	
 		}
 		
 	//	>>>>> Tile is unoccupied	//
 		
 		else {
 
-			// If there is a card selected in hand
-			if (gameState.getTurnOwner().getHand().getPlayingMode()) {
-
-				// 1) Retrieve selected card in hand
-				// 2) Identify card type for logic to be used
-				// 3) Convert cardName String to configFile name
-				// 4) Pass configname and Card to summonMonster
-				
-				// Retrieve selected card
-				Card selected = gameState.getTurnOwner().getHand().getSelectedCard();
-				
-				// If Card is a Monster
-				// Temp way of identifying, Card could contain a more useful Monster/Spell identifier
-				if(selected.getBigCard().getAttack() < 0) {
-					
-					// Mana vs mana cost check
-					if(gameState.getTurnOwner().getMana() >= selected.getManacost()) {
-						// Convert name to configFile name
-						String configName = selected.getCardname().replace(' ', '_');
-						configName = "u_" + configName;
-
-						System.out.println("Summoning monster...");
-						summonMonster(gameState, out , configName, selected, tilex, tiley);
-					} 
-					
-					else {
-						System.out.println("Not enough mana to summon Monster.");
-					}
-					
-				} 
-				
-				// If Card is Spell
-				else {
-					System.out.println("Can't activate a Spell on an empty tile.");
-				}
-				
-			}
-			
-			// No selected cards in Hand
-			else {
-				System.out.println("That sure is a tile, buddy.");
-			}
+//			// If there is a card selected in hand
+//			if (gameState.getTurnOwner().getHand().getPlayingMode()) {
+//
+//				// 1) Retrieve selected card in hand
+//				// 2) Identify card type for logic to be used
+//				// 3) Convert cardName String to configFile name
+//				// 4) Pass configname and Card to summonMonster
+//				
+//				// Retrieve selected card
+//				Card selected = gameState.getTurnOwner().getHand().getSelectedCard();
+//				
+//				// If Card is a Monster
+//				// Temp way of identifying, Card could contain a more useful Monster/Spell identifier
+//				if(selected.getBigCard().getAttack() < 0) {
+//					
+//					// Mana vs mana cost check
+//					if(gameState.getTurnOwner().getMana() >= selected.getManacost()) {
+//						// Convert name to configFile name
+//						String configName = selected.getCardname().replace(' ', '_');
+//						configName = "u_" + configName;
+//
+//						System.out.println("Summoning monster...");
+//						summonMonster(gameState, out , configName, selected, tilex, tiley);
+//					} 
+//					
+//					else {
+//						System.out.println("Not enough mana to summon Monster.");
+//					}
+//					
+//				} 
+//				
+//				// If Card is Spell
+//				else {
+//					System.out.println("Can't activate a Spell on an empty tile.");
+//				}
+//				
+//			}
+//			
+//			// No selected cards in Hand
+//			else {
+				System.out.println("That sure is an empty tile.");
+//			}
 		}
-	
+//	
 	}
 
 
@@ -145,6 +145,7 @@ public class TileClicked implements EventProcessor{
 	
 	/* Helper methods such as highlight unit, display unit stats etc */
 
+	// MonsterLogic is for selecting + movement & attack
 	static void monsterLogic(Monster m, GameState g, ActorRef o) {
 
 		System.out.println("Monster name: " + m.getName());
