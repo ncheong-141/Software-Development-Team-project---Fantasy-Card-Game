@@ -91,8 +91,14 @@ public class Player {
 			this.health = 0;
 			GameState.gameOver();
 		}
-	}	
-	public void checkDead() {
+	}
+
+
+	public Hand getHand() {
+		return this.hand;
+	}
+	
+/*	public void checkDead() {
 		if (dead = true) {
 			GameState.gameOver();
 		}
@@ -104,6 +110,6 @@ public class Player {
 			turn = true;
 		}
 	}
-	
+*/	
 	
 }
