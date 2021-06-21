@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import structures.basic.Avatar;
+import structures.basic.BigCard;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
@@ -74,44 +75,41 @@ public class BasicObjectBuilders {
 	 * @param configFile
 	 * @return
 	 */
+	// Leave this intact to support game loading code
 	public static Unit loadUnit(String configFile, int id,  Class<? extends Unit> classType) {
 		
 		try {
-			
 			Unit unit = mapper.readValue(new File(configFile), classType);
-			//unit.setId(id);
-			
-			// Condition to check if Monster or Spell 
-			if (classType == Monster.class) {
-				
-				// Cast to monster to access class attributes
-				Monster mUnit = (Monster)mapper.readValue(new File(configFile), classType);
-				mUnit.setId(id);
-				
-				// Set monster attributes (need to put actual attributes sometime)
-				mUnit.setName("Name 1");
-				mUnit.setHP(10);
-				mUnit.setAttackValue(2);
-				mUnit.setSkillID(0);
-				//mUnit.setSkills(new Skills());
-				
-				// Cast sub-class to super class for exporting out the method
-				Unit returnUnit_M = (Unit)mUnit; 
-				
-				return returnUnit_M; 
-			}
-			else if (classType == Spell.class) {
-			}
-			
+			unit.setId(id);
 			return unit;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	// Use this within our game logic
+	public static Monster loadMonsterUnit(String configFile, int id, Card statsRef, Class<? extends Monster> classType) {
+
+		try {
+			Monster mUnit = mapper.readValue(new File(configFile), classType);
 			
+			// Set monster attributes from Card
+			mUnit.setName(statsRef.getCardname());
+			mUnit.setHP(statsRef.getBigCard().getHealth());
+			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
+			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
+			mUnit.setId(id);
+			mUnit.setStatus(false); 
+			
+			return mUnit; 
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			
-		}
-		return null;
 		
+		}
+		
+		return null;
 	}
 	
 	

@@ -25,7 +25,7 @@ public class CardClicked implements EventProcessor{
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//if gameState=playerturn
 		int handPosition = message.get("position").asInt();
-		gameState.getPlayerOne().getHand().getCardFromHand(handPosition).getBigCard();
+		//gameState.getPlayerOne().getHand().getCardFromHand(handPosition).getBigCard();
 		//display bigcard
         //add statement to check tileclicked and play card to board
 		//TileClicked->getCardName->getUnit(from ID, deck)
