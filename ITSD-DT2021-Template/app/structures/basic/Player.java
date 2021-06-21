@@ -92,6 +92,15 @@ public class Player {
 			GameState.gameOver();
 		}
 	}	
+
+
+	public Hand getHand() {
+		return this.hand;
+	}
+	
+
+
+
 	public void checkDead() {
 		if (dead = true) {
 			GameState.gameOver();

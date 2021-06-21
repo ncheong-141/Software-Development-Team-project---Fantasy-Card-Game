@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import commands.BasicCommands;
+import structures.basic.abilities.Ability;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -11,28 +12,27 @@ public class Monster extends Unit{
 
 	
 	@JsonIgnore
+	
 	protected static ObjectMapper mapper = new ObjectMapper(); // Jackson Java Object Serializer, is used to read java objects from a file
 	
-	
-	/* Sub class attributes */
 	public String name; 
-	protected int HP; 
+	protected int HP;
 	protected int attackValue; 
 	protected int manaCost; 
-	//protected Skills skills; 
-	protected int skillID; 
 	
 	protected boolean 	selected;
-	protected Player		owner;
+	protected Player	owner;
+	protected int 		maxHP;
+	private Ability		monsterAbility;
 	
 	/* Constructor(s) */
 	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
 		
 		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
-		this.setStatus();
 		
 		// No attribute setting here as Monsters are initially created with a Unit reference, 
-		// which could be required by the ObjectMapper which loads the Json files 
+		// which could be required by the ObjectMapper which loads the JSon files 
+		
 	}
 	
 	// Empty constructor for testing 
@@ -40,6 +40,9 @@ public class Monster extends Unit{
 		super(); 
 	}
 
+	public void basicSetup() {
+		
+	}
 
 	/* Class methods */ 
 	
@@ -82,29 +85,13 @@ public class Monster extends Unit{
 	public void setManaCost(int manaCost) {
 		this.manaCost = manaCost;
 	}
-
-//	public Skills getSkills() {
-//		return skills;
-//	}
-//
-//	public void setSkills(Skills skills) {
-//		this.skills = skills;
-//	}
-
-	public int getSkillID() {
-		return skillID;
-	}
-
-	public void setSkillID(int skillID) {
-		this.skillID = skillID;
-	}
-	
-	private void setStatus() {
-		selected = false;
-	}
 	
 	public boolean isSelected() {
 		return selected;
+	}
+	
+	public void setStatus(boolean i) {
+		selected = i;
 	}
 
 	public void toggleSelect() {
@@ -115,10 +102,25 @@ public class Monster extends Unit{
 		return owner;
 	}
 	
-	
 	// Will be removing this when Vic can get owner to be set at object instantiation
 	public void setOwner(Player p) {
 		owner = p;
+	}
+	
+	public int getMaxHP() {
+		return maxHP;
+	}
+	
+	public void setMaxHP(int x) {
+		this.maxHP = x;
+	}
+	
+	public Ability getAbility() {
+		return monsterAbility;
+	}
+	
+	public void setAbility(Ability ab) {
+		this.monsterAbility = ab;
 	}
 	
 }

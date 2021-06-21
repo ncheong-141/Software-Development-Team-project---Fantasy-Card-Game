@@ -27,10 +27,12 @@ public class CardClicked implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		int handPosition = message.get("position").asInt();
+
 		ArrayList<Card> tempHand= new ArrayList<Card>;
 		Card tempSelect= new Card;
 		tempHand=gameState.getPlayerOne().getHand();
 		tempSelect=tempHand.setSelectedCard(getCardFromHand(handPosition));
+
 		
 		
 		//method for if no card is currently selected

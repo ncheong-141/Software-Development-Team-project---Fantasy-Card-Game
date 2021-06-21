@@ -24,6 +24,7 @@ public class Avatar extends Monster {
 	public void setOwner(Player p, Board b) {
 		this.owner = p;
 		this.board = b;
+		this.HP = p.getHealth();
 		this.setPositionByPlayer();
 	}
 
