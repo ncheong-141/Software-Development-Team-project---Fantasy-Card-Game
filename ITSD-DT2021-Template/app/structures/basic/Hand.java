@@ -64,7 +64,7 @@ public class Hand {
 	}
 	
 	public Card getCardFromHand(int i) {
-		return Hand.getCardFromHand(i);
+		return.getHand().get(i);
 	}
 	
 	
