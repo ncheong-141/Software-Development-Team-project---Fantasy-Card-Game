@@ -99,8 +99,15 @@ public class Player {
 			GameState.gameOver();
 		}
 	}	
+
+
+	public Hand getHand() {
+		return this.hand;
+	}
 	
-	/*  below methods move to GameState/EndTurn?
+
+
+
 	public void checkDead() {
 		if (dead = true) {
 			GameState.gameOver();

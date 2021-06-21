@@ -1,5 +1,8 @@
 package structures.basic;
 
+import java.util.ArrayList;
+import structures.basic.Unit;
+
 
 /**
  * This is the base representation of a Card which is rendered in the player's hand.
@@ -20,6 +23,8 @@ public class Card {
 	MiniCard miniCard;
 	BigCard bigCard;
 	
+	boolean clicked;
+	
 	public Card() {};
 	
 	public Card(int id, String cardname, int manacost, MiniCard miniCard, BigCard bigCard) {
@@ -29,7 +34,24 @@ public class Card {
 		this.manacost = manacost;
 		this.miniCard = miniCard;
 		this.bigCard = bigCard;
+		this.clicked=false;
 	}
+	
+	public Unit getUnitById(int cardId, Deck deck) {
+		ArrayList<Unit> list= new ArrayList<Unit>();
+		list=deck.getUnitDeck(); 
+		for(Unit u: list) {
+			if(u.getId()==cardId) {
+				return u;
+			}
+		}
+		
+		return null; 
+	}
+	
+	
+	
+	
 	
 	public int getId() {
 		return id;

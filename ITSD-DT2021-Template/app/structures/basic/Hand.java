@@ -63,6 +63,10 @@ public class Hand {
 		}
 	}
 	
+	public Card getCardFromHand(int i) {
+		return getHand().get(i);
+	}
+	
 	
 	//getters and setters
 	public int getCurr() {
