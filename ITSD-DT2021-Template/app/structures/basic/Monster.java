@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import commands.BasicCommands;
+import structures.basic.abilities.Ability;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -114,12 +115,12 @@ public class Monster extends Unit{
 		this.maxHP = x;
 	}
 	
-//	public Ability getAbility() {
-//		return monsterAbility;
-//	}
-//	
-//	public void setAbility(Ability ab) {
-//		this.monsterAbility = ab;
-//	}
+	public Ability getAbility() {
+		return monsterAbility;
+	}
+	
+	public void setAbility(Ability ab) {
+		this.monsterAbility = ab;
+	}
 	
 }

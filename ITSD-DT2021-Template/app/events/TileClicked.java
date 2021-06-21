@@ -79,7 +79,7 @@ public class TileClicked implements EventProcessor{
 			System.out.println("Unit present");
 			System.out.println("Free status: " + gameState.getBoard().getTile(tilex, tiley).getFreeStatus());
 			
-			// Debugging seciton
+			// Debugging section
 			// ------------------------------------------------------------------------------------------
 			// Create reference for monster on tile for debug
 			Monster tileMonster = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
