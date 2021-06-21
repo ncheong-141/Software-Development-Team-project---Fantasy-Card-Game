@@ -32,8 +32,8 @@ public class CardClicked implements EventProcessor{
 
 		ArrayList<Card> tempHand= new ArrayList<Card>;
 		Card tempSelect= new Card;
-		gameState.getPlayerOne().getHand();
-		tempSelect=tempHand.setSelectedCard(getCardFromHand(handPosition));
+		tempHand=gameState.getPlayerOne().getHand();
+		tempSelect=tempHand.setSelectedCard(tempHand.getCardFromHand(handPosition));
 
 		
 		
@@ -42,9 +42,9 @@ public class CardClicked implements EventProcessor{
 		{
 		gameState.getPlayerOne().getHand().getCardFromHand(handPosition).setClicked(true);
 		gameState.getPlayerOne().getHand().setPlayingMode(true);
-		gameState.getPlayerOne().getHand()setSelectedCard(getCardFromHand(handPosition));
+		gameState.getPlayerOne().getHand().setSelectedCard(tempHand.getCardFromHand(handPosition));
 		//if tempSelect is type monster{}
-		ArrayList<Tile> display= GameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
+		ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
 		for(Tile t: display) {
 			BasicCommands.DrawTile(out,t,2);
 			}//else if tempSelect is type spell{}
