@@ -107,7 +107,7 @@ public class Player {
 	
 
 
-
+	/*
 	public void checkDead() {
 		if (dead = true) {
 			GameState.gameOver();
@@ -153,11 +153,6 @@ public class Player {
 
 		}
 
-	
-	public Hand getHand() {
-		return this.hand;
-	}
-	
 	
 	
 /*	(game logic inside Card class?)
