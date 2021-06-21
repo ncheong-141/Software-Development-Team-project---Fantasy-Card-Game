@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import akka.actor.ActorRef;
 import commands.BasicCommands;
 import structures.GameState;
+import structures.basic.Card;
+import structures.basic.Hand;
+import java.util.ArrayList;
 
 /**
  * Indicates that the user has clicked an object on the game canvas, in this case a card.
@@ -23,13 +26,32 @@ public class CardClicked implements EventProcessor{
 
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
-		//if gameState=playerturn
 		int handPosition = message.get("position").asInt();
-		gameState.getPlayerOne().getHand().getCardFromHand(handPosition).getBigCard();
-		//display bigcard
-        //add statement to check tileclicked and play card to board
-		//TileClicked->getCardName->getUnit(from ID, deck)
-		//BasicCommands.drawUnit(out, getUnit^, tile.clicked);
+		//ArrayList<Card> tempHand= new ArrayList<Card>;
+		//Card tempSelect= new Card;
+		//tempHand=gameState.getPlayerOne().getHand();
+		//tempSelect=tempHand.setSelectedCard(getCardFromHand(handPosition));
+		
+		
+		//method for if no card is currently selected
+		//if
+		//(gameState.getTurnOwner()==gameState.getPlayerOne && gameState.getPlayerOne().getHand().getClicked==false)
+		//{
+		//tempHand.getCardFromHand(handPosition).setClicked(true);
+		//tempHand.setPlayingMode(true);
+		//tempHand.getCardFromHand(handPosition).getBigCard();
+		//display bigcard;
+		//
+		//
+		// ArrayList<Tile> display= GameState.getGameBoard().friendlyMonsterTiles(gameState.getPlayerOne);
+		//for(Tile t: display) {BasicCommands.DrawTile(out,t,2);}
+		//}
+		
+		//else if{
+		//(gameState.getTurnOwner()==playerOne && gameState.getPlayerOne().getHand().getClicked==true)
+		//
+		//
+        //}
 		
 	}
 

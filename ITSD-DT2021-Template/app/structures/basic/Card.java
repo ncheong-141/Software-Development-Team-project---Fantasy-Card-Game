@@ -37,17 +37,16 @@ public class Card {
 	public Unit getUnitById(int cardId, Deck deck) {
 		ArrayList<Unit> list= new ArrayList<Unit>();
 		list=deck.getUnitDeck(); 
-		for(Unit: list) {
-		if(Unit.getId()==cardId) {
-			return Unit;
+		for(Unit u: list) {
+		if(u.getId()==cardId) {
+			return u;
+			}
 		}
-		}
+		return null;
 	}
 	
 	
-	
-	
-	
+	//getters and setters
 	public int getId() {
 		return id;
 	}
@@ -79,5 +78,17 @@ public class Card {
 		this.bigCard = bigCard;
 	}
 
-	
+	public boolean isClicked() {
+		return clicked;
+	}
+	public void setClicked(boolean clicked) {
+		this.clicked = clicked;
+	}
+
+	public boolean isMonster() {
+		return monster;
+	}
+	public void setMonster(boolean monster) {
+		this.monster = monster;
+	}
 }
