@@ -44,11 +44,12 @@ public class Deck{//class used to create and manage player and ai decks
 			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
 			deck.add(card);
 			}
-		for(int j=0; j<=7; j++)//cycles through unit list and creates two of each unit
+		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit
 			unit= BasicObjectBuilders.loadUnit(unitList[j], j+1, Unit.class);
 			unitDeck.add(unit);
 			unit= BasicObjectBuilders.loadUnit(unitList[j], j+11, Unit.class);
 			unitDeck.add(unit);
+		}
 		}
 		
 	public void deckTwo() {// creates AI player deck
