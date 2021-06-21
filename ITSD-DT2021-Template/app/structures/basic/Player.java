@@ -1,11 +1,12 @@
 package structures.basic;
-
+import akka.actor.ActorRef;
 import commands.BasicCommands;
-
+import structures.basic.Card;
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import actors.GameActor;
-import akka.actor.ActorRef;
 import events.CardClicked;
 import events.EndTurnClicked;
 import structures.GameState;
@@ -24,17 +25,20 @@ public class Player {
 	protected Deck deck;
 	protected Hand hand;
 	protected ActorRef out;
-	private boolean dead;
-	private boolean turn;
+//	private boolean dead;
+//	private boolean turn;  move to EndTurn/GameState?
+	private int position; // card position in hand
+	private Card card;
+
 	
 	
 	public Player() {
 		super();
 		this.health = 20;
 		this.mana = 0;		
-		this.dead = false;
-		this.turn = false;		
-	
+//		this.dead = false; gameState?
+//		this.turn = false; gameState?	
+			
 	
 	}
 	
@@ -42,8 +46,8 @@ public class Player {
 		super();
 		this.health = health;
 		this.mana = mana;
-		this.dead = false;
-		this.turn = false;		
+//		this.dead = false; gameState?
+//		this.turn = false; gameState?			
 
 	}
 		
@@ -136,10 +140,54 @@ public class Player {
 		this.hand.initialHand(out, deck);
 	}
 	
-	//draw card from hand, top card in deck is deleted
-		public void drawFromDeck() {
+	//draw card from deck when round ends, top card in deck is deleted
+	public void drawFromDeck() {
 			this.hand.drawCard(out, deck); 
 
 		}
+
 	
+	public Hand getHand() {
+		return this.hand;
+	}
+	
+	
+	
+/*	(game logic inside Card class?)
+	// take the monster card position in hand and play
+	public void playCard(int position) {
+	
+		ArrayList<Card> currHand = this.hand.getHand();
+		this.card= currHand.get(position);
+		this.unit.setId(this.card.getId());
+		
+		
+		if (this.unit instanceof Monster) {
+			if(this.getMana() - this.card.getManacost() >= 0 ) {
+				this.loseMana(this.card.getManacost()); //deduct mana
+					
+				// monster skills
+					
+				BasicCommands.deleteCard(out, position);  //discard the card after played
+			}
+		}
+		
+		
+		else{  //spell played
+			if(this.getMana() - this.card.getManacost() >= 0 ) {
+				this.loseMana(this.card.getManacost()); //deduct mana
+					
+				// monster skills
+					
+				BasicCommands.deleteCard(out, position);  //discard the card after played
+			}
+		}
+		
+	*/
+
+		
+	}
+		
+		
+
 }
