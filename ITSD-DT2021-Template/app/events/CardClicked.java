@@ -42,7 +42,7 @@ public class CardClicked implements EventProcessor{
 		tempHand.getCardFromHand(handPosition).setClicked(true);
 		tempHand.setPlayingMode(true);
 		
-		ArrayList<Tile> display= GameState.getGameBoard().friendlyMonsterTiles(gameState.getPlayerOne);
+		ArrayList<Tile> display= GameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
 		for(Tile t: display) {BasicCommands.DrawTile(out,t,2);}
 		}
 		
