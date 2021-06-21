@@ -41,8 +41,11 @@ public class Card {
 		ArrayList<Unit> list= new ArrayList<Unit>();
 		list=deck.getUnitDeck(); 
 		for(Unit u: list) {
-
+			if(u.getId()==cardId) {
+				return u;
+			}
 		return null; 
+		}
 	}
 	
 	
