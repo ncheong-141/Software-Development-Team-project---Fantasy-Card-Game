@@ -68,8 +68,6 @@ public class Hand {
 	}
 	
 	
-	
-	
 	//getters and setters
 	public int getCurr() {
 		return curr;
