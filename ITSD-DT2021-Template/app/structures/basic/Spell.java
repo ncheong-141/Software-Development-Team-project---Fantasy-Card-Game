@@ -6,7 +6,6 @@ public class Spell extends Card {
 	/* Sub class attributes */
 	String spellName; 
 	String abilityDescription; 
-	
 	Ability spellAbility; 
 	
 	/* Constructor */
