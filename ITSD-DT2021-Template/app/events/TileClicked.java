@@ -46,8 +46,11 @@ public class TileClicked implements EventProcessor{
 		ArrayList<Ability> abilitySelection = new ArrayList<Ability>(10); 
 		abilitySelection.add(new A_Truestrike()); 
 		abilitySelection.add(new A_SundropElixir()); 
+		abilitySelection.add(new A_StaffofYkir());
+		abilitySelection.add(new A_EntropicDecay());
 		
-		Ability selectedAbility = abilitySelection.get(0);
+		Ability selectedAbility = abilitySelection.get(3);
+		
 		//Spell Truestrike = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike,0, Spell.class);
 		//Truestrike.setAbility("Truestrike", selectedAbility, "Does 2 damage");
 		// ---------------------------------------------------------------
@@ -83,7 +86,7 @@ public class TileClicked implements EventProcessor{
 			// Update display 
 			updateMonsterDisplay(out,tileMonster);
 			
-			// Need to try and get Truestrike effect animation, its immolation in the card file but how to link it to the static conf file?
+			// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
 			EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
 			BasicCommands.playEffectAnimation(out, ef, gameState.getBoard().getTile(tilex , tiley));
 

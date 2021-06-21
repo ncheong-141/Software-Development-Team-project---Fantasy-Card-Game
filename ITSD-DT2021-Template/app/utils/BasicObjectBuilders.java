@@ -91,6 +91,7 @@ public class BasicObjectBuilders {
 				// Set monster attributes (need to put actual attributes sometime)
 				mUnit.setName("Name 1");
 				mUnit.setHP(10);
+				mUnit.setMaxHP(20);
 				mUnit.setAttackValue(2);
 				//mUnit.setSkills(new Skills());
 				
