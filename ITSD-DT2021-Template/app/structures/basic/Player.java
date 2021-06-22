@@ -105,6 +105,11 @@ public class Player {
 		return this.hand;
 	}
 	
+	// temp method to aid demo
+	public void setHand(ArrayList <Card> h) {
+		this.hand = new Hand(h);
+	}
+	
 
 
 	/*
@@ -192,4 +197,3 @@ public class Player {
 		
 		
 
-}
