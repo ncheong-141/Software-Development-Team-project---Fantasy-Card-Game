@@ -1,11 +1,14 @@
 package demo;
 
+import java.util.ArrayList;
+
 import akka.actor.ActorRef;
 import commands.BasicCommands;
 import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.Card;
+import structures.basic.Deck;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 import structures.basic.Player;
@@ -506,7 +509,55 @@ public class CommandDemo {
 	}
 	public static void executeDemoPlayer(ActorRef out) {
 	}
-	public static void executeDemoDeckHand(ActorRef out) {
+	public static void executeDemoDeckHand(ActorRef out, GameState g) {
+		
+		// draw the Board
+		Board gameBoard = new Board();
+		
+		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+			}
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// loadCard
+		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// Create Deck
+//		Deck decks = new Deck();
+		// Create a tempHand for testing
+		ArrayList <Card> cards = new ArrayList <Card> ();
+		cards.add(cfire_spitter);
+		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
+		g.getTurnOwner().setHand(cards);
+		// draw cards in hand
+		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
+		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+			BasicCommands.drawCard(out, c, i, 0);
+			i++;
+		}
+		
+		// Set up friendly Unit to summon next to
+		Avatar humanAvatar = g.getHumanAvatar();
+		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		humanAvatar.setAttackValue(5);
+		
+		Tile tOne = g.getGameBoard().getTile(1, 2);
+		Tile tTwo = g.getGameBoard().getTile(7, 2);
+				
+		BasicCommands.drawUnit(out, humanAvatar, tOne);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
+		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
+		
+		// Then test what selecting the card in hand + selecting a target tile does
+
+		
 	}
 	
 
