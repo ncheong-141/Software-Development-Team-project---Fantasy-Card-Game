@@ -124,7 +124,7 @@ public class Board {
 		}
 		
 		//2B)Method returns all tiles where a FRIENDLY unit is present (excl. avatar)
-		public ArrayList<Tile> friendlyTile(Player p){	
+		public ArrayList<Tile> friendlyTile(Player p) {	
 			ArrayList<Tile> tileRange = new ArrayList<Tile>();
 			for (int i = 0; i <gameBoard.length; i++) {
 				for (int k =0; k<gameBoard[0].length; k++) {
@@ -152,9 +152,6 @@ public class Board {
 		 * else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
 		 * g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }
 		 */
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 }
 
