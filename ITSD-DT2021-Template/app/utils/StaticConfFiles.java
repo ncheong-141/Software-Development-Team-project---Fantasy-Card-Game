@@ -1,12 +1,5 @@
 package utils;
 
-import java.util.HashMap;
-
-import structures.basic.Monster;
-import structures.basic.Spell.AbilityInfo;
-import structures.basic.abilities.A_Truestrike;
-import structures.basic.abilities.Ability;
-
 /**
  * This is a utility class that just has short-cuts to the location of various
  * config files. 
@@ -77,31 +70,4 @@ public class StaticConfFiles {
 	public final static String f1_projectiles = "conf/gameconfs/effects/f1_projectiles.json";
 	public final static String f1_summon = "conf/gameconfs/effects/f1_summon.json";
 	
-
-	// Abilites for each unit. 
-	public final static HashMap<String, AbilityInfo> abilityForEachUnit = new HashMap<String, AbilityInfo>(); 
-	
-	public static void initialiseUnitAbilities() {
-		
-		abilityForEachUnit.put("A_Truestrike", new AbilityInfo(true, Monster.class, new A_Truestrike()));	
-	}
-	
-	// Inner class
-	static public class AbilityInfo {
-		public boolean enemyTarget; 
-		public Class<? extends Monster> targetType; 
-		public Ability ability; 
-		
-		public AbilityInfo(boolean enemyTarget, Class<? extends Monster> targetType, Ability ability) {
-			this.enemyTarget = enemyTarget;
-			this.targetType = targetType; 
-			this.ability = ability; 
-		}
-		
-		public AbilityInfo(boolean enemyTarget, Ability ability) { 
-			this.enemyTarget = enemyTarget;
-			this.targetType = null; 
-			this.ability = ability; 
-		}
-	}
 }

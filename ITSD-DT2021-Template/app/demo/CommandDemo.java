@@ -12,9 +12,11 @@ import structures.basic.Deck;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 import structures.basic.Player;
+import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
 import structures.basic.UnitAnimationType;
+import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -469,6 +471,72 @@ public class CommandDemo {
 		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}	
 
 	}
+	
+	
+	public static void executeDemoUnitsNicholas(ActorRef out, GameState gameState) {
+		
+		
+		// Draw board
+		Board gameBoard = new Board();
+		
+		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+			}
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// loadCard
+		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// drawUnit
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
+		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// Add unit to tile ON BOARD
+		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
+		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
+		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		
+		
+		
+		// Spell stuff here 
+		// Initialise data for units (will be done in initialise) 
+		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
+		
+		// CREATING SPELL 
+		BasicCommands.addPlayer1Notification(out, "Creating spell", 2);
+		Spell spell = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 0, Spell.class);
+		// 				 UNIT name		Ability object, retrieved through spell name (.get(0)) as it is an array list of abilities
+		// Will probably move this stuff to the defualt constructor but not sure how to get the Unit name from there
+		spell.setAbility("Truestrike", AbilityToUnitLinkage.UnitAbility.get("Truestrike").get(0), "Description");
+		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		// CASTING SPELL and display effects
+		BasicCommands.addPlayer1Notification(out, "Cast spell on Unit", 2);
+		spell.getAbility().execute(fire_spitter);
+		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+		
+		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
+		EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
+		BasicCommands.playEffectAnimation(out, ef, gameState.getBoard().getTile(3,2));
+		
+		// If you wanted to retrieve the spell target details
+		spell.getAbility().getTargetType(); // Returns a Class<? extends Monster> type which specifies either Monster.class or Avatar.class 
+		spell.getAbility().targetEnemy();  // Returns a boolean if true or false if should target enemy or not
+		
+		
+	}
+	
+	
 	
 	
 	public static void executeDemoBoard(ActorRef out, GameState g) {
