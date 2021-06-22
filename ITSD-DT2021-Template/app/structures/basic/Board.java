@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import structures.GameState;
 import utils.BasicObjectBuilders;
 
 //=============================Class description =============================//
@@ -66,8 +67,6 @@ public class Board {
 		return gameBoard[y][x];
 	}
 
-
-		
 	
 		//=====================PLAYABLE TILES METHODS==================//
 	
@@ -153,6 +152,9 @@ public class Board {
 		 * else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
 		 * g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }
 		 */
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 }
 

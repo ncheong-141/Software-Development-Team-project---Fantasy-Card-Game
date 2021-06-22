@@ -98,13 +98,13 @@ public class Player {
 			this.health = 0;
 			GameState.gameOver();
 		}
-	}	
-
+	}
 
 	public Hand getHand() {
 		return this.hand;
 	}
 	
+
 	// temp method to aid demo
 	public void setHand(ArrayList <Card> h) {
 		this.hand = new Hand(h);
@@ -114,6 +114,9 @@ public class Player {
 
 	/*
 	public void checkDead() {
+=======
+/*	public void checkDead() {
+>>>>>>> master
 		if (dead = true) {
 			GameState.gameOver();
 		}
@@ -127,6 +130,7 @@ public class Player {
 			turn = true;
 		}
 	}
+<<<<<<< HEAD
 	
 	*/
 	
@@ -145,7 +149,7 @@ public class Player {
 		this.deck.getDeck();
 		
 	}
-	
+
 	//create hand for player, along with first 3 cards in hand
 	public void seeHand() {
 		this.hand = new Hand(null);
