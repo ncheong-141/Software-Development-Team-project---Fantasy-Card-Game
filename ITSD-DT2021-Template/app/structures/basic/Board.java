@@ -82,7 +82,7 @@ public class Board {
 			ArrayList <Tile> tileList = new ArrayList<Tile>();
 			for (int i = 0; i <gameBoard.length; i++) {
 				for (int k =0; k<gameBoard[0].length; k++) {
-					if (gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+					if ((gameBoard[i][k].getUnitOnTile != null)&& gameBoard[i][k].getUnitOnTile().getOwner()==p) {
 						tileList.addAll(this.calcRange(gameBoard[i][k]));
 					}
 				}
