@@ -495,16 +495,24 @@ public class CommandDemo {
 		Tile tTwo = g.getGameBoard().getTile(7, 2);
 				
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
+		tOne.addUnit(humanAvatar);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}				
 				
 		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
+		tTwo.addUnit(computerAvatar);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
+		
+		ArrayList <Tile> display = gameBoard.allSummonableTiles(g.getPlayerOne());
+		for (Tile t : display) {
+			BasicCommands.drawTile(out, t, 2);
+			try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		}
 				
 	}
 	public static void executeDemoPlayer(ActorRef out) {
