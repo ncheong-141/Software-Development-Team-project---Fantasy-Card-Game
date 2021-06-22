@@ -1,5 +1,6 @@
 package structures.basic;
-import structures.basic.abilities.Ability;
+
+import structures.basic.abilities.*;
 
 public class Spell extends Card {
 
@@ -7,6 +8,8 @@ public class Spell extends Card {
 	String spellName; 
 	String abilityDescription; 
 	Ability spellAbility; 
+	Class<? extends Monster> targetMonster; 
+	
 	
 	/* Constructor */
 	public Spell(int id, String cardname, int manacost, MiniCard miniCard, BigCard bigCard) {
@@ -26,4 +29,5 @@ public class Spell extends Card {
 		this.spellAbility 		= ability;
 		this.abilityDescription = description;
 	}
+	
 }

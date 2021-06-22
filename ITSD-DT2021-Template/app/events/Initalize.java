@@ -34,6 +34,7 @@ public class Initalize implements EventProcessor{
 
 	@Override
 public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
+
 		
 		//CommandDemo.executeDemo(out); // this executes the command demo, comment out this when implementing your solution
 

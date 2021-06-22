@@ -286,6 +286,13 @@ public class TileClicked implements EventProcessor{
 	}
 	
 	
+	// Construct spell 
+	private void constructSpell(GameState gameState, ActorRef out, String c_configFile, int tilex, int tiley) {
+		Spell constructedSpell = (Spell) BasicObjectBuilders.loadCard(c_configFile,Spell.class);		
+
+		
+	}
+	
 	// Update display after effects have been applied
 	private void updateMonsterDisplay(ActorRef out, Monster mUnit) {
 
