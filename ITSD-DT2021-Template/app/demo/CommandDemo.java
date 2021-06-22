@@ -508,6 +508,9 @@ public class CommandDemo {
 		
 		
 		// Spell stuff here 
+		// Instantiate truestrike card
+		Card cTruestrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
+		
 		// Initialise data for units (will be done in initialise) 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
 		
@@ -516,7 +519,7 @@ public class CommandDemo {
 		Spell spell = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 0, Spell.class);
 		// 				 UNIT name		Ability object, retrieved through spell name (.get(0)) as it is an array list of abilities
 		// Will probably move this stuff to the defualt constructor but not sure how to get the Unit name from there
-		spell.setAbility("Truestrike", AbilityToUnitLinkage.UnitAbility.get("Truestrike").get(0), "Description");
+		spell.setAbility(cTruestrike.getCardname(), AbilityToUnitLinkage.UnitAbility.get(cTruestrike.getCardname()).get(0), "Description");
 		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		// CASTING SPELL and display effects
