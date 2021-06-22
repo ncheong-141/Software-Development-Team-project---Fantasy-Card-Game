@@ -36,7 +36,7 @@ public class CardClicked implements EventProcessor{
 		//tempSelect=tempHand.setSelectedCard(tempHand.getCardFromHand(handPosition));
 
 		//method for if no card is currently selected
-		if(gameState.getTurnOwner()==gameState.getPlayerOne && gameState.getPlayerOne().getHand().getClicked==false)
+		if(gameState.getTurnOwner()==gameState.getPlayerOne() && gameState.getPlayerOne().getHand().getSelectedCard()==null)
 		{
 			Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
 			
@@ -45,14 +45,14 @@ public class CardClicked implements EventProcessor{
 			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
 		
 		if (clickedCard.getBigCard().getAttack() > 0){
-			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
+			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne());
 		for(Tile t: display) {
-			BasicCommands.DrawTile(out,t,2);
+			BasicCommands.drawTile(out,t,2);
 			}
 		}else if (clickedCard.getBigCard().getAttack() < 0) {
-			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne);
+			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne());
 			for(Tile t: display) {
-				BasicCommands.DrawTile(out,t,2);
+				BasicCommands.drawTile(out,t,2);
 				}
 		}
 		}
