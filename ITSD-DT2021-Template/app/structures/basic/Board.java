@@ -76,7 +76,7 @@ public class Board {
 		
 		//this method can be called from elsewhere in the program
 		//it returns a list of tiles where a given Player can summon a unit
-		//Players clicks on a card >> this method is called >> all adjacent tiles to all player's units on the board are returned
+		//Players clicks on a card >> this method is called >> all adjacent tiles to all player's units on the board 			//are returned
 		public ArrayList<Tile> allSummonableTiles(Player p){
 			ArrayList <Tile> tileList = new ArrayList<Tile>();
 			for (int i = 0; i <gameBoard.length; i++) {
@@ -136,22 +136,25 @@ public class Board {
 			return tileRange;
 		}
 
-		/*
-		 * //3)Method returns player's avatar tile position public Tile ownAvatarTile
-		 * (Player p) {
-		 * 
-		 * int x = p.getAvatar().getPosition().getTilex(); int y =
-		 * p.getAvatar().getPosition().getTiley();
-		 * 
-		 * return this.getTile(x, y); }
-		 * 
-		 * //4) Method return enemy avatar's tile position public Tile enemyAvatarTile
-		 * (Player p, GameState g) { if (p instanceof HumanPlayer) { int x =
-		 * g.getComputerAvatar().getPosition().getTilex(); int y =
-		 * g.getComputerAvatar().getPosition().getTiley(); return this.getTile(x, y); }
-		 * else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
-		 * g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }
-		 */
-
+		
+		//3)Method returns player's avatar tile position 
+		public Tile ownAvatarTile (Player p) {
+		 
+			int x = p.getAvatar().getPosition().getTilex(); int y =
+			p.getAvatar().getPosition().getTiley();
+		 
+			return this.getTile(x, y); 
+		}
+		 
+		//4) Method return enemy avatar's tile position 
+		public Tile enemyAvatarTile (Player p, GameState g) { 
+			if (p instanceof HumanPlayer) { 
+				int x = g.getComputerAvatar().getPosition().getTilex(); 
+				int y = g.getComputerAvatar().getPosition().getTiley(); return this.getTile(x, y); 
+			} else { 
+				int x = g.getHumanAvatar().getPosition().getTilex(); 
+				int y = g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y);
+			} 
+		}
 }
 
