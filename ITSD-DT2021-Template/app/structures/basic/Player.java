@@ -67,14 +67,14 @@ public class Player {
 		this.mana = mana;
 	}
 	
-	//add Mana and check maximum
+	//add Mana and check maximum, when use cards
 	public void addMana(int addMana) {
 		int newMana = mana + addMana;
 		if(newMana > 9) {
 			this.mana = 9;
 		}	
 	}
-	//delete Mana  (check minimum?)
+	//delete Mana , when use cards
 	public void loseMana(int loseMana) {
 		mana = mana - loseMana;
 
@@ -100,41 +100,32 @@ public class Player {
 		}
 	}
 
-	public Hand getHand() {
-		return this.hand;
-	}
-	
 
-	// temp method to aid demo
-	public void setHand(ArrayList <Card> h) {
+	
+	//create hand for player, along with first 3 cards in hand
+	public void seeHand(ArrayList <Card> h) {
 		this.hand = new Hand(h);
+		this.hand.initialHand(out, deck);
 	}
 	
-
-
-	/*
-	public void checkDead() {
-=======
-/*	public void checkDead() {
->>>>>>> master
-		if (dead = true) {
-			GameState.gameOver();
+	//draw card from deck when round ends, top card in deck is deleted
+	public void drawFromDeck() {
+			this.hand.drawCard(out, deck); 
 		}
-	}	
+
 	
-	
-	public void setTurn(){
-		if (turn){
-			turn = false;
-		}else {
-			turn = true;
-		}
+	//playing cards,take the position of card in hand
+	public void playCard(int p) {
+		this.hand.getCardFromHand(p);
 	}
-<<<<<<< HEAD
-	
-	*/
 	
 	
+// temp method to aid demo
+//	public void setHand(ArrayList <Card> h) {
+//		this.hand = new Hand(h);
+//	}
+	
+// getters & setters	
 	public Avatar getAvatar() {
 		return avatar;
 	}
@@ -144,60 +135,28 @@ public class Player {
 		
 	}
 	
-	//create deck for player
-	public void assignDeck() {
-		this.deck.getDeck();
-		
-	}
-
-	//create hand for player, along with first 3 cards in hand
-	public void seeHand() {
-		this.hand = new Hand(null);
-		this.hand.initialHand(out, deck);
+	public Deck getDeck() {
+		return this.deck;
 	}
 	
-	//draw card from deck when round ends, top card in deck is deleted
-	public void drawFromDeck() {
-			this.hand.drawCard(out, deck); 
-
-		}
-
-	
-	
-/*	(game logic inside Card class?)
-	// take the monster card position in hand and play
-	public void playCard(int position) {
-	
-		ArrayList<Card> currHand = this.hand.getHand();
-		this.card= currHand.get(position);
-		this.unit.setId(this.card.getId());
-		
-		
-		if (this.unit instanceof Monster) {
-			if(this.getMana() - this.card.getManacost() >= 0 ) {
-				this.loseMana(this.card.getManacost()); //deduct mana
-					
-				// monster skills
-					
-				BasicCommands.deleteCard(out, position);  //discard the card after played
-			}
-		}
-		
-		
-		else{  //spell played
-			if(this.getMana() - this.card.getManacost() >= 0 ) {
-				this.loseMana(this.card.getManacost()); //deduct mana
-					
-				// monster skills
-					
-				BasicCommands.deleteCard(out, position);  //discard the card after played
-			}
-		}
-		
-	*/
-
-		
+	public void setDeck() {
+		this.deck = new Deck();
 	}
+
+	public Hand getHand() {
+		return this.hand;
+	}
+	
+	public void setHand(ArrayList <Card> h) {
+		this.hand = new Hand(h);
+	}	
+	
+	
+	
+
+	
+		
+}
 		
 		
 
