@@ -11,6 +11,7 @@ import structures.basic.Board;
 import structures.basic.ComputerPlayer;
 import structures.basic.HumanPlayer;
 import structures.basic.Tile;
+import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -34,13 +35,19 @@ public class Initalize implements EventProcessor{
 
 	@Override
 public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
+
+
+		// Initialising ability to unit linkage data to reference whenever loading units. 
+		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
+
 		
 		//CommandDemo.executeDemo(out); // this executes the command demo, comment out this when implementing your solution
 
 		//CommandDemo.executeDemoUnits(out, gameState);
+		CommandDemo.executeDemoUnitsNicholas(out, gameState); 
 		// CommandDemo.executeDemoBoard(out, gameState);
 		//CommandDemo.executeDemoDeckHand(out, gameState);
-		CommandDemo.executeDemoSummon(out, gameState);
+		//CommandDemo.executeDemoSummon(out, gameState);
 	}
 
 }

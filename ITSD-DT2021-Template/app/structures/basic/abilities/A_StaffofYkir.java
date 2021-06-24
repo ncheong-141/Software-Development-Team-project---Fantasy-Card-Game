@@ -5,6 +5,25 @@ import structures.basic.Monster;
 
 public class A_StaffofYkir implements Ability {
 
+	// Ability attributes 
+	boolean enemyTarget; 
+	Class<? extends Monster> targetType; 
+	
+	// Constructor
+	public A_StaffofYkir(boolean enemyTarget, Class<? extends Monster> targetType) {
+		this.enemyTarget = enemyTarget;
+		this.targetType = targetType; 
+	}
+	
+	public A_StaffofYkir() {
+		this.enemyTarget = false;
+		this.targetType = null; 
+	}
+	
+	/* Class methods */
+	
+	// ABILITY IMPLEMENTATION
+	// ================================================================================
 	// Add + 2 attack to avatar
 	public boolean execute(Monster targetMonster) {
 		
@@ -22,5 +41,16 @@ public class A_StaffofYkir implements Ability {
 			System.out.println("Not instance of avatar");
 			return false; 
 		}
+	}
+	// ================================================================================
+
+	
+	// Getters to communicate target information
+	public boolean targetEnemy() {
+		return enemyTarget; 
+	}
+	
+	public Class<? extends Monster> getTargetType() {
+		return targetType; 
 	}
 }
