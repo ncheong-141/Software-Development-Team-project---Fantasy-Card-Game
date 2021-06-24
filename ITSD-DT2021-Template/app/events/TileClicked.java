@@ -92,6 +92,8 @@ public class TileClicked implements EventProcessor{
 			System.out.println("Monster attack: " + tileMonster.getAttackValue());
 			System.out.println("Monster mana cost: " + tileMonster.getManaCost());
 			
+			
+			
 			// TileClicked logic chain
 			// ------------------------------------------------------------------------------------------
 			// If there is a card selected in hand: 
