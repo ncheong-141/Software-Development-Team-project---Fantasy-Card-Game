@@ -159,7 +159,7 @@ public class Board {
 			  //5) standard movement range. This method returns an array list of
 			  //all the tiles that a selected monster can move to
 			  
-			  public ArrayList<Tile> monsterMovableTiles (Monster m){
+			public ArrayList<Tile> monsterMovableTiles (Monster m){
 				  ArrayList <Tile> tileList = new ArrayList<Tile>();
 				  int x = m.getPosition().getTilex();
 				  int y = m.getPosition().getTiley();
@@ -178,7 +178,8 @@ public class Board {
 				  }
 				  
 				  return tileList;
-			  }
+			}
+			  
 			  
 }
 
