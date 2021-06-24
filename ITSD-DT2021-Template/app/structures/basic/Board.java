@@ -159,26 +159,39 @@ public class Board {
 			  //5) standard movement range. This method returns an array list of
 			  //all the tiles that a selected monster can move to
 			  
-			public ArrayList<Tile> monsterMovableTiles (Monster m){
+			  public ArrayList<Tile> monsterMovableTiles(int xPos, int yPos, int range){
 				  ArrayList <Tile> tileList = new ArrayList<Tile>();
-				  int x = m.getPosition().getTilex();
-				  int y = m.getPosition().getTiley();
-				  Tile monsterPos = this.getTile(x, y);
+				  Tile tile = this.getTile(xPos, yPos);			  
+				  if (range == 0) return tileList;
+				  else if (range == 1) {
+					  tileList.addAll(this.calcRange(tile)); 
+					  return tileList;
+				  }
+				  else if (range == 2) {
+					  tileList.addAll(this.monsterMovableTiles(xPos, yPos));
+				  }
+				  
+				  return tileList;
+			  }
+			  
+			  private ArrayList<Tile> monsterMovableTiles(int xPos, int yPos){
+				  ArrayList <Tile> tileList = new ArrayList<Tile>();
+				  Tile monsterPos = this.getTile(xPos, yPos);
 				  tileList.addAll(calcRange(monsterPos));
 				  for (int i = -2; i<=2; i += 4) {
 					  System.out.print("exec loop");
-					  if (x+i >= 0 && x+i<9) {
-						  if (this.getTile(x+i, y).getFreeStatus()) tileList.add(this.getTile(x+i,  y));
-						  System.out.println(this.getTile(x+i, y));
+					  if (xPos+i >= 0 && xPos+i<9) {
+						  if (this.getTile(xPos+i, yPos).getFreeStatus()) tileList.add(this.getTile(xPos+i,  yPos));
+						  System.out.println(this.getTile(xPos+i, yPos));
 					  }
-					  if (y+i>=0 && y+i < 9) {
-						  if (this.getTile(x, y+i).getFreeStatus()) tileList.add(this.getTile(x, y+i));
-						  System.out.println(this.getTile(x, y+i));
+					  if (yPos+i>=0 && yPos+i < 9) {
+						  if (this.getTile(xPos, yPos+i).getFreeStatus()) tileList.add(this.getTile(xPos, yPos+i));
+						  System.out.println(this.getTile(xPos, yPos+i));
 					  }
 				  }
 				  
 				  return tileList;
-			}
+			  }
 			  
 			  
 }
