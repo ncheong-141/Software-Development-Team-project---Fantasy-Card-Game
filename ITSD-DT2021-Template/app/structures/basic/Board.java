@@ -192,9 +192,51 @@ public class Board {
 				  
 				  return tileList;
 			  }
+			
 			  
+			  //====================ATTACK RANGES METHODS=====================//
+			  
+			  //this method returns all "attackable" tiles. 
+			  //attackable tiles are all adjacent tiles to specified tiles which contain an enemy unit
+			  //the method returns an array list of tiles that meet this criteria
+			  //the method takes the X position and Y position of the where the attacking monster is located
+			  public ArrayList<Tile> attackableAdjTiles(int xPos, int yPos){
+				  Tile tile = this.getTile(xPos, yPos);
+				  ArrayList <Tile> tileList = new ArrayList<Tile>();
+				  
+				  tileList.addAll(this.calcRangeEnemy(tile));
+				  
+				  return tileList;
+				  
+			  }
+			  
+			  //helper method 
+			  private ArrayList<Tile> calcRangeEnemy(Tile t){
+					ArrayList<Tile> tileRange = new ArrayList<Tile>();
+					int xPos = t.getTilex();
+					int yPos = t.getTiley();
+					
+					Monster monster = t.getUnitOnTile();
+					Player owner = monster.getOwner();
+					
+					System.out.println(xPos + " calcRange " + yPos);
+					for (int i = 0; i<rangeH.length; i++) {
+						if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
+						else {
+							if (!(this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getFreeStatus()) && this.getTile(xPos+rangeW[i],  yPos+rangeH[i]).getUnitOnTile().getOwner()!=owner) {
+								Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
+								//System.out.println(posTile.getTilex() + "  " + posTile.getTiley());
+								tileRange.add(posTile);	
+							}
+						}
+					}
+					return tileRange;
+				}
 			//===============accessors methods==========================//
 			  
+			  //this method returns a list of all monsters (including avatars) on the board which have onCooldow == true
+			  //this variable signal that the monster cannot attack/move in the current turn (right after summoning)
+		
 			  public ArrayList<Monster> coolDownToggle (){
 				  ArrayList<Monster> monsterList = new ArrayList<Monster>();
 				  
