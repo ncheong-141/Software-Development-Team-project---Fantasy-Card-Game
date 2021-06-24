@@ -193,6 +193,19 @@ public class Board {
 				  return tileList;
 			  }
 			  
+			//===============accessors methods==========================//
 			  
+			  public ArrayList<Monster> coolDownToggle (){
+				  ArrayList<Monster> monsterList = new ArrayList<Monster>();
+				  
+				  for (int i = 0; i <gameBoard.length; i++) {
+						for (int k =0; k<gameBoard[0].length; k++) {
+							if ((gameBoard[i][k].getUnitOnTile() != null)&& gameBoard[i][k].getUnitOnTile().getOnCooldown()) {
+								monsterList.add(this.gameBoard[i][k].getUnitOnTile());
+							}
+						}
+					}
+					return monsterList;
+			  }
 }
 
