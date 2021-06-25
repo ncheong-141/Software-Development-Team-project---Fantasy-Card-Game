@@ -48,7 +48,68 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		// CommandDemo.executeDemoBoard(out, gameState);
 		//CommandDemo.executeDemoDeckHand(out, gameState);
 		//CommandDemo.executeDemoSummon(out, gameState);
+		//boardAvatarSetUp(out,g,message);
+		//playerCardSetUp(out, g, message);
+		//CommandDemo.executeTileHighlightDemo(out, g);
 	}
+	
+private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
+
+		
+		for (int i = 0; i<g.getBoard().getGameBoard().length; i++) {
+			for (int k = 0; k<g.getBoard().getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, g.getBoard().getGameBoard()[i][k], 0);
+			}
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		Avatar humanAvatar = g.getHumanAvatar();
+		humanAvatar.setOwner(g.getPlayerOne(), g.getBoard());
+		Avatar computerAvatar = g.getComputerAvatar();
+		computerAvatar.setOwner(g.getPlayerTwo(), g.getBoard());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		humanAvatar.setAttackValue(2);
+		computerAvatar.setAttackValue(2);
+		
+		//display avatars on board
+		Tile tOne = g.getGameBoard().getTile(1, 2);
+		Tile tTwo = g.getGameBoard().getTile(7, 2);
+				
+		BasicCommands.drawUnit(out, humanAvatar, tOne);
+		tOne.addUnit(humanAvatar);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
+		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}				
+				
+		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
+		tTwo.addUnit(computerAvatar);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
+		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
+	}
+
+private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
+	g.getPlayerOne().setMana(2);
+	g.getPlayerTwo().setMana(2);
+	
+	BasicCommands.setPlayer1Health(out, g.getPlayerOne());
+	try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+	
+	BasicCommands.setPlayer1Mana(out, g.getPlayerOne());
+	try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+	
+	BasicCommands.setPlayer2Health(out, g.getPlayerTwo());
+	try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+	
+	BasicCommands.setPlayer2Mana(out, g.getPlayerTwo());
+	try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+	
+	//need to display player's hand - instantiation of decks done in game state
+
+}
 
 }
 
