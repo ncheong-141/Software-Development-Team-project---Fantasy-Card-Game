@@ -1,5 +1,6 @@
 package structures;
 
+import events.tileplaystates.GameplayStates;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.ComputerPlayer;
@@ -25,8 +26,9 @@ public class GameState {
 	private int turnCount;
 	private static boolean playerDead;
 	private Player turnOwner;
-	
+
 	public GameState() {
+		
 		turnCount = 0;
 		playerDead = false;
 		playerOne = new HumanPlayer();
@@ -112,5 +114,5 @@ public class GameState {
 	public Board getBoard() {
 		return gameBoard; 
 	}
-	
+
 }

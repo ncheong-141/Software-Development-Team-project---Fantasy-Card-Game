@@ -473,7 +473,7 @@ public class CommandDemo {
 	}
 	
 	
-	public static void executeDemoUnitsNicholas(ActorRef out, GameState gameState) {
+	public static void executeDemoUnitsNicholas(ActorRef out, GameState g) {
 		
 		
 		// Draw board
@@ -486,55 +486,81 @@ public class CommandDemo {
 		}
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
+		
 		// loadCard
 		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		// drawUnit
-		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
-		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
-		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
-		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+		g.setTurnOwner(g.getPlayerOne());
 		
-		// Add unit to tile ON BOARD
-		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
-		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
-		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
-		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
-		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+		// Create Deck
+//		Deck decks = new Deck();
+		// Create a tempHand for testing
+		ArrayList <Card> cards = new ArrayList <Card> ();
+		cards.add(cfire_spitter);
+		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
+		g.getTurnOwner().setHand(cards);
+		// draw cards in hand
+		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
+		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+			BasicCommands.drawCard(out, c, i, 0);
+			i++;
+		}
+		
+		// Set up friendly Unit to summon next to
+		Avatar humanAvatar = g.getHumanAvatar();
+		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+//		// loadCard
+//		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
+//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+//		
+//		// drawUnit
+//		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+//		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+//		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
+//		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
+//		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+//		
+//		// Add unit to tile ON BOARD
+//		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
+//		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
+//		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+//		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+//		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		
 		
 		
-		// Spell stuff here 
-		// Instantiate truestrike card
-		Card cTruestrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
-		
-		// Initialise data for units (will be done in initialise) 
-		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
-		
-		// CREATING SPELL 
-		BasicCommands.addPlayer1Notification(out, "Creating spell", 2);
-		Spell spell = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 0, Spell.class);
-		// 				 UNIT name		Ability object, retrieved through spell name (.get(0)) as it is an array list of abilities
-		// Will probably move this stuff to the defualt constructor but not sure how to get the Unit name from there
-		spell.setAbility(cTruestrike.getCardname(), AbilityToUnitLinkage.UnitAbility.get(cTruestrike.getCardname()).get(0), "Description");
-		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		// CASTING SPELL and display effects
-		BasicCommands.addPlayer1Notification(out, "Cast spell on Unit", 2);
-		spell.getAbility().execute(fire_spitter);
-		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
-		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
-		
-		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
-		EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
-		BasicCommands.playEffectAnimation(out, ef, gameState.getBoard().getTile(3,2));
-		
-		// If you wanted to retrieve the spell target details
-		spell.getAbility().getTargetType(); // Returns a Class<? extends Monster> type which specifies either Monster.class or Avatar.class 
-		spell.getAbility().targetEnemy();  // Returns a boolean if true or false if should target enemy or not
+//		// Spell stuff here 
+//		// Instantiate truestrike card
+//		Card cTruestrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
+//		
+//		// Initialise data for units (will be done in initialise) 
+//		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
+//		
+//		// CREATING SPELL 
+//		BasicCommands.addPlayer1Notification(out, "Creating spell", 2);
+//		Spell spell = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 0, Spell.class);
+//		// 				 UNIT name		Ability object, retrieved through spell name (.get(0)) as it is an array list of abilities
+//		// Will probably move this stuff to the defualt constructor but not sure how to get the Unit name from there
+//		spell.setAbility(cTruestrike.getCardname(), AbilityToUnitLinkage.UnitAbility.get(cTruestrike.getCardname()).get(0), "Description");
+//		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+//		
+//		// CASTING SPELL and display effects
+//		BasicCommands.addPlayer1Notification(out, "Cast spell on Unit", 2);
+//		spell.getAbility().execute(fire_spitter);
+//		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+//		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+//		
+//		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
+//		EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
+//		BasicCommands.playEffectAnimation(out, ef, gameState.getBoard().getTile(3,2));
+//		
+//		// If you wanted to retrieve the spell target details
+//		spell.getAbility().getTargetType(); // Returns a Class<? extends Monster> type which specifies either Monster.class or Avatar.class 
+//		spell.getAbility().targetEnemy();  // Returns a boolean if true or false if should target enemy or not
 		
 		
 	}
@@ -543,51 +569,51 @@ public class CommandDemo {
 	
 	
 
-	public static void executeDemoBoard(ActorRef out, GameState g) {
-		Board gameBoard = new Board();
-		
-		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
-			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
-				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
-			}
-		}
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		Avatar humanAvatar = g.getHumanAvatar();
-		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
-		Avatar computerAvatar = g.getComputerAvatar();
-		computerAvatar.setOwner(g.getPlayerTwo(), gameBoard);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		humanAvatar.setAttackValue(5);
-		computerAvatar.setAttackValue(2);
-		
-		//display avatars on board
-		Tile tOne = g.getGameBoard().getTile(1, 2);
-		Tile tTwo = g.getGameBoard().getTile(7, 2);
-				
-		BasicCommands.drawUnit(out, humanAvatar, tOne);
-		tOne.addUnit(humanAvatar);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
-		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-				
-		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
-		tTwo.addUnit(computerAvatar);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
-		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		ArrayList <Tile> display = gameBoard.unitMovableTiles(1, 2, 20);
-		
-		for (Tile t : display) {
-			BasicCommands.drawTile(out, t, 2);
-			try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
-		}
-				
-	}
+//	public static void executeDemoBoard(ActorRef out, GameState g) {
+//		Board gameBoard = new Board();
+//		
+//		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+//			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
+//				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+//			}
+//		}
+//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+//		
+//		Avatar humanAvatar = g.getHumanAvatar();
+//		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
+//		Avatar computerAvatar = g.getComputerAvatar();
+//		computerAvatar.setOwner(g.getPlayerTwo(), gameBoard);
+//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+//		
+//		humanAvatar.setAttackValue(5);
+//		computerAvatar.setAttackValue(2);
+//		
+//		//display avatars on board
+//		Tile tOne = g.getGameBoard().getTile(1, 2);
+//		Tile tTwo = g.getGameBoard().getTile(7, 2);
+//				
+//		BasicCommands.drawUnit(out, humanAvatar, tOne);
+//		tOne.addUnit(humanAvatar);
+//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+//		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
+//		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
+//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+//				
+//		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
+//		tTwo.addUnit(computerAvatar);
+//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+//		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
+//		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
+//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+//		
+//		ArrayList <Tile> display = gameBoard.unitMovableTiles(1, 2, 20);
+//		
+//		for (Tile t : display) {
+//			BasicCommands.drawTile(out, t, 2);
+//			try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
+//		}
+//				
+//	}
 
 	
 	public static void executeDemoPlayer(ActorRef out) {

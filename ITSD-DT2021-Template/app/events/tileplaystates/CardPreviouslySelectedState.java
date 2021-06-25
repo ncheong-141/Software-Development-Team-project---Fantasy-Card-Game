@@ -1,0 +1,54 @@
+package events.tileplaystates;
+
+import structures.basic.Monster;
+import structures.basic.Spell;
+
+public class CardPreviouslySelectedState implements GameplayStates {
+
+	// State attributes
+	GameplayStates subState; 
+	
+	// Constructor
+	public CardPreviouslySelectedState() {
+		subState = null; 
+	}
+	
+	// State methods
+	public void execute(GameplayContext context) {
+	
+		// If a card is selected as previous user input, get card for use in the Sub state (summon monster or Cast spell) 
+		context.setLoadedCard( context.getGameStateRef().getTurnOwner().getHand().getSelectedCard() );
+		
+		// Determine its class type of the loaded card
+		// Check if a Spell card 
+		if (context.getLoadedCard().getBigCard().getAttack() < 0) {	
+			context.setCardClasstype(Spell.class);
+		}
+		// else, Monster
+		else {
+			context.setCardClasstype(Monster.class);
+		}
+		
+		// Determine the substate (SummonMonster or Cast Spell)  (to lower case just so case isnt a problem ever) 
+		switch (context.getTileFlag().toLowerCase()) {
+		
+		case("unit"): {
+			// Add check for card type
+			if (context.getCardClasstype() == Spell.class) {
+				subState = new CastSpellSubState();
+			}
+		}
+		
+		case("empty"): {
+			if (context.getCardClasstype() == Monster.class) {
+				subState = new SummonMonsterSubState();
+			}
+		}
+		}
+		
+		// Execute sub-state
+		subState.execute(context);
+	}
+	
+	
+}
