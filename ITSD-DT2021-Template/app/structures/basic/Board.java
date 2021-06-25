@@ -156,82 +156,66 @@ public class Board {
 			  
 			  //================= UNIT MOVEMENTS METHODS ========================//
 			  
-			  //5) standard movement range. This method returns an array list of
-			  //all the tiles that a selected monster can move to
-			  
-			  public ArrayList<Tile> monsterMovableTiles(int xPos, int yPos, int range){
-				  ArrayList <Tile> tileList = new ArrayList<Tile>();
-				  Tile tile = this.getTile(xPos, yPos);			  
-				  if (range == 0) return tileList;
-				  else if (range == 1) {
-					  tileList.addAll(this.calcRange(tile)); 
-					  return tileList;
-				  }
-				  else if (range == 2) {
-					  tileList.addAll(this.monsterMovableTiles(xPos, yPos));
-				  }
-				  
-				  return tileList;
-			  }
-			  
-			  private ArrayList<Tile> monsterMovableTiles(int xPos, int yPos){
-				  ArrayList <Tile> tileList = new ArrayList<Tile>();
-				  Tile monsterPos = this.getTile(xPos, yPos);
-				  tileList.addAll(calcRange(monsterPos));
-				  for (int i = -2; i<=2; i += 4) {
-					  System.out.print("exec loop");
-					  if (xPos+i >= 0 && xPos+i<9) {
-						  if (this.getTile(xPos+i, yPos).getFreeStatus()) tileList.add(this.getTile(xPos+i,  yPos));
-						  System.out.println(this.getTile(xPos+i, yPos));
-					  }
-					  if (yPos+i>=0 && yPos+i < 9) {
-						  if (this.getTile(xPos, yPos+i).getFreeStatus()) tileList.add(this.getTile(xPos, yPos+i));
-						  System.out.println(this.getTile(xPos, yPos+i));
-					  }
-				  }
-				  
-				  return tileList;
-			  }
-			
-			  
-			  //====================ATTACK RANGES METHODS=====================//
-			  
-			  //this method returns all "attackable" tiles. 
-			  //attackable tiles are all adjacent tiles to specified tiles which contain an enemy unit
-			  //the method returns an array list of tiles that meet this criteria
-			  //the method takes the X position and Y position of the where the attacking monster is located
-			  public ArrayList<Tile> attackableAdjTiles(int xPos, int yPos){
-				  Tile tile = this.getTile(xPos, yPos);
-				  ArrayList <Tile> tileList = new ArrayList<Tile>();
-				  
-				  tileList.addAll(this.calcRangeEnemy(tile));
-				  
-				  return tileList;
-				  
-			  }
-			  
-			  //helper method 
-			  private ArrayList<Tile> calcRangeEnemy(Tile t){
-					ArrayList<Tile> tileRange = new ArrayList<Tile>();
-					int xPos = t.getTilex();
-					int yPos = t.getTiley();
+			//5) unitMovableTiles - this method returns a list of all tiles a selected unit can move to
+				//within a given range based on the specified position
+				public ArrayList<Tile> unitMovableTiles (int xpos, int ypos, int range ){
+					ArrayList <Tile> tileList = new ArrayList<Tile>();
 					
-					Monster monster = t.getUnitOnTile();
-					Player owner = monster.getOwner();
-					
-					System.out.println(xPos + " calcRange " + yPos);
-					for (int i = 0; i<rangeH.length; i++) {
-						if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
-						else {
-							if (!(this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getFreeStatus()) && this.getTile(xPos+rangeW[i],  yPos+rangeH[i]).getUnitOnTile().getOwner()!=owner) {
-								Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
-								//System.out.println(posTile.getTilex() + "  " + posTile.getTiley());
-								tileRange.add(posTile);	
+					for (int i = xpos - range; i <= (xpos + range); i++) {
+						  
+						for (int j = ypos - range; j <= (ypos + range); j++) {
+							  
+							  // Check if indices are within limits of the board
+							if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 
+								  
+								 // System.out.println("i,j: " + i + "," + j);
+
+								  // Check each tile index combination is adds up to the range 
+								  // (abs(i -x) is the distance the current index is away from the monster position)
+								if ( (Math.abs(i - xpos) + Math.abs(j - ypos)) <=range) {
+									  
+									  // Check if the Tile is free before adding
+									if (this.getTile(i, j).free) {
+										  tileList.add(this.getTile(i, j));
+									}
+								}
 							}
-						}
+						}  
 					}
-					return tileRange;
+					return tileList;
 				}
+			
+				  
+				//====================ATTACK RANGE METHOD=====================//
+				
+				public ArrayList<Tile> unitAttackableTiles (int xpos, int ypos, int range ){
+					ArrayList <Tile> tileList = new ArrayList<Tile>();
+					Player p = this.getTile(xpos, ypos).getUnitOnTile().getOwner();
+					for (int i = xpos - range; i <= (xpos + range); i++) {
+						  
+						for (int j = ypos - range; j <= (ypos + range); j++) {
+							  
+							// Check if indices are within limits of the board
+							if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 
+								  
+								// System.out.println("i,j: " + i + "," + j);
+
+								// Check each tile index combination is adds up to the range 
+								// (abs(i -x) is the distance the current index is away from the monster position)
+								if ( (Math.abs(i - xpos) + Math.abs(j - ypos)) <=range) {
+									  
+									// Check if the Tile is free before adding
+									if (!(this.getTile(i, j).free) && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
+										tileList.add(this.getTile(i, j));
+									}
+								}
+							}
+						}  
+					}
+					return tileList;
+				}		  
+				  
+				  
 			//===============accessors methods==========================//
 			  
 			  //this method returns a list of all monsters (including avatars) on the board which have onCooldow == true
