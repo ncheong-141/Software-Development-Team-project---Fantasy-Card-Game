@@ -38,18 +38,32 @@ public class GameplayContext {
 	public GameplayContext(GameState gameState, ActorRef out, int tilex, int tiley) {
 		this.currentStates = null; 
 		this.gameStateRef = gameState;
-
-		// Temp variable setting 
-		this.out = out; 
 		this.tilex = tilex;
 		this.tiley = tiley; 
 
+		// Temp variable setting 
+		this.out = out; 
 	}
 	
 	// Class methods
 	
 	// State method (called from within Context) 
 	public void executeAndCreateSubStates() {
+		
+		
+		/* --------------------------------------------------------------------------------
+		 * Check if a Unit has been clicked/is on the tile clicked (or if its empty)
+		 * -------------------------------------------------------------------------------- */
+		
+		// Flag needed to determine what what substate is required (e.g. SummonMonster or CastSpell)
+		if (checkUnitPresentOnTile(gameStateRef, tilex, tiley)) {
+			this.setTileFlag("unit");
+		}
+		else {
+			this.setTileFlag("empty"); 
+		}
+		
+		
 		
 		/*
 		 * Combination of different user inputs to substates 
@@ -62,7 +76,7 @@ public class GameplayContext {
 		 */
 		System.out.println("In GameplayContext.");
 
-		// Execute state created from previous user input
+		// Execute state created from previous user input (specified in TileClicked)
 		currentStates.execute(this);
 	}
 	
@@ -118,9 +132,12 @@ public class GameplayContext {
 		this.tileFlag = tileFlag;
 	}
 
+	/* Helper methods */
+	private boolean checkUnitPresentOnTile(GameState gameState, int tilex, int tiley) {	
+		return (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null);
+	}
 	
-	
-	// Debuf
+	// Debug
 	public void debugPrint() {
 		
 		// TileFlag

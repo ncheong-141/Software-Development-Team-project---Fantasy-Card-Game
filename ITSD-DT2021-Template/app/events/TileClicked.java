@@ -50,6 +50,7 @@ public class TileClicked implements EventProcessor{
 		// Start the GameplayState (State Pattern for TileClicked control flow) 
 		GameplayContext gameplayContext = new GameplayContext(gameState, out, tilex, tiley);
 		
+		System.out.println("In TileClicked.");
 		
 		/* --------------------------------------------------------------------------------
 		 * Check previous User inputs (will be either Card Selected State or Unit Selected
@@ -72,20 +73,6 @@ public class TileClicked implements EventProcessor{
 		}
 	
 		
-		
-		/* --------------------------------------------------------------------------------
-		 * Check if a Unit has been clicked/is on the tile clicked (or if its empty)
-		 * -------------------------------------------------------------------------------- */
-		
-		// Flag needed to determine what what substate is required (e.g. SummonMonster or CastSpell)
-		if (checkUnitPresentOnTile(gameState, tilex, tiley)) {
-			gameplayContext.setTileFlag("unit");
-		}
-		else {
-			gameplayContext.setTileFlag("empty"); 
-		}
-		
-		
 		/*
 		 * Execute State. Each state holds the game logic required to execute the desired functionality
 		 * Note, some States here create sub-states. 
@@ -93,18 +80,15 @@ public class TileClicked implements EventProcessor{
 		 * based on what the user has currently clicked (a unit or empty tile) 
 		 */
 		gameplayContext.executeAndCreateSubStates();
-		
-	
-		
 	}
+	
+	/* Helper methods */ 
 	
 	private boolean checkCardClicked(GameState gameState) {
 		return (gameState.getTurnOwner().getHand().isPlayingMode());
 	}
 	
-	private boolean checkUnitPresentOnTile(GameState gameState, int tilex, int tiley) {	
-		return (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null);
-	}
+
 		
 		
 				

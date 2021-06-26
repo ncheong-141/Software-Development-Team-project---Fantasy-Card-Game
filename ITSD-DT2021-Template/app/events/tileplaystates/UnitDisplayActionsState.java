@@ -49,6 +49,7 @@ public class UnitDisplayActionsState implements GameplayStates{
 						BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
 						System.out.println("Deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 						System.out.println("Monster selected: " + m.isSelected());
+						try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
 						
 						// Update movement + attack range tiles displayed
 						
