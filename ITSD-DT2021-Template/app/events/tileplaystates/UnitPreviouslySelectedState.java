@@ -35,6 +35,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 		
 		case("empty"): {
 			// Move
+			subState = new UnitMoveActionSubState();
 			break; 
 		}
 		

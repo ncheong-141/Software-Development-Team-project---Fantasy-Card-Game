@@ -29,6 +29,8 @@ public class UnitDisplayActionsState implements GameplayStates{
 		
 		// Set unit as selected
 		context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
+		
+		//System.out.println(context.getGameStateRef().getBoard().getUnitSelected().name);
 	}
 	
 	
