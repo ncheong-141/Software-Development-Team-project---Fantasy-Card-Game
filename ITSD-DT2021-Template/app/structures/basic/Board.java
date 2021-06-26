@@ -27,6 +27,8 @@ public class Board {
 	private Tile humanStart;
 	private Tile computerStart;
 
+	private Monster unitSelected;
+
 	private final int[] rangeH = {0,0,1,-1,1,-1,1,-1};
 	private final int[] rangeW = {1,-1,0,0,-1,1,1,-1};
 
@@ -44,27 +46,6 @@ public class Board {
 	}
 
 
-	public Tile getHumanStart() {
-		return humanStart;
-	}
-
-	public Tile getComputerStart() {
-		return computerStart;
-	}
-
-	//getter method to access the 2D array of Tiles
-	public Tile[][] getGameBoard() {
-		return gameBoard;
-	}
-
-	public void setGameBoard(Tile[][] gameBoard) {
-		this.gameBoard = gameBoard;
-	}
-
-	//humanStart = gameBoard[3][2];
-	//computerStart = gameBoard[3][8];
-
-
 
 	public Tile getHumanStart() {
 		return humanStart;
@@ -79,8 +60,17 @@ public class Board {
 		return gameBoard;
 	}
 
+
 	public void setGameBoard(Tile[][] gameBoard) {
 		this.gameBoard = gameBoard;
+	}
+
+	public void setUnitSelected(Monster m){
+		this.unitSelected = m;
+	}
+
+	public Monster getUnitSelected(){
+		return this.unitSelected;
 	}
 
 	//Method to access a specific tile on the board given the X and Y coordinates
@@ -88,18 +78,8 @@ public class Board {
 		return gameBoard[y][x];
 	}
 
-	public Monster getUnitSelected() {
-		return unitSelected; 
-	}
-
-	public void setUnitSelected(Monster m) {
-		this.unitSelected = m; 
-	}
-
-
-	public Tile getTile(int x, int y) {
-		return gameBoard[y][x];
-	}
+	//humanStart = gameBoard[3][2];
+	//computerStart = gameBoard[3][8];
 
 
 	//=====================PLAYABLE TILES METHODS==================//
