@@ -25,62 +25,42 @@ public class Player {
 	protected Deck deck;
 	protected Hand hand;
 	protected ActorRef out;
-//	private boolean dead;
-//	private boolean turn;  move to EndTurn/GameState?
-	private int position; // card position in hand
-	private Card card;
 
 	
-	
-	public Player() {
+	public Player(Deck deck) {
 		super();
 		this.health = 20;
-		this.mana = 0;		
-//		this.dead = false; gameState?
-//		this.turn = false; gameState?	
-			
-	
+		this.mana = 0;
+		this.deck = deck;
+		setPlayerHand();
 	}
 	
-	public Player(int health, int mana) {
+	public Player(int health, int mana, Deck deck) {
 		super();
 		this.health = health;
 		this.mana = mana;
-//		this.dead = false; gameState?
-//		this.turn = false; gameState?			
-
+		this.deck = deck;
+		setPlayerHand();
 	}
 		
-	public int getHealth() {
-		return health;
-	}
+
+	//add Mana and check maximum
 	
-	public void setHealth(int health) {
-		this.health = health;
-	}
-	
-	public int getMana() {
-		return mana;
-	}
-	
-	public void setMana(int mana) {
-		this.mana = mana;
-	}
-	
-	//add Mana and check maximum, when use cards
 	public void addMana(int addMana) {
 		int newMana = mana + addMana;
 		if(newMana > 9) {
 			this.mana = 9;
 		}	
 	}
+	
 	//delete Mana , when use cards
+	
 	public void loseMana(int loseMana) {
 		mana = mana - loseMana;
 
 	}	
 	
-	
+
 	//add Health and check maximum
 	public void addHealth(int addHealth) {
 		int newHealth = health + addHealth;
@@ -91,21 +71,20 @@ public class Player {
 			this.health = 20;
 		}
 	}	
+	
 	//lose health and check if it's dead, health =0
 	public void loseHealth(int loseHealth) {
 		int newHealth = health - loseHealth;
 		if(newHealth <= 0) {
 			this.health = 0;
-			GameState.gameOver();
+			GameState.gameOver(); 
 		}
 	}
 
-
-	
 	//create hand for player, along with first 3 cards in hand
-	public void seeHand(ArrayList <Card> h) {
-		this.hand = new Hand(h);
-		this.hand.initialHand(out, deck);
+	public void setPlayerHand() {
+		this.hand = new Hand(this.deck.getDeck());
+		this.hand.initialHand(out, this.deck);
 	}
 	
 	//draw card from deck when round ends, top card in deck is deleted
@@ -131,14 +110,29 @@ public class Player {
 	}
 	
 	public void setAvatar(Avatar a) {
-		this.avatar = a;
-		
+		this.avatar = a;	
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public void setHealth(int health) {
+		this.health = health;
+	}
+	
+	public int getMana() {
+		return mana;
+	}
+	
+	public void setMana(int mana) {
+		this.mana = mana;
 	}
 	
 	public Deck getDeck() {
 		return this.deck;
 	}
-	
+
 	public void setDeck() {
 		this.deck = new Deck();
 	}
@@ -146,16 +140,12 @@ public class Player {
 	public Hand getHand() {
 		return this.hand;
 	}
-	
+
 	public void setHand(ArrayList <Card> h) {
 		this.hand = new Hand(h);
 	}	
-	
-	
-	
 
 	
-		
 }
 		
 		

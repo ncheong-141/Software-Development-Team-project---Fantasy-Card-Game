@@ -38,6 +38,7 @@ public class Monster extends Unit{
 	// Empty constructor for testing 
 	public Monster() {
 		super(); 
+		System.out.println("Im from the Monster default constructor!");
 	}
 
 	public void basicSetup() {
