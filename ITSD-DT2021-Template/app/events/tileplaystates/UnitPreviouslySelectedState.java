@@ -44,6 +44,9 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 		// Execute sub-state
 		if (subState != null ) {
 			subState.execute(context);
+			
+			// Deselect after action
+			context.deselectAllAfterActionPerformed();
 		}
 		
 	}

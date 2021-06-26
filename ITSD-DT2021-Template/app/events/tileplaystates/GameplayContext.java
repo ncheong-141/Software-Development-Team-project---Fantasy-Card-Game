@@ -78,6 +78,9 @@ public class GameplayContext {
 
 		// Execute state created from previous user input (specified in TileClicked)
 		currentStates.execute(this);
+		
+		
+		
 	}
 	
 	
@@ -136,6 +139,13 @@ public class GameplayContext {
 	private boolean checkUnitPresentOnTile(GameState gameState, int tilex, int tiley) {	
 		return (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null);
 	}
+	
+	public void deselectAllAfterActionPerformed() { 
+		gameStateRef.getBoard().setUnitSelected(null);
+		gameStateRef.getTurnOwner().getHand().setPlayingMode(false);
+		gameStateRef.getTurnOwner().getHand().setSelectedCard(null);
+	}
+	
 	
 	// Debug
 	public void debugPrint() {

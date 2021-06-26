@@ -58,6 +58,9 @@ public class CardPreviouslySelectedState implements GameplayStates {
 		// Execute sub-state
 		if (subState != null ) {
 			subState.execute(context);
+			
+			// Deselect after action
+			context.deselectAllAfterActionPerformed();
 		}
 		else {
 			System.out.println("Substate = null.");
