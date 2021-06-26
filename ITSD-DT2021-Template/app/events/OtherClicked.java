@@ -21,6 +21,16 @@ public class OtherClicked implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
+		/*
+		 * Will hold:
+		 * Deselect Monster
+		 * Deselect Card
+		 */
+		
+		// Deselect any Monsters that are selected
+		// Could put this in a method stored somewhere else, which can just be called wherever in program
+		
+		
 		
 	}
 
