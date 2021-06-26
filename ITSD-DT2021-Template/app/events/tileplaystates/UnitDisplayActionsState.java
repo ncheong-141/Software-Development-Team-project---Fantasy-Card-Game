@@ -82,7 +82,7 @@ public class UnitDisplayActionsState implements GameplayStates{
 
 					// Display movement range tiles
 					ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
-					GeneralCommandSets.drawBoardTiles(o, mRange, 0);
+					GeneralCommandSets.drawBoardTiles(o, mRange, 1);
 					GeneralCommandSets.threadSleepLong();
 					System.out.println("Finished highlighting tiles.");
 				}
