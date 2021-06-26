@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import commands.GeneralCommandSets;
 import events.UnitMoving;
 import structures.GameState;
 import structures.basic.Monster;
@@ -47,12 +48,12 @@ public class UnitMoveActionSubState implements GameplayStates {
 			int i = 0;
 			for(Tile t : mRange) {
 				BasicCommands.drawTile(out, t, 0);
-				try {Thread.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
+				GeneralCommandSets.threadSleep();
 				System.out.println("Tile print " + i);
 				i++;
 			}
 			BasicCommands.drawTile(out, gameState.getBoard().getTile((mSelected.getPosition()).getTilex(), (mSelected.getPosition()).getTiley()), 0);
-			try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+			GeneralCommandSets.threadSleep();
 
 			Tile current = gameState.getBoard().getTile(mSelected.getPosition().getTilex(),mSelected.getPosition().getTiley());
 			Tile target = gameState.getBoard().getTile(tilex, tiley);
@@ -69,19 +70,19 @@ public class UnitMoveActionSubState implements GameplayStates {
 				gameState.getBoard().setUnitSelected(null);
 				
 				BasicCommands.addPlayer1Notification(out, "Unit moving...", 4);
-				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+				GeneralCommandSets.threadSleep();
 				
 			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
 				// Move animation
 				BasicCommands.playUnitAnimation(out, mSelected, UnitAnimationType.move);
-				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+				GeneralCommandSets.threadSleep();
 				// Initiate move
 				BasicCommands.moveUnitToTile(out, mSelected, gameState.getBoard().getTile(tilex, tiley));
-				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+				GeneralCommandSets.threadSleep();
 				System.out.println("Movement is complete, I'm back in TileClicked rn.");
 				// Re-idle
 				BasicCommands.playUnitAnimation(out, mSelected, UnitAnimationType.idle);
-				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+				GeneralCommandSets.threadSleep();
 			}
 			
 		}

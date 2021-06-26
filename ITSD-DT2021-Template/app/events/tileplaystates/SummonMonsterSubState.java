@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import commands.GeneralCommandSets;
 import structures.GameState;
 import structures.basic.Card;
 import structures.basic.Monster;
@@ -18,8 +19,7 @@ public class SummonMonsterSubState implements GameplayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 
-		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.tilex, context.tiley);
-		
+		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.tilex, context.tiley);	
 	}
 
 	
@@ -27,37 +27,36 @@ public class SummonMonsterSubState implements GameplayStates {
 		
 		// Summon the Monster (instantiate)
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		
 		// Need some code about retrieving StaticConfFiles matching card from Deck here
 		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,1,statsRef,Monster.class);		
 		summonedMonster.setPositionByTile(gameState.getBoard().getTile(tilex,tiley));
 		summonedMonster.setOwner(gameState.getTurnOwner());
-		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep(); 
 		
 		// Keep before add Unit because drawTile doesn't work on tile underneath new monster for some reason
 		// De-highlight tiles
 		ArrayList <Tile> summonRange = gameState.getBoard().allSummonableTiles(gameState.getTurnOwner());
-		for (Tile i : summonRange) {
-			BasicCommands.drawTile(out, i, 0);
-			try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
-		}
+		GeneralCommandSets.drawBoardTiles(out, summonRange, 0);
+		GeneralCommandSets.threadSleepLong();
 		
 		// Add unit to tile ON BOARD
 		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
 		gameState.getBoard().getTile(tilex,tiley).addUnit(summonedMonster);
 		System.out.println("This is immediately after summon.");
-		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep();
 		
 		// Drawing the monster on the board
 		BasicCommands.drawUnit(out, summonedMonster, gameState.getBoard().getTile(tilex,tiley));
-		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep();
 		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
-		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
 		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
-		try {Thread.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep();
 		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
-		try {Thread.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep();
 		
 		// De-select card
 		Card selectedCard = gameState.getTurnOwner().getHand().getSelectedCard();

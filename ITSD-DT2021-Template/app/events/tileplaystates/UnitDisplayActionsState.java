@@ -4,12 +4,9 @@ import structures.GameState;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.Unit;
-
 import java.util.ArrayList;
-
 import akka.actor.ActorRef;
-import commands.BasicCommands;
-
+import commands.*; 
 
 
 
@@ -61,14 +58,12 @@ public class UnitDisplayActionsState implements GameplayStates{
 					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
 					System.out.println("Deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 					System.out.println("Monster selected: " + m.isSelected());
-					try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+					GeneralCommandSets.threadSleep();
 					
 					// Update movement range tiles displayed
 					ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
-					for(Tile t : mRange) {
-						BasicCommands.drawTile(o, t, 0);
-						try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
-					}
+					GeneralCommandSets.drawBoardTiles(o, mRange, 0);
+					GeneralCommandSets.threadSleepLong();
 					System.out.println("Finished un-highlighting tiles.");
 					
 					// If selectedUnit != Unit on clicked Tile, switch to new Unit
@@ -82,21 +77,16 @@ public class UnitDisplayActionsState implements GameplayStates{
 					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
 					System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 					System.out.println("Monster selected: " + m.isSelected());
-					try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+					GeneralCommandSets.threadSleep();
 
 
 					// Display movement range tiles
 					ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
-					for(Tile t : mRange) {
-						BasicCommands.drawTile(o, t, 1);
-						try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
-					}
+					GeneralCommandSets.drawBoardTiles(o, mRange, 0);
+					GeneralCommandSets.threadSleepLong();
 					System.out.println("Finished highlighting tiles.");
-
-
 				}
 			} 
-			
 			else {
 				System.out.println("You do not own this monster");
 			}
