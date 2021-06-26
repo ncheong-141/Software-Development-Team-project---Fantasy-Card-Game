@@ -16,6 +16,8 @@ public class UnitMoveActionSubState implements GameplayStates {
 		// Perform unit move function
 		unitMove(context); 
 		
+		// Deselect all entities after performing an action
+		context.deselectAllAfterActionPerformed();
 	}
 
 

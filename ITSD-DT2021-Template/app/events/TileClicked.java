@@ -56,9 +56,11 @@ public class TileClicked implements EventProcessor{
 		/* --------------------------------------------------------------------------------
 		 * Check previous User inputs (will be either Card Selected State or Unit Selected
 		 * -------------------------------------------------------------------------------- */
-
+		
 		if (checkCardClicked(gameState)) {
 			gameplayContext.addCurrentState(new CardPreviouslySelectedState());
+			
+
 		} 
 		else if (gameState.getBoard().getUnitSelected() != null) {
 			
@@ -66,7 +68,7 @@ public class TileClicked implements EventProcessor{
 			
 			// Set this now to false? 
 		}
-		else {			
+		else {
 			// If nothing is selected previously 
 			gameplayContext.addCurrentState(new SingleSelectedState());
 		}

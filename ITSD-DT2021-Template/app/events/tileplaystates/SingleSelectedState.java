@@ -38,7 +38,7 @@ public class SingleSelectedState implements GameplayStates{
 			subState.execute(context);
 			
 			// Deselect after action
-			//context.deselectAllAfterActionPerformed();
+			context.deselectAllAfterActionPerformed();
 		}
 	}
 	
