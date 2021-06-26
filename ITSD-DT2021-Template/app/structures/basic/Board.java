@@ -1,6 +1,7 @@
 package structures.basic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
@@ -162,28 +163,129 @@ public class Board {
 		
 		//================= UNIT MOVEMENTS METHODS ========================//
 		  
-		  //5) standard movement range. This method returns an array list of
-		  //all the tiles that a selected monster can move to
-		  
-		  public ArrayList<Tile> monsterMovableTiles (Monster m){
-			  ArrayList <Tile> tileList = new ArrayList<Tile>();
-			  int x = m.getPosition().getTilex();
-			  int y = m.getPosition().getTiley();
-			  Tile monsterPos = this.getTile(x, y);
-			  tileList.addAll(calcRange(monsterPos));
-			  for (int i = -2; i<=2; i += 4) {
-				  System.out.print("exec loop");
-				  if (x+i >= 0 && x+i<9) {
-					  if (this.getTile(x+i, y).getFreeStatus()) tileList.add(this.getTile(x+i,  y));
-					  System.out.println(this.getTile(x+i, y));
-				  }
-				  if (y+i>=0 && y+i < 9) {
-					  if (this.getTile(x, y+i).getFreeStatus()) tileList.add(this.getTile(x, y+i));
-					  System.out.println(this.getTile(x, y+i));
-				  }
-			  }
-			  
-			  return tileList;
-		  }
+				//5) unitMovableTiles - this method returns a list of all tiles a selected unit can move to
+				//within a given range based on the specified position
+				public ArrayList<Tile> unitMovableTiles (int xpos, int ypos, int moveRange ){
+					ArrayList <Tile> tileList = this.reachableTiles(xpos, ypos, moveRange);
+					tileList.removeIf(t -> !(t.getFreeStatus()));
+					
+					return tileList;
+				}
+			
+				  
+				//====================ATTACK RANGE METHODS=====================//
+				
+				
+				//6) unitAttackableTiles - returns a set of all tiles that a unit located at xpos and ypos can attack based on its attack and move range
+				//the result is returned as a set to eliminate duplicate values within the set
+				public HashSet<Tile> unitAttackableTiles (int xpos, int ypos, int attackRange, int moveRange){
+					
+					Player p = this.getTile(xpos, ypos).getUnitOnTile().getOwner();
+					
+					//get a list of all tiles that the unit can reach given their position and move range
+					//this includes both free and occupied tiles
+					ArrayList <Tile> reachTiles = this.reachableTiles(xpos, ypos, moveRange);
+					
+					HashSet <Tile> tileList = new HashSet<Tile>();
+					
+					//iterate over the list of tiles that can be reached 
+					//if the tile has an enemy unit it is added to the set (no duplicate values)
+					for (Tile t : reachTiles) {
+						System.out.println(t + " x ");
+						if (!(t.getFreeStatus()) && t.getUnitOnTile().getOwner()!=p) tileList.add(t);
+					}
+					
+					//remove all occupied tiles (enemy or friendly) from reachable tiles list
+					reachTiles.removeIf(t -> !(t.getFreeStatus()));		
+					
+					//the reachable tile list now only contains unoccupied tiles
+					//for each of these unoccupied tiles (that the unit could move to)
+					//the attack range (with that tile as origin) is calculated as a set 
+					//the set is added to the set to returned (no duplicated values)
+					for(Tile t : reachTiles) {
+						System.out.println(t);
+						HashSet <Tile> attRange = calcAttackRange(t.getTilex(), t.getTiley(), attackRange, p);
+						tileList.addAll(attRange);
+						
+					}			
+					return tileList;			
+				}
+				
+				//this method returns all tiles a unit can reach based on position and movement range of unit
+				//includes both occupied and unoccupied tiles
+				private ArrayList<Tile> reachableTiles (int xpos, int ypos, int moveRange){
+					ArrayList<Tile> reachTile = new ArrayList<Tile>();
+					
+					for (int i = xpos - moveRange; i <= (xpos + moveRange); i++) {
+						  
+						for (int j = ypos - moveRange; j <= (ypos + moveRange); j++) {
+							  
+							  // Check if indices are within limits of the board
+							if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 
+								  
+								 // System.out.println("i,j: " + i + "," + j);
+
+								  // Check each tile index combination is adds up to the range 
+								  // (abs(i -x) is the distance the current index is away from the monster position)
+								if ( (Math.abs(i - xpos) + Math.abs(j - ypos)) <=moveRange) {
+									reachTile.add(this.getTile(i, j));
+									System.out.println(this.getTile(i,j));
+								}
+							}
+						}  
+					}
+					return reachTile;
+				}
+				
+				private HashSet<Tile> calcAttackRange(int xpos, int ypos, int attackRange, Player p){
+					HashSet<Tile> tileList = new HashSet<Tile>();
+					
+					System.out.println(xpos + " --- " + ypos);
+					
+					
+					for (int i = xpos - attackRange; i <= (xpos + attackRange); i++) {
+						  
+						for (int j = ypos - attackRange; j <= (ypos + attackRange); j++) {
+							  
+							// Check if indices are within limits of the board
+							if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 
+								  
+								// System.out.println("i,j: " + i + "," + j);
+
+								if (((i==xpos && j!=ypos) || (i != xpos && j==ypos)) && this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
+									tileList.add(this.getTile(i, j));
+									System.out.println(this.getTile(i,j)+ " o ");
+								}
+								
+								else if ((Math.abs(i-xpos) == Math.abs(j - ypos))&&this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
+									tileList.add(this.getTile(i, j));
+									System.out.println(this.getTile(i,j)+ " p ");
+								}
+							}
+						}
+						
+					}
+					
+					
+					return tileList;
+				}
+				  
+				  
+				//===============accessors methods==========================//
+				  
+				public ArrayList<Monster> coolDownToggle (){
+					ArrayList<Monster> monsterList = new ArrayList<Monster>();
+					  
+					for (int i = 0; i <gameBoard.length; i++) {
+						for (int k =0; k<gameBoard[0].length; k++) {
+							/*
+							 * if ((gameBoard[i][k].getUnitOnTile() != null)&&
+							 * gameBoard[i][k].getUnitOnTile().getOnCooldown()) {
+							 * monsterList.add(this.gameBoard[i][k].getUnitOnTile()); }
+							 */
+						}
+					}
+					return monsterList;
+				}
 }
 
