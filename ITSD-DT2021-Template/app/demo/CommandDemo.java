@@ -542,6 +542,7 @@ public class CommandDemo {
 	
 	
 	
+
 	public static void executeDemoBoard(ActorRef out, GameState g) {
 		Board gameBoard = new Board();
 		
@@ -566,18 +567,29 @@ public class CommandDemo {
 		Tile tTwo = g.getGameBoard().getTile(7, 2);
 				
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
+		tOne.addUnit(humanAvatar);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}				
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 				
 		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
+		tTwo.addUnit(computerAvatar);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		ArrayList <Tile> display = gameBoard.unitMovableTiles(1, 2, 20);
+		
+		for (Tile t : display) {
+			BasicCommands.drawTile(out, t, 2);
+			try {Thread.sleep(200);} catch (InterruptedException e) {e.printStackTrace();}
+		}
 				
 	}
+
+	
 	public static void executeDemoPlayer(ActorRef out) {
 	}
 	public static void executeDemoDeckHand(ActorRef out, GameState g) {
@@ -596,6 +608,8 @@ public class CommandDemo {
 				// loadCard
 				Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
 				try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+				
+				g.setTurnOwner(g.getPlayerOne());
 				
 				// Create Deck
 //				Deck decks = new Deck();
