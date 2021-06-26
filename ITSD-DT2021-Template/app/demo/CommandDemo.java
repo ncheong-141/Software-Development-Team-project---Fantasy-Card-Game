@@ -543,6 +543,7 @@ public class CommandDemo {
 	
 	
 	
+
 	public static void executeDemoBoard(ActorRef out, GameState g) {
 		Board gameBoard = new Board();
 		
@@ -571,7 +572,7 @@ public class CommandDemo {
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}				
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 				
 		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
 		tTwo.addUnit(computerAvatar);
@@ -587,6 +588,8 @@ public class CommandDemo {
 		}
 				
 	}
+
+	
 	public static void executeDemoPlayer(ActorRef out) {
 	}
 	public static void executeDemoDeckHand(ActorRef out, GameState g) {
@@ -605,6 +608,8 @@ public class CommandDemo {
 				// loadCard
 				Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
 				try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+				
+				g.setTurnOwner(g.getPlayerOne());
 				
 				// Create Deck
 //				Deck decks = new Deck();

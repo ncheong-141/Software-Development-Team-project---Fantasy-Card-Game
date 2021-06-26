@@ -24,6 +24,8 @@ public class AbilityToUnitLinkage {
 		
 		/* Initiailising abilities with String name keys*/
 
+		// Can maybe grab this info from a file instead if dont want to hard code it in. 
+		
 		// Truestrike 
 		UnitAbility.put("Truestrike", constructArrayListAbility(new A_Truestrike(true,Monster.class)));
 
