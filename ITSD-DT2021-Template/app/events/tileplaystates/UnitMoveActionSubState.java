@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import events.UnitMoving;
 import structures.GameState;
 import structures.basic.Monster;
 import structures.basic.Tile;
@@ -15,6 +16,9 @@ public class UnitMoveActionSubState implements GameplayStates {
 		
 		// Perform unit move function
 		unitMove(context); 
+		
+		// Call UnitMoving
+		UnitMoving rules = new UnitMoving(); 
 		
 	}
 

@@ -29,7 +29,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 			// Check if enemy if movement is required to attack the enemy
 				// -> move and attack substate
 				// if not not, attack substate 
-			// 
+			
 			break;
 		}
 		
