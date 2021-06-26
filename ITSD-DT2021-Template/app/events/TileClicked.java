@@ -112,9 +112,11 @@ public class TileClicked implements EventProcessor{
 			System.out.println("Monster name: " + tileMonster.getName());
 			System.out.println("Monster HP: " + tileMonster.getHP());
 			System.out.println("Monster attack: " + tileMonster.getAttackValue());
+
 			// -------------------------------------------------------------------------------------------
 			
 			
+
 
 			// Check if a card is currently active in the hand (been clicked) 
 			if (checkCardClicked(gameState) == true) {
@@ -157,10 +159,11 @@ public class TileClicked implements EventProcessor{
 				
 				// Moveable check here
 				if (checkIfUnitMovable(selectedMonster)) {
+
 					unitSelectedActions(selectedMonster, gameState, tilex, tiley, out, Monster.class);	
+
 				}
 			}	
-		}
 	
 		// Tile is unnoccupied 	
 		else if (checkUnitPresent(gameState,tilex,tiley) == false){
@@ -205,6 +208,7 @@ public class TileClicked implements EventProcessor{
 			
 			// If there is no card selected in hand or any unit present
 			else if (checkCardClicked(gameState) == false) {
+
 				
 				// Only movement can occur (no Unit on destination tile)
 				// Board method to retrieve selected Monster
@@ -266,14 +270,18 @@ public class TileClicked implements EventProcessor{
 				else {	
 					System.out.println("Target out of range.");		
 				}
+
 			}
 			else { /**/ }
+		}
 	}			
 }
 
 	
 	
+
 	// Remove later
+
 	/* Condition check helper methods to keep code clear */
 	private boolean checkIfPlayerTurn(GameState gameState, ActorRef out) {
 		if ((gameState.getTurnOwner() instanceof HumanPlayer)) {
@@ -307,8 +315,10 @@ public class TileClicked implements EventProcessor{
 	/* Helper methods such as highlight unit, display unit stats etc */
 
 
+
 	// unitSelectedActions is for when a unit is selected + displaying its movement & attack movement
 	private void unitSelectedActions(Unit unit, GameState g, int tilex, int tiley, ActorRef o, Class<? extends Unit> classtype) {
+
 
 		// Check class type entered 
 		if (classtype == Monster.class) {
@@ -318,12 +328,15 @@ public class TileClicked implements EventProcessor{
 			
 			// Current player owns clicked Monster
 			if (m.getOwner() == g.getTurnOwner()) {
+
 				// + getSelectedUnit check
+
 				System.out.println("You own this monster");
 				
 				// Deselect monster if already selected + apply visual
 				if(m.isSelected()) {
 					m.toggleSelect();
+
 					g.getBoard().setUnitSelected(null);
 					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
 					System.out.println("Deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
@@ -345,10 +358,12 @@ public class TileClicked implements EventProcessor{
 				else if(!(m.isSelected())) {
 					m.toggleSelect();
 					g.getBoard().setUnitSelected(m);
+
 					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
 					System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
 					System.out.println("Monster selected: " + m.isSelected());
 					try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+
 
 					// Display movement range tiles
 					ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
@@ -357,6 +372,7 @@ public class TileClicked implements EventProcessor{
 						try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
 					}
 					System.out.println("Finished highlighting tiles.");
+
 
 				}
 			} 
