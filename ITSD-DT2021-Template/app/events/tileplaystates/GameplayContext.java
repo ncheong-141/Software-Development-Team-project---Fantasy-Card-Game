@@ -20,15 +20,18 @@ public class GameplayContext {
 
 	// Attributes
 	private GameplayStates				currentStates;
+
 	private Card 						loadedCard; 
+	private Class<?> 					cardClasstype; 
+
 	private Unit						loadedUnit; 
 	private GameState					gameStateRef; 
-	private Class<?> 					cardClasstype; 
 	private String						tileFlag; 
+	int 								tilex;
+	int 								tiley; 
 	
 	// Temp variables just to make code work
-	int tilex;
-	int tiley; 
+
 	ActorRef out; 
 	
 	// Constructor
@@ -57,7 +60,8 @@ public class GameplayContext {
 		 *   Unit + Empty 			-> Move unit
 		 *   Unit + Unit			-> Attack Unit (if enemy) 
 		 */
-		
+		System.out.println("In GameplayContext.");
+
 		// Execute state created from previous user input
 		currentStates.execute(this);
 	}
@@ -116,6 +120,24 @@ public class GameplayContext {
 
 	
 	
+	// Debuf
+	public void debugPrint() {
+		
+		// TileFlag
+		System.out.println("TileFlag: " + tileFlag); 
+		
+		// Card
+		if (loadedCard != null) {
+			System.out.println("Card info:\n" + loadedCard.getCardname() + "\nHP: " + loadedCard.getBigCard().getHealth() + "\nAttack: " + loadedCard.getBigCard().getAttack());
+			System.out.println("Card type: " + cardClasstype); 
+		}
+		
+		// Add unit print
+		
+		// Tile print
+		System.out.println("Tile (x,y) : (" + tilex + "," + tiley + ")");
+
+	}
 	
 	
 }

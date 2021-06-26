@@ -486,20 +486,36 @@ public class CommandDemo {
 		}
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		
 		// loadCard
 		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
+		// drawUnit
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
+		fire_spitter.setOwner(g.getTurnOwner());
+		g.getBoard().getTile(3,2).addUnit(fire_spitter);
+		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		
+		// loadCard
+		Card ctrustrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
 		g.setTurnOwner(g.getPlayerOne());
 		
-		// Create Deck
-//		Deck decks = new Deck();
 		// Create a tempHand for testing
 		ArrayList <Card> cards = new ArrayList <Card> ();
 		cards.add(cfire_spitter);
+		cards.add(ctrustrike);
+		
 		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
 		g.getTurnOwner().setHand(cards);
+		
 		// draw cards in hand
 		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
 		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player

@@ -16,6 +16,11 @@ public class CardPreviouslySelectedState implements GameplayStates {
 	// State methods
 	public void execute(GameplayContext context) {
 	
+		// Debug section 
+		System.out.println("In CardPreviouslySelectedState.");
+		context.debugPrint();
+		
+		
 		// If a card is selected as previous user input, get card for use in the Sub state (summon monster or Cast spell) 
 		context.setLoadedCard( context.getGameStateRef().getTurnOwner().getHand().getSelectedCard() );
 		
@@ -32,22 +37,31 @@ public class CardPreviouslySelectedState implements GameplayStates {
 		// Determine the substate (SummonMonster or Cast Spell)  (to lower case just so case isnt a problem ever) 
 		switch (context.getTileFlag().toLowerCase()) {
 		
+		
+		
 		case("unit"): {
 			// Add check for card type
 			if (context.getCardClasstype() == Spell.class) {
 				subState = new CastSpellSubState();
 			}
+			break; 
 		}
 		
 		case("empty"): {
 			if (context.getCardClasstype() == Monster.class) {
 				subState = new SummonMonsterSubState();
 			}
+			break;
 		}
 		}
 		
 		// Execute sub-state
-		subState.execute(context);
+		if (subState != null ) {
+			subState.execute(context);
+		}
+		else {
+			System.out.println("Substate = null.");
+		}
 	}
 	
 	

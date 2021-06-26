@@ -12,22 +12,31 @@ public class SingleSelectedState implements GameplayStates{
 	
 	public void execute(GameplayContext context) {
 			
-		
+		System.out.println("In SingleSelectedState");
+		context.debugPrint();
+
+
 		// Determine the substate (UnitDisplayActionsState or nothing for now) 
 		switch (context.getTileFlag().toLowerCase()) {
 		
 		case("unit"): {
 			subState = new UnitDisplayActionsState(); 
+			break;
 		}
 		
 		case("empty"): {
+			return; 
 		}
-		
+		case("default"):{
+			return;
+		}
 		}
 		
 		
 		// Execute sub-state
-		subState.execute(context);
+		if (subState != null) {
+			subState.execute(context);
+		}
 	}
 	
 }

@@ -14,6 +14,8 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 	
 	public void execute(GameplayContext context) {
 			
+		System.out.println("In UnitPreviouslySelectedState.");
+		context.debugPrint();
 		
 		// Load previous unit for use in next sub state (move or attack) 
 		context.setLoadedUnit(context.getGameStateRef().getBoard().getUnitSelected());
@@ -28,17 +30,21 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 				// -> move and attack substate
 				// if not not, attack substate 
 			// 
+			break;
 		}
 		
 		case("empty"): {
 			// Move
+			break; 
 		}
 		
 		}
 		
 
 		// Execute sub-state
-		subState.execute(context);
+		if (subState != null ) {
+			subState.execute(context);
+		}
 		
 	}
 	

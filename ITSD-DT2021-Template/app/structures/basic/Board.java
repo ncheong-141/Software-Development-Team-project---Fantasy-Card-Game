@@ -25,6 +25,7 @@ public class Board {
 	//note: still to be implemented, not a fundamental feature
 	private Tile humanStart;
 	private Tile computerStart;
+	private Monster unitSelected; 
 
 	private final int[] rangeH = {0,0,1,-1,1,-1,1,-1};
 	private final int[] rangeW = {1,-1,0,0,-1,1,1,-1};
@@ -67,6 +68,13 @@ public class Board {
 		return gameBoard[y][x];
 	}
 
+	public Monster getUnitSelected() {
+		return unitSelected; 
+	}
+	
+	public void setUnitSelected(Monster m) {
+		this.unitSelected = m; 
+	}
 	
 		//=====================PLAYABLE TILES METHODS==================//
 	

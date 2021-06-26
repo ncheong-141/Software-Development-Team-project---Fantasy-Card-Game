@@ -14,6 +14,9 @@ import utils.StaticConfFiles;
 public class SummonMonsterSubState implements GameplayStates {
 
 	public void execute(GameplayContext context) {
+		
+		System.out.println("In SummonMonsterSubState.");
+
 		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.tilex, context.tiley);
 	}
 
