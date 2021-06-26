@@ -43,13 +43,15 @@ public class GameState {
 		computerAvatar.setOwner(playerTwo, gameBoard);
 		
 		//decks instantiation 
+
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
 		//playerOne.setDeck(deckPlayerOne);
-		
+				
 		Deck deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
 		//playerTwo.setDeck(deckPlayerTwo);
+
 	}
 	
 	public int getTurnCount() {
