@@ -27,6 +27,8 @@ public class Board {
 		private Tile humanStart;
 		private Tile computerStart;
 
+		private Monster unitSelected;
+
 		private final int[] rangeH = {0,0,1,-1,1,-1,1,-1};
 		private final int[] rangeW = {1,-1,0,0,-1,1,1,-1};
 		
@@ -59,6 +61,14 @@ public class Board {
 
 		public void setGameBoard(Tile[][] gameBoard) {
 			this.gameBoard = gameBoard;
+		}
+
+		public void setUnitSelected(Monster m){
+			this.unitSelected = m;
+		}
+
+		public Monster getUnitSelected(){
+			return this.unitSelected;
 		}
 		
 		//Method to access a specific tile on the board given the X and Y coordinates
