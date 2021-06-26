@@ -21,7 +21,10 @@ public class OtherClicked implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
-		
+		// Reset selected entities 
+		gameState.getBoard().setUnitSelected(null);
+		gameState.getTurnOwner().getHand().setPlayingMode(false);
+		gameState.getTurnOwner().getHand().setSelectedCard(null);
 	}
 
 }
