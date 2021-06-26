@@ -16,7 +16,6 @@ import structures.basic.HumanPlayer;
 import structures.basic.Monster;
 import structures.basic.Spell;
 import structures.basic.Tile;
-import structures.basic.Unit;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -64,71 +63,51 @@ public class TileClicked implements EventProcessor{
 		int tiley = message.get("tiley").asInt();
 		
 		
-				
+		
+	/* Need to reorganise this chain of checks to optimise
+	** Currently:	1) Check Tile occupancy
+	**				2) Check if any card in hand is selected for play
+	**				3) Check if playing card is Monster/Spell
+	*/
 	
 		
 		
-		// TileClicked logic chain
-		// ------------------------------------------------------------------------------------------
-		
-		/*
-		 * Structure of TileClicked logic
-		 *  0. Check if its the players turn (return from method if not)
-		    1. Check if Unit present
-			1T 
-				2. Check if Card is selected in hand
-				2T	3. Check card type
-					3M - Do nothing
-					3S - Cast spell on monster if applicable 
-				2F	Select monster, open the movement options 
-			1F
-				2. Check if Card is selected in hand
-				2T 	3. Check card type
-					3M - Summon monster
-					3P - Do nothing
-				2F Do nothing since no card or unit
-		*/
-		
-		
-		// Check if its the players turn. Do not want the player to be able to alter the game while the computer is playing
-//		if (!checkIfPlayerTurn(gameState, out)) {
-//			return; 
-//		}
-		
-		// Check if a Unit is present on the tile clicked. 
-		if (checkUnitPresent(gameState,tilex,tiley) == true) {
-			
+	//	>>>>> Tile is occupied by Unit	//
 
-			// Debugging section
-			// ------------------------------------------------------------------------------------------
-			// Create reference for monster on tile for debug
-			Monster tileMonster = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
+		if (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null) {
 			
 			System.out.println("Unit present");
 			System.out.println("Free status: " + gameState.getBoard().getTile(tilex, tiley).getFreeStatus());
 			
+			// Debugging section
+			// ------------------------------------------------------------------------------------------
+			// Create reference for monster on tile for debug
+			Monster tileMonster = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
+
 			// Print monster stats to console for debugging
+			System.out.println("Unit present");
+			System.out.println("Monster clicked");
 			System.out.println("Monster name: " + tileMonster.getName());
 			System.out.println("Monster HP: " + tileMonster.getHP());
 			System.out.println("Monster attack: " + tileMonster.getAttackValue());
 			System.out.println("Monster mana cost: " + tileMonster.getManaCost());
-			// -------------------------------------------------------------------------------------------
 			
-			
-
-			// Check if a card is currently active in the hand (been clicked) 
-			if (checkCardClicked(gameState) == true) {
+			// TileClicked logic chain
+			// ------------------------------------------------------------------------------------------
+			// If there is a card selected in hand: 
+			if (gameState.getTurnOwner().getHand().isPlayingMode()) {
 				
 				// Retrieve selected card
 				Card selected = gameState.getTurnOwner().getHand().getSelectedCard();
 				
-				// Check if card is a Monster or Spell
-				if(checkIfMonsterCard(selected) == true) {		
-					System.out.println("Selected card is a Monster card.");	
+				// If Card is a Monster
+				// Temp way of identifying, Card could contain a more useful Monster/Spell identifier
+				if(selected.getBigCard().getAttack() > 0) {			
 					System.out.println("Tile is already occupied.");	
 				} 
-				// If Card is Spell	
-				else {
+				
+				// If Card is Spell
+				else {	
 					System.out.println("Selected card is a Spell card.");
 					
 					// Mana check: player mana vs mana cost
@@ -146,27 +125,28 @@ public class TileClicked implements EventProcessor{
 //					EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
 //					BasicCommands.playEffectAnimation(out, ef, gameState.getBoard().getTile(tilex , tiley));
 					// ------------------------------------------------------------------------------------------
+	
 				}
+				
 			}
 			
-			// If there is no card selected in hand, unit is selected. 
-			else if (checkCardClicked(gameState) == false) {		
-				
-				System.out.println("Unit selected");
-				Monster selectedMonster = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
+			// If there is no card selected in hand, run Monster logic; no difference in Av/Mon here
+			else {			
+				System.out.println("Unit clicked");
+				Monster m = (Monster) gameState.getBoard().getTile(tilex, tiley).getUnitOnTile();
 				
 				// Moveable check here
-				if (checkIfUnitMovable(selectedMonster)) {
-					unitSelectedActions(selectedMonster, gameState, out, Monster.class);	
-				}
+					
+				monsterLogic(m, gameState, out);	
 			}	
 		}
-	
-		// Tile is unnoccupied 	
-		else if (checkUnitPresent(gameState,tilex,tiley) == false){
+		
+	//	>>>>> Tile is unoccupied	//
+		
+		else {
 
 			// If there is a card selected in hand
-			if (checkCardClicked(gameState) == true) {
+			if (gameState.getTurnOwner().getHand().isPlayingMode()) {
 
 				// 1) Retrieve selected card in hand
 				// 2) Identify card type for logic to be used
@@ -176,35 +156,36 @@ public class TileClicked implements EventProcessor{
 				// Retrieve selected card
 				Card selected = gameState.getTurnOwner().getHand().getSelectedCard();
 				
-				// Check if card is a Monster or Spell
-				if(checkIfMonsterCard(selected) == true) {		
+				// If Card is a Monster
+				// Temp way of identifying, Card could contain a more useful Monster/Spell identifier
+				if(selected.getBigCard().getAttack() > 0) {
 					
 					// Mana vs mana cost check --- input when mana cycle is implemented
 					
-					// Check selected Tile is in summonable range
-					// What a condition!!
-					if((gameState.getBoard().allSummonableTiles(gameState.getTurnOwner())).contains(gameState.getBoard().getTile(tilex, tiley))) {
-
-						String configName = selected.getCardname().replace(' ', '_').toLowerCase().trim();
-						configName = "u_" + configName;
-
-						System.out.println("Summoning monster...");
-						summonMonster(gameState, out , configName, selected, tilex, tiley);
-
-					} else {
-						System.out.println("Can't summon monster on this tile.");
-					}
+						// Check selected Tile is in summonable range
+						if((gameState.getBoard().allSummonableTiles(gameState.getTurnOwner())).contains(gameState.getBoard().getTile(tilex, tiley))) {
+							
+							String configName = selected.getCardname().replace(' ', '_').toLowerCase().trim();
+							configName = "u_" + configName;
+	
+							System.out.println("Summoning monster...");
+							summonMonster(gameState, out , configName, selected, tilex, tiley);
+							
+						} else {
+							System.out.println("Can't summon monster on this tile.");
+						}
 						
 				} 
 				
 				// If Card is Spell
 				else {
 					System.out.println("Can't activate a Spell on an empty tile.");
-				}	
+				}
+				
 			}
 			
-			// If there is no card selected in hand or any unit present
-			else if (checkCardClicked(gameState) == false) {
+			// No selected cards in Hand
+			else {
 				System.out.println("That sure is an empty tile.");
 			}
 		}	
@@ -212,81 +193,45 @@ public class TileClicked implements EventProcessor{
 
 	
 	
-	
-	/* Condition check helper methods to keep code clear */
-	private boolean checkIfPlayerTurn(GameState gameState, ActorRef out) {
-		if ((gameState.getTurnOwner() instanceof HumanPlayer)) {
-			BasicCommands.addPlayer1Notification(out, "Not your turn!", 2);
-			try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}	
-			return true;
-		}
-		else {
-			return false; 
-		}
-	}
-	
-	private boolean checkUnitPresent(GameState gameState, int tilex, int tiley) {	
-		return (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null);
-	}
-	
-	private boolean checkCardClicked(GameState gameState) {
-		return (gameState.getTurnOwner().getHand().isPlayingMode());
-	}
-	
-	private boolean checkIfMonsterCard(Card selected) {
-		return (selected.getBigCard().getAttack() > 0);
-	}
-	
-	
-	private boolean checkIfUnitMovable(Unit unit) {
-		return true; 
-	}
-	
-	
 	/* Helper methods such as highlight unit, display unit stats etc */
 
 
-	// unitSelectedActions is for selecting + movement & attack
-	private void unitSelectedActions(Unit unit, GameState g, ActorRef o, Class<? extends Unit> classtype) {
+	// MonsterLogic is for selecting + movement & attack
+	static void monsterLogic(Monster m, GameState g, ActorRef o) {
 
-		// Check class type entered 
-		if (classtype == Monster.class) {
+		
+		// Current player owns clicked Monster
+		if (m.getOwner() == g.getTurnOwner()) {
+			System.out.println("You own this monster");
 			
-			// Cast unit to a Monster (note, only works if a monster is actually inputted) 
-			Monster m = (Monster) unit; 
-			
-			// Current player owns clicked Monster
-			if (m.getOwner() == g.getTurnOwner()) {
-				System.out.println("You own this monster");
+			// Deselect monster if already selected + apply visual
+			if(m.isSelected()) {
+				m.toggleSelect();
+				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
+				System.out.println("Deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
+				System.out.println("Monster selected: " + m.isSelected());
 				
-				// Deselect monster if already selected + apply visual
-				if(m.isSelected()) {
-					m.toggleSelect();
-					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
-					System.out.println("Deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
-					System.out.println("Monster selected: " + m.isSelected());
-					
-					// Update movement + attack range tiles displayed
-					
-				}
-				// Select monster + apply visual
-				else {
-					m.toggleSelect();
-					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
-					System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
-					System.out.println("Monster selected: " + m.isSelected());
-					try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
-
-					// Movement + attack range tiles are displayed
-				}
-			} 
-			
+				// Update movement + attack range tiles displayed
+				
+			}
+			// Select monster + apply visual
 			else {
-				System.out.println("You do not own this monster");
+				m.toggleSelect();
+				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
+				System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
+				System.out.println("Monster selected: " + m.isSelected());
+				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+
+				// Movement + attack range tiles are displayed
+				
 			}
 			
+		} 
+		
+		else {
+			System.out.println("You do not own this monster");
 		}
-
+		
 	}
 	
 	
@@ -340,13 +285,6 @@ public class TileClicked implements EventProcessor{
 		
 	}
 	
-	
-//	// Construct spell 
-//	private void constructSpell(GameState gameState, ActorRef out, String c_configFile, int tilex, int tiley) {
-//		Spell constructedSpell = (Spell) BasicObjectBuilders.loadCard(c_configFile,Spell.class);		
-//
-//		
-//	}
 	
 	// Update display after effects have been applied
 	private void updateMonsterDisplay(ActorRef out, Monster mUnit) {

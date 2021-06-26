@@ -27,7 +27,7 @@ public class Board {
 	private Tile computerStart;
 
 	private final int[] rangeH = {0,0,1,-1,1,-1,1,-1};
-	private final int[] rangeW = {1,-1,0,0,-1,1,1,-1};
+	private final int[] rangeW = {1,-1,0,0,1,-1,1,-1};
 	
 	public Board() {
 		X = 9;
@@ -76,7 +76,7 @@ public class Board {
 		
 		//this method can be called from elsewhere in the program
 		//it returns a list of tiles where a given Player can summon a unit
-		//Players clicks on a card >> this method is called >> all adjacent tiles to all player's units on the board 			//are returned
+		//Players clicks on a card >> this method is called >> all adjacent tiles to all player's units on the board are returned
 		public ArrayList<Tile> allSummonableTiles(Player p){
 			ArrayList <Tile> tileList = new ArrayList<Tile>();
 			for (int i = 0; i <gameBoard.length; i++) {
@@ -97,15 +97,12 @@ public class Board {
 			int xPos = t.getTilex();
 			int yPos = t.getTiley();
 			
-			System.out.println(xPos + " calcRange " + yPos);
+			System.out.println(xPos + " " + yPos);
 			for (int i = 0; i<rangeH.length; i++) {
 				if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
 				else {
-					if (this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getFreeStatus()) {
-						Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
-						//System.out.println(posTile.getTilex() + "  " + posTile.getTiley());
-						tileRange.add(posTile);	
-					}
+					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
+					tileRange.add(posTile);
 				}
 			}
 			return tileRange;
@@ -139,51 +136,22 @@ public class Board {
 			return tileRange;
 		}
 
-		
-		//3)Method returns player's avatar tile position 
-		public Tile ownAvatarTile (Player p) {
-		 
-			int x = p.getAvatar().getPosition().getTilex(); int y =
-			p.getAvatar().getPosition().getTiley();
-		 
-			return this.getTile(x, y); 
-		}
-		 
-		//4) Method return enemy avatar's tile position 
-		public Tile enemyAvatarTile (Player p, GameState g) { 
-			if (p instanceof HumanPlayer) { 
-				int x = g.getComputerAvatar().getPosition().getTilex(); 
-				int y = g.getComputerAvatar().getPosition().getTiley(); return this.getTile(x, y); 
-			} else { 
-				int x = g.getHumanAvatar().getPosition().getTilex(); 
-				int y = g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y);
-			} 
-		}
-		
-		//================= UNIT MOVEMENTS METHODS ========================//
-		  
-		  //5) standard movement range. This method returns an array list of
-		  //all the tiles that a selected monster can move to
-		  
-		  public ArrayList<Tile> monsterMovableTiles (Monster m){
-			  ArrayList <Tile> tileList = new ArrayList<Tile>();
-			  int x = m.getPosition().getTilex();
-			  int y = m.getPosition().getTiley();
-			  Tile monsterPos = this.getTile(x, y);
-			  tileList.addAll(calcRange(monsterPos));
-			  for (int i = -2; i<=2; i += 4) {
-				  System.out.print("exec loop");
-				  if (x+i >= 0 && x+i<9) {
-					  if (this.getTile(x+i, y).getFreeStatus()) tileList.add(this.getTile(x+i,  y));
-					  System.out.println(this.getTile(x+i, y));
-				  }
-				  if (y+i>=0 && y+i < 9) {
-					  if (this.getTile(x, y+i).getFreeStatus()) tileList.add(this.getTile(x, y+i));
-					  System.out.println(this.getTile(x, y+i));
-				  }
-			  }
-			  
-			  return tileList;
-		  }
+		/*
+		 * //3)Method returns player's avatar tile position public Tile ownAvatarTile
+		 * (Player p) {
+		 * 
+		 * int x = p.getAvatar().getPosition().getTilex(); int y =
+		 * p.getAvatar().getPosition().getTiley();
+		 * 
+		 * return this.getTile(x, y); }
+		 * 
+		 * //4) Method return enemy avatar's tile position public Tile enemyAvatarTile
+		 * (Player p, GameState g) { if (p instanceof HumanPlayer) { int x =
+		 * g.getComputerAvatar().getPosition().getTilex(); int y =
+		 * g.getComputerAvatar().getPosition().getTiley(); return this.getTile(x, y); }
+		 * else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
+		 * g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }
+		 */
+
 }
 
