@@ -220,7 +220,7 @@ public class Board {
 					//the set is added to the set to returned (no duplicated values)
 					for(Tile t : reachTiles) {
 						System.out.println(t);
-						HashSet <Tile> attRange = calcAttackRange(t.getTiley(), t.getTiley(), attackRange, p);
+						HashSet <Tile> attRange = calcAttackRange(t.getTilex(), t.getTiley(), attackRange, p);
 						tileList.addAll(attRange);
 						
 					}			
@@ -270,9 +270,11 @@ public class Board {
 				  
 				  for (int i = 0; i <gameBoard.length; i++) {
 						for (int k =0; k<gameBoard[0].length; k++) {
-							if ((gameBoard[i][k].getUnitOnTile() != null)&& gameBoard[i][k].getUnitOnTile().getOnCooldown()) {
-								monsterList.add(this.gameBoard[i][k].getUnitOnTile());
-							}
+							/*
+							 * if ((gameBoard[i][k].getUnitOnTile() != null)&&
+							 * gameBoard[i][k].getUnitOnTile().getOnCooldown()) {
+							 * monsterList.add(this.gameBoard[i][k].getUnitOnTile()); }
+							 */
 						}
 					}
 					return monsterList;
