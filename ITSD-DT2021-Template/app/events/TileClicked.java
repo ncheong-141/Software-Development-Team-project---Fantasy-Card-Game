@@ -18,6 +18,7 @@ import structures.basic.Monster;
 import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
+import structures.basic.UnitAnimationType;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -59,7 +60,7 @@ public class TileClicked implements EventProcessor{
 		if (checkCardClicked(gameState)) {
 			gameplayContext.addCurrentState(new CardPreviouslySelectedState());
 			
-			// Set this now to false? 
+
 		} 
 		else if (gameState.getBoard().getUnitSelected() != null) {
 			
@@ -71,7 +72,8 @@ public class TileClicked implements EventProcessor{
 			// If nothing is selected previously 
 			gameplayContext.addCurrentState(new SingleSelectedState());
 		}
-	
+
+
 		
 		/*
 		 * Execute State. Each state holds the game logic required to execute the desired functionality
@@ -80,19 +82,18 @@ public class TileClicked implements EventProcessor{
 		 * based on what the user has currently clicked (a unit or empty tile) 
 		 */
 		gameplayContext.executeAndCreateSubStates();
+		
+		
 	}
+
+	
 	
 	/* Helper methods */ 
 	
 	private boolean checkCardClicked(GameState gameState) {
 		return (gameState.getTurnOwner().getHand().isPlayingMode());
 	}
-	
 
-		
-		
-				
-	
 
 
 }

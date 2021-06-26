@@ -25,6 +25,16 @@ public class OtherClicked implements EventProcessor{
 		gameState.getBoard().setUnitSelected(null);
 		gameState.getTurnOwner().getHand().setPlayingMode(false);
 		gameState.getTurnOwner().getHand().setSelectedCard(null);
+
+		/*
+		 * Will hold:
+		 * Deselect Monster
+		 * Deselect Card
+		 */
+		
+		// Deselect any Monsters that are selected
+		// Could put this in a method stored somewhere else, which can just be called wherever in program
+		
 	}
 
 }
