@@ -619,7 +619,6 @@ public class CommandDemo {
 				humanAvatar.setAttackValue(5);
 				
 				Tile tOne = g.getGameBoard().getTile(1, 2);
-				Tile tTwo = g.getGameBoard().getTile(7, 2);
 						
 				BasicCommands.drawUnit(out, humanAvatar, tOne);
 				try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
