@@ -35,6 +35,15 @@ public class Player {
 		setPlayerHand();
 	}
 	
+	
+	public Player(int health, int mana) {
+		this.health = health;
+		this.mana = mana;
+	
+		this.deck = new Deck();
+		setPlayerHand();
+	}
+	
 	public Player(int health, int mana, Deck deck) {
 		super();
 		this.health = health;

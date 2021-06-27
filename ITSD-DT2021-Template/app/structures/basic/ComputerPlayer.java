@@ -17,17 +17,18 @@ public class ComputerPlayer extends Player {
 	
 	
 	public ComputerPlayer() {
-		super();
+		super(new Deck());
+		this.deck.deckTwo();
 
 	}
 
 	
-
-	// assign a fixed set of card for ComputerPlayer as deckTwo
-	@Override
-	public void assignDeck() {
-		this.deck.deckTwo();
-	}
+//
+//	// assign a fixed set of card for ComputerPlayer as deckTwo
+//	@Override
+//	public void assignDeck() {
+//		this.deck.deckTwo();
+//	}
 
 
 }
