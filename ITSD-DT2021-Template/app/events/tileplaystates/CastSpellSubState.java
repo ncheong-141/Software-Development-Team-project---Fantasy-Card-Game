@@ -32,6 +32,9 @@ public class CastSpellSubState implements GameplayStates {
 		
 		if (successfulFlag) {
 			System.out.println("Sucessfully cast spell."); 
+			
+			// Keep this as the flag for how deselect method works
+			context.getGameStateRef().getTurnOwner().getHand().setPlayingMode(false);
 		}
 		else {
 			System.out.println("Spell cast unsucessful, please select another Unit"); 
