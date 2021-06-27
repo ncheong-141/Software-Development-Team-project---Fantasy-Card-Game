@@ -18,18 +18,18 @@ public class HumanPlayer extends Player {
 
 	
 	public HumanPlayer() {
-		super();
-
-	}
-
-	
-	
-
-	// assign a fixed set of card for HumanPlayer as deckOne
-	@Override
-	public void assignDeck() {
+		super(new Deck());
 		this.deck.deckOne();
 	}
+
+	
+	
+
+//	// assign a fixed set of card for HumanPlayer as deckOne
+//	@Override
+//	public void assignDeck() {
+//		this.deck.deckOne();
+//	}
 
 
 	
