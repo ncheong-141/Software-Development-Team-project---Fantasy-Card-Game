@@ -58,14 +58,14 @@ public class SummonMonsterSubState implements GameplayStates {
 		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
 		GeneralCommandSets.threadSleep();
 		
-		// De-select card
+		// De-select card (visual only)
 		Card selectedCard = gameState.getTurnOwner().getHand().getSelectedCard();
 		// Need position in hand from Noah to redraw Card with no highlight
 //		BasicCommands.drawCard(out, selectedCard, position, 0);
-		selectedCard.setClicked(false);
-		gameState.getTurnOwner().getHand().setPlayingMode(false);
-		gameState.getTurnOwner().getHand().setSelectedCard(null);
 		
+		// Keep this as the flag for how deselect method works
+		gameState.getTurnOwner().getHand().setPlayingMode(false);
+
 		// >>> Mana costs --- leave out until mana cycle is implemented ingame
 //		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);
 //		gameState.getTurnOwner().loseMana(statsRef.getManacost());
@@ -82,7 +82,7 @@ public class SummonMonsterSubState implements GameplayStates {
 	}
 	
 	
-	
+// >>>>>>>>>>	Leave in for now, may be useable	
 	
 //	if((gameState.getBoard().allSummonableTiles(gameState.getTurnOwner())).contains(gameState.getBoard().getTile(tilex, tiley))) {
 //

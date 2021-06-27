@@ -667,18 +667,34 @@ public class CommandDemo {
 		// Set up friendly Unit to summon next to
 		Avatar humanAvatar = g.getHumanAvatar();
 		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		humanAvatar.setCooldown(false);
+		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 
-		humanAvatar.setAttackValue(5);
-
+		humanAvatar.setAttackValue(1);
 		Tile tOne = g.getGameBoard().getTile(1, 2);
+		tOne.addUnit(humanAvatar);
 
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
-
+		
+		// Set up an enemy Unit in attack range
+		Card cardfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter,4,Card.class);
+		Monster fire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,4,cardfire_spitter,Monster.class);
+		fire_spitter.setOwner(g.getPlayerTwo());
+		
+		Tile tTwo = g.getBoard().getTile(2, 2);
+		tTwo.addUnit(fire_spitter);
+		fire_spitter.setPositionByTile(tTwo);
+		
+		BasicCommands.drawUnit(out, fire_spitter, tTwo);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
+		
 		// Then test what selecting the card in hand + selecting a target tile does
 
 	}

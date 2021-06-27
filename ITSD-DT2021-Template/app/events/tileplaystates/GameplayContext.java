@@ -21,10 +21,10 @@ public class GameplayContext {
 	// Attributes
 	private GameplayStates				currentStates;
 
-	private Card 						loadedCard; 
+	private Card 						loadedCard; 	// any Card that is currently in selected mode from previous action
 	private Class<?> 					cardClasstype; 
 
-	private Unit						loadedUnit; 
+	private Unit						loadedUnit; 	// any Unit that is currently in selected mode from previous action
 	private GameState					gameStateRef; 
 	private String						tileFlag; 
 	int 								tilex;
@@ -51,13 +51,16 @@ public class GameplayContext {
 	public void executeAndCreateSubStates() {
 		
 		
-		/* --------------------------------------------------------------------------------
-		 * Check if a Unit has been clicked/is on the tile clicked (or if its empty)
-		 * -------------------------------------------------------------------------------- */
+		/* -----------------------------------------------------------------------------------------------
+		 * Check if a (friendly/enemy) Unit has been clicked/is on the tile clicked (or if its empty)
+		 * ----------------------------------------------------------------------------------------------- */
 		
 		// Flag needed to determine what what substate is required (e.g. SummonMonster or CastSpell)
-		if (checkUnitPresentOnTile(gameStateRef, tilex, tiley)) {
-			this.setTileFlag("unit");
+		if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (gameStateRef.getBoard().getTile(tilex, tiley).getUnitOnTile().getOwner() == gameStateRef.getTurnOwner())) {
+			this.setTileFlag("friendly unit");
+		}
+		else if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (gameStateRef.getBoard().getTile(tilex, tiley).getUnitOnTile().getOwner() != gameStateRef.getTurnOwner())) {
+			this.setTileFlag("enemy unit");
 		}
 		else {
 			this.setTileFlag("empty"); 
@@ -68,11 +71,11 @@ public class GameplayContext {
 		/*
 		 * Combination of different user inputs to substates 
 		 * 
-		 *   Unit + card selected 	-> Cast spell (if spell card)
-		 *   Unit only				-> Display unit actions 
-		 *   Card + Empty 			-> SummonMonster (if Monster card) 
-		 *   Unit + Empty 			-> Move unit
-		 *   Unit + Unit			-> Attack Unit (if enemy) 
+		 *   Card selected 	+ 	Unit target 	-> Cast spell (if spell card)
+		 *   None selected	+	Unit target		-> Display unit actions 
+		 *   Card selected 	+ 	Empty target	-> SummonMonster (if Monster card) 
+		 *   Unit selected 	+ 	Empty target 	-> Move unit
+		 *   Unit selected 	+ 	Unit target		-> Attack Unit (if enemy) or Move and Attack Unit (if enemy)
 		 */
 		System.out.println("In GameplayContext.");
 
@@ -134,16 +137,33 @@ public class GameplayContext {
 	public void setTileFlag(String tileFlag) {
 		this.tileFlag = tileFlag;
 	}
+	
+	public int getTilex() {
+		return tilex;
+	}
 
+	public int getTiley() {
+		return tiley;
+	}
+	
 	/* Helper methods */
 	private boolean checkUnitPresentOnTile(GameState gameState, int tilex, int tiley) {	
 		return (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null);
 	}
 	
 	public void deselectAllAfterActionPerformed() { 
-		gameStateRef.getBoard().setUnitSelected(null);
-		gameStateRef.getTurnOwner().getHand().setPlayingMode(false);
-		gameStateRef.getTurnOwner().getHand().setSelectedCard(null);
+		if(gameStateRef.getBoard().getUnitSelected() != null) {
+			gameStateRef.getBoard().setUnitSelected(null);
+			this.loadedUnit = null;
+		}
+
+		
+		if(!gameStateRef.getTurnOwner().getHand().isPlayingMode()) {
+			//gameStateRef.getTurnOwner().getHand().getSelectedCard().setClicked(false);
+			gameStateRef.getTurnOwner().getHand().setSelectedCard(null);
+			this.loadedCard = null;
+		}
+		
 	}
 	
 	
