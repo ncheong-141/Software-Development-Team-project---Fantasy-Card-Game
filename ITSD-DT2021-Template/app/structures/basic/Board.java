@@ -266,22 +266,36 @@ public class Board {
 			  //this variable signal that the monster cannot attack/move in the current turn (right after summoning)
 		
 
-			  public ArrayList<Monster> coolDownCheck (){
-				  ArrayList<Monster> monsterList = new ArrayList<Monster>();
+			public ArrayList<Monster> coolDownCheck (){
+				ArrayList<Monster> monsterList = new ArrayList<Monster>();
 				  
-				  for (int i = 0; i <gameBoard.length; i++) {
+				for (int i = 0; i <gameBoard.length; i++) {
+					for (int k =0; k<gameBoard[0].length; k++) {
 
-						for (int k =0; k<gameBoard[0].length; k++) {
 							/*
 							 * if ((gameBoard[i][k].getUnitOnTile() != null)&&
 							 * gameBoard[i][k].getUnitOnTile().getOnCooldown()) {
 							 * monsterList.add(this.gameBoard[i][k].getUnitOnTile()); }
 							 */
-						}
 					}
-					return monsterList;
-					
-			  }
+				}
+					return monsterList;		
+			}
 
+
+
+			
+			public ArrayList<Monster> friendlyUnitList (Player p){
+				ArrayList<Monster> monsterList = new ArrayList<Monster>();
+				for (int i = 0; i <gameBoard.length; i++) {
+					for (int k =0; k<gameBoard[0].length; k++) {
+						if (gameBoard[i][k].getUnitOnTile() != null && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+							monsterList.add(gameBoard[i][k].getUnitOnTile());
+						}
+					}	
+				}
+				return monsterList;
+			}
+			  
 }
 
