@@ -25,6 +25,9 @@ public class UnitStopped implements EventProcessor{
 		
 		int unitid = message.get("id").asInt();
 		
+		/*
+		 * Needs to reactivate card and unit player actions.
+		 */
 	}
 
 }

@@ -101,7 +101,6 @@ public class BasicObjectBuilders {
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
 			mUnit.setId(id);
-			mUnit.setStatus(false); 
 			
 			return mUnit; 
 			

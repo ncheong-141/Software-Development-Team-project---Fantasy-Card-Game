@@ -1,5 +1,7 @@
 package structures.basic;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,31 +19,37 @@ public class Monster extends Unit{
 	
 	public String name; 
 	protected int HP;
+	protected int maxHP;
 	protected int attackValue; 
-	protected int manaCost; 
 	
-	protected boolean 	selected;
-	protected Player	owner;
-	protected int 		maxHP;
-	private Ability		monsterAbility;
+	protected int movesLeft;							// move actions left, tracks directly to range
+	protected int attacksLeft;							// attack actions left, != range
+	protected int attackRange;							// tile range for attacks
+	
+	protected Player				owner;				// Player who owns the unit
+	protected boolean 				selected;			// Tracks when the unit is selected on board by owner
+	protected boolean				onCooldown;			// Tracks when the unit has actions left (move and/or attack)
+	protected ArrayList <Ability>	monsterAbility;		// Any abilities the Monster has
 	
 	/* Constructor(s) */
 	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
 		
 		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
 		
-		// No attribute setting here as Monsters are initially created with a Unit reference, 
-		// which could be required by the ObjectMapper which loads the JSon files 
-		
 	}
 	
-	// Empty constructor for testing 
-	public Monster() {
+	// Default constructor for JSON
+	public Monster(/*Card statsRef, Player o*/) {
 		super(); 
-		System.out.println("Im from the Monster default constructor!");
-	}
 
-	public void basicSetup() {
+		this.movesLeft = 0;				//
+		this.attacksLeft = 0;			// Unit is summoned on cooldown 
+		this.attackRange = 1;			//
+		
+		this.selected = false;
+//		owner = o;
+		this.onCooldown = true;			// Unit is summoned on cooldown
+		System.out.println("As a Monster I am: " + this.getOnCooldown());
 		
 	}
 
@@ -52,6 +60,54 @@ public class Monster extends Unit{
 	// Receive damage (HP reduction, counter attack if not from Spell) 
 	// Use their ability
 	
+	// Move
+	// Updates movesLeft and Position
+	public boolean move(Tile t) {
+		if(movesLeft > 0 && !(onCooldown)) {
+			// Check change in Board dimension indices from current to t
+			int xchange = Math.abs(this.getPosition().getTilex() - t.getTilex());
+			int ychange = Math.abs(this.getPosition().getTiley() - t.getTiley());
+			// Move fails if index change exceeds ability to move
+			if(xchange + ychange > movesLeft) {	return false;	}
+			
+			movesLeft -= (xchange+ychange);
+			// Set position
+			this.setPositionByTile(t);
+		} else {	return false;	}
+		
+		if(this.movesLeft == 0 && this.attacksLeft == 0) {	// this should check attack range == 0 really
+			this.toggleCooldown();
+		}
+		return true;
+	}
+	
+	// Attack
+	// Returns the outcome of an attack (successful or not) and updates attack values
+	public boolean attack() {
+		// Check if Monster is able to attack
+		if(this.onCooldown) {
+			return false; 
+		}
+		this.attacksLeft -= 1;
+		if(this.attacksLeft == 0) {
+			this.toggleCooldown();
+		}
+		return true;
+	}
+	
+	// Counter
+	
+	// Calculates outcome of being damaged (attack, counter-attack or Spell dmg) and updates health
+	public boolean defend(int d) {
+		if(this.HP - d < 0) {
+			this.HP = 0;
+			System.out.println("Unit has died.");
+			return false;
+		} else {
+			this.HP -= d;
+			return true;
+		}
+	}
 	
 	/* Getters and setters */ 
 	
@@ -78,14 +134,6 @@ public class Monster extends Unit{
 	public void setAttackValue(int attackValue) {
 		this.attackValue = attackValue;
 	}
-
-	public int getManaCost() {
-		return manaCost;
-	}
-
-	public void setManaCost(int manaCost) {
-		this.manaCost = manaCost;
-	}
 	
 	public boolean isSelected() {
 		return selected;
@@ -96,7 +144,9 @@ public class Monster extends Unit{
 	}
 
 	public void toggleSelect() {
-		selected = !selected;
+		if(!onCooldown) {
+			selected = !selected;
+		}
 	}
 	
 	public Player getOwner() {
@@ -112,16 +162,64 @@ public class Monster extends Unit{
 		return maxHP;
 	}
 	
-	public void setMaxHP(int x) {
-		this.maxHP = x;
+	public void setMaxHP(int h) {
+		this.maxHP = h;
 	}
 	
-	public Ability getAbility() {
-		return monsterAbility;
+	public int getMovesLeft() {
+		return movesLeft;
 	}
 	
-	public void setAbility(Ability ab) {
-		this.monsterAbility = ab;
+	public void setMovesLeft(int m) {
+		this.movesLeft = m;
 	}
+	
+	public int getAttacksLeft() {
+		return attacksLeft;
+	}
+	
+	public void setAttacksLeft(int a) {
+		this.attacksLeft = a;
+	}
+	
+	public int getAttackRange() {
+		return attackRange;
+	}
+	
+	public void setAttackRange(int a) {
+		this.attackRange = a;
+	}
+	
+	// Indicates a Monster can no longer move & attack (if true)
+	public boolean getOnCooldown() {
+		return onCooldown;
+	}
+
+	// temporary for testing
+	public void setCooldown(boolean b) {
+		onCooldown = b;
+		movesLeft = 2;
+		attacksLeft = 1;
+		attackRange = 1;
+	}
+	
+	// Switches cooldown status and dependent variables
+	public void toggleCooldown() {
+		this.onCooldown = !onCooldown;
+		this.actionSet();
+	}
+	
+	// Helper method for cooldown management
+	private void actionSet() {
+		if(onCooldown) {
+			this.movesLeft = 0;
+			this.attacksLeft = 0;
+		} else {
+			this.movesLeft = 2;
+			this.attacksLeft = 1;
+		}
+	}
+	
+	// Getters/setters for Abilities to be put in
 	
 }
