@@ -53,7 +53,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 			else {
 				// Move & Attack
 				System.out.println("Creating MoveAndAttackAction substate...");
-				subState = new UnitMoveAndAttackActionSubState();
+				//subState = new UnitMoveAndAttackActionSubState();
 				break;
 			}
 		}
