@@ -54,13 +54,20 @@ public class TileClicked implements EventProcessor{
 		System.out.println("In TileClicked.");
 		
 		/* --------------------------------------------------------------------------------
-		 * Check previous User inputs (will be either Card Selected State or Unit Selected
+		 * Check previous User inputs (will be either Card Selected State or Unit Selected)
 		 * -------------------------------------------------------------------------------- */
 
 		if (checkCardClicked(gameState)) {
+			
+			// Before calling substate:
+			// Check units are not selected and deselect if they are
+			
 			gameplayContext.addCurrentState(new CardPreviouslySelectedState());
 		} 
 		else if (gameState.getBoard().getUnitSelected() != null) {
+			
+			// Before calling substate:
+			// Check cards are not selected and deselect if they are
 			
 			gameplayContext.addCurrentState(new UnitPreviouslySelectedState());
 			
@@ -70,8 +77,6 @@ public class TileClicked implements EventProcessor{
 			// If nothing is selected previously 
 			gameplayContext.addCurrentState(new SingleSelectedState());
 		}
-
-
 		
 		/*
 		 * Execute State. Each state holds the game logic required to execute the desired functionality

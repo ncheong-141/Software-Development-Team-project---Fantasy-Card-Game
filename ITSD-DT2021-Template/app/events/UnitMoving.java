@@ -24,6 +24,10 @@ public class UnitMoving implements EventProcessor{
 		
 		int unitid = message.get("id").asInt();
 		
+		/*
+		 * Needs to deactivate card and unit player actions.
+		 */
+		
 	}
 
 }

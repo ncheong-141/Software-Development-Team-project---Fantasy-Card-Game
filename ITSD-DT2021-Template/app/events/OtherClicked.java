@@ -25,6 +25,9 @@ public class OtherClicked implements EventProcessor{
 		gameState.getBoard().setUnitSelected(null);
 		gameState.getTurnOwner().getHand().setPlayingMode(false);
 		gameState.getTurnOwner().getHand().setSelectedCard(null);
+		
+		// Will need to redraw the board
+		
 
 		/*
 		 * Will hold:

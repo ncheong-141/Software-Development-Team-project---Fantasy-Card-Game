@@ -21,16 +21,24 @@ public class SingleSelectedState implements GameplayStates{
 
 		// Determine the substate (UnitDisplayActionsState or nothing for now) 
 		switch (context.getTileFlag().toLowerCase()) {
-		
-		case("unit"): {
+
+		case("friendly unit"): {
+			System.out.println("Hit friendly unit case in SingleSelected State");
 			subState = new UnitDisplayActionsState(); 
 			break;
 		}
 		
+		case("enemy unit"): {
+			System.out.println("You don't own this Unit");
+			break;
+		}
+		
 		case("empty"): {
+			System.out.println("Nice empty tile click buddy.");
 			return; 
 		}
 		case("default"):{
+			System.out.println("Hit default case in SingleSelectedState.");
 			return;
 		}
 		}

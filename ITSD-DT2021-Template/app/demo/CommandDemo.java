@@ -496,8 +496,13 @@ public class CommandDemo {
 		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
+		g.setTurnOwner(g.getPlayerOne());
+
 		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
 		fire_spitter.setOwner(g.getTurnOwner());
+		fire_spitter.setAttacksLeft(10);
+		fire_spitter.setMovesLeft(3);
+		fire_spitter.setCooldown(false);
 		g.getBoard().getTile(3,2).addUnit(fire_spitter);
 		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
 		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
@@ -507,7 +512,6 @@ public class CommandDemo {
 		Card ctrustrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
-		g.setTurnOwner(g.getPlayerOne());
 
 		// Create a tempHand for testing
 		ArrayList <Card> cards = new ArrayList <Card> ();
@@ -528,57 +532,6 @@ public class CommandDemo {
 		Avatar humanAvatar = g.getHumanAvatar();
 		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-
-		//		// loadCard
-		//		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
-		//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		//		
-		//		// drawUnit
-		//		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		//		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
-		//		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
-		//		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
-		//		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
-		//		
-		//		// Add unit to tile ON BOARD
-		//		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
-		//		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
-		//		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
-		//		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
-		//		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
-
-
-
-
-		//		// Spell stuff here 
-		//		// Instantiate truestrike card
-		//		Card cTruestrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
-		//		
-		//		// Initialise data for units (will be done in initialise) 
-		//		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
-		//		
-		//		// CREATING SPELL 
-		//		BasicCommands.addPlayer1Notification(out, "Creating spell", 2);
-		//		Spell spell = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 0, Spell.class);
-		//		// 				 UNIT name		Ability object, retrieved through spell name (.get(0)) as it is an array list of abilities
-		//		// Will probably move this stuff to the defualt constructor but not sure how to get the Unit name from there
-		//		spell.setAbility(cTruestrike.getCardname(), AbilityToUnitLinkage.UnitAbility.get(cTruestrike.getCardname()).get(0), "Description");
-		//		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
-		//		
-		//		// CASTING SPELL and display effects
-		//		BasicCommands.addPlayer1Notification(out, "Cast spell on Unit", 2);
-		//		spell.getAbility().execute(fire_spitter);
-		//		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
-		//		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
-		//		
-		//		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
-		//		EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
-		//		BasicCommands.playEffectAnimation(out, ef, gameState.getBoard().getTile(3,2));
-		//		
-		//		// If you wanted to retrieve the spell target details
-		//		spell.getAbility().getTargetType(); // Returns a Class<? extends Monster> type which specifies either Monster.class or Avatar.class 
-		//		spell.getAbility().targetEnemy();  // Returns a boolean if true or false if should target enemy or not
-
 
 	}
 
@@ -667,18 +620,34 @@ public class CommandDemo {
 		// Set up friendly Unit to summon next to
 		Avatar humanAvatar = g.getHumanAvatar();
 		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		humanAvatar.setCooldown(false);
+		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 
-		humanAvatar.setAttackValue(5);
-
+		humanAvatar.setAttackValue(1);
 		Tile tOne = g.getGameBoard().getTile(1, 2);
+		tOne.addUnit(humanAvatar);
 
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
-
+		
+		// Set up an enemy Unit in attack range
+		Card cardfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter,4,Card.class);
+		Monster fire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,4,cardfire_spitter,Monster.class);
+		fire_spitter.setOwner(g.getPlayerTwo());
+		
+		Tile tTwo = g.getBoard().getTile(2, 2);
+		tTwo.addUnit(fire_spitter);
+		fire_spitter.setPositionByTile(tTwo);
+		
+		BasicCommands.drawUnit(out, fire_spitter, tTwo);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
+		
 		// Then test what selecting the card in hand + selecting a target tile does
 
 	}

@@ -35,24 +35,46 @@ public class CardPreviouslySelectedState implements GameplayStates {
 			context.setCardClasstype(Monster.class);
 		}
 		
+		
+		
 		// Determine the substate (SummonMonster or Cast Spell)  (to lower case just so case isnt a problem ever) 
 		switch (context.getTileFlag().toLowerCase()) {
 		
-		
-		
-		case("unit"): {
+		case("friendly unit"): {
 			// Add check for card type
 			if (context.getCardClasstype() == Spell.class) {
 				subState = new CastSpellSubState();
+				break; 
 			}
-			break; 
+			else {
+				System.out.println("Can't summon Monster on occupied tile.");
+				break;
+			}
+
 		}
+		case("enemy unit"): {
+			// Add check for card type
+			if (context.getCardClasstype() == Spell.class) {
+				subState = new CastSpellSubState();
+				break; 
+			}
+			else {
+				System.out.println("Can't summon Monster on occupied tile.");
+				break;
+			}
+		}
+		
 		
 		case("empty"): {
 			if (context.getCardClasstype() == Monster.class) {
 				subState = new SummonMonsterSubState();
+				break;
 			}
-			break;
+			else {
+				System.out.println("Can't play Spell on empty tile.");
+				break;
+			}
+
 		}
 		}
 		
