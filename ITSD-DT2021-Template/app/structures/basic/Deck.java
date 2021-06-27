@@ -125,5 +125,3 @@ public class Deck{//class used to create and manage player and ai decks
 		//shuffle deck, reorder unitDeck to match shuffled deck?
 	}
 	
-	
-}
