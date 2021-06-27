@@ -22,8 +22,9 @@ public class Monster extends Unit{
 	protected int maxHP;
 	protected int attackValue; 
 	
-	protected int movesLeft;
-	protected int attacksLeft;
+	protected int movesLeft;							// move actions left, tracks directly to range
+	protected int attacksLeft;							// attack actions left, != range
+	protected int attackRange;							// tile range for attacks
 	
 	protected Player				owner;				// Player who owns the unit
 	protected boolean 				selected;			// Tracks when the unit is selected on board by owner
@@ -35,23 +36,20 @@ public class Monster extends Unit{
 		
 		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
 		
-		// No attribute setting here as Monsters are initially created with a Unit reference, 
-		// which could be required by the ObjectMapper which loads the JSon files 
-		
 	}
 	
 	// Default constructor for JSON
 	public Monster(/*Card statsRef, Player o*/) {
 		super(); 
-		System.out.println("Im from the Monster default constructor!");
 
-		this.movesLeft = 2;				// default move/attack values
-		this.attacksLeft = 1;
+		this.movesLeft = 0;				//
+		this.attacksLeft = 0;			// Unit is summoned on cooldown 
+		this.attackRange = 1;			//
 		
 		this.selected = false;
 //		owner = o;
-		//this.onCooldown = true;		// unit can be selected but not move/attack until toggled
-		this.onCooldown = false;			// set up for testing
+		this.onCooldown = true;			// Unit is summoned on cooldown
+		System.out.println("As a Monster I am: " + this.getOnCooldown());
 		
 	}
 
@@ -66,7 +64,7 @@ public class Monster extends Unit{
 	// Updates movesLeft and Position
 	public boolean move(Tile t) {
 		if(movesLeft > 0 && !(onCooldown)) {
-			// Check change in position on Board dimension indexes to get to t
+			// Check change in Board dimension indices from current to t
 			int xchange = Math.abs(this.getPosition().getTilex() - t.getTilex());
 			int ychange = Math.abs(this.getPosition().getTiley() - t.getTiley());
 			// Move fails if index change exceeds ability to move
@@ -77,27 +75,29 @@ public class Monster extends Unit{
 			this.setPositionByTile(t);
 		} else {	return false;	}
 		
-		if(this.movesLeft == 0 && this.attacksLeft == 0) {
+		if(this.movesLeft == 0 && this.attacksLeft == 0) {	// this should check attack range == 0 really
 			this.toggleCooldown();
 		}
 		return true;
 	}
 	
-//	// Attack
-//	// Returns the unit's attack and updates its status
-//	public int attack() {
-//		if(!(onCooldown)) {
-//			this.attacksLeft -= 1;
-//			return attackValue; 
-//		}
-//		if(this.attacksLeft == 0) {
-//			this.toggleCooldown();
-//		}
-//		return 0;
-//
-//	}
+	// Attack
+	// Returns the outcome of an attack (successful or not) and updates attack values
+	public boolean attack() {
+		// Check if Monster is able to attack
+		if(this.onCooldown) {
+			return false; 
+		}
+		this.attacksLeft -= 1;
+		if(this.attacksLeft == 0) {
+			this.toggleCooldown();
+		}
+		return true;
+	}
 	
-	// Receive damage (attack, counter-attack or Spell dmg)
+	// Counter
+	
+	// Calculates outcome of being damaged (attack, counter-attack or Spell dmg) and updates health
 	public boolean defend(int d) {
 		if(this.HP - d < 0) {
 			this.HP = 0;
@@ -108,8 +108,6 @@ public class Monster extends Unit{
 			return true;
 		}
 	}
-	
-	
 	
 	/* Getters and setters */ 
 	
@@ -182,6 +180,14 @@ public class Monster extends Unit{
 	
 	public void setAttacksLeft(int a) {
 		this.attacksLeft = a;
+	}
+	
+	public int getAttackRange() {
+		return attackRange;
+	}
+	
+	public void setAttackRange(int a) {
+		this.attackRange = a;
 	}
 	
 	// Indicates a Monster can no longer move & attack (if true)
