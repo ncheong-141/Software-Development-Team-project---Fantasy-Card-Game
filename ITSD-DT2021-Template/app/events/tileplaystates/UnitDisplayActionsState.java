@@ -22,55 +22,29 @@ public class UnitDisplayActionsState implements GameplayStates{
 		Unit newlySelectedUnit = context.getGameStateRef().getBoard().getTile(context.tilex, context.tiley).getUnitOnTile();
 		
 		// Display unit selected actions
-		unitSelectedActions(newlySelectedUnit, context.getGameStateRef(),context.tilex, context.tiley, context.out, newlySelectedUnit.getClass());
+		boolean outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(),context.tilex, context.tiley, context.out, newlySelectedUnit.getClass());
 		
-		// Set unit as selected
-		context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
-		
-		//System.out.println(context.getGameStateRef().getBoard().getUnitSelected().name);
+		if(outcome) {
+			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
+			//System.out.println(context.getGameStateRef().getBoard().getUnitSelected().name);
+		}	
+
 	}
 	
 	
 	
 	
 	// unitSelectedActions is for selecting + movement & attack
-	private void unitSelectedActions(Unit unit, GameState g, int tilex, int tiley, ActorRef o, Class<? extends Unit> classtype) {
-
-
-		// Check class type entered 
-		if (classtype == Monster.class) {
-			
+	private boolean unitSelectedActions(Unit unit, GameState g, int tilex, int tiley, ActorRef o, Class<? extends Unit> classtype) {
+		
 			// Cast unit to a Monster (note, only works if a monster is actually inputted) 
 			Monster m = (Monster) unit; 
 			
-			// Current player owns clicked Monster
-			if (m.getOwner() == g.getTurnOwner()) {
-
-				// + getSelectedUnit check
-
+			// Monster is actionable
+			if (!(m.getOnCooldown())) {
 				System.out.println("You own this monster");
 				
-				// Deselect monster if already selected + apply visual
-				if(m.isSelected()) {
-					m.toggleSelect();
-
-					g.getBoard().setUnitSelected(null);
-					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 0);
-					System.out.println("Deselected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
-					System.out.println("Monster selected: " + m.isSelected());
-					GeneralCommandSets.threadSleep();
-					
-					// Update movement range tiles displayed
-					ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
-					GeneralCommandSets.drawBoardTiles(o, mRange, 0);
-					GeneralCommandSets.threadSleepLong();
-					System.out.println("Finished un-highlighting tiles.");
-					
-					// If selectedUnit != Unit on clicked Tile, switch to new Unit
-					
-				}
 				// Select monster + apply visual
-				else if(!(m.isSelected())) {
 					m.toggleSelect();
 					g.getBoard().setUnitSelected(m);
 
@@ -79,20 +53,45 @@ public class UnitDisplayActionsState implements GameplayStates{
 					System.out.println("Monster selected: " + m.isSelected());
 					GeneralCommandSets.threadSleep();
 
-
-					// Display movement range tiles
+					// Display movement + attack range tiles
+					// Get ranges
 					ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
-					GeneralCommandSets.drawBoardTiles(o, mRange, 0);
-					GeneralCommandSets.threadSleepLong();
+					ArrayList <Tile> aRange = new ArrayList <Tile> (g.getBoard().unitAttackableTiles(tilex, tiley, m.getAttackRange(), m.getMovesLeft()));
+					ArrayList <Tile> actRange = mRange;		actRange.addAll(aRange);
+					
+					// Change GeneralCommandSets thing to account for multiple ranges later
+					for(Tile t : actRange) {
+						// If aRange contains t = draw as attack tile
+						if(aRange.contains(t)) {
+							BasicCommands.drawTile(o, t, 2);
+							GeneralCommandSets.threadSleep();
+						}
+						// Else, draw as move range tile
+						else {
+							BasicCommands.drawTile(o, t, 1);
+							GeneralCommandSets.threadSleep();
+						}
+					}
 					System.out.println("Finished highlighting tiles.");
-				}
+					return true;
+					
 			} 
+			
+			// Monster not actionable
 			else {
-				System.out.println("You do not own this monster");
+				// Monster is not owned by Player
+				if(m.getOwner() != g.getTurnOwner()) {
+					System.out.println("You do not own this monster");
+					return false;
+				}
+				// Monster doesn't have moves/attacks left
+				else {
+					System.out.println("Can't select this monster.");
+					return false;
+				}
 			}
 			
-		}
-
 	}
 
 }
+
