@@ -9,8 +9,8 @@ import structures.basic.Card;
 public class Hand {
 	private int curr;//keeps track of no of cards in hand
 	private ArrayList<Card> hand;// array of card objects comprising the hand
-	private boolean playingMode;
-	private Card selectedCard;
+	private boolean playingMode;//boolean to indicate whether a card is ready to be played
+	private Card selectedCard;//card selected for play
 	
 	public Hand(ArrayList<Card> hand) {//constructor for hand 
 		super();
@@ -100,4 +100,4 @@ public class Hand {
 }
 		
 		
-		
+			
