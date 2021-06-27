@@ -38,6 +38,7 @@ public class BasicObjectBuilders {
 	 * @param classtype
 	 * @return
 	 */
+	
 	public static Card loadCard(String configurationFile, int id, Class<? extends Card> classtype) {
 		try {
 			Card card = mapper.readValue(new File(configurationFile), classtype);
@@ -100,7 +101,6 @@ public class BasicObjectBuilders {
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
 			mUnit.setId(id);
-			mUnit.setStatus(false); 
 			
 			return mUnit; 
 			

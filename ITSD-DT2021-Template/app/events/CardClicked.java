@@ -64,6 +64,10 @@ public class CardClicked implements EventProcessor{
 		// ArrayList<Tile> display= gameState.getGameBoard().friendlyMonsterTiles(gameState.getPlayerOne);
 		//for(Tile t: display) {BasicCommands.DrawTile(out,t,2);}
         //}
+		
+		
+		// Added a record of a Card being clicked to flag in gamestate for user input processing
+		//gameState.setPreviousGameplayState(new CardSelectedState());
 	}
 
 }

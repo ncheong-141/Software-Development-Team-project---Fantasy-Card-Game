@@ -1,8 +1,10 @@
 package structures;
 
+import events.tileplaystates.GameplayStates;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.ComputerPlayer;
+import structures.basic.Deck;
 import structures.basic.HumanPlayer;
 import structures.basic.Player;
 import utils.BasicObjectBuilders;
@@ -25,8 +27,9 @@ public class GameState {
 	private int turnCount;
 	private static boolean playerDead;
 	private Player turnOwner;
-	
+
 	public GameState() {
+		
 		turnCount = 0;
 		playerDead = false;
 		playerOne = new HumanPlayer();
@@ -40,6 +43,17 @@ public class GameState {
 		
 		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
 		computerAvatar.setOwner(playerTwo, gameBoard);
+		
+		//decks instantiation 
+
+		Deck deckPlayerOne = new Deck(); 
+		deckPlayerOne.deckOne();
+		//playerOne.setDeck(deckPlayerOne);
+				
+		Deck deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
+		//playerTwo.setDeck(deckPlayerTwo);
+
 	}
 	
 	public int getTurnCount() {
@@ -112,5 +126,5 @@ public class GameState {
 	public Board getBoard() {
 		return gameBoard; 
 	}
-	
+
 }
