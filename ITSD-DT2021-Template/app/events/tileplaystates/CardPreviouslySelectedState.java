@@ -13,7 +13,8 @@ public class CardPreviouslySelectedState implements GameplayStates {
 		subState = null; 
 	}
 	
-	// State methods
+	/*** State method ***/
+	
 	public void execute(GameplayContext context) {
 	
 		// Debug section 

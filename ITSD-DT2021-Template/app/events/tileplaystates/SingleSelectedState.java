@@ -10,6 +10,9 @@ public class SingleSelectedState implements GameplayStates{
 		subState = null; 
 	}
 	
+	
+	/*** State method ***/
+
 	public void execute(GameplayContext context) {
 			
 		System.out.println("In SingleSelectedState");

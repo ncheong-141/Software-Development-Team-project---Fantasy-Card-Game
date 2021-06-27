@@ -13,7 +13,8 @@ import commands.*;
 public class UnitDisplayActionsState implements GameplayStates{
 
 	
-	// State method
+	/*** State method ***/
+	
 	public void execute(GameplayContext context) {
 		
 		System.out.println("In UnitDisplayActionsState.");

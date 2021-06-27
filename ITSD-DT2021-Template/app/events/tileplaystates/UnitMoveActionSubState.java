@@ -13,6 +13,8 @@ import structures.basic.UnitAnimationType;
 
 public class UnitMoveActionSubState implements GameplayStates {
 
+	/*** State method ***/
+	
 	public void execute(GameplayContext context) {
 		
 		// Perform unit move function

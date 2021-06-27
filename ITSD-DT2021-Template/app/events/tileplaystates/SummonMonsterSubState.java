@@ -15,6 +15,9 @@ import utils.StaticConfFiles;
 
 public class SummonMonsterSubState implements GameplayStates {
 
+	
+	/*** State method ***/
+	
 	public void execute(GameplayContext context) {
 		
 		System.out.println("In SummonMonsterSubState.");
