@@ -269,6 +269,7 @@ public class Board {
 				}
 			}
 		}	
+		return tileList;
 	}
 	//===============accessors methods==========================//
 
