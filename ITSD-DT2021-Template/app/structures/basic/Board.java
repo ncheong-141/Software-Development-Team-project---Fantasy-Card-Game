@@ -267,39 +267,7 @@ public class Board {
 						System.out.println(this.getTile(i,j)+ " p ");
 					}
 				}
-<<<<<<< HEAD
-				  
-			//===============accessors methods==========================//
-			  
-			  //this method returns a list of all monsters (including avatars) on the board which have onCooldow == true
-			  //this variable signal that the monster cannot attack/move in the current turn (right after summoning)
-		
 
-			public ArrayList<Monster> coolDownCheck (){
-				ArrayList<Monster> monsterList = new ArrayList<Monster>();
-				  
-				for (int i = 0; i <gameBoard.length; i++) {
-					for (int k =0; k<gameBoard[0].length; k++) {
-
-							/*
-							 * if ((gameBoard[i][k].getUnitOnTile() != null)&&
-							 * gameBoard[i][k].getUnitOnTile().getOnCooldown()) {
-							 * monsterList.add(this.gameBoard[i][k].getUnitOnTile()); }
-							 */
-					}
-				}
-					return monsterList;		
-			}
-
-
-=======
-			}
-
-		}
-
-
-		return tileList;
-	}
 
 	//===============accessors methods==========================//
 
@@ -323,14 +291,13 @@ public class Board {
 		return monsterList;
 
 	}
->>>>>>> 91bd303c8ec5d6cbb2d0b8d7803a9a71eeb2e300
 
 			
 			public ArrayList<Monster> friendlyUnitList (Player p){
 				ArrayList<Monster> monsterList = new ArrayList<Monster>();
 				for (int i = 0; i <gameBoard.length; i++) {
 					for (int k =0; k<gameBoard[0].length; k++) {
-						if (gameBoard[i][k].getUnitOnTile() != null && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+						if (gameBoard[i][k].getUnitOnTile() != null && gameBoard[i][k].getUnitOnTile().getOwner()==p) 							{
 							monsterList.add(gameBoard[i][k].getUnitOnTile());
 						}
 					}	
