@@ -267,8 +267,9 @@ public class Board {
 						System.out.println(this.getTile(i,j)+ " p ");
 					}
 				}
-
-
+			}
+		}	
+	}
 	//===============accessors methods==========================//
 
 	//this method returns a list of all monsters (including avatars) on the board which have onCooldow == true
