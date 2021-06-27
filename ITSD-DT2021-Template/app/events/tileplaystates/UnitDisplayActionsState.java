@@ -86,7 +86,7 @@ public class UnitDisplayActionsState implements GameplayStates{
 				}
 				// Monster doesn't have moves/attacks left
 				else {
-					System.out.println("Can't select this monster.");
+					System.out.println("Can't select this monster as no moves or attacks left.");
 					return false;
 				}
 			}
