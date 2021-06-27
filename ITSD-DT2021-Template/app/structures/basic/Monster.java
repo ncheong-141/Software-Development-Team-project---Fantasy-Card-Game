@@ -194,6 +194,14 @@ public class Monster extends Unit{
 	public boolean getOnCooldown() {
 		return onCooldown;
 	}
+
+	// temporary for testing
+	public void setCooldown(boolean b) {
+		onCooldown = b;
+		movesLeft = 2;
+		attacksLeft = 1;
+		attackRange = 1;
+	}
 	
 	// Switches cooldown status and dependent variables
 	public void toggleCooldown() {
