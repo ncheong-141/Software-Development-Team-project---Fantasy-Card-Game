@@ -37,14 +37,10 @@ public class UnitAttackActionSubState implements GameplayStates {
 		Tile currentLocation = context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
 		ArrayList <Tile> selectedAttackRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getAttackRange(),currentLocation.getUnitOnTile().getMovesLeft()));
 		Tile enemyTarget = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
-		
-		for(Tile t : selectedAttackRange) {
-			System.out.println("Tile t x: " + t.getTilex() + ", y: " + t.getTiley());
-		}
-		
+	
 		// Check target is in attack range
 		if(!(selectedAttackRange.contains(enemyTarget))) {	
-			System.out.println("About to abort attack");
+			System.out.println("Enemy is not in range.");
 			return;
 		}
 		
@@ -89,7 +85,7 @@ public class UnitAttackActionSubState implements GameplayStates {
 			BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);
 			GeneralCommandSets.threadSleep();
 			
-			// Update both unit tile visuals
+			// Update both unit tiles visuals
 			BasicCommands.drawTile(context.out, context.getGameStateRef().getBoard().getTile(attacker.getPosition().getTilex(), attacker.getPosition().getTiley()), 0);			
 			GeneralCommandSets.threadSleep();
 			BasicCommands.drawTile(context.out, context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()), 0);
