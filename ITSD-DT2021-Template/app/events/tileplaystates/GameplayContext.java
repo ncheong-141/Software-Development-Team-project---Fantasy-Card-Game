@@ -58,10 +58,10 @@ public class GameplayContext {
 		 * ----------------------------------------------------------------------------------------------- */
 		
 		// Flag needed to determine what what substate is required (e.g. SummonMonster or CastSpell)
-		if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (gameStateRef.getBoard().getTile(tilex, tiley).getUnitOnTile().getOwner() == gameStateRef.getTurnOwner())) {
+		if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (isUnitFriendly())) {
 			this.setTileFlag("friendly unit");
 		}
-		else if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (gameStateRef.getBoard().getTile(tilex, tiley).getUnitOnTile().getOwner() != gameStateRef.getTurnOwner())) {
+		else if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (!isUnitFriendly())) {
 			this.setTileFlag("enemy unit");
 		}
 		else {
@@ -184,6 +184,10 @@ public class GameplayContext {
 		
 	}
 	
+	
+	private boolean isUnitFriendly() {
+		return gameStateRef.getBoard().getTile(tilex, tiley).getUnitOnTile().getOwner() == gameStateRef.getTurnOwner();
+	}
 	
 	// Debug
 	public void debugPrint() {

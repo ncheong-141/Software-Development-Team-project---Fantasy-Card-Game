@@ -35,7 +35,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 		// Retrieve clicked tile for reference in condition checks
 		Tile clickedTile = context.getGameStateRef().getBoard().getTile(context.getTilex(),context.getTiley());
 		
-		// Determine the substate (SummonMonster or Cast Spell)  (to lower case just so case isnt a problem ever) 
+		// Determine the substate (attack , reselect friendly or move) 
 		switch (context.getTileFlag().toLowerCase()) {
 		
 		case("enemy unit"): {
