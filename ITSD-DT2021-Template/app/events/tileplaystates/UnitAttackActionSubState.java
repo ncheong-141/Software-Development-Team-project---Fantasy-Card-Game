@@ -29,12 +29,25 @@ public class UnitAttackActionSubState implements GameplayStates {
 	
 	private void unitAttack(GameplayContext context) {
 		
-		// Missing target tile in range check
-		
 		// Gather attacker and defender
 		Monster attacker = (Monster) context.getLoadedUnit();
 		Monster defender = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()).getUnitOnTile();
-
+		
+		// Retrieve frequently used Tile data
+		Tile currentLocation = context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
+		ArrayList <Tile> selectedAttackRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getAttackRange(),currentLocation.getUnitOnTile().getMovesLeft()));
+		Tile enemyTarget = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
+		
+		for(Tile t : selectedAttackRange) {
+			System.out.println("Tile t x: " + t.getTilex() + ", y: " + t.getTiley());
+		}
+		
+		// Check target is in attack range
+		if(!(selectedAttackRange.contains(enemyTarget))) {	
+			System.out.println("About to abort attack");
+			return;
+		}
+		
 		// Gather action range
 		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
 		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getMovesLeft());
@@ -84,8 +97,7 @@ public class UnitAttackActionSubState implements GameplayStates {
 			
 			// De-select selected unit
 			attacker.toggleSelect();
-			context.getGameStateRef().getBoard().getUnitSelected().toggleSelect();
-			
+			context.deselectAllAfterActionPerformed();
 			
 		} 
 		// Unit is unable to attack for some reason - internal attack values/summon cooldown/etc.
