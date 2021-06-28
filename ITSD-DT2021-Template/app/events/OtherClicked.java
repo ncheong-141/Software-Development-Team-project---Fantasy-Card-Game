@@ -35,7 +35,7 @@ public class OtherClicked implements EventProcessor{
 			
 			Card cSelected = gameState.getTurnOwner().getHand().getSelectedCard();
 			
-			// Visual update while references intact	--- Need position info from Noah somehow
+			// Visual update while variables intact	--- Need position info from Noah somehow
 			//BasicCommands.drawCard(out, cSelected, position, 0);
 			//GeneralCommandSets.threadSleep();
 			
@@ -51,7 +51,7 @@ public class OtherClicked implements EventProcessor{
 			
 			Monster mSelected = gameState.getBoard().getUnitSelected();
 			
-			// Visual update while references intact
+			// Visual update while variables intact
 			ArrayList <Tile> actionRange = gameState.getBoard().unitMovableTiles(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley(), mSelected.getMovesLeft());
 			ArrayList <Tile> attackRange = new ArrayList <Tile> (gameState.getBoard().unitAttackableTiles(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley(), mSelected.getAttackRange(), mSelected.getMovesLeft()));
 			actionRange.addAll(attackRange);
@@ -69,7 +69,7 @@ public class OtherClicked implements EventProcessor{
 			gameState.getBoard().setUnitSelected(null);
 			mSelected.toggleSelect();
 			
-			System.out.println("Monster selected: " + mSelected.isSelected());
+			System.out.println("Monster deselected: " + mSelected.isSelected());
 			
 		}
 
