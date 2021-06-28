@@ -46,35 +46,35 @@ public class UnitDisplayActionsState implements GameplayStates{
 				System.out.println("You own this monster");
 				
 				// Select monster + apply visual
-					m.toggleSelect();
-					g.getBoard().setUnitSelected(m);
+				m.toggleSelect();
+				g.getBoard().setUnitSelected(m);
 
-					BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
-					System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
-					System.out.println("Monster selected: " + m.isSelected());
-					GeneralCommandSets.threadSleep();
+				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
+				System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
+				System.out.println("Monster selected: " + m.isSelected());
+				GeneralCommandSets.threadSleep();
 
-					// Display movement + attack range tiles
-					// Get ranges
-					ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
-					ArrayList <Tile> aRange = new ArrayList <Tile> (g.getBoard().unitAttackableTiles(tilex, tiley, m.getAttackRange(), m.getMovesLeft()));
-					ArrayList <Tile> actRange = mRange;		actRange.addAll(aRange);
-					
-					// Change GeneralCommandSets thing to account for multiple ranges later
-					for(Tile t : actRange) {
-						// If aRange contains t = draw as attack tile
-						if(aRange.contains(t)) {
-							BasicCommands.drawTile(o, t, 2);
-							GeneralCommandSets.threadSleep();
-						}
-						// Else, draw as move range tile
-						else {
-							BasicCommands.drawTile(o, t, 1);
-							GeneralCommandSets.threadSleep();
-						}
+				// Display movement + attack range tiles
+				// Get ranges
+				ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
+				ArrayList <Tile> aRange = new ArrayList <Tile> (g.getBoard().unitAttackableTiles(tilex, tiley, m.getAttackRange(), m.getMovesLeft()));
+				ArrayList <Tile> actRange = mRange;		actRange.addAll(aRange);
+				
+				// Change GeneralCommandSets thing to account for multiple ranges later
+				for(Tile t : actRange) {
+					// If aRange contains t = draw as attack tile
+					if(aRange.contains(t)) {
+						BasicCommands.drawTile(o, t, 2);
+						GeneralCommandSets.threadSleep();
 					}
-					System.out.println("Finished highlighting tiles.");
-					return true;
+					// Else, draw as move range tile
+					else {
+						BasicCommands.drawTile(o, t, 1);
+						GeneralCommandSets.threadSleep();
+					}
+				}
+				System.out.println("Finished highlighting tiles.");
+				return true;
 					
 			} 
 			

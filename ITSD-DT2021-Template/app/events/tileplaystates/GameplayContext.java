@@ -30,6 +30,8 @@ public class GameplayContext {
 	int 								tilex;
 	int 								tiley; 
 	
+	boolean								combinedActive;	// reference for states to indicate multiple substates will occur
+	
 	// Temp variables just to make code work
 
 	ActorRef out; 
@@ -146,6 +148,22 @@ public class GameplayContext {
 		return tiley;
 	}
 	
+	public void setTilex(int x) {
+		this.tilex = x;
+	}
+	
+	public void setTiley(int y) {
+		this.tiley = y;
+	}
+	
+	public boolean getCombinedActive() {
+		return combinedActive;
+	}
+	
+	public void setCombinedActive(boolean c) {
+		combinedActive = c;
+	}
+	
 	/* Helper methods */
 	private boolean checkUnitPresentOnTile(GameState gameState, int tilex, int tiley) {	
 		return (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null);
@@ -189,6 +207,5 @@ public class GameplayContext {
 		System.out.println("Tile (x,y) : (" + tilex + "," + tiley + ")");
 
 	}
-	
 	
 }
