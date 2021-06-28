@@ -41,7 +41,8 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 		case("enemy unit"): {
 			
 			/*** Check distance from UnitSelected ***/
-			// Near --- enemy unit tile has tile.index difference of <2 for board dimensions, which does not require the selected unit to move
+			System.out.println("Before near check");
+			// Near --- enemy unit tile has index difference with current tile of <=1 on board dimensions, which does not require the selected unit to move before attack
 			if(Math.abs(context.getLoadedUnit().getPosition().getTilex() - clickedTile.getTilex()) <=1 && (Math.abs(context.getLoadedUnit().getPosition().getTiley() - clickedTile.getTiley()) <= 1)) {
 				// Attack
 				System.out.println("Creating AttackAction substate...");
@@ -52,10 +53,11 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 			// Far (wherever you are) --- enemy unit is outside a non-movement range
 			else {
 				// Move & Attack
-				System.out.println("Creating MoveAndAttackAction substate...");
-				//subState = new UnitMoveAndAttackActionSubState();
+				System.out.println("Creating CombinedAction substate...");
+				subState = new UnitCombinedActionSubState();
 				break;
 			}
+			
 		}
 		
 		case("friendly unit"): {
@@ -66,8 +68,6 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 				Monster selectedUnit = (Monster) context.getLoadedUnit();
 				
 				BasicCommands.drawTile(context.out, context.getGameStateRef().getBoard().getTile((selectedUnit.getPosition()).getTilex(), (selectedUnit.getPosition()).getTiley()), 0);
-				System.out.println("Deselected monster on Tile " + selectedUnit.getPosition().getTilex() + "," + selectedUnit.getPosition().getTiley());
-				System.out.println("Monster selected: " + context.getGameStateRef().getBoard().getUnitSelected().isSelected());
 				GeneralCommandSets.threadSleep();
 				
 				// Update action range tiles displayed
@@ -80,6 +80,8 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 				
 				// Update selected reference last for now
 				context.getGameStateRef().getBoard().getUnitSelected().toggleSelect();
+				System.out.println("Monster selected: " + context.getGameStateRef().getBoard().getUnitSelected().isSelected());
+				System.out.println("Deselected monster on Tile " + selectedUnit.getPosition().getTilex() + "," + selectedUnit.getPosition().getTiley());
 				context.deselectAllAfterActionPerformed();
 				break;
 				
@@ -88,15 +90,20 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 			// Clicked other friendly unit, switch selection
 			else {
 				
-			
-				// select new friendly unit
+				// Variable change for old unit
+				
+				// Visual change for old unit
+				
+				// Variable change for new unit
+				
+				// Visual change for new unit
+				
 			}
 			
 		}
 		
 		case("empty"): {
 			// Move
-			System.out.println("I'm here");
 			subState = new UnitMoveActionSubState();
 			break;
 
