@@ -684,7 +684,8 @@ public class CommandDemo {
 		Monster fire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,4,cardfire_spitter,Monster.class);
 		Monster fire_spitter2 = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 5, cardfire_spitter, Monster.class);
 		Avatar testAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 54, Avatar.class);
-		fire_spitter.setOwner(g.getPlayerTwo());
+		fire_spitter.setOwner(g.getPlayerOne());
+		fire_spitter.toggleCooldown();
 		fire_spitter2.setOwner(g.getPlayerTwo());
 		testAvatar.setOwner(g.getPlayerTwo(), g.getBoard());
 		Tile tTwo = g.getBoard().getTile(2, 2);
