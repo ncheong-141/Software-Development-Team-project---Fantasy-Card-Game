@@ -61,7 +61,7 @@ public class Monster extends Unit{
 	// Use their ability
 	
 	// Move
-	// Updates movesLeft and Position
+	// Returns outcome of an attempt to move (successful or not) and updates move variables
 	public boolean move(Tile t) {
 		if(movesLeft > 0 && !(onCooldown)) {
 			// Check change in Board dimension indices from current to t
@@ -82,7 +82,7 @@ public class Monster extends Unit{
 	}
 	
 	// Attack
-	// Returns the outcome of an attack (successful or not) and updates attack values
+	// Returns the outcome of an attack (successful or not) and updates attack variables
 	public boolean attack() {
 		// Check if Monster is able to attack
 		if(this.onCooldown) {
@@ -97,7 +97,7 @@ public class Monster extends Unit{
 	
 	// Counter
 	
-	// Calculates outcome of being damaged (attack, counter-attack or Spell dmg) and updates health
+	// Returns outcome of receiving damaged (attack/counter-attack/Spell dmg) and updates health
 	public boolean defend(int d) {
 		if(this.HP - d < 0) {
 			this.HP = 0;
@@ -198,9 +198,7 @@ public class Monster extends Unit{
 	// temporary for testing
 	public void setCooldown(boolean b) {
 		onCooldown = b;
-		movesLeft = 2;
-		attacksLeft = 1;
-		attackRange = 1;
+		this.actionSet();
 	}
 	
 	// Switches cooldown status and dependent variables
