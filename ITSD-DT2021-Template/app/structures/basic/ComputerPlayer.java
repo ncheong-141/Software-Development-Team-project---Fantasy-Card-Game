@@ -19,6 +19,9 @@ public class ComputerPlayer extends Player {
 		super(d);
 	}
 	
+	
+	
+	
 	//method returns playable cards from the player's hand based on the mana cost
 	private ArrayList <Card> playableCards(){
 		ArrayList<Card> cardList = new ArrayList<Card>();
@@ -55,18 +58,18 @@ public class ComputerPlayer extends Player {
 
 	
 	****/
-	private ArrayList<ArrayList<Card>> cardCombos(ArrayList <Card> list){
+	private ArrayList<CardCombo> cardCombos(ArrayList <Card> list){
 		
 		//method will return a list of combinations of cards
 		//a card combination (combo) is represented as an ArrayList
-		ArrayList<ArrayList <Card>> comboList = new ArrayList<ArrayList <Card>>();
+		ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
 		
 		//converting hand to an array for ease of indexing
 		Card [] hand = (Card[]) list.toArray();
 		//!!!!!NOTE: order array - card will implement comparable on mana cost
 		
 		//instantiating a combo object (as an array list of card objects)
-		ArrayList<Card> combo = new ArrayList <Card>();
+		CardCombo combo = new CardCombo();
 		
 		//iterating over the hand array
 		for (int k = 0; k<hand.length; k++) {
@@ -85,7 +88,7 @@ public class ComputerPlayer extends Player {
 			if (manaLeft == 0 || manaLeft < hand[hand.length-1].getManacost() || k == hand.length-1) {
 				comboList.add(combo);
 				//reference combo is re-assigned a new ArrayList obj (empty)
-				combo = new ArrayList<Card>();
+				combo = new CardCombo();
 				//move on to k+1 th card in hand
 				continue;
 			}
@@ -100,7 +103,7 @@ public class ComputerPlayer extends Player {
 					if (hand[i].getManacost() == manaLeft) {
 						combo.add(hand[i]);
 						comboList.add(combo);
-						combo = new ArrayList<Card>();
+						combo = new CardCombo();
 						manaLeft = this.getMana() - hand[k].getManacost();
 					}
 					//if leftover mana is more than enough to add the next card to the current combo
