@@ -43,7 +43,6 @@ public class SummonMonsterSubState implements GameplayStates {
 		// Add unit to tile ON BOARD
 		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
 		gameState.getBoard().getTile(tilex,tiley).addUnit(summonedMonster);
-		System.out.println("This is immediately after summon.");
 		GeneralCommandSets.threadSleep();
 		
 		// Drawing the monster on the board
