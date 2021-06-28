@@ -114,10 +114,6 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 		// Execute sub-state
 		if (subState != null ) {
 			subState.execute(context);
-			
-			// Deselect after action
-			// Can't use this for every outcome in this branch of choices
-			//context.deselectAllAfterActionPerformed();
 		}
 		
 	}

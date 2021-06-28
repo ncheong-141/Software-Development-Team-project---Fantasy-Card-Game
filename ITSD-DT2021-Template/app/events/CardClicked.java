@@ -44,14 +44,14 @@ public class CardClicked implements EventProcessor{
 				tempHand.getHand().get(i).setClicked(false);
 			}
 		}
-		
-		
+
+
 		//creates a placeholder for the clicked card
-			Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
-			//sets clicked card and tells the game state that a card in hand is to be played
-			clickedCard.setClicked(true);
-			gameState.getPlayerOne().getHand().setPlayingMode(true);
-			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
+		Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
+		//sets clicked card and tells the game state that a card in hand is to be played
+		clickedCard.setClicked(true);
+		gameState.getPlayerOne().getHand().setPlayingMode(true);
+		gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
 		//checks that the clicked card is a monster card using its attack value
 		if (clickedCard.getBigCard().getAttack() > 0){ //for summoning monsters
 			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne());	
@@ -60,27 +60,27 @@ public class CardClicked implements EventProcessor{
 		else if (clickedCard.getBigCard().getAttack() < 0) {
 			//for spell targeting enemy units
 			if(AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
-				&& clickedCard.targetEnemy()==true){
-					ArrayList<Tile> display= gameState.getGameBoard().enemyTile(gameState.getPlayerOne());
-					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+					&& clickedCard.targetEnemy()==true){
+				ArrayList<Tile> display= gameState.getGameBoard().enemyTile(gameState.getPlayerOne());
+				GeneralCommandSets.drawBoardTiles(out, display, 2);	
 			}//for spell which targets enemy avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
-				&& clickedCard.targetEnemy()==true){
-					Tile display= gameState.getGameBoard().enemyAvatarTile(gameState.getPlayerOne(), gameState);
-							BasicCommands.drawTile(out,display,2);
+					&& clickedCard.targetEnemy()==true){
+				Tile display= gameState.getGameBoard().enemyAvatarTile(gameState.getPlayerOne(), gameState);
+				BasicCommands.drawTile(out,display,2);
 			}//for spell targeting friendly unit
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
-				&& clickedCard.targetEnemy()==false){
-					ArrayList<Tile> display= gameState.getGameBoard().friendlyTile(gameState.getPlayerOne());
-					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+					&& clickedCard.targetEnemy()==false){
+				ArrayList<Tile> display= gameState.getGameBoard().friendlyTile(gameState.getPlayerOne());
+				GeneralCommandSets.drawBoardTiles(out, display, 2);	
 
 			}//for spell targeting friendly avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
-				&& clickedCard.targetEnemy()==false){
-						Tile display= gameState.getGameBoard().ownAvatarTile(gameState.getPlayerOne());
-						BasicCommands.drawTile(out,display,2);						
-						}
+					&& clickedCard.targetEnemy()==false){
+				Tile display= gameState.getGameBoard().ownAvatarTile(gameState.getPlayerOne());
+				BasicCommands.drawTile(out,display,2);						
 			}
+		}
 
 	}
 	

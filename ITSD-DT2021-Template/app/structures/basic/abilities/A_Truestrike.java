@@ -42,4 +42,6 @@ public class A_Truestrike implements Ability {
 		return targetType; 
 	}
 	
+	public int returnCallID() { return -1;}
+
 }

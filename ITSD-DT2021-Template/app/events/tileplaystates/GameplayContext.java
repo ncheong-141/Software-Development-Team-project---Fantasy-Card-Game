@@ -27,10 +27,10 @@ public class GameplayContext {
 	private Unit						loadedUnit; 	// any Unit that is currently in selected mode from previous action
 	private GameState					gameStateRef; 
 	private String						tileFlag; 
-	int 								tilex;
-	int 								tiley; 
+	private int 						tilex;
+	private int							tiley; 
 	
-	boolean								combinedActive;	// reference for states to indicate multiple substates will occur
+	private boolean						combinedActive;	// reference for states to indicate multiple substates will occur
 	
 	// Temp variables just to make code work
 
