@@ -22,7 +22,7 @@ public class SummonMonsterSubState implements GameplayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 
-		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.tilex, context.tiley);	
+		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.getTilex(), context.getTiley());	
 	}
 
 	
