@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import commands.GeneralCommandSets;
 import structures.GameState;
 import structures.basic.*;
 import structures.basic.Hand;
@@ -53,19 +54,15 @@ public class CardClicked implements EventProcessor{
 			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
 		//checks that the clicked card is a monster card using its attack value
 		if (clickedCard.getBigCard().getAttack() > 0){ //for summoning monsters
-			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne());
-				for(Tile t: display) {
-					BasicCommands.drawTile(out,t,2);
-			}		
+			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne());	
+			GeneralCommandSets.drawBoardTiles(out, display, 2);	
 		}//a loop which checks that a card is a spell, then displays playable tiles depending on spell target
 		else if (clickedCard.getBigCard().getAttack() < 0) {
 			//for spell targeting enemy units
 			if(AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==true){
 					ArrayList<Tile> display= gameState.getGameBoard().enemyTile(gameState.getPlayerOne());
-						for(Tile t: display) {
-							BasicCommands.drawTile(out,t,2);
-							}
+					GeneralCommandSets.drawBoardTiles(out, display, 2);	
 			}//for spell which targets enemy avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
 				&& clickedCard.targetEnemy()==true){
@@ -75,9 +72,8 @@ public class CardClicked implements EventProcessor{
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==false){
 					ArrayList<Tile> display= gameState.getGameBoard().friendlyTile(gameState.getPlayerOne());
-						for(Tile t: display) {
-							BasicCommands.drawTile(out,t,2);
-							}
+					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+
 			}//for spell targeting friendly avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
 				&& clickedCard.targetEnemy()==false){
