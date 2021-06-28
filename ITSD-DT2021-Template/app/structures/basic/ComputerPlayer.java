@@ -16,8 +16,8 @@ import structures.GameState;
 public class ComputerPlayer extends Player {
 	
 	
-	public ComputerPlayer() {
-		super(new Deck());
+	public ComputerPlayer(Deck deck) {
+		super(deck);
 		this.deck.deckTwo();
 
 	}

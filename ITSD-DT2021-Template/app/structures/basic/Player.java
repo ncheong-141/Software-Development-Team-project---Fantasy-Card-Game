@@ -28,10 +28,15 @@ public class Player {
 
 	
 	public Player(Deck deck) {
-		super();
 		this.health = 20;
 		this.mana = 0;
 		this.deck = deck;
+		
+		System.out.println("In Player constructor");
+		for (Card d : this.deck.getDeck()) {
+			System.out.println(d.getCardname());
+		}
+		
 		setPlayerHand();
 	}
 	
@@ -93,6 +98,11 @@ public class Player {
 	//create hand for player, along with first 3 cards in hand
 	public void setPlayerHand() {
 		this.hand = new Hand(this.deck.getDeck());
+		
+		System.out.println("In setPlayerHand()");
+		for (Card d : this.deck.getDeck()) {
+			System.out.println(d.getCardname());
+		}
 		this.hand.initialHand(out, this.deck);
 	}
 	

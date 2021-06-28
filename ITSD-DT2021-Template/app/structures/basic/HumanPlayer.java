@@ -17,8 +17,8 @@ public class HumanPlayer extends Player {
 	
 
 	
-	public HumanPlayer() {
-		super(new Deck());
+	public HumanPlayer(Deck deck) {
+		super(deck);
 		this.deck.deckOne();
 	}
 

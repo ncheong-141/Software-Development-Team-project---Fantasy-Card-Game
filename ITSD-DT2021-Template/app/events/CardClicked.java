@@ -35,13 +35,13 @@ public class CardClicked implements EventProcessor{
 		
 		//checks if a card had previously been selected, if so it removes any traces of this
 		if(gameState.getPlayerOne().getHand().isPlayingMode()==true){
-		gameState.getPlayerOne().getHand().setPlayingMode(false);
-		Hand tempHand= new Hand(gameState.getPlayerOne().getHand());
-		tempHand= gameState.getPlayerOne().getHand();
-		gameState.getPlayerOne().getHand().setSelectedCard(null);
-		for(int i; i<=tempHand.; i++){
-		    tempHand(i).setClicked(false);
-		    }
+			gameState.getPlayerOne().getHand().setPlayingMode(false);
+			Hand tempHand= gameState.getPlayerOne().getHand();
+			tempHand= gameState.getPlayerOne().getHand();
+			gameState.getPlayerOne().getHand().setSelectedCard(null);
+			for(int i = 0; i<=tempHand.getHand().size(); i++){
+				tempHand.getHand().get(i).setClicked(false);
+			}
 		}
 		
 		

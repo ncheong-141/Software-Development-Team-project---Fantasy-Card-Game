@@ -49,22 +49,22 @@ public class Card {
 	//checks that monster/spell associated with card has an ability
 	public boolean hasAbility(Card card){
 		boolean result= false;
-		if(card.getBigCard().getAttack()>0) {//checks whether card is a monster
-		//create a temporary	
-			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+card.getCardname(), 99, card, Monster.class);
-			if(mon.getAbility()!=null) {//if monster has ability, a true result is given
-				result=true;
-			}else {//if monster doesnt have an ability a false result is give
-				result=false;
-			}
-		}else if(card.getBigCard().getAttack()<0) {//checks whether card is a spell
-			Spell spell = (Spell)BasicObjectBuilders.loadCard("StaticConfFiles.c_"+card.getCardname(),99, Spell.class);
-			if(spell.getAbility()!=null) {//if spell has an effect(should always have one) returns a true result
-				result=true;
-			}else {//if spell has no ability(should never happen) false result returned
-				result=false;
-			}
-		}
+//		if(card.getBigCard().getAttack()>0) {//checks whether card is a monster
+//		//create a temporary	
+//			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+card.getCardname(), 99, card, Monster.class);
+//			if(mon.getAbility()!=null) {//if monster has ability, a true result is given
+//				result=true;
+//			}else {//if monster doesnt have an ability a false result is give
+//				result=false;
+//			}
+//		}else if(card.getBigCard().getAttack()<0) {//checks whether card is a spell
+//			Spell spell = (Spell)BasicObjectBuilders.loadCard("StaticConfFiles.c_"+card.getCardname(),99, Spell.class);
+//			if(spell.getAbility()!=null) {//if spell has an effect(should always have one) returns a true result
+//				result=true;
+//			}else {//if spell has no ability(should never happen) false result returned
+//				result=false;
+//			}
+//		}
 		return result;
 	}
 	

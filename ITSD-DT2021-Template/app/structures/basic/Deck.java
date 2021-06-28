@@ -124,4 +124,5 @@ public class Deck{//class used to create and manage player and ai decks
 		//connect to gameState for both decks to shuffle before game commences
 		//shuffle deck, reorder unitDeck to match shuffled deck?
 	}
+}
 	

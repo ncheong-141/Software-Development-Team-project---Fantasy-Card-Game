@@ -53,9 +53,9 @@ public class EndTurnClicked implements EventProcessor{
 	//cooldown monsters
 	public void toCoolDown() {
 		
-		ArrayList<Monster> toCool = board.coolDownToggle();	
+		ArrayList<Monster> toCool = board.coolDownCheck();	
 		for(Monster m : toCool){
-				m.toggleCoolDown();				
+				m.toggleCooldown();				
 		}
 	}
 	

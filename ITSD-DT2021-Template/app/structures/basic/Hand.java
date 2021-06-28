@@ -21,7 +21,14 @@ public class Hand {
 	}
 	
 	public void initialHand(ActorRef out, Deck deck) { //allows player to receive initial hand
+		
+		
 		ArrayList<Card> drawDeck= deck.getDeck();//create temporary instance of player deck
+		
+		System.out.println("\n\nIn initialHand");
+		for (Card d : drawDeck) {
+			System.out.println(d.getCardname());
+		}
 		
 		//finds top three cards from deck
 		Card cardOne= drawDeck.get(0);
@@ -29,9 +36,9 @@ public class Hand {
 		Card cardThree= drawDeck.get(2);
 		
 		//draws top three deck cards into hand
-		BasicCommands.drawCard(out, cardOne, 1, 0);
-		BasicCommands.drawCard(out, cardTwo, 2, 0);
-		BasicCommands.drawCard(out, cardThree, 3, 0);
+//		BasicCommands.drawCard(out, cardOne, 1, 0);
+//		BasicCommands.drawCard(out, cardTwo, 2, 0);
+//		BasicCommands.drawCard(out, cardThree, 3, 0);
 		
 		//adds the cards to the Hand class's array of Cards to keep track 
 		//of them for later playing and deleting of cards

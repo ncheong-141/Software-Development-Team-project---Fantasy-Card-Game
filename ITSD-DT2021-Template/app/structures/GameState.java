@@ -32,9 +32,26 @@ public class GameState {
 		
 		turnCount = 0;
 		playerDead = false;
-		playerOne = new HumanPlayer();
-		playerTwo = new ComputerPlayer();
 		turnOwner = playerOne;
+		
+		
+		//decks instantiation 
+
+		Deck deckPlayerOne = new Deck(); 
+		deckPlayerOne.deckOne();
+		
+		for (int i = 0; i < deckPlayerOne.getDeck().size(); i++) {
+			System.out.println(deckPlayerOne.getDeck().get(i).getCardname());
+		}
+		//playerOne.setDeck(deckPlayerOne);
+				
+		Deck deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
+		//playerTwo.setDeck(deckPlayerTwo);
+		
+		playerOne = new HumanPlayer(deckPlayerOne);
+		playerTwo = new ComputerPlayer(deckPlayerTwo);
+
 		
 		gameBoard = new Board();
 		humanAvatar =  (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
@@ -44,16 +61,6 @@ public class GameState {
 		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
 		computerAvatar.setOwner(playerTwo, gameBoard);
 		
-		//decks instantiation 
-
-		Deck deckPlayerOne = new Deck(); 
-		deckPlayerOne.deckOne();
-		//playerOne.setDeck(deckPlayerOne);
-				
-		Deck deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
-		//playerTwo.setDeck(deckPlayerTwo);
-
 	}
 	
 	public int getTurnCount() {
