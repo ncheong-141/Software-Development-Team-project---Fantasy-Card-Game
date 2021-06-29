@@ -27,18 +27,38 @@ public class EndTurnClicked implements EventProcessor{
 	private Board board;
 	
 	@Override
-	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
+	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {  //for HumanPlayer
 		
+		if (gameState.getTurnOwner() == playerOne) {
+			gameState.getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
+			emptyMana(); //empty mana for player who ends the turn
+			toCoolDown(); //switch avatars status for current turnOwner
+			gameState.getTurnOwner().getHand().setPlayingMode(false); //current turnOwner hand turn off
+			gameState.turnChange(); // turnOwner exchanged	
+			giveMana(); //give turnCount mana to the player in the beginning of new turn
+			toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
+			gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
+		}
+		else{
+			processEventComputer();
+		}
+	}
+	
+	
+	//for ComputerPlayer
+	public void processEventComputer() {  
 		
 		gameState.getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
 		emptyMana(); //empty mana for player who ends the turn
-		toCoolDown(); //cool monsters
+		toCoolDown(); //switch avatars status for current turnOwner
 		gameState.getTurnOwner().getHand().setPlayingMode(false); //current turnOwner Hand is off?
 		gameState.turnChange(); // turnOwner exchanged	
 		giveMana(); //give turnCount mana to the player in the beginning of new turn
-		
-//		deactivateTileClicked();	
+		toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
+		gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
 	}
+	
+
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
@@ -52,8 +72,7 @@ public class EndTurnClicked implements EventProcessor{
 	
 	//cooldown monsters
 	public void toCoolDown() {
-		
-		ArrayList<Monster> toCool = board.coolDownCheck();	
+		ArrayList<Monster> toCool = board.friendlyUnitList(gameState.getTurnOwner());	
 		for(Monster m : toCool){
 				m.toggleCooldown();				
 		}
