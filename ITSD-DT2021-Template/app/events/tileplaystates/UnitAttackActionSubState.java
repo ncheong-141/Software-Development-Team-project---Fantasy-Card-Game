@@ -76,6 +76,7 @@ public class UnitAttackActionSubState implements GameplayStates {
 			BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.hit);
 			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 			BasicCommands.setUnitHealth(context.out, defender, defender.getHP());
+			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 			
 			// Defender death check
 			// Counter attack here
