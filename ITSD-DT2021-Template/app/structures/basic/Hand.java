@@ -12,24 +12,17 @@ public class Hand {
 	private boolean playingMode;//boolean to indicate whether a card is ready to be played
 	private Card selectedCard;//card selected for play
 	
-	public Hand(ArrayList<Card> hand) {//constructor for hand 
+	public Hand() {//constructor for hand 
 		super();
 		this.curr = 0;
-		this.hand = hand;
+		this.hand = new ArrayList<Card>() ;
 		this.playingMode=false;
 		this.selectedCard=null;
 	}
 	
 	public void initialHand(ActorRef out, Deck deck) { //allows player to receive initial hand
-		
-		
 		ArrayList<Card> drawDeck= deck.getDeck();//create temporary instance of player deck
-		
-		System.out.println("\n\nIn initialHand");
-		for (Card d : drawDeck) {
-			System.out.println(d.getCardname());
-		}
-		
+			
 		//finds top three cards from deck
 		Card cardOne= drawDeck.get(0);
 		Card cardTwo= drawDeck.get(1);
