@@ -38,7 +38,7 @@ public class A_U_DrawCardOnUnitDeath implements Ability {
 		// Can also just call this method, monsters shouldnt be inputed anyway
 		public boolean execute(GameState gameState) {
 		
-			//gameState.getTurnOwner().getHand().drawCard(null, gameState.getTurnOwner().getDeck());
+			gameState.getTurnOwner().drawFromDeck();
 			return true; 
 		}
 		// ================================================================================

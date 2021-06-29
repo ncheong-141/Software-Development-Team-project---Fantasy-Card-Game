@@ -38,7 +38,7 @@ public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
 		// Can also just call this method, monsters shouldnt be inputed anyway
 		public boolean execute(GameState gameState) {
 		
-			//gameState.getPlayerOne().getHand().drawCard(null, gameState.getPlayerOne().getDeck());
+			gameState.getPlayerOne().drawFromDeck();
 			return true; 
 		}
 		// ================================================================================
