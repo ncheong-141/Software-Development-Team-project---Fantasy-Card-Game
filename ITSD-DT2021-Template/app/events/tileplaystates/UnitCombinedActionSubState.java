@@ -16,7 +16,7 @@ public class UnitCombinedActionSubState implements GameplayStates {
 			
 			context.setCombinedActive(true);
 			
-			// Build variables
+			// Build reference variables
 			destination = null;
 			enemyTarget = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
 			if(destination == null && (enemyTarget != null)) {		System.out.println("Successful. enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	}
@@ -68,7 +68,7 @@ public class UnitCombinedActionSubState implements GameplayStates {
 		// Establish tiles adjacent to enemy that are within movement range
 		
 		// Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
-		// Get a movement range from enemy's position
+		// Get a movement range from enemy's position (encompasses attack range)
 		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(context.getTilex(), context.getTiley(), 2);
 		ArrayList <Tile> options = new ArrayList <Tile> ();
 		for(Tile t : temp) {
