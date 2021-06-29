@@ -1,21 +1,30 @@
 package structures.basic.abilities;
+import structures.GameState;
 import structures.basic.Monster;
 
 public class A_Truestrike implements Ability {
 	
 	// Ability attributes 
-	boolean enemyTarget; 
-	Class<? extends Monster> targetType; 
+	private boolean enemyTarget; 
+	private Class<? extends Monster> targetType;
+	private int callID; 
+	
 	
 	// Constructor
 	public A_Truestrike(boolean enemyTarget, Class<? extends Monster> targetType) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		
+		// Call ID of 3 signals this is called on Spell cast
+		this.callID = 3; 
 	}
 	
 	public A_Truestrike() {
 		this.enemyTarget = false;
 		this.targetType = null; 
+		
+		// Call ID of 3 signals this is called on Spell cast
+		this.callID = 3; 
 	}
 	
 	/* Class methods */
@@ -23,7 +32,7 @@ public class A_Truestrike implements Ability {
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
 	// Deal 2 damage to  an enemy Unit
-	public boolean execute(Monster targetMonster) {
+	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		// Reduce Monster HP by 2
 		targetMonster.setHP(targetMonster.getHP() - 2);
@@ -42,6 +51,8 @@ public class A_Truestrike implements Ability {
 		return targetType; 
 	}
 	
-	public int returnCallID() { return -1;}
+	public int getCallID() { 
+		return callID;
+	}
 
 }

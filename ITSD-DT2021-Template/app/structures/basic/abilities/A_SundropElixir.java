@@ -1,22 +1,30 @@
 package structures.basic.abilities;
 
+import structures.GameState;
 import structures.basic.Monster;
 
 public class A_SundropElixir implements Ability {
 
 	// Ability attributes 
-	boolean enemyTarget; 
-	Class<? extends Monster> targetType; 
+	private boolean enemyTarget; 
+	private Class<? extends Monster> targetType; 
+	private int callID;
 	
 	// Constructor
 	public A_SundropElixir(boolean enemyTarget, Class<? extends Monster> targetType) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		
+		// Call ID of 3 signals this is called on Spell cast
+		this.callID = 3; 
 	}
 	
 	public A_SundropElixir() {
 		this.enemyTarget = false;
 		this.targetType = null; 
+		
+		// Call ID of 3 signals this is called on Spell cast
+		this.callID = 3; 
 	}
 	
 	
@@ -25,7 +33,7 @@ public class A_SundropElixir implements Ability {
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
 	// Add 5 health to a Unit. This Cannot take a unit over its starting health.
-	public boolean execute(Monster targetMonster) {
+	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		// Verbose variable/easy to change
 		int healthIncreaseValue = 5;
@@ -49,5 +57,9 @@ public class A_SundropElixir implements Ability {
 	
 	public Class<? extends Monster> getTargetType() {
 		return targetType; 
+	}
+	
+	public int getCallID() {
+		return callID; 
 	}
 }
