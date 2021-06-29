@@ -22,7 +22,14 @@ public class SummonMonsterSubState implements GameplayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 
-		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.getTilex(), context.getTiley());	
+		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.getTilex(), context.getTiley());
+		
+		/** Reset entity selection and board **/  
+		// Deselect after action finished *if* not in the middle of move-attack action
+		context.deselectAllAfterActionPerformed();
+	
+		//  Reset board visual (highlighted tiles)
+		GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 	}
 
 	
@@ -65,8 +72,6 @@ public class SummonMonsterSubState implements GameplayStates {
 		// Need position in hand from Noah to redraw Card with no highlight
 //		BasicCommands.drawCard(out, selectedCard, position, 0);
 		
-		// Keep this as the flag for how deselect method works
-		gameState.getTurnOwner().getHand().setPlayingMode(false);
 
 		// >>> Mana costs --- leave out until mana cycle is implemented ingame
 //		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);
