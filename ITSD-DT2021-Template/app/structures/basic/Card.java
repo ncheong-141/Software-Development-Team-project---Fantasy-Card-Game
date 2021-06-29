@@ -15,7 +15,7 @@ import utils.BasicObjectBuilders;
  * @author Dr. Richard McCreadie
  *
  */
-public class Card {
+public class Card implements Comparable<Card> {
 	
 	int id;//unique identifier for each card
 	
@@ -75,6 +75,17 @@ public class Card {
 		return result;
 	}
 	
+	@Override
+	public int compareTo(Card o) {
+		if(this.manacost>o.getManacost()) {
+			return 1;
+		}else if(this.manacost<o.getManacost()){
+			return -1;
+		}else {
+		return 0;
+		}
+	}
+	
 	//getters and setters
 	public int getId() {
 		return id;
@@ -113,4 +124,6 @@ public class Card {
 	public void setClicked(boolean clicked) {
 		this.clicked = clicked;
 	}
+
+	
 }
