@@ -2,6 +2,7 @@ package events.tileplaystates;
 
 import java.util.ArrayList;
 
+import ch.qos.logback.classic.selector.servlet.ContextDetachingSCL;
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import structures.basic.*;
@@ -95,21 +96,13 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 				context.deselectAllAfterActionPerformed();
 				
 				// Visual change for old unit
-					// Update selected unit's tile
-					// Update tile selection displayed
-				Tile oldTile = context.getGameStateRef().getBoard().getTile(old.getPosition().getTilex(), old.getPosition().getTiley());
-				BasicCommands.drawTile(context.out, oldTile, 0);
+				GeneralCommandSets.drawUnitDeselect(context.out, context.getGameStateRef(), old);
 				
-				ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(context.getTilex(), context.getTiley(), old.getAttackRange(), old.getMovesLeft()));
-				actRange.addAll(context.getGameStateRef().getBoard().unitMovableTiles(old.getPosition().getTilex(), old.getPosition().getTiley(), old.getMovesLeft()));
-				for(Tile t : actRange) {
-					BasicCommands.drawTile(context.out, t, 0);
-				}
-				
-				// Variable change + visual change for new unit
+				// Variable + visual change for new unit
 				// Pass to DisplayActions state to complete
 				GameplayStates UnitDisplayActionsState = new UnitDisplayActionsState();
 				UnitDisplayActionsState.execute(context);
+				break;
 				
 			}
 			
