@@ -2,6 +2,7 @@ package structures.basic;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 
@@ -131,11 +132,11 @@ public class ComputerPlayer extends Player {
 		}
 		
 		private CardCombo chooseCombo(ArrayList<CardCombo> possCombos) {
-			return possCombos.get(0);
-			
+			Collections.sort(possCombos);
+			return possCombos.get(possCombos.size()-1);			
 		}
 		
-		//this method holds the logic to calculate best card combination
+		
 		
 	
 	//==================OVERALL NOTES ON COMP PLAYER CLASS========================//
