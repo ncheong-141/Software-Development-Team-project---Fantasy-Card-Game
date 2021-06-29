@@ -46,27 +46,50 @@ public class Card implements Comparable<Card> {
 		boolean result= AbilityToUnitLinkage.UnitAbility.get(getCardname()).get(0).targetEnemy();
 		return result;
 	}
+	
 	//checks that monster/spell associated with card has an ability
-	public boolean hasAbility(Card card){
+	public boolean hasAbility(){
 		boolean result= false;
-//		if(card.getBigCard().getAttack()>0) {//checks whether card is a monster
-//		//create a temporary	
-//			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+card.getCardname(), 99, card, Monster.class);
-//			if(mon.getAbility()!=null) {//if monster has ability, a true result is given
-//				result=true;
-//			}else {//if monster doesnt have an ability a false result is give
-//				result=false;
-//			}
-//		}else if(card.getBigCard().getAttack()<0) {//checks whether card is a spell
-//			Spell spell = (Spell)BasicObjectBuilders.loadCard("StaticConfFiles.c_"+card.getCardname(),99, Spell.class);
-//			if(spell.getAbility()!=null) {//if spell has an effect(should always have one) returns a true result
-//				result=true;
-//			}else {//if spell has no ability(should never happen) false result returned
-//				result=false;
-//			}
-//		}
+		if(this.getBigCard().getAttack()>0) {//checks whether card is a monster
+		//create a temporary	
+			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+this.getCardname(), 99, this, Monster.class);
+			if(mon.getMonsterAbility()!=null) {//if monster has ability, a true result is given
+				result=true;
+			}else {//if monster doesn't have an ability a false result is give
+				result=false;
+			}
+		}else if(this.getBigCard().getAttack()<0) {//checks whether card is a spell
+			Spell spell = (Spell)BasicObjectBuilders.loadCard("StaticConfFiles.c_"+this.getCardname(),99, Spell.class);
+			if(spell.getAbility()!=null) {//if spell has an effect(should always have one) returns a true result
+				result=true;
+			}else {//if spell has no ability(should never happen) false result returned
+				result=false;
+			}
+		}
 		return result;
+		}
+
+	//special getter methods to aid with ai logic decisions getting card(if monster) health and attack
+	public int getCardHP(){
+		return this.getBigCard().getHealth();
 	}
+	public int getCardAttack() {
+		return this.getBigCard().getAttack();
+	}
+	
+	//helper method to show where card(if monster) is playable
+	public boolean checkPlayableAnywhere() {
+		if(this.getCardname().equals("Ironcliff Guardian") || this.getCardname().contentEquals("Planar Scout")) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public void delCard() {
+		
+	}
+	
 	
 	//method to return integer value of unit ability effect 
 	//i.e if ability is +2 damage, the method would return 2
@@ -76,6 +99,7 @@ public class Card implements Comparable<Card> {
 	}
 	
 	@Override
+	//compares mana cost of two cards for ai logic
 	public int compareTo(Card o) {
 		if(this.manacost>o.getManacost()) {
 			return 1;
@@ -124,6 +148,3 @@ public class Card implements Comparable<Card> {
 	public void setClicked(boolean clicked) {
 		this.clicked = clicked;
 	}
-
-	
-}
