@@ -1,15 +1,8 @@
 package structures.basic;
 
-import commands.BasicCommands;
 
 import java.util.ArrayList;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import actors.GameActor;
-import akka.actor.ActorRef;
-import events.CardClicked;
-import events.EndTurnClicked;
-import structures.GameState;
 
 
 
@@ -124,7 +117,26 @@ public class ComputerPlayer extends Player {
 		return comboList;
 	}
 
-	
+	//return card(s) to be played by comp player
+		public ArrayList <Card> playComputerCards(){
+			
+			//getting the list of possible card combinations
+			ArrayList <CardCombo> possCombos = this.cardCombos(this.playableCards());
+			
+			//extracting the best card combination based on logic in chooseCombo method
+			CardCombo choosenCombo = this.chooseCombo(possCombos); 
+			
+			//returning the choosen combination of cards 
+			return choosenCombo.getCardCombo();
+		}
+		
+		private CardCombo chooseCombo(ArrayList<CardCombo> possCombos) {
+			return possCombos.get(0);
+			
+		}
+		
+		//this method holds the logic to calculate best card combination
+		
 	
 	//==================OVERALL NOTES ON COMP PLAYER CLASS========================//
 	
