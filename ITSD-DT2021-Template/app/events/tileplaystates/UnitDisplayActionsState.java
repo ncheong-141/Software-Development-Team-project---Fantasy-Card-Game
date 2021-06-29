@@ -20,10 +20,10 @@ public class UnitDisplayActionsState implements GameplayStates{
 		System.out.println("In UnitDisplayActionsState.");
 
 		// Get the newly selected unit
-		Unit newlySelectedUnit = context.getGameStateRef().getBoard().getTile(context.tilex, context.tiley).getUnitOnTile();
+		Unit newlySelectedUnit = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()).getUnitOnTile();
 		
 		// Display unit selected actions
-		boolean outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(),context.tilex, context.tiley, context.out, newlySelectedUnit.getClass());
+		boolean outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(),context.getTilex(), context.getTiley(), context.out, newlySelectedUnit.getClass());
 		
 		if(outcome) {
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
