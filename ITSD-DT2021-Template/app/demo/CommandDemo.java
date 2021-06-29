@@ -620,6 +620,7 @@ public class CommandDemo {
 		// Set up friendly Unit to summon next to
 		Avatar humanAvatar = g.getHumanAvatar();
 		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
+		humanAvatar.toggleCooldown();
 		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 
 		humanAvatar.setAttackValue(2);
