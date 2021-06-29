@@ -29,7 +29,7 @@ public class A_U_DrawCardOnUnitDeath implements Ability {
 		
 		// ABILITY IMPLEMENTATION
 		// ================================================================================
-		// Both players draw a card when this Unit is summoned. 
+		// Player draws card when this unit is defeated. 
 		// Ignore the Monster input since this ability doesnt affect Monsters
 		public boolean execute(Monster targetMonster, GameState gameState) {
 			return execute(gameState); 
@@ -38,7 +38,7 @@ public class A_U_DrawCardOnUnitDeath implements Ability {
 		// Can also just call this method, monsters shouldnt be inputed anyway
 		public boolean execute(GameState gameState) {
 		
-			//gameState.getTurnOwner().getHand().drawCard(null, gameState.getTurnOwner().getDeck());
+			gameState.getTurnOwner().drawFromDeck();
 			return true; 
 		}
 		// ================================================================================

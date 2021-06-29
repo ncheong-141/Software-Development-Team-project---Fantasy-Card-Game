@@ -24,6 +24,7 @@ public class CastSpellSubState implements GameplayStates {
 		
 		// Cast the Spell on the Unit on tile selected
 
+
 		boolean successfulFlag = spellToCast.getAbility().execute( context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()).getUnitOnTile() , context.getGameStateRef());
 		
 		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
@@ -33,10 +34,15 @@ public class CastSpellSubState implements GameplayStates {
 		GeneralCommandSets.threadSleep();
 		
 		if (successfulFlag) {
-			System.out.println("Sucessfully cast spell."); 
 			
-			// Keep this as the flag for how deselect method works
-			context.getGameStateRef().getTurnOwner().getHand().setPlayingMode(false);
+			System.out.println("Sucessfully cast spell."); 
+						
+			/** Reset entity selection and board **/  
+			// Deselect after action finished *if* not in the middle of move-attack action
+			context.deselectAllAfterActionPerformed();
+		
+			// Reset board visual (highlighted tiles)
+			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 		}
 		else {
 			System.out.println("Spell cast unsucessful, please select another Unit"); 

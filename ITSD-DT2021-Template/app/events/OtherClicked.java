@@ -28,59 +28,11 @@ public class OtherClicked implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
+		
 
-		// >>> Deselect all
-		
-		// Card selected
-		if(gameState.getTurnOwner().getHand().isPlayingMode()) {
-			
-			Card cSelected = gameState.getTurnOwner().getHand().getSelectedCard();
-			
-			// Visual update while variables intact	--- Need position info from Noah somehow
-			//BasicCommands.drawCard(out, cSelected, position, 0);
-			//GeneralCommandSets.threadSleep();
-			
-			// Update game variables
-			gameState.getTurnOwner().getHand().setSelectedCard(null);
-			//gameState.getTurnOwner().getHand().getSelectedCard().setClicked(false);
-			gameState.getTurnOwner().getHand().setPlayingMode(false);
-			
-		}
-		
-		// Unit selected
-		if(gameState.getBoard().getUnitSelected() != null) {
-			
-			Monster mSelected = gameState.getBoard().getUnitSelected();
-			
-			// Visual update while variables intact
-			ArrayList <Tile> actionRange = gameState.getBoard().unitMovableTiles(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley(), mSelected.getMovesLeft());
-			ArrayList <Tile> attackRange = new ArrayList <Tile> (gameState.getBoard().unitAttackableTiles(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley(), mSelected.getAttackRange(), mSelected.getMovesLeft()));
-			actionRange.addAll(attackRange);
-			
-			for(Tile t : actionRange) {
-				BasicCommands.drawTile(out, t, 0);
-				GeneralCommandSets.threadSleep();
-			}
-			
-			// + Unit tile
-			BasicCommands.drawTile(out, gameState.getBoard().getTile(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley()), 0);
-			GeneralCommandSets.threadSleep();
-			
-			// Update game variables
-			gameState.getBoard().setUnitSelected(null);
-			mSelected.toggleSelect();
-			
-			System.out.println("Monster deselected: " + mSelected.isSelected());
-			
-		}
-
-		/*
-		 * Will hold:
-		 * Deselect Monster
-		 * Deselect Card
-		 */
-		
-		
+		/* Entity deselection and board reset */
+		gameState.deselectAllEntities();
+		GeneralCommandSets.boardVisualReset(out, gameState);
 	}
 
 }
