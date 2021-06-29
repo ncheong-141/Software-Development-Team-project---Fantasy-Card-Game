@@ -170,18 +170,10 @@ public class GameplayContext {
 	}
 	
 	public void deselectAllAfterActionPerformed() { 
-		if(gameStateRef.getBoard().getUnitSelected() != null) {
-			gameStateRef.getBoard().setUnitSelected(null);
-			this.loadedUnit = null;
-		}
-
 		
-		if(!gameStateRef.getTurnOwner().getHand().isPlayingMode()) {
-			//gameStateRef.getTurnOwner().getHand().getSelectedCard().setClicked(false);
-			gameStateRef.getTurnOwner().getHand().setSelectedCard(null);
-			this.loadedCard = null;
-		}
-		
+		gameStateRef.deselectAllEntities();
+		this.loadedUnit = null;
+		this.loadedCard = null;
 	}
 	
 	

@@ -3,6 +3,7 @@ package commands;
 import java.util.ArrayList;
 
 import structures.basic.Avatar;
+import structures.basic.Board;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.Unit;
@@ -30,7 +31,7 @@ public class GeneralCommandSets {
 		if (tilesToDraw.size() < bufferSize) {
 			for (int i = 0; i < tilesToDraw.size(); i++) {
 				BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
-				try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
+				try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}	
 			}
 		}
 		else { 
@@ -62,6 +63,10 @@ public class GeneralCommandSets {
 		}
 	}
 	
+	// Verbose board reset method for code clarity
+	public static void boardVisualReset(ActorRef out, ArrayList<Tile> highlightedTilesToReset) {
+		drawBoardTiles(out, highlightedTilesToReset, 0);
+	}
 	
 	
 	// Draw a unit with stats if a Monster
