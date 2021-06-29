@@ -2,6 +2,7 @@ package commands;
 
 import java.util.ArrayList;
 
+import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.Monster;
@@ -64,8 +65,9 @@ public class GeneralCommandSets {
 	}
 	
 	// Verbose board reset method for code clarity
-	public static void boardVisualReset(ActorRef out, ArrayList<Tile> highlightedTilesToReset) {
-		drawBoardTiles(out, highlightedTilesToReset, 0);
+	public static void boardVisualReset(ActorRef out, GameState gameState) {
+		
+		drawBoardTiles(out, gameState.getBoard().getAllTilesList(), 0);
 	}
 	
 	

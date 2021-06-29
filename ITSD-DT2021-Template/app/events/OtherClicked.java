@@ -32,9 +32,7 @@ public class OtherClicked implements EventProcessor{
 
 		/* Entity deselection and board reset */
 		gameState.deselectAllEntities();
-		GeneralCommandSets.boardVisualReset(out, gameState.getAllTilesList());
-			
-		
+		GeneralCommandSets.boardVisualReset(out, gameState);
 	}
 
 }
