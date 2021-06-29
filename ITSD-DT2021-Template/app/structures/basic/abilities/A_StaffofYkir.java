@@ -1,23 +1,29 @@
 package structures.basic.abilities;
 
+import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.Monster;
 
 public class A_StaffofYkir implements Ability {
 
 	// Ability attributes 
-	boolean enemyTarget; 
-	Class<? extends Monster> targetType; 
+	private boolean enemyTarget; 
+	private Class<? extends Monster> targetType; 
+	private Call_IDs callID;
 	
 	// Constructor
 	public A_StaffofYkir(boolean enemyTarget, Class<? extends Monster> targetType) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	public A_StaffofYkir() {
 		this.enemyTarget = false;
 		this.targetType = null; 
+		
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	/* Class methods */
@@ -25,7 +31,7 @@ public class A_StaffofYkir implements Ability {
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
 	// Add + 2 attack to avatar
-	public boolean execute(Monster targetMonster) {
+	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		int additionalAttackValue = 2; 
 		
@@ -52,5 +58,9 @@ public class A_StaffofYkir implements Ability {
 	
 	public Class<? extends Monster> getTargetType() {
 		return targetType; 
+	}
+	
+	public Call_IDs getCallID() {
+		return callID; 
 	}
 }

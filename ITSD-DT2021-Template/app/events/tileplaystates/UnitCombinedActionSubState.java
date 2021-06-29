@@ -2,6 +2,7 @@ package events.tileplaystates;
 
 import java.util.ArrayList;
 
+import commands.GeneralCommandSets;
 import structures.basic.*;
 
 public class UnitCombinedActionSubState implements GameplayStates {
@@ -45,6 +46,14 @@ public class UnitCombinedActionSubState implements GameplayStates {
 			
 			// Finish combined State execution
 			context.setCombinedActive(false);
+			
+			
+			/** Reset entity selection and board **/  
+			// Deselect after combined action
+			context.deselectAllAfterActionPerformed();
+			
+			// Reset board visual (highlighted tiles)
+			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 
 	}
 
