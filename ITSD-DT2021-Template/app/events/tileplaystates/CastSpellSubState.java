@@ -28,6 +28,7 @@ public class CastSpellSubState implements GameplayStates {
 		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
 		EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
 		BasicCommands.playEffectAnimation(context.out, ef, context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()));
+
 		GeneralCommandSets.threadSleep();
 		
 		if (successfulFlag) {

@@ -24,6 +24,7 @@ public interface Ability {
 	public boolean targetEnemy(); 
 	
 	public Call_IDs getCallID(); 
+
 	
 	// Call ID
 	/*

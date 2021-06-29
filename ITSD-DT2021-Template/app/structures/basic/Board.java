@@ -60,7 +60,18 @@ public class Board {
 		return gameBoard;
 	}
 
-
+	public ArrayList<Tile> getAllTilesList(){
+		ArrayList<Tile> fullTileList = new ArrayList<Tile>();
+		
+		for (int i=0; i<gameBoard.length; i++) {
+			for (int k = 0; i<gameBoard[0].length; k++) {
+				fullTileList.add(gameBoard[i][k]);
+			}
+		}
+		
+		return fullTileList;
+	}
+	
 	public void setGameBoard(Tile[][] gameBoard) {
 		this.gameBoard = gameBoard;
 	}
