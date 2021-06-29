@@ -55,17 +55,17 @@ public class SummonMonsterSubState implements GameplayStates {
 		gameState.getBoard().getTile(tilex,tiley).addUnit(summonedMonster);
 		GeneralCommandSets.threadSleep();
 		
-		// Drawing the monster on the board
-		BasicCommands.drawUnit(out, summonedMonster, gameState.getBoard().getTile(tilex,tiley));
+		// Drawing summoned monster with stats on the board
+		GeneralCommandSets.drawUnitWithStats(out, summonedMonster, gameState.getBoard().getTile(tilex, tiley));
 		GeneralCommandSets.threadSleep();
 		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
 		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
-		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
-		GeneralCommandSets.threadSleep();
-		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
-		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
+//		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
+//		GeneralCommandSets.threadSleep();
 		
 		// De-select card (visual only)
 		Card selectedCard = gameState.getTurnOwner().getHand().getSelectedCard();
