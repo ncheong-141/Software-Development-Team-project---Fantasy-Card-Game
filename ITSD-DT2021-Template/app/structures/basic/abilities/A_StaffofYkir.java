@@ -9,23 +9,21 @@ public class A_StaffofYkir implements Ability {
 	// Ability attributes 
 	private boolean enemyTarget; 
 	private Class<? extends Monster> targetType; 
-	private int callID;
+	private Call_IDs callID;
 	
 	// Constructor
 	public A_StaffofYkir(boolean enemyTarget, Class<? extends Monster> targetType) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
 		
-		// Call ID of 3 signals this is called on Spell cast
-		this.callID = 3; 
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	public A_StaffofYkir() {
 		this.enemyTarget = false;
 		this.targetType = null; 
 		
-		// Call ID of 3 signals this is called on Spell cast
-		this.callID = 3; 
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	/* Class methods */
@@ -62,7 +60,7 @@ public class A_StaffofYkir implements Ability {
 		return targetType; 
 	}
 	
-	public int getCallID() {
+	public Call_IDs getCallID() {
 		return callID; 
 	}
 }

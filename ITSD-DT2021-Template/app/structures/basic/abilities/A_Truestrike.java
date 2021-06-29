@@ -7,7 +7,7 @@ public class A_Truestrike implements Ability {
 	// Ability attributes 
 	private boolean enemyTarget; 
 	private Class<? extends Monster> targetType;
-	private int callID; 
+	private Call_IDs callID; 
 	
 	
 	// Constructor
@@ -15,16 +15,14 @@ public class A_Truestrike implements Ability {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
 		
-		// Call ID of 3 signals this is called on Spell cast
-		this.callID = 3; 
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	public A_Truestrike() {
 		this.enemyTarget = false;
 		this.targetType = null; 
 		
-		// Call ID of 3 signals this is called on Spell cast
-		this.callID = 3; 
+		this.callID = Call_IDs.noTimeConstraint; 
 	}
 	
 	/* Class methods */
@@ -51,8 +49,7 @@ public class A_Truestrike implements Ability {
 		return targetType; 
 	}
 	
-	public int getCallID() { 
-		return callID;
+	public Call_IDs getCallID() {
+		return callID; 
 	}
-
 }

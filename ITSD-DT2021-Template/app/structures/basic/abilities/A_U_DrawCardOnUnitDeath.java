@@ -3,7 +3,7 @@ package structures.basic.abilities;
 import structures.GameState;
 import structures.basic.Monster;
 
-public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
+public class A_U_DrawCardOnUnitDeath implements Ability {
 	
 		// Ability attributes 
 		private boolean enemyTarget; 
@@ -11,18 +11,18 @@ public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
 		private Call_IDs callID; 
 		
 		// Constructors
-		public A_U_PlayersDrawCardOnUnitSummon(boolean enemyTarget, Class<? extends Monster> targetType) {
+		public A_U_DrawCardOnUnitDeath(boolean enemyTarget, Class<? extends Monster> targetType) {
 			this.enemyTarget = enemyTarget;
 			this.targetType = targetType; 
-		
-			this.callID = Call_IDs.onSummon;
+			
+			this.callID = Call_IDs.onDeath;
 		}
 		
-		public A_U_PlayersDrawCardOnUnitSummon() {
+		public A_U_DrawCardOnUnitDeath() {
 			this.enemyTarget = false;
 			this.targetType = null; 
 			
-			this.callID = Call_IDs.onSummon;
+			this.callID = Call_IDs.onDeath;
 		}
 		
 		/* Class methods */
@@ -38,7 +38,7 @@ public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
 		// Can also just call this method, monsters shouldnt be inputed anyway
 		public boolean execute(GameState gameState) {
 		
-			//gameState.getPlayerOne().getHand().drawCard(null, gameState.getPlayerOne().getDeck());
+			//gameState.getTurnOwner().getHand().drawCard(null, gameState.getTurnOwner().getDeck());
 			return true; 
 		}
 		// ================================================================================
@@ -56,7 +56,6 @@ public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
 		public Call_IDs getCallID() { 
 			return callID;
 		}
-
 }
 
 	

@@ -23,7 +23,7 @@ public interface Ability {
 	public Class<? extends Monster> getTargetType();
 	public boolean targetEnemy(); 
 	
-	public int getCallID(); 
+	public Call_IDs getCallID(); 
 	
 	// Call ID
 	/*
