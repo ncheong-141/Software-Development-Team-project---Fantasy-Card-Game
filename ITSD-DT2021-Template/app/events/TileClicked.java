@@ -90,10 +90,10 @@ public class TileClicked implements EventProcessor{
 		/*
 		 * Execute State. Each state holds the game logic required to execute the desired functionality
 		 * Note, some States here create sub-states. 
-		 * E.g. CardSelectedState deals with the previous user input of a Card click and generates a new substate 
+		 * E.g. CardSelectedState deals with the previous user input of a Card click and generates a new Unit state 
 		 * based on what the user has currently clicked (a unit or empty tile) 
 		 */
-		gameplayContext.executeAndCreateSubStates();
+		gameplayContext.executeAndCreateUnitStates();
 		
 		
 	}

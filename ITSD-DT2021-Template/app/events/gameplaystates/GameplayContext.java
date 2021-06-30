@@ -51,7 +51,7 @@ public class GameplayContext {
 	// Class methods
 	
 	// State method (called from within Context) 
-	public void executeAndCreateSubStates() {
+	public void executeAndCreateUnitStates() {
 		
 		
 		/* -----------------------------------------------------------------------------------------------
