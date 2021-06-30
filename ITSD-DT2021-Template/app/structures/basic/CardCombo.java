@@ -72,6 +72,7 @@ public class CardCombo implements Comparable<CardCombo> {
 		return 0;
 	}
 
+	
 	@Override
 	public int compareTo(CardCombo o) {
 		if (this.getScore() > o.getScore()) return 1;

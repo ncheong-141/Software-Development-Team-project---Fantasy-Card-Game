@@ -9,12 +9,34 @@ import java.util.Collections;
 
 public class ComputerPlayer extends Player {
 	
+	Board gameBoard;
+	boolean playedAllPossibleCards;
+	boolean madeAllPossibleMoves;
+	Monster dummy;
+	
 	public ComputerPlayer(Deck d) {
 		super(d);
+		this.madeAllPossibleMoves = false;
+		this.playedAllPossibleCards = false;
+		this.dummy = new Monster();
+		dummy.setOwner(this);
+	}
+	
+	public ComputerPlayer(Deck d, Board b) {
+		super(d);
+		this.gameBoard = b;
+		this.madeAllPossibleMoves = false;
+		this.madeAllPossibleMoves = true;
+		this.dummy = new Monster();
+		dummy.setOwner(this);
+	}
+	
+	public void setGameBoard(Board b) {
+		this.gameBoard = b;
 	}
 	
 	
-	
+	//========================PLAYING CARDS METHODS ===================================//
 	
 	//method returns playable cards from the player's hand based on the mana cost
 	private ArrayList <Card> playableCards(){
@@ -41,7 +63,7 @@ public class ComputerPlayer extends Player {
 			8.1) if mana cost of i = mana left
 				8.1.1) add i to current combo
 				8.1.2) add current combo to combo list
-				8.1.3) rest mana left to total mana - k mana cost
+				8.1.3) reset mana left to total mana - k mana cost
 				8.1.4) reset combo (new empty combo) and continue
 			8.2) else if mana cost of i is < mana left
 				8.2.1) add i to current combo
@@ -117,9 +139,32 @@ public class ComputerPlayer extends Player {
 		}		
 		return comboList;
 	}
-
+	
+	private boolean playableCombo(CardCombo combo) {
+		int tilesAvailable = this.gameBoard.allSummonableTiles(this).size();
+		int tilesNeeded = 0;
+		for (Card c : combo.getCardCombo()) {
+			if (!(c.playableAnywhere())) tilesNeeded++;
+		}
+		
+		int delta = tilesAvailable - tilesNeeded;
+		
+		if (delta >= 0) return true;
+		else {
+			boolean result = true;
+			int i =0;
+			while (delta < 0 && i<this.gameBoard.allSummonableTiles(this).size()) {
+				this.gameBoard.allSummonableTiles(this).get(i).addUnit(this.dummy);
+				delta = this.gameBoard.allSummonableTiles(this).size() - tilesNeeded;
+				result = false;
+				i++;
+			}
+			return result;
+		}
+		
+	}
 	//return card(s) to be played by comp player
-		public ArrayList <Card> playComputerCards(){
+		public ArrayList <ComputerInstruction> playComputerCards(){
 			
 			//getting the list of possible card combinations
 			ArrayList <CardCombo> possCombos = this.cardCombos(this.playableCards());
@@ -135,9 +180,24 @@ public class ComputerPlayer extends Player {
 			Collections.sort(possCombos);
 			return possCombos.get(possCombos.size()-1);			
 		}
+	
+	//methods returns list of cards that computer player wants to play
+	//as a list of ComputerMoves objs (Card + target tile)
+		public ArrayList<ComputerMove> whereToSummon(CardCombo combo){
+			
+		}
 		
+	//====================SUMMONING OF UNITS ON BOARD METHOD=======================//
+	
+		private ArrayList <Monster> allMovableMonsters(){
+			ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitList(this);
+			
+			myMonsters.removeIf(m -> (m.getMovesLeft()<=0));
+			
+			return myMonsters;
+		}
 		
-		
+	//====================MOVING OF UNITS ON BOARD METHOD=======================//
 	
 	//==================OVERALL NOTES ON COMP PLAYER CLASS========================//
 	

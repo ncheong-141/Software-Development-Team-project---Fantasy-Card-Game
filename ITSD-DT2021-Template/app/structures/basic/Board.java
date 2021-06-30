@@ -26,6 +26,9 @@ public class Board {
 	//note: still to be implemented, not a fundamental feature
 	private Tile humanStart;
 	private Tile computerStart;
+	
+	private int numUnitsOnBoard;
+	private int boardCapacity;
 
 	private Monster unitSelected;
 
@@ -35,6 +38,8 @@ public class Board {
 	public Board() {
 		X = 9;
 		Y = 5;
+		this.boardCapacity = X*Y;
+		this.numUnitsOnBoard = 0;
 		gameBoard = new Tile[Y][X];
 		for (int i = 0; i<Y; i++) {
 			for (int k = 0; k<X; k++) {
@@ -60,7 +65,24 @@ public class Board {
 		return gameBoard;
 	}
 
-
+	public int getBoardCapacity() {
+		return this.boardCapacity;
+	}
+	
+	public void setUnitCount(int delta) {
+		this.numUnitsOnBoard += delta;
+	}
+	public ArrayList<Tile> getAllTilesList(){
+		ArrayList<Tile> fullTileList = new ArrayList<Tile>();
+		
+		for (int i=0; i<gameBoard.length; i++) {
+			for (int k = 0; k<gameBoard[0].length; k++) {
+				fullTileList.add(gameBoard[i][k]);
+			}
+		}
+		
+		return fullTileList;
+	}
 	public void setGameBoard(Tile[][] gameBoard) {
 		this.gameBoard = gameBoard;
 	}
