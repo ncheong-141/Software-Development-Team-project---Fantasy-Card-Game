@@ -35,6 +35,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		System.out.println("In UnitPreviouslySelectedState.");
 		context.debugPrint();
 		
+		// 
 		// Load previously selected unit for use in next sub state (move or attack) 
 		context.setLoadedUnit(context.getGameStateRef().getBoard().getUnitSelected());
 		// Retrieve clicked tile for reference in condition checks
