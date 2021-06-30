@@ -10,7 +10,7 @@ import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-public class CastSpellSubState implements ITilePlayStates {
+public class CastSpellState implements ITilePlayStates {
 
 	public void execute(GameplayContext context) {
 		

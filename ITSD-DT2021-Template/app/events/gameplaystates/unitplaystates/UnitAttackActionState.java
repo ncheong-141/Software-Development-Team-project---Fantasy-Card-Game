@@ -10,13 +10,13 @@ import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 
-public class UnitAttackActionSubState implements ITilePlayStates {
+public class UnitAttackActionState implements ITilePlayStates {
 
 	// State attributes
 	ITilePlayStates subState; 
 
 	// State constructor 
-	public UnitAttackActionSubState() {	
+	public UnitAttackActionState() {	
 		subState = null; 
 	}
 	

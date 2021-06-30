@@ -7,7 +7,7 @@ import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.*;
 
-public class UnitCombinedActionSubState implements ITilePlayStates {
+public class UnitCombinedActionState implements ITilePlayStates {
 	
 	Tile destination;
 	Tile enemyTarget;
@@ -32,7 +32,7 @@ public class UnitCombinedActionSubState implements ITilePlayStates {
 			context.setTiley(destination.getTiley());
 			
 			// Execute selected unit movement
-			ITilePlayStates UnitMoveActionSubState = new UnitMoveActionSubState();
+			ITilePlayStates UnitMoveActionSubState = new UnitMoveActionState();
 			System.out.println("Calling MoveAction from CombinedAction...");
 			UnitMoveActionSubState.execute(context);
 			
@@ -43,7 +43,7 @@ public class UnitCombinedActionSubState implements ITilePlayStates {
 			System.out.println("Calling AttackAction from CombinedAction...");
 			
 			// Execute attack between units
-			ITilePlayStates UnitAttackActionSubState = new UnitAttackActionSubState();
+			ITilePlayStates UnitAttackActionSubState = new UnitAttackActionState();
 			UnitAttackActionSubState.execute(context);
 			
 			// Finish combined State execution

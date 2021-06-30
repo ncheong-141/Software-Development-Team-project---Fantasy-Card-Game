@@ -15,7 +15,7 @@ import structures.basic.UnitAnimationType;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-public class SummonMonsterSubState implements ITilePlayStates {
+public class SummonMonsterState implements ITilePlayStates {
 
 	
 	/*** State method ***/

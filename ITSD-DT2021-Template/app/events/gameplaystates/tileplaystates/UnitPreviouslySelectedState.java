@@ -6,8 +6,8 @@ import ch.qos.logback.classic.selector.servlet.ContextDetachingSCL;
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
-import events.gameplaystates.unitplaystates.UnitAttackActionSubState;
-import events.gameplaystates.unitplaystates.UnitCombinedActionSubState;
+import events.gameplaystates.unitplaystates.UnitAttackActionState;
+import events.gameplaystates.unitplaystates.UnitCombinedActionState;
 import structures.basic.*;
 
 public class UnitPreviouslySelectedState implements ITilePlayStates {
@@ -50,7 +50,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 			if(Math.abs(context.getLoadedUnit().getPosition().getTilex() - clickedTile.getTilex()) <=1 && (Math.abs(context.getLoadedUnit().getPosition().getTiley() - clickedTile.getTiley()) <= 1)) {
 				// Attack
 				System.out.println("Creating AttackAction substate...");
-				subState = new UnitAttackActionSubState();
+				subState = new UnitAttackActionState();
 				break;
 			} 
 			
@@ -58,7 +58,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 			else {
 				// Move & Attack
 				System.out.println("Creating CombinedAction substate...");
-				subState = new UnitCombinedActionSubState();
+				subState = new UnitCombinedActionState();
 				break;
 			}
 			
@@ -114,7 +114,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		case("empty"): {
 			
 			// Move
-			subState = new UnitMoveActionSubState();
+			subState = new UnitMoveActionState();
 			break;
 
 		}

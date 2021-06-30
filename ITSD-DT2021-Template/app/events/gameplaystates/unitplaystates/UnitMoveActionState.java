@@ -14,7 +14,7 @@ import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 
-public class UnitMoveActionSubState implements ITilePlayStates {
+public class UnitMoveActionState implements ITilePlayStates {
 
 	/*** State method ***/
 	
