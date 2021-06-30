@@ -1,20 +1,22 @@
-package events.tileplaystates;
+package events.gameplaystates.unitplaystates;
 
 import java.util.ArrayList;
 
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 
-public class UnitAttackActionSubState implements GameplayStates {
+public class UnitAttackActionState implements ITilePlayStates {
 
 	// State attributes
-	GameplayStates subState; 
+	ITilePlayStates subState; 
 
 	// State constructor 
-	public UnitAttackActionSubState() {	
+	public UnitAttackActionState() {	
 		subState = null; 
 	}
 	

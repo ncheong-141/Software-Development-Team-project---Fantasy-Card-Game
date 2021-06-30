@@ -1,4 +1,4 @@
-package events.tileplaystates;
+package events.gameplaystates.unitplaystates;
 
 import java.util.ArrayList;
 
@@ -7,12 +7,14 @@ import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.UnitMoving;
 import events.UnitStopped;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.GameState;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 
-public class UnitMoveActionSubState implements GameplayStates {
+public class UnitMoveActionState implements ITilePlayStates {
 
 	/*** State method ***/
 	

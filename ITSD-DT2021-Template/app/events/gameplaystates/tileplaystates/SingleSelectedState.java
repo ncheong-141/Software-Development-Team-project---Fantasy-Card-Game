@@ -1,9 +1,12 @@
-package events.tileplaystates;
+package events.gameplaystates.tileplaystates;
 
-public class SingleSelectedState implements GameplayStates{
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.unitplaystates.UnitDisplayActionsState;
+
+public class SingleSelectedState implements ITilePlayStates{
 
 	// State attributes
-	GameplayStates subState; 
+	ITilePlayStates subState; 
 
 	// State constructor 
 	public SingleSelectedState() {	

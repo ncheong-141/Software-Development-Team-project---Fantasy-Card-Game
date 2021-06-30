@@ -1,14 +1,16 @@
-package events.tileplaystates;
+package events.gameplaystates.unitplaystates;
 
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.EffectAnimation;
 import structures.basic.Spell;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-public class CastSpellSubState implements GameplayStates {
+public class CastSpellState implements ITilePlayStates {
 
 	public void execute(GameplayContext context) {
 		

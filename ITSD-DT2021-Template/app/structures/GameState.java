@@ -1,6 +1,6 @@
 package structures;
 
-import events.tileplaystates.GameplayStates;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.ComputerPlayer;
@@ -132,6 +132,24 @@ public class GameState {
 	/* Getters*/ 
 	public Board getBoard() {
 		return gameBoard; 
+	}
+	
+	/** Entity selection helper methods **/
+	
+	// Deselects Card and Unit (if selected)
+	public void deselectAllEntities() { 
+	
+		// If there is a selected unit
+		if(this.getBoard().getUnitSelected() != null) {
+			this.getBoard().setUnitSelected(null);
+		}
+
+		// If there is a card selected in turn owner hand
+		if(this.getTurnOwner().getHand().isPlayingMode()) {
+			this.getTurnOwner().getHand().setSelectedCard(null);
+			this.getTurnOwner().getHand().setPlayingMode(false);
+		}
+		
 	}
 
 }

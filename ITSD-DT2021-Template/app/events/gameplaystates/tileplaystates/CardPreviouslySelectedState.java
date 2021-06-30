@@ -1,12 +1,15 @@
-package events.tileplaystates;
+package events.gameplaystates.tileplaystates;
 
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.unitplaystates.CastSpellState;
+import events.gameplaystates.unitplaystates.SummonMonsterState;
 import structures.basic.Monster;
 import structures.basic.Spell;
 
-public class CardPreviouslySelectedState implements GameplayStates {
+public class CardPreviouslySelectedState implements ITilePlayStates {
 
 	// State attributes
-	GameplayStates subState; 
+	ITilePlayStates subState; 
 	
 	// Constructor
 	public CardPreviouslySelectedState() {
@@ -43,7 +46,7 @@ public class CardPreviouslySelectedState implements GameplayStates {
 		case("friendly unit"): {
 			// Add check for card type
 			if (context.getCardClasstype() == Spell.class) {
-				subState = new CastSpellSubState();
+				subState = new CastSpellState();
 				break; 
 			}
 			else {
@@ -55,7 +58,7 @@ public class CardPreviouslySelectedState implements GameplayStates {
 		case("enemy unit"): {
 			// Add check for card type
 			if (context.getCardClasstype() == Spell.class) {
-				subState = new CastSpellSubState();
+				subState = new CastSpellState();
 				break; 
 			}
 			else {
@@ -67,7 +70,7 @@ public class CardPreviouslySelectedState implements GameplayStates {
 		
 		case("empty"): {
 			if (context.getCardClasstype() == Monster.class) {
-				subState = new SummonMonsterSubState();
+				subState = new SummonMonsterState();
 				break;
 			}
 			else {

@@ -1,16 +1,20 @@
-package events.tileplaystates;
+package events.gameplaystates.tileplaystates;
 
 import java.util.ArrayList;
 
-import ch.qos.logback.classic.selector.servlet.ContextDetachingSCL;
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.unitplaystates.UnitAttackActionState;
+import events.gameplaystates.unitplaystates.UnitCombinedActionState;
+import events.gameplaystates.unitplaystates.UnitDisplayActionsState;
+import events.gameplaystates.unitplaystates.UnitMoveActionState;
 import structures.basic.*;
 
-public class UnitPreviouslySelectedState implements GameplayStates {
+public class UnitPreviouslySelectedState implements ITilePlayStates {
 
 	// State attributes
-	GameplayStates subState; 
+	ITilePlayStates subState; 
 
 	// State constructor 
 	public UnitPreviouslySelectedState() {	
@@ -31,6 +35,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 		System.out.println("In UnitPreviouslySelectedState.");
 		context.debugPrint();
 		
+		// 
 		// Load previously selected unit for use in next sub state (move or attack) 
 		context.setLoadedUnit(context.getGameStateRef().getBoard().getUnitSelected());
 		// Retrieve clicked tile for reference in condition checks
@@ -47,7 +52,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 			if(Math.abs(context.getLoadedUnit().getPosition().getTilex() - clickedTile.getTilex()) <=1 && (Math.abs(context.getLoadedUnit().getPosition().getTiley() - clickedTile.getTiley()) <= 1)) {
 				// Attack
 				System.out.println("Creating AttackAction substate...");
-				subState = new UnitAttackActionSubState();
+				subState = new UnitAttackActionState();
 				break;
 			} 
 			
@@ -55,7 +60,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 			else {
 				// Move & Attack
 				System.out.println("Creating CombinedAction substate...");
-				subState = new UnitCombinedActionSubState();
+				subState = new UnitCombinedActionState();
 				break;
 			}
 			
@@ -100,7 +105,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 				
 				// Variable + visual change for new unit
 				// Pass to DisplayActions state to complete
-				GameplayStates UnitDisplayActionsState = new UnitDisplayActionsState();
+				ITilePlayStates UnitDisplayActionsState = new UnitDisplayActionsState();
 				UnitDisplayActionsState.execute(context);
 				break;
 				
@@ -111,7 +116,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 		case("empty"): {
 			
 			// Move
-			subState = new UnitMoveActionSubState();
+			subState = new UnitMoveActionState();
 			break;
 
 		}

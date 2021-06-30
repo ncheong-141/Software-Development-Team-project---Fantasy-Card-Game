@@ -1,10 +1,12 @@
-package events.tileplaystates;
+package events.gameplaystates.unitplaystates;
 
 import java.util.ArrayList;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.GameState;
 import structures.basic.Card;
 import structures.basic.Monster;
@@ -13,7 +15,7 @@ import structures.basic.UnitAnimationType;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-public class SummonMonsterSubState implements GameplayStates {
+public class SummonMonsterState implements ITilePlayStates {
 
 	
 	/*** State method ***/
