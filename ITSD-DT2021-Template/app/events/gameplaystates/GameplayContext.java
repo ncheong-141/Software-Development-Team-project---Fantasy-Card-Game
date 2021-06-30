@@ -1,4 +1,4 @@
-package events.tileplaystates;
+package events.gameplaystates;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ import structures.basic.Unit;
 
 // TEMP
 import akka.actor.ActorRef;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 
 
 /*
@@ -19,7 +20,7 @@ import akka.actor.ActorRef;
 public class GameplayContext {
 
 	// Attributes
-	private GameplayStates				currentStates;
+	private ITilePlayStates				currentStates;
 
 	private Card 						loadedCard; 	// any Card that is currently in selected mode from previous action
 	private Class<?> 					cardClasstype; 
@@ -92,11 +93,11 @@ public class GameplayContext {
 	
 	
 	// Getters and setters
-	public GameplayStates getCurrentStates() {
+	public ITilePlayStates getCurrentStates() {
 		return currentStates;
 	}
 
-	public void addCurrentState(GameplayStates state) {
+	public void addCurrentState(ITilePlayStates state) {
 		this.currentStates = state;
 	}
 	

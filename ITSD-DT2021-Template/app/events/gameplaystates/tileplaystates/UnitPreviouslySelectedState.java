@@ -1,16 +1,19 @@
-package events.tileplaystates;
+package events.gameplaystates.tileplaystates;
 
 import java.util.ArrayList;
 
 import ch.qos.logback.classic.selector.servlet.ContextDetachingSCL;
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.unitplaystates.UnitAttackActionSubState;
+import events.gameplaystates.unitplaystates.UnitCombinedActionSubState;
 import structures.basic.*;
 
-public class UnitPreviouslySelectedState implements GameplayStates {
+public class UnitPreviouslySelectedState implements ITilePlayStates {
 
 	// State attributes
-	GameplayStates subState; 
+	ITilePlayStates subState; 
 
 	// State constructor 
 	public UnitPreviouslySelectedState() {	
@@ -100,7 +103,7 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 				
 				// Variable + visual change for new unit
 				// Pass to DisplayActions state to complete
-				GameplayStates UnitDisplayActionsState = new UnitDisplayActionsState();
+				ITilePlayStates UnitDisplayActionsState = new UnitDisplayActionsState();
 				UnitDisplayActionsState.execute(context);
 				break;
 				

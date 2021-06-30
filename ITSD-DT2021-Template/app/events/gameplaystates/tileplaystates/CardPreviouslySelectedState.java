@@ -1,12 +1,15 @@
-package events.tileplaystates;
+package events.gameplaystates.tileplaystates;
 
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.unitplaystates.CastSpellSubState;
+import events.gameplaystates.unitplaystates.SummonMonsterSubState;
 import structures.basic.Monster;
 import structures.basic.Spell;
 
-public class CardPreviouslySelectedState implements GameplayStates {
+public class CardPreviouslySelectedState implements ITilePlayStates {
 
 	// State attributes
-	GameplayStates subState; 
+	ITilePlayStates subState; 
 	
 	// Constructor
 	public CardPreviouslySelectedState() {

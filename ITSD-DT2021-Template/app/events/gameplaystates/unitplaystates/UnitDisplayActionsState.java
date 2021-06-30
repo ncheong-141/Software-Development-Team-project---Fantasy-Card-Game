@@ -1,4 +1,4 @@
-package events.tileplaystates;
+package events.gameplaystates.unitplaystates;
 
 import structures.GameState;
 import structures.basic.Monster;
@@ -6,11 +6,13 @@ import structures.basic.Tile;
 import structures.basic.Unit;
 import java.util.ArrayList;
 import akka.actor.ActorRef;
-import commands.*; 
+import commands.*;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.tileplaystates.ITilePlayStates; 
 
 
 
-public class UnitDisplayActionsState implements GameplayStates{
+public class UnitDisplayActionsState implements ITilePlayStates{
 
 	
 	/*** State method ***/

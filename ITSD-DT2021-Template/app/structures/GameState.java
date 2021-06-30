@@ -1,6 +1,6 @@
 package structures;
 
-import events.tileplaystates.GameplayStates;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.ComputerPlayer;
