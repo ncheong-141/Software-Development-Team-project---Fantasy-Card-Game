@@ -10,6 +10,7 @@ import structures.basic.BigCard;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
+import structures.basic.Player;
 import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
@@ -89,18 +90,23 @@ public class BasicObjectBuilders {
 		return null;
 	}
 	
-	// Use this within our game logic
-	public static Monster loadMonsterUnit(String configFile, int id, Card statsRef, Class<? extends Monster> classType) {
+	// Alternative ObjectBuilder that uses the Monster constructor
+	public static Monster loadMonsterUnit(String configFile, Card statsRef, /*Player p,*/ Class<? extends Monster> classType) {
 
 		try {
 			Monster mUnit = mapper.readValue(new File(configFile), classType);
 			
-			// Set monster attributes from Card
+			// Set monster attributes from reference Card
+			mUnit.setId(statsRef.getId());
+			
 			mUnit.setName(statsRef.getCardname());
 			mUnit.setHP(statsRef.getBigCard().getHealth());
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
-			mUnit.setId(id);
+			
+			//mUnit.setOwner(p);
+			
+			System.out.println("mUnit has ID " + mUnit.getId());
 			
 			return mUnit; 
 			
