@@ -53,7 +53,7 @@ public class Card implements Comparable<Card> {
 		if(this.getBigCard().getAttack()>0) {//checks whether card is a monster
 		//create a temporary	
 			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+this.getCardname(), 99, this, Monster.class);
-			if(mon.getMonsterAbility()!=null) {//if monster has ability, a true result is given
+			if(mon.getAbility()!=null) {//if monster has ability, a true result is given
 				result=true;
 			}else {//if monster doesn't have an ability a false result is give
 				result=false;
@@ -148,3 +148,6 @@ public class Card implements Comparable<Card> {
 	public void setClicked(boolean clicked) {
 		this.clicked = clicked;
 	}
+
+	
+}
