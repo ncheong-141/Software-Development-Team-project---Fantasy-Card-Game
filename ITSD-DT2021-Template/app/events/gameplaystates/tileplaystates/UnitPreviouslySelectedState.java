@@ -48,7 +48,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 			
 			/*** Check distance from UnitSelected ***/
 			System.out.println("Before near check");
-			// Near --- enemy unit tile has index difference with current tile of <=1 on board dimensions, which does not require the selected unit to move before attack
+			// Near --- enemy unit tile has index difference with current tile of <=2 on board dimensions, which does not require the selected unit to move before attack
 			if(Math.abs(context.getLoadedUnit().getPosition().getTilex() - clickedTile.getTilex()) <=1 && (Math.abs(context.getLoadedUnit().getPosition().getTiley() - clickedTile.getTiley()) <= 1)) {
 				// Attack
 				System.out.println("Creating AttackAction substate...");
