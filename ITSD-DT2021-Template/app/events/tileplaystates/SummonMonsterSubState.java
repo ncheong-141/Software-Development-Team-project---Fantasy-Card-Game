@@ -39,7 +39,7 @@ public class SummonMonsterSubState implements GameplayStates {
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		
 		// Need some code about retrieving StaticConfFiles matching card from Deck here
-		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,1,statsRef,Monster.class);		
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,statsRef,Monster.class);		
 		summonedMonster.setPositionByTile(gameState.getBoard().getTile(tilex,tiley));
 		summonedMonster.setOwner(gameState.getTurnOwner());
 		GeneralCommandSets.threadSleep(); 
@@ -62,10 +62,10 @@ public class SummonMonsterSubState implements GameplayStates {
 		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
-//		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
-//		GeneralCommandSets.threadSleep();
-//		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
-//		GeneralCommandSets.threadSleep();
+		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
+		GeneralCommandSets.threadSleep();
+		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
+		GeneralCommandSets.threadSleep();
 		
 		// De-select card (visual only)
 		Card selectedCard = gameState.getTurnOwner().getHand().getSelectedCard();
@@ -87,19 +87,3 @@ public class SummonMonsterSubState implements GameplayStates {
 		
 		// >>> Delete card from Hand command --- later sprint
 	}
-	
-	
-// >>>>>>>>>>	Leave in for now, may be useable	
-	
-//	if((gameState.getBoard().allSummonableTiles(gameState.getTurnOwner())).contains(gameState.getBoard().getTile(tilex, tiley))) {
-//
-//		String configName = selected.getCardname().replace(' ', '_').toLowerCase().trim();
-//		configName = "u_" + configName;
-//
-//		System.out.println("Summoning monster...");
-//		summonMonster(gameState, out , configName, selected, tilex, tiley);
-//
-//	} else {
-//		System.out.println("Can't summon monster on this tile.");
-//	}
-}
