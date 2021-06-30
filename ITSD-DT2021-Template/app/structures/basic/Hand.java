@@ -20,7 +20,7 @@ public class Hand {
 		this.selectedCard=null;
 	}
 	
-	public void initialHand(ActorRef out, Deck deck) { //allows player to receive initial hand
+	public void initialHand(Deck deck) { //allows player to receive initial hand
 		ArrayList<Card> drawDeck= deck.getDeck();//create temporary instance of player deck
 			
 		//finds top three cards from deck
@@ -47,23 +47,25 @@ public class Hand {
 		setCurr(3);// sets current hand size
 	}
 	//allows players to draw card on round end
-	public void drawCard(ActorRef out, Deck deck) {
+	public void drawCard( Deck deck) {
 		curr=getCurr();
-		if (curr<6) {//checks that hand is not full
-		
 		//creates temporary deck and finds top card	
 		ArrayList<Card> drawDeck= deck.getDeck();
 		Card drawn= drawDeck.get(0);
-		
+		if (curr<6) {//checks that hand is not full
+			hand.add(drawn);
 		//draws top card from deck and increments current card count
-		BasicCommands.drawCard(out, drawn, curr, 0);
-		curr++;
+		//BasicCommands.drawCard(out, drawn, curr, 0);
+			curr++;
 		
-		deck.delCard(0);//removes card from deck
-		setCurr(curr);//sets new no of cards in hand
+			deck.delCard(0);//removes card from deck
+			setCurr(curr);//sets new no of cards in hand
 		}
-		else {//warns player if hand is full
-			BasicCommands.addPlayer1Notification(out, "Hand Full", 2);
+		else {//warns player if hand is full and discards drawn card
+			//BasicCommands.addPlayer1Notification(out, "Hand Full", 2);
+			curr++;
+			deck.delCard(0);//removes card from deck
+			setCurr(curr);//sets new no of cards in hand
 		}
 	}
 	
