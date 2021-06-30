@@ -25,6 +25,16 @@ public class UnitAttackActionSubState implements GameplayStates {
 		
 		unitAttack(context);
 		
+		/***	Condition here for combined substate executing, which requires selection is maintained	***/
+		if(!(context.getCombinedActive())) {
+			
+			/** Reset entity selection and board **/  
+			// Deselect after action finished *if* not in the middle of move-attack action
+			context.deselectAllAfterActionPerformed();
+		
+			//  Reset board visual (highlighted tiles)
+			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+		}	
 	}
 	
 	private void unitAttack(GameplayContext context) {
@@ -76,6 +86,7 @@ public class UnitAttackActionSubState implements GameplayStates {
 			BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.hit);
 			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 			BasicCommands.setUnitHealth(context.out, defender, defender.getHP());
+			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 			
 			// Defender death check
 			// Counter attack here
@@ -90,10 +101,6 @@ public class UnitAttackActionSubState implements GameplayStates {
 			GeneralCommandSets.threadSleep();
 			BasicCommands.drawTile(context.out, context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()), 0);
 			GeneralCommandSets.threadSleep();
-			
-			// De-select selected unit
-			attacker.toggleSelect();
-			context.deselectAllAfterActionPerformed();
 			
 		} 
 		// Unit is unable to attack for some reason - internal attack values/summon cooldown/etc.

@@ -1,5 +1,6 @@
 package structures.basic.abilities;
 
+import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.Monster;
 
@@ -7,18 +8,23 @@ public class A_EntropicDecay implements Ability {
 	
 	
 	// Ability attributes 
-	boolean enemyTarget; 
-	Class<? extends Monster> targetType; 
+	private boolean enemyTarget; 
+	private Class<? extends Monster> targetType;
+	private Call_IDs callID;
 	
 	// Constructor
 	public A_EntropicDecay(boolean enemyTarget, Class<? extends Monster> targetType) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	public A_EntropicDecay() {
 		this.enemyTarget = false;
 		this.targetType = null; 
+		
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	/* Class methods */
@@ -26,7 +32,7 @@ public class A_EntropicDecay implements Ability {
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
 	// Reduce non-avatar entity HP to 0
-	public boolean execute(Monster targetMonster) {
+	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		if (!(targetMonster instanceof Avatar)) {
 			targetMonster.setHP(0);
@@ -46,5 +52,9 @@ public class A_EntropicDecay implements Ability {
 	
 	public Class<? extends Monster> getTargetType() {
 		return targetType; 
+	}
+	
+	public Call_IDs getCallID() {
+		return callID; 
 	}
 }

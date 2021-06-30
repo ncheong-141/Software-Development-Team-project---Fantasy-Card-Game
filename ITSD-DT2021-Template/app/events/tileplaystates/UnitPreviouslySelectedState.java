@@ -2,6 +2,7 @@ package events.tileplaystates;
 
 import java.util.ArrayList;
 
+import ch.qos.logback.classic.selector.servlet.ContextDetachingSCL;
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import structures.basic.*;
@@ -91,18 +92,24 @@ public class UnitPreviouslySelectedState implements GameplayStates {
 			else {
 				
 				// Variable change for old unit
+				Monster old = (Monster) context.getLoadedUnit();
+				context.deselectAllAfterActionPerformed();
 				
 				// Visual change for old unit
+				GeneralCommandSets.drawUnitDeselect(context.out, context.getGameStateRef(), old);
 				
-				// Variable change for new unit
-				
-				// Visual change for new unit
+				// Variable + visual change for new unit
+				// Pass to DisplayActions state to complete
+				GameplayStates UnitDisplayActionsState = new UnitDisplayActionsState();
+				UnitDisplayActionsState.execute(context);
+				break;
 				
 			}
 			
 		}
 		
 		case("empty"): {
+			
 			// Move
 			subState = new UnitMoveActionSubState();
 			break;

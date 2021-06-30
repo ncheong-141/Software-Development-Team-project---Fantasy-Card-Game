@@ -2,7 +2,9 @@ package commands;
 
 import java.util.ArrayList;
 
+import structures.GameState;
 import structures.basic.Avatar;
+import structures.basic.Board;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.Unit;
@@ -30,7 +32,7 @@ public class GeneralCommandSets {
 		if (tilesToDraw.size() < bufferSize) {
 			for (int i = 0; i < tilesToDraw.size(); i++) {
 				BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
-				try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
+				try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}	
 			}
 		}
 		else { 
@@ -61,8 +63,13 @@ public class GeneralCommandSets {
 			}
 		}
 	}
-	
-	
+
+	// Verbose board reset method for code clarity
+	public static void boardVisualReset(ActorRef out, GameState gameState) {
+		
+		drawBoardTiles(out, gameState.getBoard().getAllTilesList(), 0);
+	}
+
 	
 	// Draw a unit with stats if a Monster
 	public static void drawUnitWithStats(ActorRef out, Unit unit, Tile onTile) {
@@ -84,6 +91,29 @@ public class GeneralCommandSets {
 			BasicCommands.setUnitAttack(out, mUnit, mUnit.getAttackValue());
 			try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 		}
+	}
+	
+	// Reset tiles covering a given unit's range
+	public static void drawUnitDeselect(ActorRef out, GameState gameState, Unit unit) {
+		if(unit.getClass() == Monster.class || unit.getClass() == Avatar.class) {
+			
+			// Cast for Monster methods/values
+			Monster mUnit = (Monster) unit;
+			
+			// Update Monster's occupied tile
+			Tile location = gameState.getBoard().getTile(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley());
+			BasicCommands.drawTile(out, location, 0);
+			
+			// Get Monster range
+			ArrayList <Tile> actRange = new ArrayList <Tile> (gameState.getBoard().unitAttackableTiles(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley(), mUnit.getAttackRange(), mUnit.getMovesLeft()));
+			actRange.addAll(gameState.getBoard().unitMovableTiles(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley(), mUnit.getMovesLeft()));
+			
+			for(Tile t : actRange) {
+				BasicCommands.drawTile(out, t, 0);
+			}
+			
+		}
+		
 	}
 	
 	
