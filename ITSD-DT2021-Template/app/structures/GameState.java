@@ -1,5 +1,5 @@
 package structures;
-
+import events.EndTurnClicked;
 import events.tileplaystates.GameplayStates;
 import structures.basic.Avatar;
 import structures.basic.Board;
@@ -9,6 +9,8 @@ import structures.basic.HumanPlayer;
 import structures.basic.Player;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
+import akka.actor.ActorRef;
+import commands.*;
 
 /**
  * This class can be used to hold information about the on-going game.
@@ -27,6 +29,9 @@ public class GameState {
 	private int turnCount;
 	private static boolean playerDead;
 	private Player turnOwner;
+	private EndTurnClicked e;
+	private ActorRef out;
+	private GameState gameState;
 
 	public GameState() {
 		
@@ -123,8 +128,7 @@ public class GameState {
 			turnOwner = playerTwo;
 		}
 		
-		else turnOwner = playerOne;
-		
+		else turnOwner = playerOne;		
 		turnCount++;
 	}
 
@@ -149,6 +153,20 @@ public class GameState {
 			this.getTurnOwner().getHand().setSelectedCard(null);
 			this.getTurnOwner().getHand().setPlayingMode(false);
 		}
+	}
+	
+	
+	public void computerEnd() {  
 		
+		getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
+		e.emptyMana(); //empty mana for player who ends the turn
+		e.toCoolDown(); //switch avatars status for current turnOwner
+	    deselectAllEntities();
+		GeneralCommandSets.boardVisualReset(out, gameState); 
+		getTurnOwner().getHand().setPlayingMode(false); //current turnOwner Hand is off?
+		turnChange(); // turnOwner exchanged	
+		e.giveMana(); //give turnCount mana to the player in the beginning of new turn
+		e.toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
+		getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
 	}
 }

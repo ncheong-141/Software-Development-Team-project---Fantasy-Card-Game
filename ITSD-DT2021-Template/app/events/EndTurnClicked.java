@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.databind.JsonNode;
 import akka.actor.ActorRef;
 import structures.GameState;
-
+import commands.*;
 
 /**
  * Indicates that the user has clicked an object on the game canvas, in this case
@@ -33,6 +33,8 @@ public class EndTurnClicked implements EventProcessor{
 			gameState.getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
 			emptyMana(); //empty mana for player who ends the turn
 			toCoolDown(); //switch avatars status for current turnOwner
+			gameState.deselectAllEntities();
+			GeneralCommandSets.boardVisualReset(out, gameState);
 			gameState.getTurnOwner().getHand().setPlayingMode(false); //current turnOwner hand turn off
 			gameState.turnChange(); // turnOwner exchanged	
 			giveMana(); //give turnCount mana to the player in the beginning of new turn
@@ -40,26 +42,10 @@ public class EndTurnClicked implements EventProcessor{
 			gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
 		}
 		else{
-			processEventComputer();
+			gameState.computerEndTurn();
 		}
 	}
-	
-	
-	//for ComputerPlayer
-	public void processEventComputer() {  
-		
-		gameState.getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
-		emptyMana(); //empty mana for player who ends the turn
-		toCoolDown(); //switch avatars status for current turnOwner
-		gameState.getTurnOwner().getHand().setPlayingMode(false); //current turnOwner Hand is off?
-		gameState.turnChange(); // turnOwner exchanged	
-		giveMana(); //give turnCount mana to the player in the beginning of new turn
-		toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
-		gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
-	}
-	
-
-	
+			
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
 			gameState.getTurnOwner().setMana(gameState.getTurnCount());  
@@ -77,8 +63,4 @@ public class EndTurnClicked implements EventProcessor{
 				m.toggleCooldown();				
 		}
 	}
-	
-	
-
-	
 }
