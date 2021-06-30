@@ -64,7 +64,7 @@ public class Board {
 		ArrayList<Tile> fullTileList = new ArrayList<Tile>();
 		
 		for (int i=0; i<gameBoard.length; i++) {
-			for (int k = 0; i<gameBoard[0].length; k++) {
+			for (int k = 0; k<gameBoard[0].length; k++) {
 				fullTileList.add(gameBoard[i][k]);
 			}
 		}
