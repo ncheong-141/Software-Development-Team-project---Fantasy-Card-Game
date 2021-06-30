@@ -9,14 +9,12 @@ import structures.basic.Card;
 public class Hand {
 	private int curr;//keeps track of no of cards in hand
 	private ArrayList<Card> hand;// array of card objects comprising the hand
-	private boolean playingMode;//boolean to indicate whether a card is ready to be played
 	private Card selectedCard;//card selected for play
 	
 	public Hand() {//constructor for hand 
 		super();
 		this.curr = 0;
 		this.hand = new ArrayList<Card>() ;
-		this.playingMode=false;
 		this.selectedCard=null;
 	}
 	
@@ -86,12 +84,6 @@ public class Hand {
 	}
 	public void setHand(ArrayList<Card> hand) {
 		this.hand = hand;
-	}
-	public boolean isPlayingMode() {
-		return playingMode;
-	}
-	public void setPlayingMode(boolean playingMode) {
-		this.playingMode = playingMode;
 	}
 	public Card getSelectedCard() {
 		return selectedCard;
