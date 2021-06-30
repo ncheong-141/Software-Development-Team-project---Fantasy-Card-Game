@@ -25,7 +25,6 @@ public class Card implements Comparable<Card> {
 	MiniCard miniCard;//display element for unselected cards
 	BigCard bigCard;//display element for selected card
 	
-	boolean clicked;//indicates whether the card is currently selected
 	
 	public Card() {};
 	
@@ -36,7 +35,6 @@ public class Card implements Comparable<Card> {
 		this.manacost = manacost;
 		this.miniCard = miniCard;
 		this.bigCard = bigCard;
-		this.clicked=false;
 	}
 	
 	//shortcut methods for ability access
@@ -53,7 +51,7 @@ public class Card implements Comparable<Card> {
 		if(this.getBigCard().getAttack()>0) {//checks whether card is a monster
 		//create a temporary	
 			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+this.getCardname(), 99, this, Monster.class);
-			if(mon.getAbility()!=null) {//if monster has ability, a true result is given
+			if(mon.getMonsterAbility()!=null) {//if monster has ability, a true result is given
 				result=true;
 			}else {//if monster doesn't have an ability a false result is give
 				result=false;
