@@ -12,8 +12,24 @@ import events.gameplaystates.tileplaystates.ITilePlayStates;
 
 
 
-public class UnitDisplayActionsState implements ITilePlayStates{
+public class UnitDisplayActionsState implements IUnitPlayStates{
 
+
+	/*** State attributes ***/
+	
+	private Tile currentTile; 
+	
+
+	/*** State constructor ***/
+	/* 
+	 * Changed constructor to input current and target tiles to decouple Unit states from TileClicked
+	 * Previously Unit states had tilex, tiley be used from context which were variables recieved from TileClicked. 
+	 * Decoupling required to use unit States from the ComputerPlayer. */
+	
+	public UnitDisplayActionsState(Tile currentTile) {
+		this.currentTile = currentTile;
+	}
+	
 	
 	/*** State method ***/
 	
@@ -22,10 +38,10 @@ public class UnitDisplayActionsState implements ITilePlayStates{
 		System.out.println("In UnitDisplayActionsState.");
 
 		// Get the newly selected unit
-		Unit newlySelectedUnit = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()).getUnitOnTile();
+		Unit newlySelectedUnit = currentTile.getUnitOnTile();
 		
 		// Display unit selected actions
-		boolean outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(),context.getTilex(), context.getTiley(), context.out, newlySelectedUnit.getClass());
+		boolean outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
 		
 		if(outcome) {
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
@@ -33,8 +49,6 @@ public class UnitDisplayActionsState implements ITilePlayStates{
 		}	
 
 	}
-	
-	
 	
 	
 	// unitSelectedActions is for selecting + movement & attack

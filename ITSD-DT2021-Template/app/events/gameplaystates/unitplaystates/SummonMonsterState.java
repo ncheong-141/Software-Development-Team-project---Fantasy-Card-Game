@@ -15,8 +15,22 @@ import structures.basic.UnitAnimationType;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-public class SummonMonsterState implements ITilePlayStates {
+public class SummonMonsterState implements IUnitPlayStates {
 
+	/*** State attributes ***/
+	private Tile targetTile; 
+	
+	
+	/*** State constructor ***/
+	/* 
+	 * Changed constructor to input current and target tiles to decouple Unit states from TileClicked
+	 * Previously Unit states had tilex, tiley be used from context which were variables recieved from TileClicked. 
+	 * Decoupling required to use unit States from the ComputerPlayer. */
+	
+	public SummonMonsterState(Tile targetTile) {
+		this.targetTile = targetTile; 
+	}
+	
 	
 	/*** State method ***/
 	
@@ -24,7 +38,7 @@ public class SummonMonsterState implements ITilePlayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 
-		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.getTilex(), context.getTiley());
+		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), targetTile.getTilex(), targetTile.getTiley());
 		
 		/** Reset entity selection and board **/  
 		// Deselect after action finished *if* not in the middle of move-attack action

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
+import events.gameplaystates.unitplaystates.IUnitPlayStates;
 import events.gameplaystates.unitplaystates.UnitAttackActionState;
 import events.gameplaystates.unitplaystates.UnitCombinedActionState;
 import events.gameplaystates.unitplaystates.UnitDisplayActionsState;
@@ -14,11 +15,15 @@ import structures.basic.*;
 public class UnitPreviouslySelectedState implements ITilePlayStates {
 
 	// State attributes
-	ITilePlayStates subState; 
+	IUnitPlayStates unitState;		// Unit Play state to be executeed
+	Tile currentTile; 				// Current tile (Unit position)
+	Tile targetTile; 				// Target tile (Unit target) 
 
 	// State constructor 
 	public UnitPreviouslySelectedState() {	
-		subState = null; 
+		unitState = null;
+		currentTile = null; 
+		targetTile = null; 
 	}
 	
 	public void execute(GameplayContext context) {
@@ -35,13 +40,19 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		System.out.println("In UnitPreviouslySelectedState.");
 		context.debugPrint();
 		
-		// 
+		
 		// Load previously selected unit for use in next sub state (move or attack) 
 		context.setLoadedUnit(context.getGameStateRef().getBoard().getUnitSelected());
-		// Retrieve clicked tile for reference in condition checks
-		Tile clickedTile = context.getGameStateRef().getBoard().getTile(context.getTilex(),context.getTiley());
 		
-		// Determine the substate (attack , reselect friendly or move) 
+		// Set tiles unit will interact with
+		int currentX = context.getLoadedUnit().getPosition().getTilex(); 
+		int currentY = context.getLoadedUnit().getPosition().getTiley(); 
+		
+		currentTile = context.getGameStateRef().getBoard().getTile(currentX, currentY);
+		targetTile = context.getClickedTile();
+		
+		
+		// Determine the unitState (attack , reselect friendly or move) 
 		switch (context.getTileFlag().toLowerCase()) {
 		
 		case("enemy unit"): {
@@ -49,10 +60,11 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 			/*** Check distance from UnitSelected ***/
 			System.out.println("Before near check");
 			// Near --- enemy unit tile has index difference with current tile of <=1 on board dimensions, which does not require the selected unit to move before attack
-			if(Math.abs(context.getLoadedUnit().getPosition().getTilex() - clickedTile.getTilex()) <=1 && (Math.abs(context.getLoadedUnit().getPosition().getTiley() - clickedTile.getTiley()) <= 1)) {
+			if(Math.abs(currentX - targetTile.getTilex()) <=1 && (Math.abs(currentY - targetTile.getTiley()) <= 1)) {
+				
 				// Attack
 				System.out.println("Creating AttackAction substate...");
-				subState = new UnitAttackActionState();
+				unitState = new UnitAttackActionState(currentTile, targetTile);
 				break;
 			} 
 			
@@ -60,7 +72,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 			else {
 				// Move & Attack
 				System.out.println("Creating CombinedAction substate...");
-				subState = new UnitCombinedActionState();
+				unitState = new UnitCombinedActionState(currentTile, targetTile);
 				break;
 			}
 			
@@ -69,7 +81,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		case("friendly unit"): {
 			
 			// Player re-clicks the selected unit, de-select it
-			if (clickedTile.getUnitOnTile() == context.getLoadedUnit()) {
+			if (targetTile.getUnitOnTile() == context.getLoadedUnit()) {
 				
 				Monster selectedUnit = (Monster) context.getLoadedUnit();
 				
@@ -105,8 +117,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				
 				// Variable + visual change for new unit
 				// Pass to DisplayActions state to complete
-				ITilePlayStates UnitDisplayActionsState = new UnitDisplayActionsState();
-				UnitDisplayActionsState.execute(context);
+				unitState = new UnitDisplayActionsState(targetTile);	// Pass target tile as this has the new unit on it
 				break;
 				
 			}
@@ -116,16 +127,16 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		case("empty"): {
 			
 			// Move
-			subState = new UnitMoveActionState();
+			unitState = new UnitMoveActionState(currentTile, targetTile);
 			break;
 
 		}
 		
 		}
 		
-		// Execute sub-state
-		if (subState != null ) {
-			subState.execute(context);
+		/*** Execute Unit state***/
+		if (unitState != null ) {
+			unitState.execute(context);
 		}
 		
 	}

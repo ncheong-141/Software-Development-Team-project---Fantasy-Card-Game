@@ -2,18 +2,22 @@ package events.gameplaystates.tileplaystates;
 
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.unitplaystates.CastSpellState;
+import events.gameplaystates.unitplaystates.IUnitPlayStates;
 import events.gameplaystates.unitplaystates.SummonMonsterState;
 import structures.basic.Monster;
 import structures.basic.Spell;
+import structures.basic.Tile;
 
 public class CardPreviouslySelectedState implements ITilePlayStates {
 
 	// State attributes
-	ITilePlayStates subState; 
+	IUnitPlayStates unitState; 
+	Tile targetTile; 
 	
 	// Constructor
 	public CardPreviouslySelectedState() {
-		subState = null; 
+		unitState = null; 
+		targetTile = null; 
 	}
 	
 	/*** State method ***/
@@ -38,15 +42,16 @@ public class CardPreviouslySelectedState implements ITilePlayStates {
 			context.setCardClasstype(Monster.class);
 		}
 		
+		// Set targetTile
+		targetTile = context.getClickedTile();
 		
-		
-		// Determine the substate (SummonMonster or Cast Spell)  (to lower case just so case isnt a problem ever) 
+		// Determine the unit state (SummonMonster or Cast Spell)  (to lower case just so case isnt a problem ever) 
 		switch (context.getTileFlag().toLowerCase()) {
 		
 		case("friendly unit"): {
 			// Add check for card type
 			if (context.getCardClasstype() == Spell.class) {
-				subState = new CastSpellState();
+				unitState = new CastSpellState(targetTile);
 				break; 
 			}
 			else {
@@ -58,7 +63,7 @@ public class CardPreviouslySelectedState implements ITilePlayStates {
 		case("enemy unit"): {
 			// Add check for card type
 			if (context.getCardClasstype() == Spell.class) {
-				subState = new CastSpellState();
+				unitState = new CastSpellState(targetTile);
 				break; 
 			}
 			else {
@@ -70,7 +75,7 @@ public class CardPreviouslySelectedState implements ITilePlayStates {
 		
 		case("empty"): {
 			if (context.getCardClasstype() == Monster.class) {
-				subState = new SummonMonsterState();
+				unitState = new SummonMonsterState(targetTile);
 				break;
 			}
 			else {
@@ -81,9 +86,9 @@ public class CardPreviouslySelectedState implements ITilePlayStates {
 		}
 		}
 		
-		// Execute sub-state
-		if (subState != null ) {
-			subState.execute(context);
+		// Execute Unit state
+		if (unitState != null ) {
+			unitState.execute(context);
 		}
 		else {
 			System.out.println("Substate = null.");

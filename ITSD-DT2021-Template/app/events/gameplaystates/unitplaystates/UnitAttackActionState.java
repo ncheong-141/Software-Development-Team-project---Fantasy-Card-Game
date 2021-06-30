@@ -10,14 +10,21 @@ import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 
-public class UnitAttackActionState implements ITilePlayStates {
+public class UnitAttackActionState implements IUnitPlayStates {
 
-	// State attributes
-	ITilePlayStates subState; 
-
-	// State constructor 
-	public UnitAttackActionState() {	
-		subState = null; 
+	/*** State attributes ***/
+	private Tile currentTile; 
+	private Tile targetTile; 
+	
+	/*** State constructor ***/
+	/* 
+	 * Changed constructor to input current and target tiles to decouple Unit states from TileClicked
+	 * Previously Unit states had tilex, tiley be used from context which were variables recieved from TileClicked. 
+	 * Decoupling required to use unit States from the ComputerPlayer. */
+	
+	public UnitAttackActionState(Tile currentTile, Tile targetTile) {
+		this.currentTile = currentTile;
+		this.targetTile = targetTile; 
 	}
 	
 	public void execute(GameplayContext context) {
@@ -43,15 +50,13 @@ public class UnitAttackActionState implements ITilePlayStates {
 		
 		// Gather attacker and defender
 		Monster attacker = (Monster) context.getLoadedUnit();
-		Monster defender = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()).getUnitOnTile();
+		Monster defender = targetTile.getUnitOnTile();
 		
 		// Retrieve frequently used Tile data
-		Tile currentLocation = context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
-		ArrayList <Tile> selectedAttackRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getAttackRange(),currentLocation.getUnitOnTile().getMovesLeft()));
-		Tile enemyTarget = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
+		ArrayList <Tile> selectedAttackRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
 	
 		// Check target is in attack range
-		if(!(selectedAttackRange.contains(enemyTarget))) {	
+		if(!(selectedAttackRange.contains(targetTile))) {	
 			System.out.println("Enemy is not in range.");
 			return;
 		}
@@ -72,7 +77,7 @@ public class UnitAttackActionState implements ITilePlayStates {
 			int i = 0;
 			for (Tile t : actRange) {
 				// Leave defender tile highlighted
-				if(t == context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley())) {
+				if(t == context.getClickedTile()) {
 					continue;
 				}
 				BasicCommands.drawTile(context.out, t, 0);
@@ -101,7 +106,7 @@ public class UnitAttackActionState implements ITilePlayStates {
 			// Update both unit tiles visuals
 			BasicCommands.drawTile(context.out, context.getGameStateRef().getBoard().getTile(attacker.getPosition().getTilex(), attacker.getPosition().getTiley()), 0);			
 			GeneralCommandSets.threadSleep();
-			BasicCommands.drawTile(context.out, context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()), 0);
+			BasicCommands.drawTile(context.out, targetTile, 0);
 			GeneralCommandSets.threadSleep();
 			
 		} 
