@@ -33,12 +33,9 @@ public class UnitMoveActionSubState implements GameplayStates {
 		
 		/***	Condition here for combined substate executing, which requires selection is maintained	***/
 		if(!(context.getCombinedActive())) {
-			
 		
 			/** Reset entity selection and board **/  
-			// Deselect after action finished *if* not in the middle of move-attack action
 			context.deselectAllAfterActionPerformed();
-			
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 		}
@@ -77,7 +74,6 @@ public class UnitMoveActionSubState implements GameplayStates {
 			// Update Tiles and Unit
 			current.removeUnit();
 			target.addUnit(mSelected);
-			mSelected.setPositionByTile(target);
 			BasicCommands.addPlayer1Notification(context.out, "Unit moving...", 4);
 			GeneralCommandSets.threadSleep();
 			
