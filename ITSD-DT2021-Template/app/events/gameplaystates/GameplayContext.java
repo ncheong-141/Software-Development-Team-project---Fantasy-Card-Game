@@ -35,7 +35,7 @@ public class GameplayContext {
 	
 	// Temp variables just to make code work
 
-	ActorRef out; 
+	public ActorRef out; 
 	
 	// Constructor
 	public GameplayContext(GameState gameState, ActorRef out, int tilex, int tiley) {
