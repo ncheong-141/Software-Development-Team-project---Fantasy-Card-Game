@@ -254,9 +254,7 @@ public class Board {
 		HashSet <Tile> tileList = new HashSet<Tile>();
 		
 		if (moveRange == 0) {
-			reachTiles = this.adjEnemyTiles(xpos, ypos, p);
-			for (Tile t : reachTiles) tileList.add(t);
-			return tileList;
+			return this.calcAttackRange(xpos, ypos, attackRange, p);
 		}
 
 		//get a list of all tiles that the unit can reach given their position and move range
