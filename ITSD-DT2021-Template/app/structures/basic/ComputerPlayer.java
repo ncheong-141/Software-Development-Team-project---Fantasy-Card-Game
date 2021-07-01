@@ -136,7 +136,10 @@ public class ComputerPlayer extends Player {
 					}
 				}
 			}
-		}		
+		}
+		
+		comboList.removeIf(c -> !(this.playableCombo(c)));
+		
 		return comboList;
 	}
 	
@@ -170,10 +173,11 @@ public class ComputerPlayer extends Player {
 			ArrayList <CardCombo> possCombos = this.cardCombos(this.playableCards());
 			
 			//extracting the best card combination based on logic in chooseCombo method
-			CardCombo choosenCombo = this.chooseCombo(possCombos); 
+			
+			ArrayList<ComputerInstruction> cardsToBePlayed = this.computeMoves(this.chooseCombo(possCombos)); 
 			
 			//returning the choosen combination of cards 
-			return choosenCombo.getCardCombo();
+			return cardsToBePlayed;
 		}
 		
 		private CardCombo chooseCombo(ArrayList<CardCombo> possCombos) {
@@ -183,11 +187,29 @@ public class ComputerPlayer extends Player {
 	
 	//methods returns list of cards that computer player wants to play
 	//as a list of ComputerMoves objs (Card + target tile)
-		public ArrayList<ComputerMove> whereToSummon(CardCombo combo){
+		private ArrayList<ComputerInstruction> computeMoves(CardCombo combo){
+			ArrayList<ComputerInstruction> compInstructions = new ArrayList<ComputerInstruction>();
 			
+			ArrayList <Tile> tiles = null;
+			Tile t = null;
+			int i = 0;
+			for (Card c : combo.getCardCombo()) {
+				if (c.playableAnywhere()) {
+					t = this.gameBoard.allFreeTiles().get(0); // will need to fine tune logic, for now this is hard-coded to pick first tile
+					compInstructions.add(new ComputerInstruction(c,t));
+				}
+				else {
+					tiles= this.gameBoard.allSummonableTiles(this);
+					t = tiles.get(i);
+					compInstructions.add(new ComputerInstruction(c,t));
+					
+				}
+			}
+			
+			return compInstructions;
 		}
 		
-	//====================SUMMONING OF UNITS ON BOARD METHOD=======================//
+	//====================MOVING OF UNITS ON BOARD METHOD=======================//
 	
 		private ArrayList <Monster> allMovableMonsters(){
 			ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitList(this);
@@ -197,7 +219,8 @@ public class ComputerPlayer extends Player {
 			return myMonsters;
 		}
 		
-	//====================MOVING OF UNITS ON BOARD METHOD=======================//
+		
+
 	
 	//==================OVERALL NOTES ON COMP PLAYER CLASS========================//
 	

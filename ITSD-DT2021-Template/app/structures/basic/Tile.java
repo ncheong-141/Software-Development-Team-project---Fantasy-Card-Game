@@ -123,6 +123,7 @@ public class Tile {
 		else {
 			this.unitOnTile = m;
 			this.free = false;
+			m.setPositionByTile(this);
 			
 			return true;			
 		}
