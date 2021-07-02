@@ -6,7 +6,9 @@ import structures.basic.Board;
 import structures.basic.ComputerPlayer;
 import structures.basic.Deck;
 import structures.basic.HumanPlayer;
+import structures.basic.Monster;
 import structures.basic.Player;
+import structures.basic.Tile;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 import akka.actor.ActorRef;
@@ -32,7 +34,8 @@ public class GameState {
 	private EndTurnClicked e;
 	private ActorRef out;
 	private GameState gameState;
-
+	private Monster trackMonster; //YC added
+	private Tile monsterLocation; //YC added
 	public GameState() {
 		
 		turnCount = 0;
@@ -155,6 +158,11 @@ public class GameState {
 		}
 	}
 	
+	// YC add
+	public Tile locateMonster(Monster trackMonster) {
+		this.monsterLocation = this.getGameBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
+		return monsterLocation;
+	}
 	
 	public void computerEnd() {  
 		
