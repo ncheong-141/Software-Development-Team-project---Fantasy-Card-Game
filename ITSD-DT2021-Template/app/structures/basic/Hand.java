@@ -10,12 +10,14 @@ public class Hand {
 	private int curr;//keeps track of no of cards in hand
 	private ArrayList<Card> hand;// array of card objects comprising the hand
 	private Card selectedCard;//card selected for play
+	private int selCarPos;
 	
 	public Hand() {//constructor for hand 
 		super();
 		this.curr = 0;
 		this.hand = new ArrayList<Card>() ;
 		this.selectedCard=null;
+		this.selCarPos=-1;
 	}
 	
 	public void initialHand(Deck deck) { //allows player to receive initial hand
@@ -91,6 +93,13 @@ public class Hand {
 	public void setSelectedCard(Card selectedCard) {
 		this.selectedCard = selectedCard;
 	}
+	public int getSelCarPos() {
+		return selCarPos;
+	}
+	public void setSelCarPos(int selCarPos) {
+		this.selCarPos = selCarPos;
+	}
+	
 }
 		
 		

@@ -54,6 +54,7 @@ public class CardClicked implements EventProcessor{
 			Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
 		//tells the game state that a card in hand is to be played
 			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
+			gameState.getPlayerOne().getHand().setSelCarPos(handPosition);
 		//checks that the clicked card is a monster card using its attack value
 		if (clickedCard.getBigCard().getAttack() > 0){ //for summoning monsters
 			ArrayList<Tile> display= gameState.getGameBoard().allSummonableTiles(gameState.getPlayerOne());	
