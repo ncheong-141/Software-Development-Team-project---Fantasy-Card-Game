@@ -2,6 +2,7 @@ package structures.basic;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Dr. Richard McCreadie
  *
  */
-public class Tile {
+public class Tile implements Comparable<Tile>{
 
 	@JsonIgnore
 	private static ObjectMapper mapper = new ObjectMapper(); // Jackson Java Object Serializer, is used to read java objects from a file
@@ -28,10 +29,13 @@ public class Tile {
 	int tilex;
 	int tiley;
 	
+	private static  double inRangeScore = - 0.5;
+	
+	private static  double bringsEnemyInRange = 0.2; 
 	// Added attribute
 	boolean free;
 	Monster unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
-
+	double score;
 
 	public Tile() {}
 	
@@ -48,6 +52,7 @@ public class Tile {
 		
 		this.free = true;
 		this.unitOnTile = null;
+		this.score = 0;
 	}
 	
 	public Tile(List<String> tileTextures, int xpos, int ypos, int width, int height, int tilex, int tiley) {
@@ -62,6 +67,7 @@ public class Tile {
 		
 		this.free = true;
 		this.unitOnTile = null;
+		this.score = 0;
 	}
 	public List<String> getTileTextures() {
 		return tileTextures;
@@ -137,6 +143,43 @@ public class Tile {
 			return true;
 		}
 	}
+	
+	public double calcTileScore(Monster m, Board b) {
+		//tile where monster is currently located
+		Tile currTile = b.getTile(m.getPosition().getTilex(), m.getPosition().getTiley());
+
+		//calculate which enemy tiles are in range from the would be (WB) tile
+		HashSet <Tile> wBAttackable = b.calcAttackRange(xpos, ypos, m.getAttackRange(), m.getOwner());
+		
+		//get all tiles that this monster could attack from its current tile (with enemies on them)
+		HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
+		
+		
+		if (wBAttackable.size() > currAttackable.size()) this.score += this.bringsEnemyInRange;
+		
+		//all tiles on the board with an enemy unit on it
+		ArrayList <Tile> enemyTilesOnBoard = b.enemyTile(m.getOwner());
+		
+		int currAttackableByEnemy = 0;
+		int wBAttackableByEnemy = 0;
+		
+		for (Tile t : enemyTilesOnBoard) {
+			Monster mnstr = t.getUnitOnTile();
+			int x = t.getTilex();
+			int y = t.getTiley();
+			
+			//NOTE need to check when moves left gets reset
+			HashSet<Tile> tilesEnemyCanAttack = b.unitAttackableTiles(x, y, mnstr.getAttackRange(), mnstr.getMovesLeft());
+			
+			if (tilesEnemyCanAttack.contains(this)) wBAttackableByEnemy++;
+			if (tilesEnemyCanAttack.contains(currTile)) currAttackableByEnemy ++;
+		}
+		
+		
+		if (wBAttackableByEnemy > currAttackableByEnemy) this.score += inRangeScore;
+		
+		return score;
+	}
 
 	/**
 	 * Loads a tile from a configuration file
@@ -155,6 +198,17 @@ public class Tile {
 		}
 		return null;
 		
+	}
+
+	@Override
+	public int compareTo(Tile o) {
+		if (this.getScore() > o.getScore()) return 1;
+		else if (this.getScore() < o.getScore()) return -1;
+		return 0;
+	}
+
+	public double getScore() {
+		return score;
 	}
 	
 	

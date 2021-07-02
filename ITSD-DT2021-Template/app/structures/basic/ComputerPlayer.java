@@ -219,7 +219,72 @@ public class ComputerPlayer extends Player {
 			return myMonsters;
 		}
 		
-		
+		private MonsterTileOption[] getMonstersOptions(ArrayList<Monster> list){
+			
+			//array list implementation
+			//ArrayList<MonsterTileOption> monsterTiles = new ArrayList<MonsterTileOption>();
+			//for (Monster m : list) {
+				//monsterTiles.add(new MonsterTileOption(m, this.gameBoard));
+			//}
+			MonsterTileOption[] optionList = new MonsterTileOption[list.size()];
+			
+			for (int i = 0; i<optionList.length; i++) {
+				optionList[i] = new MonsterTileOption (list.get(i), this.gameBoard);
+			}
+			
+			return optionList;
+		}
+	
+		private ArrayList<ComputerInstruction> matchMonsterAndTile (MonsterTileOption[] optionList){
+			
+			return null;
+			
+		}
+		//=========================inner class===============================//
+		static class MonsterTileOption implements Comparable<MonsterTileOption> {
+			Monster m; 
+			ArrayList<Tile> list;
+			double score;
+			MonsterTileOption(Monster m, Board b){
+				this.m = m;
+				this.list = b.unitMovableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getMovesLeft());
+				if(list != null && !(list.isEmpty())) {
+					for (Tile t : list) t.calcTileScore(m, b);
+					Collections.sort(list);
+					this.score = this.list.get(0).getScore();
+				}
+				else if (list.isEmpty()) this.score = -1.0;
+				
+			}
+			
+			public Monster getM() {
+				return m;
+			}
+			
+			public ArrayList<Tile> getList(){
+				return this.list;
+			}
+			
+			public double getScore() {
+				return this.score;
+			}
+
+			@Override
+			public int compareTo(MonsterTileOption o) {
+				/*
+				 * if (this.getList().isEmpty() && !o.getList().isEmpty()) return -1; else if
+				 * (!this.getList().isEmpty() && o.getList().isEmpty()) return 1; else
+				 * if(this.getList().isEmpty() && this.getList().isEmpty()) return 0; else { if
+				 * (this.getList().get(0).getScore() > o.getList().get(0).getScore()) return 1;
+				 * else if (this.getList().get(0).getScore() < o.getList().get(0).getScore())
+				 * return -1; else return 0; }
+				 */
+				
+				if (this.score > o.getScore()) return 1;
+				else if (this.score < o.getScore()) return -1;
+				else return 0;
+			}
+		}
 
 	
 	//==================OVERALL NOTES ON COMP PLAYER CLASS========================//
