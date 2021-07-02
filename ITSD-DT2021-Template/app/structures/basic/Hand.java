@@ -73,6 +73,9 @@ public class Hand {
 		return getHand().get(i);
 	}
 	
+	public void removeCard(int i) {
+		hand.remove(i);
+	}
 	
 	//getters and setters
 	public int getCurr() {
