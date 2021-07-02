@@ -91,7 +91,7 @@ public class BasicObjectBuilders {
 	}
 	
 	// Alternative ObjectBuilder that uses the Monster constructor
-	public static Monster loadMonsterUnit(String configFile, Card statsRef, /*Player p,*/ Class<? extends Monster> classType) {
+	public static Monster loadMonsterUnit(String configFile, Card statsRef, Player p, Class<? extends Monster> classType) {
 
 		try {
 			Monster mUnit = mapper.readValue(new File(configFile), classType);
@@ -104,7 +104,7 @@ public class BasicObjectBuilders {
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
 			
-			//mUnit.setOwner(p);
+			mUnit.setOwner(p);
 			
 			System.out.println("mUnit has ID " + mUnit.getId());
 			

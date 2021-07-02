@@ -10,6 +10,7 @@ import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.GameState;
 import structures.basic.Card;
 import structures.basic.Monster;
+import structures.basic.Player;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 import utils.BasicObjectBuilders;
@@ -41,7 +42,7 @@ public class SummonMonsterState implements ITilePlayStates {
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		
 		// Need some code about retrieving StaticConfFiles matching card from Deck here
-		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,statsRef,Monster.class);		
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,statsRef,gameState.getTurnOwner(),Monster.class);		
 		summonedMonster.setPositionByTile(gameState.getBoard().getTile(tilex,tiley));
 		summonedMonster.setOwner(gameState.getTurnOwner());
 		GeneralCommandSets.threadSleep(); 
