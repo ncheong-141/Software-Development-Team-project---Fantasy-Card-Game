@@ -33,12 +33,11 @@ public class GameplayContext {
 	public ActorRef 					out; 				// Front end reference			
 	
 	// Constructor
-	public GameplayContext(GameState gameState, ActorRef out, int tilex, int tiley) {
+	public GameplayContext(GameState gameState, ActorRef out) {
 		
 		// Setting attributes 
 		this.currentStates = null; 
 		this.gameStateRef = gameState;
-		this.clickedTile = gameState.getBoard().getTile(tilex , tiley); 
 		this.out = out; 
 	}
 	

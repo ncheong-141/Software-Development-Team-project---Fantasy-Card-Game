@@ -56,7 +56,8 @@ public class TileClicked implements EventProcessor{
 		System.out.println("In TileClicked.");
 		
 		// Start the GameplayState (State Pattern for TileClicked control flow) 
-		GameplayContext gameplayContext = new GameplayContext(gameState, out, tilex, tiley);
+		GameplayContext gameplayContext = new GameplayContext(gameState, out);
+		gameplayContext.setClickedTile(gameState.getBoard().getTile(tilex, tiley));
 		
 		/* --------------------------------------------------------------------------------
 		 * Check previous User inputs (will be either Card Selected State or Unit Selected)
