@@ -20,21 +20,22 @@ public class Monster extends Unit{
 	protected static ObjectMapper mapper = new ObjectMapper(); // Jackson Java Object Serializer, is used to read java objects from a file
 	
 	// Basic Monster attributes
-	public String name; 
-	protected int HP;									// Monster's current health value, between 0 - maxHP
-	protected int maxHP;								// Max limit on Monster's health (reference for healing actions)
-	protected int attackValue; 							// How much damage Monster does in one attack action
+	public String 					name; 
+	protected int 					HP;				// Monster's current health value, between 0 - maxHP
+	protected int 					maxHP;			// Max limit on Monster's health (reference for healing actions)
+	protected int 					attackValue; 	// How much damage Monster does in one attack action
+	protected ArrayList <Ability>	abilities;		// Any abilities the Monster has
+
 	
 	// Action range values
-	protected int movesLeft;							// move actions left, tracks directly to range
-	protected int attacksLeft;							// attack actions left, != range
-	protected int attackRange;							// tile range for attacks
+	protected int 			movesLeft;				// number of move actions Monster has left, tracks directly to range
+	protected int 			attacksLeft;			// number of attack actions Monster has left, != range
+	protected int 			attackRange;			// integer range for attacks
 	
 	// Monster gameplay info
-	protected Player				owner;				// Player who owns the unit
-	protected boolean 				selected;			// Tracks when the unit is selected on board by owner
-	protected boolean				onCooldown;			// Tracks when the unit has actions left (move and/or attack)
-	protected ArrayList <Ability>	abilities;			// Any abilities the Monster has
+	protected Player		owner;					// Player who owns the unit
+	protected boolean 		selected;				// Tracks when the unit is selected on board by owner
+	protected boolean		onCooldown;				// Tracks when the unit has actions left (move and/or attack)
 	
 	
 	/* Constructor(s) */
