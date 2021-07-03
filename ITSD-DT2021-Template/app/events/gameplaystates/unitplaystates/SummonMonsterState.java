@@ -72,8 +72,6 @@ public class SummonMonsterState implements IUnitPlayStates {
 			}
 			
 		}
-		
-		
 
 	}
 
