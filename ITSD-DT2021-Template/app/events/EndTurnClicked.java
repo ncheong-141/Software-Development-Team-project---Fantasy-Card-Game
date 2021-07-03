@@ -28,8 +28,10 @@ public class EndTurnClicked implements EventProcessor{
 	
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {  //for HumanPlayer
-		
-		if (gameState.getTurnOwner() == playerOne) {
+			
+			if (isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
+				gameState.gameOver();  // if not, gameover(?)
+			}
 			gameState.getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
 			emptyMana(); //empty mana for player who ends the turn
 			toCoolDown(); //switch avatars status for current turnOwner
@@ -40,12 +42,27 @@ public class EndTurnClicked implements EventProcessor{
 			giveMana(); //give turnCount mana to the player in the beginning of new turn
 			toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
 			gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
-		}
-		else{
-			gameState.computerEndTurn();
-		}
+		
 	}
 			
+	
+	
+	
+	
+	// check if players decks are are empty 
+	public boolean isDeckEmpty() {
+		ArrayList<Card> humanDeck = playerOne.getDeck().getDeck();
+		int humanCardLeft = humanDeck.size();
+		ArrayList<Card> computerDeck = playerTwo.getDeck().getDeck();
+		int computerCardLeft = computerDeck.size();
+		
+		if(( humanCardLeft < 1) ||(computerCardLeft < 1)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
 			gameState.getTurnOwner().setMana(gameState.getTurnCount());  
