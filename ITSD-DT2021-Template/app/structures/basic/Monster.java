@@ -19,30 +19,33 @@ public class Monster extends Unit{
 	
 	protected static ObjectMapper mapper = new ObjectMapper(); // Jackson Java Object Serializer, is used to read java objects from a file
 	
+	// Basic Monster attributes
 	public String name; 
-	protected int HP;
-	protected int maxHP;
-	protected int attackValue; 
+	protected int HP;									// Monster's current health value, between 0 - maxHP
+	protected int maxHP;								// Max limit on Monster's health (reference for healing actions)
+	protected int attackValue; 							// How much damage Monster does in one attack action
 	
+	// Action range values
 	protected int movesLeft;							// move actions left, tracks directly to range
 	protected int attacksLeft;							// attack actions left, != range
 	protected int attackRange;							// tile range for attacks
 	
+	// Monster gameplay info
 	protected Player				owner;				// Player who owns the unit
 	protected boolean 				selected;			// Tracks when the unit is selected on board by owner
 	protected boolean				onCooldown;			// Tracks when the unit has actions left (move and/or attack)
 	protected ArrayList <Ability>	abilities;			// Any abilities the Monster has
 	
+	
 	/* Constructor(s) */
-	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
-		
-		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
-
-	}
 	
 	// Default constructor for JSON
 	public Monster() {
 		super(); 
+		
+		// Some attributes are set by JSON Mapper (Unit) or in the loadMonsterUnit
+		// ObjectBuilder method:
+			// name, HP, maxHP, attackValue, owner, abilities
 
 		this.movesLeft = 0;				//
 		this.attacksLeft = 0;			// Unit is summoned on cooldown 
@@ -54,20 +57,31 @@ public class Monster extends Unit{
 		abilities = null;
 		
 	}
+	
+	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
+		
+		// Specify id, UnitAnimationSet, ImageCorrection and/or Tile
+		super(id, animations, correction);  
+
+	}
+	
+
 
 	/* Class methods */ 
 	
-	// Move unit
-	// Attack unit
-	// Receive damage (HP reduction, counter attack if not from Spell) 
-	// Use their ability
+	/* Move unit
+	 * Attack unit
+	 * Counter attack (specialised attack, works even onCooldown)
+	 * Receive damage (HP reduction, counter attack if not from Spell) 
+	 * Use ability (applicable to some)
+	 */
 	
 	// Move
 	// Returns the outcome of an attempt to move (successful or not) and updates move/location variables
 	public boolean move(Tile t) {
 		if(movesLeft > 0 && !(onCooldown)) {
 			
-			// Check change in index of Board dimensions from current to t
+			// Check change in Board dimension indices from current to t
 			int xchange = Math.abs(this.getPosition().getTilex() - t.getTilex());
 			int ychange = Math.abs(this.getPosition().getTiley() - t.getTiley());
 			// Move fails if change total exceeds ability to move
