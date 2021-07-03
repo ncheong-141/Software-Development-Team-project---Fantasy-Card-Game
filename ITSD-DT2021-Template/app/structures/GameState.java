@@ -54,11 +54,11 @@ public class GameState {
 
 		
 		gameBoard = new Board();
-		humanAvatar =  (Avatar) BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, Avatar.class);
+		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, Avatar.class);
 		humanAvatar.setOwner(playerOne, gameBoard);//assigning avatar to player and board - this could be done within player's class
 		
 		
-		computerAvatar = (Avatar) BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, Avatar.class);
+		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, Avatar.class);
 		computerAvatar.setOwner(playerTwo, gameBoard);
 		
 	}
