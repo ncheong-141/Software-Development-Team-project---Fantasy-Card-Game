@@ -103,11 +103,11 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			//GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
 			for (Tile t : actRange) {
 				// Leave defender tile highlighted
-				if(t == context.getClickedTile()) {
+				if(t == targetTile) {
 					continue;
 				}
 				BasicCommands.drawTile(context.out, t, 0);
-				try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+				GeneralCommandSets.threadSleep();
 			}
 			System.out.println("Finished drawing Tiles method");
 			GeneralCommandSets.threadSleepLong();

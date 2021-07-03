@@ -52,11 +52,11 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			
 			// Update clicked tile context references (moved here for use of attack, not required anymore for move since inputted tile) 
 			// Update clicked Tile context references for attack state
-			context.setClickedTile(destination);
+			// context.setClickedTile(destination); // Not required anymore since the decouple
 			
-			System.out.println("Context clicked values are x: " + context.getClickedTile().getTilex() + " and y: " + context.getClickedTile().getTiley());
+			// System.out.println("Context clicked values are x: " + context.getClickedTile().getTilex() + " and y: " + context.getClickedTile().getTiley());
+			
 			System.out.println("Calling AttackAction from CombinedAction...");
-			
 			// Execute attack between units
 			IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
 			UnitAttackState.execute(context);
@@ -78,6 +78,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 				
 		// Retrieve frequently used data
 		Tile currentLocation = context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
+		
 		// Selected unit's ranges
 		ArrayList <Tile> moveRange = context.getGameStateRef().getBoard().unitMovableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getMovesLeft());
 		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getAttackRange(), currentLocation.getUnitOnTile().getMovesLeft()));
@@ -95,7 +96,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		
 		// Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
 		// Get a movement range from enemy's position (encompasses attack range)
-		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(context.getClickedTile().getTilex(), context.getClickedTile().getTiley(), 2);
+		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
 		ArrayList <Tile> options = new ArrayList <Tile> ();
 		for(Tile t : temp) {
 			// If tile is adjacent to enemy
