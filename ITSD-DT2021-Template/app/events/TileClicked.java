@@ -67,7 +67,7 @@ public class TileClicked implements EventProcessor{
 			
 			gameplayContext.addCurrentState(new CardPreviouslySelectedState());
 		} 
-		else if (gameState.getBoard().getUnitSelected() != null) {
+		else if (checkUnitSelected(gameState)) {
 			
 			gameplayContext.addCurrentState(new UnitPreviouslySelectedState());
 			
@@ -99,6 +99,10 @@ public class TileClicked implements EventProcessor{
 	
 	private boolean checkCardClicked(GameState gameState) {
 		return (gameState.getTurnOwner().getHand().getSelectedCard() != null);
+	}
+	
+	private boolean checkUnitSelected(GameState gameState) {
+		return (gameState.getBoard().getUnitSelected() != null);
 	}
 
 
