@@ -31,7 +31,7 @@ public class AIUnitStateController {
 	public AIUnitStateController(ActorRef out, GameState gameState) {
 		
 		// GameplayContext for current state of the game depending on unit actions 
-		context = new GameplayContext(out, gameState);
+		context = new GameplayContext(gameState, out);
 	}
 	
 	
