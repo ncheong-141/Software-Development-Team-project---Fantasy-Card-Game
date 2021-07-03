@@ -4,6 +4,7 @@ package structures.basic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 
 
@@ -256,31 +257,79 @@ public class ComputerPlayer extends Player {
 		}
 	
 		private ArrayList<ComputerInstruction> matchMonsterAndTile (MonsterTileOption[] optionList){
+			//sorting array based on value of top tile 
 			Arrays.sort(optionList);
 			
-			//sorted list of (Monster - tile list) objs - score based on first tile in the list (highest scoring tile)
-			//set i = to option list length, create empty tile set S, 
-			//while i < list length repeat:
-			//if list[i] top tile is not the same as list[i+1] 
-				//create comp instruction obj with list [i] monster and top tile. Add top tile to S
-				//create comp instruction obj with list [i+1] monster and top tile. Add top tile to S
-			//else if list[i] top tile == list[i+1] top tile
-				//create comp instruction obj with list [i] monster and top tile. Add top tile to S
-				//next best tile from list from list[i+1] --> tile t = list.get(k)
-				//set k = 1, while k < list.size, set boolean tile found = false, repeat:
-				// tile t = list[k]
-				// if tile t is not in S
-					//create computer instruction obj with monster m and tile t
-					// set tile found = true
-					//break out of the loop
-				//if tile found is not true
-					//
+			//method returns an array list of computer instruction objs
+			//each of those objs contains a monster to be moved and a target tiles
+			ArrayList <ComputerInstruction> compMoves = new ArrayList<ComputerInstruction>();
 			
+			//this set keep track of tiles that have already been used as a target tile 
+			//so no other monster should be added to it
+			HashSet <Tile> tileUsed = new HashSet<Tile>();
 			
-			return null;
+			int k = 0;
 			
+			//for loop iterates over the list of (monster - list of tiles) objs (MLT) passed to the method
+			for (int i = 0; i<optionList.length; i++) {
+				//for each MLT the top tile is retrieved (k=0)
+				//this is the tile with the highest score
+				Tile t = optionList[i].getList().get(k);
+			
+				//boolean variable for testing purposes
+				boolean tileFound = false;
+				
+				//creating a CI reference
+				ComputerInstruction inst = null;
+				
+				//this checks if the top tile for the given monster (within the MLT obj) has already been used
+				if (!(tileUsed.contains(t))){
+					//if the best tile has not been used already, a new instruction is created passing it the monster within the MLT obj at optionList[i]
+					//and the target tile t
+					inst = new ComputerInstruction(optionList[i].getM(), t);
+					//adding the new instruction object to the list to be returned 
+					compMoves.add(inst);
+					//adding the target tile to the tile used set
+					tileUsed.add(inst.getTargetTile());
+					tileFound = true;
+					
+					continue;
+				}
+				else {
+					//this part of the code is exectuted if the tileUsed set already contains target tile t
+					do {
+						//incrementing k
+						k++;
+						//to retrieve the new best tile within the MLT obj
+						t = optionList[i].getList().get(k);
+						
+					//checking if the new tile t is in the set already and if there are still tiles to be tested within the MLT obj	
+					} while(tileUsed.contains(t)&& k<optionList[i].getList().size());
+					
+					//once the above loop terminates
+					//this condition checks that the do-while loop terminated because a tile was found
+					//if tile was found current target tile t is not in set
+					if (!tileUsed.contains(t)) {
+						tileFound = true;
+						//creating a computer instruction with monster with MTL obj and current target tile
+						inst = new ComputerInstruction(optionList[i].getM() , t);
+						//adding tile to used tile set
+						tileUsed.add(t);
+						//adding new computer instruction to list to be returned
+						compMoves.add(inst);
+					}
+				}
+				//resetting value of k for next loop iteration
+				k=0;
+			}			
+			return compMoves;	
 		}
 		//=========================inner class===============================//
+		
+		//this inner class represent a pairing of a monster belonging to comp player
+		//and a list of tiles that the given monster can move to
+		//each object has a score that is equal to the score of the first tile in the list
+		//the list is ordered based on tile score (tile implements comparable)
 		static class MonsterTileOption implements Comparable<MonsterTileOption> {
 			Monster m; 
 			ArrayList<Tile> list;
@@ -308,18 +357,11 @@ public class ComputerPlayer extends Player {
 			public double getScore() {
 				return this.score;
 			}
+			
 
 			@Override
 			public int compareTo(MonsterTileOption o) {
-				/*
-				 * if (this.getList().isEmpty() && !o.getList().isEmpty()) return -1; else if
-				 * (!this.getList().isEmpty() && o.getList().isEmpty()) return 1; else
-				 * if(this.getList().isEmpty() && this.getList().isEmpty()) return 0; else { if
-				 * (this.getList().get(0).getScore() > o.getList().get(0).getScore()) return 1;
-				 * else if (this.getList().get(0).getScore() < o.getList().get(0).getScore())
-				 * return -1; else return 0; }
-				 */
-				
+			
 				if (this.score > o.getScore()) return 1;
 				else if (this.score < o.getScore()) return -1;
 				else return 0;

@@ -15,4 +15,17 @@ public class ComputerInstruction {
 		this.actor = m;
 		this.targetTile = t;
 	}
+
+	public Card getCard() {
+		return card;
+	}
+
+	public Tile getTargetTile() {
+		return targetTile;
+	}
+
+	public Monster getActor() {
+		return actor;
+	}
+	
 }
