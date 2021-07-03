@@ -83,19 +83,20 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				
 				Monster selectedUnit = (Monster) context.getLoadedUnit();
 				
-				BasicCommands.drawTile(context.out, context.getGameStateRef().getBoard().getTile((selectedUnit.getPosition()).getTilex(), (selectedUnit.getPosition()).getTiley()), 0);
+				// Update unit's occupied tile visual
+				BasicCommands.drawTile(context.out, currentTile, 0);
 				GeneralCommandSets.threadSleep();
 				
-				// Update action range tiles displayed
-				ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(selectedUnit.getPosition().getTilex(), selectedUnit.getPosition().getTiley(), selectedUnit.getAttackRange(), selectedUnit.getMovesLeft()));
-				ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley(),context.getGameStateRef().getBoard().getUnitSelected().getMovesLeft());
+				// Update unit's action range tile visual
+				ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), selectedUnit.getAttackRange(), selectedUnit.getMovesLeft()));
+				ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(currentTile.getTilex(),currentTile.getTiley(),selectedUnit.getMovesLeft());
 				actRange.addAll(mRange);
 				GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
 				GeneralCommandSets.threadSleepLong();
-				System.out.println("Finished un-highlighting tiles.");
+				System.out.println("Finished de-highlighting tiles.");
 				
-				// Update selected reference last for now
-				context.getGameStateRef().getBoard().getUnitSelected().toggleSelect();
+				// Update selected reference (last)
+				selectedUnit.toggleSelect();
 				System.out.println("Monster selected: " + context.getGameStateRef().getBoard().getUnitSelected().isSelected());
 				System.out.println("Deselected monster on Tile " + selectedUnit.getPosition().getTilex() + "," + selectedUnit.getPosition().getTiley());
 				context.deselectAllAfterActionPerformed();
