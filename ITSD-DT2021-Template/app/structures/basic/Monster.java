@@ -2,15 +2,10 @@ package structures.basic;
 
 import java.util.ArrayList;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import commands.BasicCommands;
 import structures.basic.abilities.Ability;
-import utils.BasicObjectBuilders;
-import utils.StaticConfFiles;
 
 public class Monster extends Unit{
 
@@ -73,7 +68,7 @@ public class Monster extends Unit{
 	/* Move unit
 	 * Attack unit
 	 * Counter attack (specialised attack, works even onCooldown)
-	 * Receive damage (HP reduction, counter attack if not from Spell) 
+	 * Defend (HP reduction from any source) 
 	 * Use ability (applicable to some)
 	 */
 	
@@ -85,7 +80,7 @@ public class Monster extends Unit{
 			// Check change in Board dimension indices from current to t
 			int xchange = Math.abs(this.getPosition().getTilex() - t.getTilex());
 			int ychange = Math.abs(this.getPosition().getTiley() - t.getTiley());
-			// Move fails if change total exceeds ability to move
+			// Move fails if total change exceeds ability to move
 			if(xchange + ychange > movesLeft) {	return false;	}
 			
 			movesLeft -= (xchange+ychange);
@@ -112,9 +107,11 @@ public class Monster extends Unit{
 		return true;
 	}
 	
-	// Counter
+	// Counter-attack
+	// Method here
 	
-	// Returns outcome of receiving damaged (attack/counter-attack/Spell dmg) and updates health
+	// Defend (receive damage)
+	// Returns outcome of receiving damage (attack/counter-attack/Spell dmg) and updates health
 	public boolean defend(int d) {
 		if(this.HP - d < 0) {
 			this.HP = 0;
@@ -125,6 +122,8 @@ public class Monster extends Unit{
 			return true;
 		}
 	}
+	
+	
 	
 	/* Getters and setters */ 
 	
@@ -232,6 +231,11 @@ public class Monster extends Unit{
 			this.movesLeft = 2;
 			this.attacksLeft = 1;
 		}
+	}
+
+	public boolean hasAbility() {
+		if(this.abilities == null) {	return false;	}
+		return true;
 	}
 	
 	public ArrayList <Ability> getAbility() {
