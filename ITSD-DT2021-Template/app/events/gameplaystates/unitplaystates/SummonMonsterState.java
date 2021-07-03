@@ -11,6 +11,7 @@ import structures.GameState;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
+import structures.basic.Player;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 import utils.BasicObjectBuilders;
@@ -19,7 +20,8 @@ import utils.StaticConfFiles;
 public class SummonMonsterState implements IUnitPlayStates {
 
 	/*** State attributes ***/
-	private Tile targetTile; 
+	private Tile 				targetTile;
+	private ArrayList <Tile> 	summonRange;
 	
 	
 	/*** State constructor ***/
@@ -29,7 +31,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 	 * Decoupling required to use unit States from the ComputerPlayer. */
 	
 	public SummonMonsterState(Tile targetTile) {
-		this.targetTile = targetTile; 
+		this.targetTile = targetTile;
+		this.summonRange = null;
 	}
 	
 	
@@ -39,33 +42,56 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 		
-		// If targetTile is in summon range check
-		// Mana sufficient check
+		// Build summonRange for checks
+		summonRange = context.getGameStateRef().getBoard().allSummonableTiles(context.getGameStateRef().getTurnOwner());
 		
-		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), this.targetTile);
+		// Target tile within summon range && sufficient player mana check
+		if(tileInSummonRange() && sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard())) {
+			
+			// Execute summon method
+			summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), this.targetTile);
+			
+			/** Reset entity selection and board **/  
+			// Deselect after action finished
+			context.deselectAllAfterActionPerformed();
 		
-		/** Reset entity selection and board **/  
-		// Deselect after action finished *if* not in the middle of move-attack action
-		context.deselectAllAfterActionPerformed();
-	
-		//  Reset board visual (highlighted tiles)
-		GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+			//  Reset board visual (highlighted tiles)
+			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+			
+		} 
+		
+		else {
+		// Verbose console messages for debugging, simplify for submission
+			
+			if(!tileInSummonRange()) {
+				System.out.println("Tile is not in summon range.");
+			} else if(!(sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard()))) {
+				System.out.println("Insufficient mana to summon this monster.");
+			} else {
+				System.out.println("Can't summon Monster, please try again.");
+			}
+			
+		}
+		
+		
+
 	}
 
 	
 	public void summonMonster(GameState gameState, ActorRef out, String u_configFile, Card statsRef, Tile summonTile) {
 		
 		// Mana cost
-//		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);
-//		gameState.getTurnOwner().loseMana(statsRef.getManacost());
-//		
-//		if(gameState.getTurnOwner() instanceof HumanPlayer) {
-//			BasicCommands.setPlayer1Mana(out, gameState.getTurnOwner());
-//		} else {
-//			BasicCommands.setPlayer2Mana(out, gameState.getTurnOwner());
-//		}
-//		
-//		try {Thread.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);
+		gameState.getTurnOwner().loseMana(statsRef.getManacost());
+		
+		if(gameState.getTurnOwner() == gameState.getPlayerOne()) {
+			BasicCommands.setPlayer1Mana(out, gameState.getTurnOwner());
+			GeneralCommandSets.threadSleep();
+		} else {
+			BasicCommands.setPlayer2Mana(out, gameState.getTurnOwner());
+			GeneralCommandSets.threadSleep();
+		}
+		
 		
 		// Summon the Monster (instantiate)
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
@@ -76,14 +102,14 @@ public class SummonMonsterState implements IUnitPlayStates {
 		summonedMonster.setOwner(gameState.getTurnOwner());
 		GeneralCommandSets.threadSleep(); 
 		
-		// Summon animation
-		EffectAnimation summonEf = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_summon);
-		BasicCommands.playEffectAnimation(out, summonEf, summonTile);
-		
 		// Add unit to tile ON BOARD
 		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
 		summonTile.addUnit(summonedMonster);
 		GeneralCommandSets.threadSleep();
+		
+		// Summon animation
+		EffectAnimation summonEf = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_summon);
+		BasicCommands.playEffectAnimation(out, summonEf, summonTile);
 		
 		// Drawing summoned monster with stats on the board
 		GeneralCommandSets.drawUnitWithStats(out, summonedMonster, summonTile);
@@ -97,6 +123,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
 		GeneralCommandSets.threadSleep();
 		
+		// Check for on-summon triggers
+		
 		// Delete card from hand
 //		Card selectedCard = context.getLoadedUnit();
 		// Need position in hand from Noah to redraw Card with no highlight
@@ -108,18 +136,21 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 	}
 	
+	/*	Helper methods	*/
 	
-// >>>>>>>>>>	Leave in for now, may be useable	
+	// Returns true if the clicked targetTile is within a Player's summon range
+	private boolean tileInSummonRange() {
+		if(summonRange.contains(targetTile)) {	return true;	}
+		return false;
+	}
 	
-//	if((gameState.getBoard().allSummonableTiles(gameState.getTurnOwner())).contains(gameState.getBoard().getTile(tilex, tiley))) {
-//
-//		String configName = selected.getCardname().replace(' ', '_').toLowerCase().trim();
-//		configName = "u_" + configName;
-//
-//		System.out.println("Summoning monster...");
-//		summonMonster(gameState, out , configName, selected, tilex, tiley);
-//
-//	} else {
-//		System.out.println("Can't summon monster on this tile.");
-//	}
+	// Returns true if Player has sufficient mana to cover the card's playing cost
+	private boolean sufficientMana(Player p, Card mon) {
+		System.out.println("Turn owner has: " + p.getMana() + " mana");
+		if(p.getMana() - mon.getManacost() >= 0) {	return true;	}
+		return false;
+	}
+	
 }
+
+
