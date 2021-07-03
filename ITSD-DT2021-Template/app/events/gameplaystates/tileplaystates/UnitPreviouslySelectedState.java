@@ -15,7 +15,7 @@ import structures.basic.*;
 public class UnitPreviouslySelectedState implements ITilePlayStates {
 
 	// State attributes
-	IUnitPlayStates unitState;		// Unit Play state to be executeed
+	IUnitPlayStates unitState;		// Unit Play state to be executed
 	Tile currentTile; 				// Current tile (Unit position)
 	Tile targetTile; 				// Target tile (Unit target) 
 
@@ -28,18 +28,16 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 	
 	public void execute(GameplayContext context) {
 			
-		/*
-		 * Selected units can:
+		/* Selected units can:
 		 * - move
 		 * - attack
 		 * - move & attack
 		 * - be deselected
-		 * - have selection switched to different unit
+		 * - switch selection to another friendly unit
 		 */
 		
 		System.out.println("In UnitPreviouslySelectedState.");
 		context.debugPrint();
-		
 		
 		// Load previously selected unit for use in next sub state (move or attack) 
 		context.setLoadedUnit(context.getGameStateRef().getBoard().getUnitSelected());
@@ -55,12 +53,11 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		// Determine the unitState (attack , reselect friendly or move) 
 		switch (context.getTileFlag().toLowerCase()) {
 		
-		case("enemy unit"): {
-			
+		case("enemy unit"): {		
 			/*** Check distance from UnitSelected ***/
-			System.out.println("Before near check");
-			// Near --- enemy unit tile has index difference with current tile of <=1 on board dimensions, which does not require the selected unit to move before attack
-			if(Math.abs(currentX - targetTile.getTilex()) <=1 && (Math.abs(currentY - targetTile.getTiley()) <= 1)) {
+			
+			// Near --- enemy unit tile has total tile index difference of <=2, which does not require the unit to move before attack
+			if(Math.abs(currentTile.getTilex() - targetTile.getTilex()) <=1 && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= 1)) {
 				
 				// Attack
 				System.out.println("Creating AttackAction substate...");
@@ -68,8 +65,9 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				break;
 			} 
 			
-			// Far (wherever you are) --- enemy unit is outside a non-movement range
+			// Far --- enemy unit is outside a non-movement range
 			else {
+				
 				// Move & Attack
 				System.out.println("Creating CombinedAction substate...");
 				unitState = new UnitCombinedActionState(currentTile, targetTile);
@@ -80,8 +78,8 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		
 		case("friendly unit"): {
 			
-			// Player re-clicks the selected unit, de-select it
-			if (targetTile.getUnitOnTile() == context.getLoadedUnit()) {
+			// Selected unit has been clicked, de-select it
+			if (targetTile == currentTile) {
 				
 				Monster selectedUnit = (Monster) context.getLoadedUnit();
 				
@@ -116,8 +114,8 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				GeneralCommandSets.drawUnitDeselect(context.out, context.getGameStateRef(), old);
 				
 				// Variable + visual change for new unit
-				// Pass to DisplayActions state to complete
-				unitState = new UnitDisplayActionsState(targetTile);	// Pass target tile as this has the new unit on it
+				// Pass target tile (occupied by new unit) to DisplayActions state to complete
+				unitState = new UnitDisplayActionsState(targetTile);	
 				break;
 				
 			}

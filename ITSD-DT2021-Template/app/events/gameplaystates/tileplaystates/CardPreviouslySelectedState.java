@@ -28,11 +28,13 @@ public class CardPreviouslySelectedState implements ITilePlayStates {
 		System.out.println("In CardPreviouslySelectedState.");
 		context.debugPrint();
 		
+		/***	Set reference info for navigating state		***/
+		// Could be it's own method
 		
-		// If a card is selected as previous user input, get card for use in the Sub state (summon monster or Cast spell) 
+		// Get selected card for use in the Sub state (Monster or Spell use) 
 		context.setLoadedCard( context.getGameStateRef().getTurnOwner().getHand().getSelectedCard() );
 		
-		// Determine its class type of the loaded card
+		// Determine class type of the loaded card
 		// Check if a Spell card 
 		if (context.getLoadedCard().getBigCard().getAttack() < 0) {	
 			context.setCardClasstype(Spell.class);
@@ -44,6 +46,8 @@ public class CardPreviouslySelectedState implements ITilePlayStates {
 		
 		// Set targetTile
 		targetTile = context.getClickedTile();
+		
+		
 		
 		// Determine the unit state (SummonMonster or Cast Spell)  (to lower case just so case isnt a problem ever) 
 		switch (context.getTileFlag().toLowerCase()) {
