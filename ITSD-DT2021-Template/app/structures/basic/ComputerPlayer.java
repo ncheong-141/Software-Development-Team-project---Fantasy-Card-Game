@@ -2,6 +2,7 @@ package structures.basic;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -143,26 +144,45 @@ public class ComputerPlayer extends Player {
 		return comboList;
 	}
 	
+	//this method checks if a given card combination is playable
+	//a combination is playable iff all the cards in the combination can be played on the abord (playable tiles are available)
+	//method return true iff card combination is playable
 	private boolean playableCombo(CardCombo combo) {
+		//number of playable tiles available to computer player
+		//number of tiles adj to a friendly unit
 		int tilesAvailable = this.gameBoard.allSummonableTiles(this).size();
 		int tilesNeeded = 0;
+		//count how many cards in the card combo need to be played in a tile adj to a friendly unit
+		//NOTE: need to implement check to see if board still has capacity (max number of units X*Y)
 		for (Card c : combo.getCardCombo()) {
 			if (!(c.playableAnywhere())) tilesNeeded++;
 		}
 		
+		//compare the diff between adj friendly tiles available and needed
 		int delta = tilesAvailable - tilesNeeded;
 		
+		//if diff = 0 or positive then terminate yielding true
 		if (delta >= 0) return true;
+		//else, place simulate placing dummy unit to tiles in all summonable tiles list in order
+		//if addition of a dummy results in pos delta terminate yielding true
 		else {
-			boolean result = true;
+			
 			int i =0;
+			//while the diff remains negative AND there are still tiles to test in summonable tiles
+			//loops places dummy monster on tile and recalculates delta
 			while (delta < 0 && i<this.gameBoard.allSummonableTiles(this).size()) {
 				this.gameBoard.allSummonableTiles(this).get(i).addUnit(this.dummy);
 				delta = this.gameBoard.allSummonableTiles(this).size() - tilesNeeded;
-				result = false;
 				i++;
 			}
-			return result;
+			//remove dummy unit from board 
+			if (this.dummy.getPosition() != null) {
+				Tile t = this.gameBoard.getTile(this.dummy.getPosition().getTilex(), this.dummy.getPosition().getTiley());
+				t.removeUnit();
+			}
+			//end of else condition, re-check delta to see if simulated placing of friendly units made combination payable
+			if (delta >= 0) return true;
+			else return false;
 		}
 		
 	}
@@ -236,6 +256,26 @@ public class ComputerPlayer extends Player {
 		}
 	
 		private ArrayList<ComputerInstruction> matchMonsterAndTile (MonsterTileOption[] optionList){
+			Arrays.sort(optionList);
+			
+			//sorted list of (Monster - tile list) objs - score based on first tile in the list (highest scoring tile)
+			//set i = to option list length, create empty tile set S, 
+			//while i < list length repeat:
+			//if list[i] top tile is not the same as list[i+1] 
+				//create comp instruction obj with list [i] monster and top tile. Add top tile to S
+				//create comp instruction obj with list [i+1] monster and top tile. Add top tile to S
+			//else if list[i] top tile == list[i+1] top tile
+				//create comp instruction obj with list [i] monster and top tile. Add top tile to S
+				//next best tile from list from list[i+1] --> tile t = list.get(k)
+				//set k = 1, while k < list.size, set boolean tile found = false, repeat:
+				// tile t = list[k]
+				// if tile t is not in S
+					//create computer instruction obj with monster m and tile t
+					// set tile found = true
+					//break out of the loop
+				//if tile found is not true
+					//
+			
 			
 			return null;
 			
