@@ -25,6 +25,7 @@ public class Card implements Comparable<Card> {
 	MiniCard miniCard;//display element for unselected cards
 	BigCard bigCard;//display element for selected card
 	
+	String configFile;
 	
 	public Card() {};
 	
@@ -35,7 +36,13 @@ public class Card implements Comparable<Card> {
 		this.manacost = manacost;
 		this.miniCard = miniCard;
 		this.bigCard = bigCard;
+		this.configFile="";
 	}
+	
+	
+	
+	
+	
 	
 	//shortcut methods for ability access
 	
@@ -84,10 +91,6 @@ public class Card implements Comparable<Card> {
 		}
 	}
 	
-	public void delCard() {
-		
-	}
-	
 	
 	//method to return integer value of unit ability effect 
 	//i.e if ability is +2 damage, the method would return 2
@@ -107,6 +110,8 @@ public class Card implements Comparable<Card> {
 		return 0;
 		}
 	}
+	
+	
 	
 	//getters and setters
 	public int getId() {
@@ -140,12 +145,11 @@ public class Card implements Comparable<Card> {
 		this.bigCard = bigCard;
 	}
 
-	public boolean isClicked() {
-		return clicked;
+	public void setConfigFile(String configFile) {
+		this.configFile = configFile;
 	}
-	public void setClicked(boolean clicked) {
-		this.clicked = clicked;
-	}
-
 	
+	public String getConfigFile() {
+		return this.configFile;
+	}
 }
