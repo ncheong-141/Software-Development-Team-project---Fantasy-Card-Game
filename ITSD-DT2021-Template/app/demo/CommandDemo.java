@@ -452,7 +452,7 @@ public class CommandDemo {
 
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
 		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
@@ -509,7 +509,7 @@ public class CommandDemo {
 		
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
 
@@ -653,8 +653,8 @@ public class CommandDemo {
 		
 		// Set up an enemy Unit in attack range
 		Card cardfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter,4,Card.class);
-		Monster fire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,4,cardfire_spitter,Monster.class);
-		Monster fire_spitter2 = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 5, cardfire_spitter, Monster.class);
+		Monster fire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,cardfire_spitter,Monster.class);
+		Monster fire_spitter2 = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,cardfire_spitter, Monster.class);
 		Avatar testAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 54, Avatar.class);
 		fire_spitter.setOwner(g.getPlayerOne());
 		fire_spitter.toggleCooldown();
@@ -702,7 +702,7 @@ public class CommandDemo {
 
 		// drawUnit
 
-		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		fire_spitter.setPositionByTile(tone);
 		tone.addUnit(fire_spitter);
@@ -711,7 +711,7 @@ public class CommandDemo {
 
 		// drawUnit
 
-		Monster fire_spitterTwo = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		Monster fire_spitterTwo = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		fire_spitterTwo.setPositionByTile(tTwo);
 		tTwo.addUnit(fire_spitterTwo);
@@ -721,14 +721,14 @@ public class CommandDemo {
 
 		// drawUnit
 
-		Monster fire_spitterThree = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		Monster fire_spitterThree = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		fire_spitterThree.setPositionByTile(tThree);
 		tThree.addUnit(fire_spitterThree);
 		fire_spitterThree.setOwner(g.getPlayerTwo());
 		BasicCommands.drawUnit(out, fire_spitterThree, tThree);
 
-		Monster fire_spitterFour = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		Monster fire_spitterFour = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		fire_spitterFour.setPositionByTile(tFour);
 		tFour.addUnit(fire_spitterFour);

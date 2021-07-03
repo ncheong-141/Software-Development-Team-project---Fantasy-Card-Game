@@ -53,12 +53,9 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		
 		/***	Condition here for combined substate executing, which requires selection is maintained	***/
 		if(!(context.getCombinedActive())) {
-			
 		
 			/** Reset entity selection and board **/  
-			// Deselect after action finished *if* not in the middle of move-attack action
 			context.deselectAllAfterActionPerformed();
-			
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 		}

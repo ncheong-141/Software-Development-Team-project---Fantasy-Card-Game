@@ -95,8 +95,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		
 		// Need some code about retrieving StaticConfFiles matching card from Deck here
-		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,1,statsRef,Monster.class);		
-		summonedMonster.setPositionByTile(summonTile);
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,statsRef,gameState.getTurnOwner(),Monster.class);		
+		summonedMonster.setPositionByTile(gameState.getBoard().getTile(tilex,tiley));
 		summonedMonster.setOwner(gameState.getTurnOwner());
 		GeneralCommandSets.threadSleep(); 
 		

@@ -2,7 +2,9 @@ package structures.basic;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import commands.BasicCommands;
@@ -29,17 +31,17 @@ public class Monster extends Unit{
 	protected Player				owner;				// Player who owns the unit
 	protected boolean 				selected;			// Tracks when the unit is selected on board by owner
 	protected boolean				onCooldown;			// Tracks when the unit has actions left (move and/or attack)
-	protected ArrayList <Ability>	monsterAbility;		// Any abilities the Monster has
+	protected ArrayList <Ability>	abilities;			// Any abilities the Monster has
 	
 	/* Constructor(s) */
 	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
 		
 		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
-		
+
 	}
 	
 	// Default constructor for JSON
-	public Monster(/*Card statsRef, Player o*/) {
+	public Monster() {
 		super(); 
 
 		this.movesLeft = 0;				//
@@ -47,9 +49,9 @@ public class Monster extends Unit{
 		this.attackRange = 1;			//
 		
 		this.selected = false;
-//		owner = o;
 		this.onCooldown = true;			// Unit is summoned on cooldown
-		System.out.println("As a Monster I am: " + this.getOnCooldown());
+		
+		abilities = null;
 		
 	}
 
@@ -61,17 +63,17 @@ public class Monster extends Unit{
 	// Use their ability
 	
 	// Move
-	// Returns outcome of an attempt to move (successful or not) and updates move variables
+	// Returns the outcome of an attempt to move (successful or not) and updates move/location variables
 	public boolean move(Tile t) {
 		if(movesLeft > 0 && !(onCooldown)) {
-			// Check change in Board dimension indices from current to t
+			
+			// Check change in index of Board dimensions from current to t
 			int xchange = Math.abs(this.getPosition().getTilex() - t.getTilex());
 			int ychange = Math.abs(this.getPosition().getTiley() - t.getTiley());
-			// Move fails if index change exceeds ability to move
+			// Move fails if change total exceeds ability to move
 			if(xchange + ychange > movesLeft) {	return false;	}
 			
 			movesLeft -= (xchange+ychange);
-			// Set position
 			this.setPositionByTile(t);
 		} else {	return false;	}
 		
@@ -82,7 +84,7 @@ public class Monster extends Unit{
 	}
 	
 	// Attack
-	// Returns the outcome of an attack (successful or not) and updates attack variables
+	// Returns the outcome of an attempt to attack (successful or not) and updates attack variables
 	public boolean attack() {
 		// Check if Monster is able to attack
 		if(this.onCooldown) {
@@ -153,7 +155,6 @@ public class Monster extends Unit{
 		return owner;
 	}
 	
-	// Will be removing this when Vic can get owner to be set at object instantiation
 	public void setOwner(Player p) {
 		owner = p;
 	}
@@ -218,6 +219,16 @@ public class Monster extends Unit{
 		}
 	}
 	
-	// Getters/setters for Abilities to be put in
+	public ArrayList <Ability> getAbility() {
+		return abilities;
+	}
+	
+	public void setAbility(ArrayList <Ability> abs) {
+		abilities = abs;
+	}
+	
+	public void giveAbility(Ability a) {
+		abilities.add(a);
+	}
 	
 }
