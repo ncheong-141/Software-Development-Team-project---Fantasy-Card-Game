@@ -23,7 +23,7 @@ public class GameplayContext {
 	// Attributes
 	private ITilePlayStates				currentStates;		// Current Tile state reference for executing
 
-	private Card 						loadedCard; 		// Any Card that is currently in selected mode from previous action
+	private Card 						loadedCard; 		// Any Card in select mode from a previous action
 	private Class<?> 					cardClasstype; 		// Class type of the Card
 	private Unit						loadedUnit; 		// Any Unit that is currently in selected mode from previous action
 	private GameState					gameStateRef; 		// GameState reference to use game variables when dealing with gameplay control flow
