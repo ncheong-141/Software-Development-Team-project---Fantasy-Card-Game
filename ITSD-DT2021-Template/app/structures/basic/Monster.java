@@ -85,6 +85,7 @@ public class Monster extends Unit{
 			
 			movesLeft -= (xchange+ychange);
 			this.setPositionByTile(t);
+			
 		} else {	return false;	}
 		
 		if(this.movesLeft == 0 && this.attacksLeft == 0) {	// this should check attack range == 0 really
@@ -233,6 +234,7 @@ public class Monster extends Unit{
 		}
 	}
 
+	// True/false check for if a Unit has abilities
 	public boolean hasAbility() {
 		if(this.abilities == null) {	return false;	}
 		return true;
