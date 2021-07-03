@@ -39,8 +39,8 @@ public class Monster extends Unit{
 	public Monster() {
 		super(); 
 		
-		// Some attributes are set by JSON Mapper (Unit) or in the loadMonsterUnit
-		// ObjectBuilder method:
+		// Some attributes are set by JSON Mapper (Unit attributes) or in the 
+		// loadMonsterUnit ObjectBuilder method:
 			// name, HP, maxHP, attackValue, owner, abilities
 
 		this.movesLeft = 0;				//
