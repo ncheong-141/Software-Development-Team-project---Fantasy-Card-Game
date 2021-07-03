@@ -1,190 +1,154 @@
 package structures.basic;
-import commands.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
 
-import org.checkerframework.checker.units.qual.m;
-import com.fasterxml.jackson.databind.JsonNode;
-import actors.GameActor;
-import akka.actor.ActorRef;
+import java.util.ArrayList;
 import structures.GameState;
-import events.*;
-import structures.basic.*;
-import commands.BasicCommands;
-import utils.BasicObjectBuilders;
-import events.tileplaystates.*;
 public class ComputerPlayer extends Player {
 	
 	private HumanPlayer playerOne;
 	private ComputerPlayer playerTwo;
 	private GameState gameState;
 	private Board gameBoard;
-	private ArrayList<Tile> doAttackTile; // for back up methods
-	private ArrayList<Tile> beAttackTile; // for back up methods
-	private  ArrayList<Tile> attackRange;
-	private ArrayList<Monster> doAttackMonster;
-	private ArrayList<Monster> beAttackMonster;
-	private Monster actorM;
-	private Monster enemyM;
+	private ArrayList<Tile> attackTiles; // all tiles holds all ComputerPlayer monster
+	private ArrayList<Tile> targetInRange;
+	private ArrayList<Tile> attackRange;
+
+//	private Tile actorT; //for random back up code
+//	private Tile enemyT; //for random back up code
 	
 	public ComputerPlayer(Deck deck) {
 		super(deck);
 	}
 
+
+	
+//////////////////////////////////////////////////////////**Ranking Methods**/////////////////////////////////////////////////////////	
+	
+//===========choose by Highest currentHP =============
+	public Tile selectAttackerByHP(){
+		Tile chosenA = attackTiles.get(0);    //set compared chosenA as the first tile in attackTiles
+		for (int i = 1; i < attackTiles.size(); i++) {  //loop through attackTiles
+			if(attackTiles.get(i).getUnitOnTile().getHP() > chosenA.getUnitOnTile().getHP()) {  //get loaded monster, if the monster has higher current HP, 
+				chosenA = attackTiles.get(i);  //make it  as chosenA to a tile hold attacker
+			}	
+		}
+		return chosenA;
+	}
+
+//===========choose by Highest attackValue(HP damage) ============
+	public Tile selectAttackerByDamage(){
+		Tile chosenA = attackTiles.get(0);    //set compared chosenA as the first tile in attackTiles
+		for (int i = 1; i < attackTiles.size(); i++) {  //loop through attackTiles
+			if(attackTiles.get(i).getUnitOnTile().getAttackValue() > chosenA.getUnitOnTile().getAttackValue()){ //get loaded monster, if the monster has higher damageHP value, 
+				chosenA = attackTiles.get(i); //make it  as chosenA to a tile hold attacker
+			}	
+		}
+		return chosenA;
+	}	
+//===========choose by Highest attackTimes =============
+	public Tile selectAttackerByTimes(){
+		Tile chosenA = attackTiles.get(0);    //set compared chosenA as the first tile in attackTiles
+		for (int i = 1; i < attackTiles.size(); i++) {  //loop through attackTiles
+			if(attackTiles.get(i).getUnitOnTile().getAttacksLeft() > chosenA.getUnitOnTile().getAttacksLeft()){ //get loaded monster, if the monster has higher attack times currently, 
+				chosenA = attackTiles.get(i); //make it  as chosenA to a tile hold attacker
+			}	
+		}
+		return chosenA;
+	}	
+	
+//===============choose by Lowest HP========================	
+	public Tile selectEnemyByHP(){
+		Tile chosenE = targetInRange.get(0); //set compared chosenE as the first Tile in targetInRange
+		for (int i = 1; i < targetInRange.size(); i++) {  //loop through targetInRange
+			if(targetInRange.get(i).getUnitOnTile().getHP() < chosenE.getUnitOnTile().getHP()) {   //get loaded monster, if the enemy has lower current HP, 
+				chosenE = targetInRange.get(i);  //make it  as chosenE to a tile hold enemy target
+			}	
+		}
+		return chosenE;
+	}	
+	
+//////////////////////////////////////////////////////////**ArrayList Generator Method**/////////////////////////////////////////////////////////		
+	 
+//=============find attack target in range for current gameOwner's=======
+//helper method for intellectual ComputerPlayer behaviour, possibly reused to predict HumanPlayer action
+	public ArrayList<Tile> getTargetTiles(Tile t){
+		ArrayList<Tile> targetInRange = gameBoard.calcRange(t);
+		for (Tile rt : targetInRange) {
+			if (rt.getUnitOnTile().owner != gameState.getTurnOwner()) {
+				targetInRange.add(rt);
+			}
+		}
+		return targetInRange;
+	}
+
+
+//======get a list of Computer monster that can perform attack this turn============
+//get rid of those have no attack count left
+//get rid of those have nothing to attack
+	public ArrayList<Tile> findAttacker(){
+		attackTiles = gameBoard.friendlyTile(playerTwo);
+		
+		for (Tile fT : attackTiles) {
+			attackRange = gameBoard.calcRange(fT);
+			if (fT.getUnitOnTile().getAttacksLeft() == 0 ) {
+				attackRange.remove(fT);
+			}
+			if ( getTargetTiles(fT).size() == 0) {
+				attackRange.remove(fT);
+			}
+		}
+		return attackRange;
+	}	
+		
 	// after all actions, ComputerPlayer call computerEndTurn() to ends the turn
 	@Override
 	public void endTurn() {
 		gameState.computerEnd();
 	}
 
-
-//	@Override  give 3 card in the first round from deckTwo	
-//	public void firstThreeCards() {
-//		// TODO Auto-generated method stub
-//		super.firstThreeCards();
+////	==================randomAttack=====back up=====================
+//
+//	public void randomAttack() {
+//		this.actorT = this.getRandomActorT();        //set chosen actorM
+//		this.enemyT = this.getRandomEnemyT(actorT);  // set chosen enemyM
+//		
+//		
+//		//=========attack action begin========
+//		
+//		//sort out attackLeft
+//		int attackLeft = actorT.getUnitOnTile().getAttacksLeft()- 1; // set remain attack value	
+//		if(attackLeft == 0) { //if no attack left, cool monster
+//			actorT.getUnitOnTile().toggleCooldown();
+//		}
+//		//need animation
+//		
+//		//sort out HP left
+//		int hpLeft = enemyT.getUnitOnTile().getHP();
+//		//need animation?
+//		
 //	}
-
-//	@Override assign deckOne for HumanPlayer
-//	public void setDeck(ArrayList<Card> d) {
-//		// TODO Auto-generated method stub
-//		this.d = deck.deckTwo(); // need Deck to return deckTwo list
+//		
+//	//helper method
+//	private Tile getRandomActorT() {
+//		actorT = this.getRandomTile(attackTiles); // get a random actoRM
+//		return actorT;
+//	}	
+//	//helper method	
+//	private Tile getRandomEnemyT(Tile t) { //given a actor monster, pick random target
+//		targetInRange = getTargetTiles(t); //get list of enemy for actorM
+//		enemyT = this.getRandomTile(targetInRange); // get one in list randomly
+//		return enemyT;
 //	}
-	
-	//** get a list of tiles that hold AI monster  which can still perform attack
-	
-	//get ramdon AI monster to attack enemy randomly 
-
-	public void randomAttack() {
-		this.actorM = this.getRandomActorM();        //set chosen actorM
-		this.enemyM = this.getRandomEnemyM(actorM);  // set chosen enemyM
-		
-		
-		//=========attack action begin========
-		
-		//sort out attackLeft
-		int attackLeft = actorM.getAttacksLeft()- 1; // set remain attack value	
-		if(attackLeft == 0) { //if no attack left, cool monster
-			actorM.toggleCooldown();
-		}
-		//need animation
-		
-		//sort out HP left
-		int hpLeft = enemyM.getHP();
-		//need animation?
-		
-	}
-	
-	
-	
-	//helper method
-	private Monster getRandomActorM() {
-		actorM = this.getRandomMonster(doAttackMonster); // get a random actoRM
-		return actorM;
-	}	
-	//helper method	
-	private Monster getRandomEnemyM(Monster m) { //given a actor monster, pick random target
-		this.actorM = m;
-		beAttackMonster = findEnemyForEachMonster(this.actorM); //get list of enemy for actorM
-		enemyM = this.getRandomMonster(beAttackMonster); // get one in list randomly
-		return enemyM;
-	}
-	
-	
-	public Monster getRandomMonster(ArrayList<Monster> toRandom) {
-		int index = (int) Math.random() * ( toRandom.size() - 0 );
-		return toRandom.get(index);
-	}
-	
+//	
+//	public Tile getRandomTile(ArrayList<Tile> toRandom) {
+//		int index = (int) Math.random() * ( toRandom.size() - 0 );
+//		return toRandom.get(index);
+//	}
+////	================randomAttack=====back up=================	
 
 	
-	//======================= work with Monster ============
-	//** get a list of AI monster that can still attack in its turn
-	public ArrayList<Monster> doAttackMonster(){
-		doAttackMonster = gameBoard.friendlyUnitList(playerOne);
-		for (Monster fM : doAttackMonster) {
-			if (fM.getAttacksLeft() == 0 ) {
-				doAttackMonster.remove(fM);
-			}			
-		}
-		return doAttackMonster;
-	}	
 	
-	
-	//for each doAttack monster, calcRange, list targetMonster
-	public ArrayList<Monster> findEnemyForEachMonster(Monster m){
-		
-		ArrayList<Tile> rangeForEachMonster = gameBoard.calcRange(gameState.locateMonster(m));
-		beAttackMonster = new ArrayList<Monster>();
-		for (Tile rfT: rangeForEachMonster) {   		 // in the tilerange of each AI monster
-			for (Tile eT: beAttackTile) {				 
-				if(rangeForEachMonster.contains(eT)) {	 // check if enemy monster fall into the range
-					Monster eM = eT.getUnitOnTile();	 
-					beAttackMonster.add(eM);			 // collect attackable enemy monster for each AI monster
-				}
-			}
-		}
-		return beAttackMonster;
-	}
-	
-	
-	//get a list of attackable enemy monster on board
-	/*
-	 * public ArrayList<Monster> findAllEnemyToAttack() {
-	 * 
-	 * ArrayList<Monster> targetEnemy = new ArrayList<Monster>(); for (Tile fT :
-	 * doAttackTile) { ArrayList<Tile> doAttackTile = gameBoard.calcRange(fT);
-	 * //make board.calcRange(fT) for (Tile eT :beAttackTile) {
-	 * if(doAttackTile.contains(eT) && (!targetEnemy.contains(eT))) {
-	 * targetEnemy.add(eT.getUnitOnTile()); } } } return targetEnemy; }
-	 */
-	
-	
-	
-	
-	
-	//=======================back up======================
-	//** get a list of attackable range for "all" AI monsters, could be used to find out which enemy monster can be attacked
-	public ArrayList<Tile> attackableRange(){
-		this.attackRange = new ArrayList<Tile>();
-	 	
-	 	//below is to find out the attack range of each AI monster
-	 	for (Tile calcT : doAttackTile) {	
-	 	// ask this to be public in Board ->	private ArrayList<Tile> calcRange(Tile t)
-	 	// board.calcRange()
-	 		ArrayList<Tile> eachRange =  calcT.calcRange(gameBoard.getTile(calcT.unitOnTile.getPosition().getTilex(),calcT.unitOnTile.getPosition().getTilex()));
-	 		//after getting attack range for each monster, add in board attackable tile range
-	 		for (Tile addT : eachRange) {
-	 			if(!attackRange.contains(addT)) {
-	 				attackRange.add(addT);
-	 			}
-	 		}
-	 	}
-	 	return attackRange;
-	}
-	//========================back up=======================
-	
-	//==================== working with Tile ======back up========
-	public ArrayList<Tile> doActtackTile(){
 
-		this.doAttackTile = gameBoard.friendlyTile(playerTwo);
-		
-		//find monster still can attack
-		for (Tile fT : doAttackTile) {
-			if (fT.getUnitOnTile().attacksLeft == 0) {
-				doAttackTile.remove(fT);
-			}			
-		}
-		return doAttackTile;
-	}
-	
-	//** get a list of tiles that hold AI monster  which can still perform attack
-	public ArrayList<Tile> beActtackTile(){
-		this.beAttackTile = gameBoard.friendlyTile(playerOne);
-		//find tiles hold all enemy monster on gameboard
-		//for possible further required game logic, do this as a method for now
-		return beAttackTile;
-	}
-	//==================== working with Tile ======back up========
+
+
 }
 	
