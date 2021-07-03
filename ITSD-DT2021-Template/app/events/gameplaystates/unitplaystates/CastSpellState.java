@@ -6,12 +6,27 @@ import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.EffectAnimation;
 import structures.basic.Spell;
+import structures.basic.Tile;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-public class CastSpellState implements ITilePlayStates {
+public class CastSpellState implements IUnitPlayStates {
 
+	/*** State attributes ***/
+	private Tile targetTile; 
+	
+	
+	/*** State constructor ***/
+	/* 
+	 * Changed constructor to input current and target tiles to decouple Unit states from TileClicked
+	 * Previously Unit states had tilex, tiley be used from context which were variables recieved from TileClicked. 
+	 * Decoupling required to use unit States from the ComputerPlayer. */
+	
+	public CastSpellState(Tile targetTile) {
+		this.targetTile = targetTile; 
+	}
+	
 	public void execute(GameplayContext context) {
 		
 		System.out.println("In CastSpellSubState.");
@@ -27,11 +42,11 @@ public class CastSpellState implements ITilePlayStates {
 		// Cast the Spell on the Unit on tile selected
 
 
-		boolean successfulFlag = spellToCast.getAbility().execute( context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()).getUnitOnTile() , context.getGameStateRef());
+		boolean successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
 		
 		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
 		EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
-		BasicCommands.playEffectAnimation(context.out, ef, context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()));
+		BasicCommands.playEffectAnimation(context.out, ef, targetTile);
 
 		GeneralCommandSets.threadSleep();
 		

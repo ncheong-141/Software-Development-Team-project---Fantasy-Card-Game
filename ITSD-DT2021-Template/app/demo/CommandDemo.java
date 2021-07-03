@@ -486,17 +486,32 @@ public class CommandDemo {
 			}
 		}
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		g.setTurnOwner(g.getPlayerOne());
+
 
 		// loadCard
 		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
+		// Enemy unit
+		// drawUnit
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster ENEMY_fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, 1, cfire_spitter, Monster.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		ENEMY_fire_spitter.setPositionByTile(gameBoard.getTile(3,4));
+		ENEMY_fire_spitter.setOwner(g.getPlayerTwo());
+		g.getBoard().getTile(3,4).addUnit(ENEMY_fire_spitter);
+		BasicCommands.drawUnit(out, ENEMY_fire_spitter, gameBoard.getTile(3,4));
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+
+		
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, Monster.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
-		g.setTurnOwner(g.getPlayerOne());
 
 		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
 		fire_spitter.setOwner(g.getTurnOwner());
@@ -507,7 +522,7 @@ public class CommandDemo {
 		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
 		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
 
-
+		
 		// loadCard
 		Card ctrustrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
@@ -602,6 +617,9 @@ public class CommandDemo {
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
 		g.setTurnOwner(g.getPlayerOne());
+		g.getPlayerOne().setMana(8);
+		BasicCommands.setPlayer1Mana(out, g.getPlayerOne());
+		System.out.println("From demo, Player one has: " + g.getPlayerOne().getMana());
 
 		// Create Deck
 		// Deck decks = new Deck();

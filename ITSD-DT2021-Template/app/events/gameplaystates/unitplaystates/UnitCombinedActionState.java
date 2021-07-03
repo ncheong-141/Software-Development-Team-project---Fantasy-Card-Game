@@ -7,10 +7,27 @@ import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.*;
 
-public class UnitCombinedActionState implements ITilePlayStates {
+public class UnitCombinedActionState implements IUnitPlayStates {
 	
-	Tile destination;
-	Tile enemyTarget;
+	
+	/*** State attributes ***/
+	private Tile currentTile; 
+	private Tile destination;
+	private Tile enemyTarget;
+	
+	
+	/*** State constructor ***/
+	/* 
+	 * Changed constructor to input current and target tiles to decouple Unit states from TileClicked
+	 * Previously Unit states had tilex, tiley be used from context which were variables recieved from TileClicked. 
+	 * Decoupling required to use unit States from the ComputerPlayer. */
+	
+	public UnitCombinedActionState(Tile currentTile, Tile targetTile) {
+		this.currentTile = currentTile; 
+		this.destination = null;
+		this.enemyTarget = targetTile; 
+	}
+	
 	
 	public void execute(GameplayContext context) {
 			
@@ -21,30 +38,28 @@ public class UnitCombinedActionState implements ITilePlayStates {
 			
 			// Build reference variables
 			destination = null;
-			enemyTarget = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
-			if(destination == null && (enemyTarget != null)) {		System.out.println("Successful. enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	}
+			if(destination == null && (enemyTarget != null)) {		
+				System.out.println("Successful. enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	
+			}
 			
 			// Find and set a tile destination for selected unit movement
 			unitDestinationSet(context); 
-	
-			// Update clicked tile context references for use by move substate
-			context.setTilex(destination.getTilex());
-			context.setTiley(destination.getTiley());
-			
+
 			// Execute selected unit movement
-			ITilePlayStates UnitMoveActionSubState = new UnitMoveActionState();
+			IUnitPlayStates unitMoveState = new UnitMoveActionState(currentTile, destination);	
 			System.out.println("Calling MoveAction from CombinedAction...");
-			UnitMoveActionSubState.execute(context);
+			unitMoveState.execute(context);
 			
+			// Update clicked tile context references (moved here for use of attack, not required anymore for move since inputted tile) 
 			// Update clicked Tile context references for attack state
-			context.setTilex(enemyTarget.getTilex());
-			context.setTiley(enemyTarget.getTiley());
-			System.out.println("Context clicked values are x: " + context.getTilex() + " and y: " + context.getTiley());
+			context.setClickedTile(destination);
+			
+			System.out.println("Context clicked values are x: " + context.getClickedTile().getTilex() + " and y: " + context.getClickedTile().getTiley());
 			System.out.println("Calling AttackAction from CombinedAction...");
 			
 			// Execute attack between units
-			ITilePlayStates UnitAttackActionSubState = new UnitAttackActionState();
-			UnitAttackActionSubState.execute(context);
+			IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
+			UnitAttackState.execute(context);
 			
 			// Finish combined State execution
 			context.setCombinedActive(false);
@@ -80,7 +95,7 @@ public class UnitCombinedActionState implements ITilePlayStates {
 		
 		// Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
 		// Get a movement range from enemy's position (encompasses attack range)
-		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(context.getTilex(), context.getTiley(), 2);
+		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(context.getClickedTile().getTilex(), context.getClickedTile().getTiley(), 2);
 		ArrayList <Tile> options = new ArrayList <Tile> ();
 		for(Tile t : temp) {
 			// If tile is adjacent to enemy
