@@ -617,6 +617,9 @@ public class CommandDemo {
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
 		g.setTurnOwner(g.getPlayerOne());
+		g.getPlayerOne().setMana(8);
+		BasicCommands.setPlayer1Mana(out, g.getPlayerOne());
+		System.out.println("From demo, Player one has: " + g.getPlayerOne().getMana());
 
 		// Create Deck
 		// Deck decks = new Deck();
