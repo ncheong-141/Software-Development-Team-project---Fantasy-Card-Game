@@ -72,7 +72,8 @@ public class GameState {
 		playerOne = new HumanPlayer();
 		playerOne.setDeck(deckPlayerOne);
 
-		playerTwo = new ComputerPlayer(deckPlayerTwo);
+		playerTwo = new ComputerPlayer();
+		playerTwo.setDeck(deckPlayerTwo);
 		
 		
 		// Set hands

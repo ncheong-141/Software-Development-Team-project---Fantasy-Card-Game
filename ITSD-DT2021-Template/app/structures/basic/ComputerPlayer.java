@@ -43,6 +43,14 @@ public class ComputerPlayer extends Player {
 		dummy.setOwner(this);
 	}
 	
+	public ComputerPlayer() {
+		super(); 
+		this.madeAllPossibleMoves = false;
+		this.playedAllPossibleCards = false;
+		this.dummy = new Monster();
+		dummy.setOwner(this);
+	}
+	
 	public void setGameBoard(Board b) {
 		this.gameBoard = b;
 	}
