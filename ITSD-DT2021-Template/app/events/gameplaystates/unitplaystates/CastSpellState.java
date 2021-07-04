@@ -1,5 +1,8 @@
 package events.gameplaystates.unitplaystates;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
@@ -46,6 +49,18 @@ public class CastSpellState implements IUnitPlayStates {
 		
 		// Play effect animation associated with ability (if present)
 		if (spellToCast.getAbility().getEffectAnimation() != null) {
+			
+//			List<String> temp = new ArrayList<String>();
+//			for (String s : context.getLoadedCard().getMiniCard().getAnimationFrames()) {
+//				temp.add(s);
+//				System.out.println(s);
+//			}
+//			
+//			EffectAnimation ef = new EffectAnimation();
+//			ef.setAnimationTextures(temp);
+//			ef.setFps(context.getLoadedCard().getMiniCard().getFps());
+//			
+					
 			BasicCommands.playEffectAnimation(context.out, spellToCast.getAbility().getEffectAnimation(), targetTile);
 			GeneralCommandSets.threadSleep();
 		}

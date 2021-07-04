@@ -5,12 +5,14 @@ import java.util.HashSet;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import commands.GeneralCommandSets;
 import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.Card;
 import structures.basic.Deck;
 import structures.basic.EffectAnimation;
+import structures.basic.Hand;
 import structures.basic.Monster;
 import structures.basic.Player;
 import structures.basic.Spell;
@@ -82,81 +84,83 @@ public class CommandDemo {
 	}
 
 
-//	public static void executeDemoUnitsNicholas(ActorRef out, GameState g) {
-//
-//
-//		// Draw board
-//		Board gameBoard = new Board();
-//
-//		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
-//			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
-//				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
-//			}
-//		}
-//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-//		
-//		g.setTurnOwner(g.getPlayerOne());
-//
-//
-//		// loadCard
-//		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
-//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//		// Enemy unit
-//		// drawUnit
-//		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-//		Monster ENEMY_fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
-//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//		ENEMY_fire_spitter.setPositionByTile(gameBoard.getTile(3,4));
-//		ENEMY_fire_spitter.setOwner(g.getPlayerTwo());
-//		g.getBoard().getTile(3,4).addUnit(ENEMY_fire_spitter);
-//		BasicCommands.drawUnit(out, ENEMY_fire_spitter, gameBoard.getTile(3,4));
-//		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//		
-//		// drawUnit
-//		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-//		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerOne(), Monster.class);
-//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//
-//		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
-//		fire_spitter.setOwner(g.getTurnOwner());
-//		fire_spitter.setAttacksLeft(10);
-//		fire_spitter.setMovesLeft(3);
-//		fire_spitter.setCooldown(false);
-//		g.getBoard().getTile(3,2).addUnit(fire_spitter);
-//		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
-//		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//		
-//		// loadCard
-//		Card ctrustrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
-//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//
-//		// Create a tempHand for testing
-//		ArrayList <Card> cards = new ArrayList <Card> ();
-//		cards.add(cfire_spitter);
-//		cards.add(ctrustrike);
-//
-//		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
-//		g.getTurnOwner().setHand(cards);
-//
-//		// draw cards in hand
-//		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
-//		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
-//			BasicCommands.drawCard(out, c, i, 0);
-//			i++;
-//		}
-//
-//		// Set up friendly Unit to summon next to
-//		Avatar humanAvatar = g.getHumanAvatar();
-//		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
-//		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-//
-//	}
+	public static void executeDemoUnitsNicholas(ActorRef out, GameState g) {
+
+
+		// Draw board
+		Board gameBoard = new Board();
+
+		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+			}
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		g.setTurnOwner(g.getPlayerOne());
+
+
+		// loadCard
+		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		// Enemy unit
+		// drawUnit
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster ENEMY_fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
+		GeneralCommandSets.threadSleep();
+		
+		ENEMY_fire_spitter.setPositionByTile(gameBoard.getTile(3,4));
+		ENEMY_fire_spitter.setOwner(g.getPlayerTwo());
+		g.getBoard().getTile(3,4).addUnit(ENEMY_fire_spitter);
+		BasicCommands.drawUnit(out, ENEMY_fire_spitter, gameBoard.getTile(3,4));
+		GeneralCommandSets.threadSleep();
+
+		
+		// drawUnit
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerOne(), Monster.class);
+		GeneralCommandSets.threadSleep();
+
+
+		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
+		fire_spitter.setOwner(g.getTurnOwner());
+		fire_spitter.setAttacksLeft(10);
+		fire_spitter.setMovesLeft(3);
+		fire_spitter.setCooldown(false);
+		g.getBoard().getTile(3,2).addUnit(fire_spitter);
+		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
+		GeneralCommandSets.threadSleep();
+
+		
+		// loadCard
+		Card ctrustrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
+		GeneralCommandSets.threadSleep();
+
+
+		// Create a tempHand for testing
+		ArrayList <Card> cards = new ArrayList <Card> ();
+		cards.add(cfire_spitter);
+		cards.add(ctrustrike);
+
+		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
+		Hand hand = new Hand(); 
+		hand.setHand(cards);
+		g.getTurnOwner().setHand(hand);
+
+		// draw cards in hand
+		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
+		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+			BasicCommands.drawCard(out, c, i, 0);
+			i++;
+		}
+
+		// Set up friendly Unit to summon next to
+		Avatar humanAvatar = g.getHumanAvatar();
+		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
+		GeneralCommandSets.threadSleep();
+
+	}
 
 
 	public static void executeDemoBoard(ActorRef out, GameState g) {
