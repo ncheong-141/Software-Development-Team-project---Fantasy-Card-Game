@@ -236,7 +236,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		// Check for onDeath ability
 		if(deadUnit.hasAbility()) {
 			for(Ability a : deadUnit.getMonsterAbility()) {
-				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); }
+				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); 
+				break;}
 			}
 		}
 		
