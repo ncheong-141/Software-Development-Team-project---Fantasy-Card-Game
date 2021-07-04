@@ -38,7 +38,8 @@ public class A_U_RangedAttacker implements Ability {
 		// Alternative method signature that reflects actual behaviour
 		public boolean execute(Monster targetMonster) {
 
-			targetMonster.setAttackRange(50);
+			// Range value set to arbitrary high number for now
+			targetMonster.setAttackRange(60);
 			return true; 
 		}
 		// ================================================================================
