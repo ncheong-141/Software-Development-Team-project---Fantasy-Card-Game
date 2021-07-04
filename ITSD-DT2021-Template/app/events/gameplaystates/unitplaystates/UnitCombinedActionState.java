@@ -6,6 +6,7 @@ import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.*;
+import structures.basic.abilities.*;
 
 public class UnitCombinedActionState implements IUnitPlayStates {
 	
@@ -30,18 +31,24 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 	
 	
 	public void execute(GameplayContext context) {
-			
-		/*
-		 * Human Player accessing this state: has proceeded through tileplaystates checks
-		 * Computer Player accessing this state must check:
-		 * - Proximity of unit
-		 *		>	Near unit - skip to attack state
-		 *		>	Far unit - move state + attack state
-		 */
 	
 		System.out.println("In UnitCombinedActionSubState.");
 		context.debugPrint();
 		
+		// Check for selected unit abilities that do not require adjacency for attack
+		if(currentTile.getUnitOnTile().getMonsterAbility() != null) {
+			for(Ability a : currentTile.getUnitOnTile().getMonsterAbility()) {
+				if(a instanceof A_U_RangedAttacker) {
+					
+					System.out.println("Selected unit is a ranged attacker, can attack without moving.");
+					IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
+					UnitAttackState.execute(context);
+					break;
+					
+				}
+			}
+			
+		}
 		context.setCombinedActive(true);
 		
 		// Build reference variables
@@ -103,7 +110,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		// Establish tiles adjacent to enemy that are within movement range
 		
 		// Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
-		// Get a movement range from enemy's position (encompasses attack range)
+		// Get a movement range from enemy's position (encompasses attack range) -- needs to just be an adjacent Board method
 		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
 		ArrayList <Tile> options = new ArrayList <Tile> ();
 		for(Tile t : temp) {
