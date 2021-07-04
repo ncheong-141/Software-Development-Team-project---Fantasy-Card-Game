@@ -1,5 +1,8 @@
 package events.gameplaystates.unitplaystates;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
@@ -39,17 +42,25 @@ public class CastSpellState implements IUnitPlayStates {
 		// Set ability to Spell
 		spellToCast.setAbility("Truestrike",AbilityToUnitLinkage.UnitAbility.get(context.getLoadedCard().getCardname()).get(0), "Description");
 		
-		// Cast the Spell on the Unit on tile selected
-
-
-		boolean successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+		/* Cast the Spell on the Unit on tile selected */
 		
-		// Play effect animation associated with ability (if present)
-		if (spellToCast.getAbility().getEffectAnimation() != null) {
-			BasicCommands.playEffectAnimation(context.out, spellToCast.getAbility().getEffectAnimation(), targetTile);
-			GeneralCommandSets.threadSleep();
+		boolean successfulFlag = false;
+		
+		// If has enough mana 
+		if (context.getGameStateRef().getTurnOwner().getMana() - context.getLoadedCard().getManacost() >= 0) {
+			
+			// Cast spell and return a flag to indicate if worked
+			successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+			
+			// Play effect animation associated with ability (if present)
+			if (spellToCast.getAbility().getEffectAnimation() != null) {
+
+				BasicCommands.playEffectAnimation(context.out, spellToCast.getAbility().getEffectAnimation(), targetTile);
+				GeneralCommandSets.threadSleep();
+			}
 		}
 		
+		// Apply changes to gamestate if successful cast	
 		if (successfulFlag) {
 			
 			System.out.println("Sucessfully cast spell."); 
