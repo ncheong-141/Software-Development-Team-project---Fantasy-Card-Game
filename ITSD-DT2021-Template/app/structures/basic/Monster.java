@@ -109,7 +109,9 @@ public class Monster extends Unit{
 	}
 	
 	// Counter-attack
-	// Method here
+	// Returns the attackValue of a defending unit that has survived, counter is not reliant on attack actions
+	//Method here - no boolean, just return attackValue
+	// counter();
 	
 	// Defend (receive damage)
 	// Returns outcome of receiving damage (attack/counter-attack/Spell dmg) and updates health
