@@ -46,7 +46,9 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		if(outcome) {
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
 			//System.out.println(context.getGameStateRef().getBoard().getUnitSelected().name);
-		}	
+		} else {
+			return;
+		}
 
 	}
 	

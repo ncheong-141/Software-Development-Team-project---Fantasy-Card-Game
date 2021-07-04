@@ -47,6 +47,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 				}
 			}
 		}
+			
 		// CombinedAction state controls state flow
 		context.setCombinedActive(true);
 		

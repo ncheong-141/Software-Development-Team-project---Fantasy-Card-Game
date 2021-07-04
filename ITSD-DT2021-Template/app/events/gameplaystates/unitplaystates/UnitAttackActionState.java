@@ -53,11 +53,11 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		attacker = (Monster) context.getLoadedUnit();
 		defender = targetTile.getUnitOnTile();
 		
-		// Gather ranges
-		// Build attacker/defender attackRanges for checks --- formula should only ever reflect attackRange in this state, not
-		// cumulative attack + move range (since all movement takes place before this state).
-		// For attacker: attackRange should reflect unit's attacks range (omit move range)
-		// For defender: counterRange should reflect unit's attack range (omit move range)
+		/* Gather ranges
+		/* Build attacker/defender attackRanges for checks --- formula should only reflect attackRange in this state, not
+		/* cumulative attack + move range (since all movement takes place before this state).
+		/* For attacker: attackRange should reflect unit's attacks range (omit move range)
+		/* For defender: counterRange should reflect unit's attack range (omit move range)*/
 		ArrayList <Tile> temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
 		attackerAttackRange = temp;
 		temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), defender.getMovesLeft()));
@@ -166,7 +166,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 					}
 					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
 					
-					// Game ends
+					// Call game end method
 					context.getGameStateRef().gameOver();
 					return;
 				}
@@ -244,7 +244,6 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		grave.removeUnit();
 		deadUnit.setPosition(new Position(-1,-1,-1,-1));
 		
-		// Dereference object
 	}
 	
 	// Check for Ranged Attacker ability and return EffectAnimation if true
