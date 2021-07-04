@@ -11,7 +11,6 @@ public class Monster extends Unit{
 
 	
 	@JsonIgnore
-	
 	protected static ObjectMapper mapper = new ObjectMapper(); // Jackson Java Object Serializer, is used to read java objects from a file
 	
 	// Basic Monster attributes
@@ -20,15 +19,14 @@ public class Monster extends Unit{
 	protected int 					maxHP;			// Max limit on Monster's health (reference for healing actions)
 	protected int 					attackValue; 	// How much damage Monster does in one attack action
 	protected ArrayList <Ability>	abilities;		// Any abilities the Monster has
-
 	
 	// Action range values
 	protected int 			movesLeft;				// number of move actions Monster has left, tracks directly to range
 	protected int 			attacksLeft;			// number of attack actions Monster has left, != range
-	protected int			attacksMax;				// max number of attack actions Monster can have, reset by Cooldown
+	protected int			attacksMax;				// max number of attack actions a Monster can have, reset by Cooldown
 	protected int 			attackRange;			// integer range for attacks
 	
-	// Monster gameplay info
+	// Gameplay info
 	protected Player		owner;					// Player who owns the unit
 	protected boolean 		selected;				// Tracks when the unit is selected on board by owner
 	protected boolean		onCooldown;				// Tracks when the unit has actions left (move and/or attack)
@@ -116,11 +114,10 @@ public class Monster extends Unit{
 	// counter();
 	
 	// Defend (receive damage)
-	// Returns outcome of receiving damage (attack/counter-attack/Spell dmg) and updates health
+	// Returns outcome of receiving damage (successful defence or death) and updates health
 	public boolean defend(int d) {
-		if(this.HP - d < 0) {
+		if(this.HP - d <= 0) {
 			this.HP = 0;
-			System.out.println("Unit has died.");
 			return false;
 		} else {
 			this.HP -= d;
@@ -165,9 +162,7 @@ public class Monster extends Unit{
 	}
 
 	public void toggleSelect() {
-		if(!onCooldown) {
-			selected = !selected;
-		}
+		if(!onCooldown) {	selected = !selected;	}
 	}
 	
 	public Player getOwner() {
