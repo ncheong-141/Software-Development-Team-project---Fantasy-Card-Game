@@ -10,6 +10,7 @@ import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.EffectAnimation;
 import structures.basic.Spell;
 import structures.basic.Tile;
+import structures.basic.UnitAnimationType;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
@@ -76,6 +77,14 @@ public class CastSpellState implements IUnitPlayStates {
 			// Update UI 
 			BasicCommands.deleteCard(context.out, cardIndexInHand);
 		
+			// Check if Unit has been defeated, if so, destroy it. 
+			if (targetTile.getUnitOnTile().getHP() <= 0) {
+				BasicCommands.playUnitAnimation(context.out, targetTile.getUnitOnTile(), UnitAnimationType.death);
+				GeneralCommandSets.threadSleepLong();
+				BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
+				GeneralCommandSets.threadSleep();
+			}
+
 			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 		}
