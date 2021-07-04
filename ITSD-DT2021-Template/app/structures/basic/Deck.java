@@ -45,10 +45,10 @@ public class Deck{//class used to create and manage player and ai decks
 			deck.add(card);
 			}
 		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+1, Unit.class);
-			unitDeck.add(unit);
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+11, Unit.class);
-			unitDeck.add(unit);
+			//unit= BasicObjectBuilders.loadMonsterUnit(unitList[j], j+1, Unit.class);
+			//unitDeck.add(unit);
+			//unit= BasicObjectBuilders.loadMonsterUnit(unitList[j], j+11, Unit.class);
+			//unitDeck.add(unit);
 		}
 		}
 		
@@ -78,15 +78,17 @@ public class Deck{//class used to create and manage player and ai decks
 		
 		for (int i=0; i<=9; i++) {//cycles through card list twice and creates two of each card and adds to deck
 			card = BasicObjectBuilders.loadCard(cardList[i], i+1, Card.class);
+			card.setConfigFile(cardList[i]);
 			deck.add(card);
 			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
+			card.setConfigFile(cardList[i]);
 			deck.add(card);
 			}
 		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+1, Unit.class);
-			unitDeck.add(unit);
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+11, Unit.class);
-			unitDeck.add(unit);
+			//unit= BasicObjectBuilders.loadMonsterUnit(unitList[j], j+1, Unit.class);
+			//unitDeck.add(unit);
+			//unit= BasicObjectBuilders.loadMonsterUnit(unitList[j], j+11, Unit.class);
+			//unitDeck.add(unit);
 		}
 		}
 		

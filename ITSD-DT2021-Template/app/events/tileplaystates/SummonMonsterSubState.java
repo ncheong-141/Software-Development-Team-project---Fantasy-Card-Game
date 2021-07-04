@@ -22,7 +22,14 @@ public class SummonMonsterSubState implements GameplayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 
-		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.getTilex(), context.getTiley());	
+		summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), context.getTilex(), context.getTiley());
+		
+		/** Reset entity selection and board **/  
+		// Deselect after action finished *if* not in the middle of move-attack action
+		context.deselectAllAfterActionPerformed();
+	
+		//  Reset board visual (highlighted tiles)
+		GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 	}
 
 	
@@ -48,25 +55,23 @@ public class SummonMonsterSubState implements GameplayStates {
 		gameState.getBoard().getTile(tilex,tiley).addUnit(summonedMonster);
 		GeneralCommandSets.threadSleep();
 		
-		// Drawing the monster on the board
-		BasicCommands.drawUnit(out, summonedMonster, gameState.getBoard().getTile(tilex,tiley));
+		// Drawing summoned monster with stats on the board
+		GeneralCommandSets.drawUnitWithStats(out, summonedMonster, gameState.getBoard().getTile(tilex, tiley));
 		GeneralCommandSets.threadSleep();
 		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
 		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
-		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
-		GeneralCommandSets.threadSleep();
-		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
-		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
+//		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
+//		GeneralCommandSets.threadSleep();
 		
 		// De-select card (visual only)
 		Card selectedCard = gameState.getTurnOwner().getHand().getSelectedCard();
 		// Need position in hand from Noah to redraw Card with no highlight
 //		BasicCommands.drawCard(out, selectedCard, position, 0);
 		
-		// Keep this as the flag for how deselect method works
-		gameState.getTurnOwner().getHand().setPlayingMode(false);
 
 		// >>> Mana costs --- leave out until mana cycle is implemented ingame
 //		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);

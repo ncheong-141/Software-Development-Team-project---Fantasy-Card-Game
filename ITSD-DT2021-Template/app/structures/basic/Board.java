@@ -72,6 +72,7 @@ public class Board {
 	public void setUnitCount(int delta) {
 		this.numUnitsOnBoard += delta;
 	}
+
 	public ArrayList<Tile> getAllTilesList(){
 		ArrayList<Tile> fullTileList = new ArrayList<Tile>();
 		
@@ -83,6 +84,7 @@ public class Board {
 		
 		return fullTileList;
 	}
+
 	public void setGameBoard(Tile[][] gameBoard) {
 		this.gameBoard = gameBoard;
 	}
@@ -128,7 +130,7 @@ public class Board {
 	//helper method to allSummonableTiles
 	//for any given tile it returns a list of tile in range
 	//the range here is based on game specifications (any tile adjacent to a friendly unit)
-	private ArrayList<Tile> calcRange(Tile t){
+	ArrayList<Tile> calcRange(Tile t){
 		ArrayList<Tile> tileRange = new ArrayList<Tile>();
 		int xPos = t.getTilex();
 		int yPos = t.getTiley();

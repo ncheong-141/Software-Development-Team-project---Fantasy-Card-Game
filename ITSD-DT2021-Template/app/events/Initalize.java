@@ -43,15 +43,15 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 		//CommandDemo.executeDemo(out); // this executes the command demo, comment out this when implementing your solution
 		//CommandDemo.executeDemoUnits(out, gameState);
-		CommandDemo.executeDemoUnitsNicholas(out, gameState); 
+		//CommandDemo.executeDemoUnitsNicholas(out, gameState); 
 		//CommandDemo.executeDemoBoard(out, gameState);
 		//CommandDemo.executeDemoDeckHand(out, gameState);
 		// CommandDemo.executeDemoSummon(out, gameState);
 		//CommandDemo.executeDemoBoard(out, g);
 		//CommandDemo.executeDemoDeckHand(out, gameState);
 		//CommandDemo.executeDemoSummon(out, gameState);
-		//boardAvatarSetUp(out,g,message);
-		//playerCardSetUp(out, g, message);
+		boardAvatarSetUp(out,gameState,message);
+		playerCardSetUp(out, gameState, message);
 		//CommandDemo.executeTileHighlightDemo(out, g);
 	}
 	
@@ -63,13 +63,13 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 				BasicCommands.drawTile(out, g.getBoard().getGameBoard()[i][k], 0);
 			}
 		}
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		Avatar humanAvatar = g.getHumanAvatar();
 		humanAvatar.setOwner(g.getPlayerOne(), g.getBoard());
 		Avatar computerAvatar = g.getComputerAvatar();
 		computerAvatar.setOwner(g.getPlayerTwo(), g.getBoard());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		humanAvatar.setAttackValue(2);
 		computerAvatar.setAttackValue(2);
@@ -80,17 +80,17 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 				
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		tOne.addUnit(humanAvatar);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}				
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}				
 				
 		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
 		tTwo.addUnit(computerAvatar);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}	
 
 	}
 	
@@ -99,16 +99,16 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		g.getPlayerTwo().setMana(2);
 		
 		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		BasicCommands.setPlayer1Mana(out, g.getPlayerOne());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		BasicCommands.setPlayer2Health(out, g.getPlayerTwo());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		BasicCommands.setPlayer2Mana(out, g.getPlayerTwo());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		//need to display player's hand - instantiation of decks done in game state
 

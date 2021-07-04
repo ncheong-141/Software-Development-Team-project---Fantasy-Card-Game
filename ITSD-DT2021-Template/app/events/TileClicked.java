@@ -98,7 +98,7 @@ public class TileClicked implements EventProcessor{
 	/* Helper methods */ 
 	
 	private boolean checkCardClicked(GameState gameState) {
-		return (gameState.getTurnOwner().getHand().isPlayingMode());
+		return (gameState.getTurnOwner().getHand().getSelectedCard() != null);
 	}
 
 

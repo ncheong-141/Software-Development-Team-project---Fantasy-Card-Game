@@ -80,16 +80,16 @@ public class UnitDisplayActionsState implements GameplayStates{
 			
 			// Monster not actionable
 			else {
-				// Monster is not owned by Player
-				if(m.getOwner() != g.getTurnOwner()) {
-					System.out.println("You do not own this monster");
-					return false;
-				}
+				// Monster is not owned by Player --- Don't think this is needed anymore
+//				if(m.getOwner() != g.getTurnOwner()) {
+//					System.out.println("You do not own this monster");
+//					return false;
+//				}
 				// Monster doesn't have moves/attacks left
-				else {
+//				else {
 					System.out.println("Can't select this monster as no moves or attacks left.");
 					return false;
-				}
+//				}
 			}
 			
 	}
