@@ -44,11 +44,11 @@ public class CastSpellState implements IUnitPlayStates {
 
 		boolean successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
 		
-		// Need to try and get Spell effect animation, for Truestrike its immolation in the card file but how to link it to the static conf file?
-		EffectAnimation ef = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation);
-		BasicCommands.playEffectAnimation(context.out, ef, targetTile);
-
-		GeneralCommandSets.threadSleep();
+		// Play effect animation associated with ability (if present)
+		if (spellToCast.getAbility().getEffectAnimation() != null) {
+			BasicCommands.playEffectAnimation(context.out, spellToCast.getAbility().getEffectAnimation(), targetTile);
+			GeneralCommandSets.threadSleep();
+		}
 		
 		if (successfulFlag) {
 			
@@ -57,10 +57,13 @@ public class CastSpellState implements IUnitPlayStates {
 			/** Reset entity selection and board **/  
 			// Deselect after action finished *if* not in the middle of move-attack action
 			context.deselectAllAfterActionPerformed();
-			
-			// Delete card from Hand + update visual
-//			context.getGameStateRef().getTurnOwner().getHand().removeCard(position);
-			// BasicCommand
+						
+			/** Delete card from Hand + update visual **/
+			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
+			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
+
+			// Update UI 
+			BasicCommands.deleteCard(context.out, cardIndexInHand);
 		
 			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
