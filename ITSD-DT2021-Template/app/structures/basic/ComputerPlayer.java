@@ -40,6 +40,10 @@ public class ComputerPlayer extends Player {
 	
 	//========================PLAYING CARDS METHODS ===================================//
 	
+	/**
+	 * METHOD 1 
+	 * 
+	 */
 	//method returns playable cards from the player's hand based on the mana cost
 	private ArrayList <Card> playableCards(){
 		ArrayList<Card> cardList = new ArrayList<Card>();
@@ -76,6 +80,10 @@ public class ComputerPlayer extends Player {
 
 	
 	****/
+	
+	/**
+	 * METHOD 2
+	 */
 	private ArrayList<CardCombo> cardCombos(ArrayList <Card> list){
 		
 		//method will return a list of combinations of cards
@@ -83,7 +91,10 @@ public class ComputerPlayer extends Player {
 		ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
 		
 		//converting hand to an array for ease of indexing
-		Card [] hand = (Card[]) list.toArray();
+		Card [] hand = new Card [this.hand.getHand().size()-1];
+		for (int i = 0; i<hand.length; i++) {
+			hand[i] = list.get(i);
+		}
 		//!!!!!NOTE: order array - card will implement comparable on mana cost
 		
 		//instantiating a combo object (as an array list of card objects)
@@ -145,6 +156,9 @@ public class ComputerPlayer extends Player {
 		return comboList;
 	}
 	
+	/**
+	 * METHOD 3
+	 */
 	//this method checks if a given card combination is playable
 	//a combination is playable iff all the cards in the combination can be played on the abord (playable tiles are available)
 	//method return true iff card combination is playable
@@ -187,6 +201,10 @@ public class ComputerPlayer extends Player {
 		}
 		
 	}
+	/**
+	 * METHOD 4
+	 * 
+	 */
 	//return card(s) to be played by comp player
 		public ArrayList <ComputerInstruction> playComputerCards(){
 			
@@ -200,12 +218,18 @@ public class ComputerPlayer extends Player {
 			//returning the choosen combination of cards 
 			return cardsToBePlayed;
 		}
-		
+	
+	/**
+	 * METHOD 5
+	 */
 		private CardCombo chooseCombo(ArrayList<CardCombo> possCombos) {
 			Collections.sort(possCombos);
 			return possCombos.get(possCombos.size()-1);			
 		}
 	
+	/**
+	 * METHOD 6
+	 */
 	//methods returns list of cards that computer player wants to play
 	//as a list of ComputerMoves objs (Card + target tile)
 		private ArrayList<ComputerInstruction> computeMoves(CardCombo combo){
@@ -232,6 +256,11 @@ public class ComputerPlayer extends Player {
 		
 	//====================MOVING OF UNITS ON BOARD METHOD=======================//
 	
+		public ArrayList<ComputerInstruction> compPlayerMovesUnits(){
+			MonsterTileOption [] listofMTO = this.getMonstersOptions(this.allMovableMonsters());
+			return this.matchMonsterAndTile(listofMTO);
+		}
+		
 		private ArrayList <Monster> allMovableMonsters(){
 			ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitList(this);
 			
