@@ -19,47 +19,20 @@ import structures.GameState;
  */
 public class Player {
 
-	private int health;
-	private int mana;
-	protected Avatar avatar;
-	protected Deck deck;
+	protected int health;
+	protected int mana;
 	protected Hand hand;
+	protected Deck deck;
+	protected Avatar avatar;
 	protected ActorRef out;
-
+	protected EndTurnClicked e;
 	
-	public Player(Deck deck) {
+	public Player() {
 		this.health = 20;
 		this.mana = 0;
-		this.deck = deck;
-		
-		System.out.println("In Player constructor");
-		for (Card d : this.deck.getDeck()) {
-			System.out.println(d.getCardname());
-		}
-		
-		setPlayerHand();
 	}
 	
-	
-	public Player(int health, int mana) {
-		this.health = health;
-		this.mana = mana;
-	
-		this.deck = new Deck();
-		setPlayerHand();
-	}
-	
-	public Player(int health, int mana, Deck deck) {
-		super();
-		this.health = health;
-		this.mana = mana;
-		this.deck = deck;
-		setPlayerHand();
-	}
-		
-
-	//add Mana and check maximum
-	
+	//add Mana and check maximum	
 	public void addMana(int addMana) {
 		int newMana = mana + addMana;
 		if(newMana > 9) {
@@ -71,7 +44,6 @@ public class Player {
 	
 	public void loseMana(int loseMana) {
 		mana = mana - loseMana;
-
 	}	
 	
 
@@ -95,26 +67,29 @@ public class Player {
 		}
 	}
 
-	//create hand for player, along with first 3 cards in hand
-	public void setPlayerHand() {
-		this.hand = new Hand(this.deck.getDeck());
-		
-		System.out.println("In setPlayerHand()");
-		for (Card d : this.deck.getDeck()) {
-			System.out.println(d.getCardname());
-		}
-		this.hand.initialHand(out, this.deck);
-	}
+	//create first 3 cards in hand
+//	public void firstThreeCards() {
+//		this.hand = new Hand(this.deck.getDeck());		
+//		hand.initialHand(out, deck);
+//		System.out.println("In setPlayerHand()");
+//		for (Card d : this.deck.getDeck()) {
+//			System.out.println(d.getCardname());
+//		}
+//	}
 	
-	//draw card from deck when round ends, top card in deck is deleted
-	public void drawFromDeck() {
-			this.hand.drawCard(out, deck); 
-		}
+//	//draw card from deck when round ends, top card in deck is deleted
+//	public void drawFromDeck() {
+//			this.hand.drawCard(out, deck); 
+//		}
 
 	
-	//playing cards,take the position of card in hand
-	public void playCard(int p) {
-		this.hand.getCardFromHand(p);
+//	playing cards,take the position of card in hand
+//	public void playCard(int p) {
+//		this.hand.getCardFromHand(p);
+//	}
+	
+	public void endTurn() {
+		e.processEvent(out, null, null);
 	}
 	
 	
@@ -149,20 +124,13 @@ public class Player {
 	}
 	
 	public Deck getDeck() {
-		return this.deck;
-	}
-
-	public void setDeck() {
-		this.deck = new Deck();
+		return deck;
 	}
 
 	public Hand getHand() {
-		return this.hand;
+		return hand;
 	}
 
-	public void setHand(ArrayList <Card> h) {
-		this.hand = new Hand(h);
-	}	
 
 	
 }
