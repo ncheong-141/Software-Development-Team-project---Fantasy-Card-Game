@@ -10,8 +10,13 @@ import structures.basic.HumanPlayer;
 import structures.basic.Monster;
 import structures.basic.Player;
 import structures.basic.Tile;
+import structures.basic.abilities.Ability;
+import structures.basic.abilities.Call_IDs;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
+
+import java.util.ArrayList;
+
 import akka.actor.ActorRef;
 import commands.*;
 import commands.GeneralCommandSets;
@@ -122,11 +127,11 @@ public class GameState {
 		turnCount++;
 	}
 
-
+	// ----------------------
 	public Board getGameBoard() {
 		return gameBoard;
 	}
-
+	// ---------------------- delete
 
 	public HumanPlayer getPlayerOne() {
 		return playerOne;
@@ -227,5 +232,42 @@ public class GameState {
 		playerOne.getHand().initialHand(deckPlayerOne);
 		playerTwo.getHand().initialHand(deckPlayerTwo);
 	}
+	
+	
+	/** Generalised method for finding if any monsters require their ability to be executed.
+	 * 	Called in relevant places
+	 ***/
+	public void checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
+
+		// Loop over all tiles
+		for (Tile tile : this.getBoard().getAllTilesList()) {
+
+			// Container for containing all executable abilities
+			ArrayList<Ability> abilityContainer = new ArrayList<Ability>(2); 
+
+			// Loop over abilities and get executing ones
+			for (Ability ability : tile.getUnitOnTile().getMonsterAbility()) {
+
+				if (ability.getCallID() == callID) {
+					abilityContainer.add(ability);
+				}
+			}
+
+			// Execute all contstruction abilities first
+			for (Ability ability : abilityContainer) {
+
+				if (ability.getCallID() == Call_IDs.construction) {
+					ability.execute(targetMonster, this); 
+					abilityContainer.remove(ability);		// Remove this ability to not execute twice
+				}
+			}
+
+			// Execute the rest 
+			for (Ability ability : abilityContainer) {
+				ability.execute(targetMonster, this);
+			}
+		}
+	}
+	
 
 }
