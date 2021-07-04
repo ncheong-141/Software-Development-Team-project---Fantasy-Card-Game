@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import structures.basic.abilities.Ability;
+import structures.basic.abilities.*;
 
 public class Monster extends Unit{
 
@@ -25,6 +25,7 @@ public class Monster extends Unit{
 	// Action range values
 	protected int 			movesLeft;				// number of move actions Monster has left, tracks directly to range
 	protected int 			attacksLeft;			// number of attack actions Monster has left, != range
+	protected int			attacksMax;				// max number of attack actions Monster can have, reset by Cooldown
 	protected int 			attackRange;			// integer range for attacks
 	
 	// Monster gameplay info
@@ -39,18 +40,19 @@ public class Monster extends Unit{
 	public Monster() {
 		super(); 
 		
-		// Some attributes are set by JSON Mapper (Unit attributes) or in the 
+		// Some attributes are set by JSON Mapper (Unit constructor) or in the 
 		// loadMonsterUnit ObjectBuilder method:
 			// name, HP, maxHP, attackValue, owner, abilities
 
 		this.movesLeft = 0;				//
 		this.attacksLeft = 0;			// Unit is summoned on cooldown 
+		this.attacksMax = 1;			//
 		this.attackRange = 1;			//
 		
 		this.selected = false;
 		this.onCooldown = true;			// Unit is summoned on cooldown
 		
-		abilities = null;
+		this.abilities = null;			// Abilities set in ObjectBuilder for safe object construction
 		
 	}
 	
@@ -200,6 +202,14 @@ public class Monster extends Unit{
 		this.attacksLeft = a;
 	}
 	
+	public int getAttacksMax() {
+		return attacksMax;
+	}
+	
+	public void setAttacksMax(int mx) {
+		this.attacksMax = mx;
+	}
+	
 	public int getAttackRange() {
 		return attackRange;
 	}
@@ -215,7 +225,7 @@ public class Monster extends Unit{
 
 	// temporary for testing
 	public void setCooldown(boolean b) {
-		onCooldown = b;
+		this.onCooldown = b;
 		this.actionSet();
 	}
 	
@@ -232,14 +242,8 @@ public class Monster extends Unit{
 			this.attacksLeft = 0;
 		} else {
 			this.movesLeft = 2;
-			this.attacksLeft = 1;
+			this.attacksLeft = this.attacksMax;
 		}
-	}
-
-	// True/false check for if a Unit has abilities
-	public boolean hasAbility() {
-		if(this.abilities == null) {	return false;	}
-		return true;
 	}
 	
 	public ArrayList <Ability> getAbility() {
@@ -248,10 +252,6 @@ public class Monster extends Unit{
 	
 	public void setAbility(ArrayList <Ability> abs) {
 		abilities = abs;
-	}
-	
-	public void giveAbility(Ability a) {
-		abilities.add(a);
 	}
 	
 }
