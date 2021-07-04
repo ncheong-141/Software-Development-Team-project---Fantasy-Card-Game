@@ -31,7 +31,7 @@ public interface Ability {
 	 * 1 = Called on summon (just after construction) 
 	 * 2 = Called on death 
 	 * 3 = Called on enemy player casts spell 
-	 * 4 = Provoke: called on unit selection (check if any enemy unit adjacent has provoke) 
+	 * 4 = Provoke: called on unit selection, move, or attack (check if any enemy unit adjacent has provoke)
 	 * 5 = Called when friendly Avatar is dealt damage 
 	 * 6 = Called when selecting a card (Play anywhere on the board ability) 
 	 * ... 
