@@ -2,5 +2,5 @@ package structures.basic.abilities;
 
 public enum Call_IDs {
 
-	noTimeConstraint, onSummon, onDeath, onEnemySpellCast, onUnitSelection, onFriendlyAvatarDamageTaken, onSelectingACard;
+	noTimeConstraint, construction, onSummon, onDeath, onEnemySpellCast, onUnitSelection, onFriendlyAvatarDamageTaken, onSelectingACard;
 }

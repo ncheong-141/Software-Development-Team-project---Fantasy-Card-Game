@@ -1,6 +1,6 @@
 package structures;
+
 import events.EndTurnClicked;
-import events.tileplaystates.GameplayStates;
 import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.ComputerPlayer;
@@ -78,6 +78,7 @@ public class GameState {
 		gameBoard = new Board();
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, Avatar.class);
 		humanAvatar.setOwner(playerOne, gameBoard);//assigning avatar to player and board - this could be done within player's class
+
 
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, Avatar.class);
 		computerAvatar.setOwner(playerTwo, gameBoard);

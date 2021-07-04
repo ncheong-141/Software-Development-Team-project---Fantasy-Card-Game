@@ -1,49 +1,49 @@
 package structures.basic.abilities;
 
 import structures.GameState;
-import structures.basic.Avatar;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_EntropicDecay implements Ability {
-	
-	
+public class A_S_SundropElixir implements Ability {
+
 	// Ability attributes 
 	private boolean enemyTarget; 
-	private Class<? extends Monster> targetType;
+	private Class<? extends Monster> targetType; 
 	private Call_IDs callID;
+	EffectAnimation eAnimation; 
 	
 	// Constructor
-	public A_EntropicDecay(boolean enemyTarget, Class<? extends Monster> targetType) {
+	public A_S_SundropElixir(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		this.eAnimation = eAnimation; 
 		
 		this.callID = Call_IDs.noTimeConstraint;
 	}
+
 	
-	public A_EntropicDecay() {
-		this.enemyTarget = false;
-		this.targetType = null; 
-		
-		this.callID = Call_IDs.noTimeConstraint;
-	}
 	
 	/* Class methods */
 	
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
-	// Reduce non-avatar entity HP to 0
+	// Add 5 health to a Unit. This Cannot take a unit over its starting health.
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		if (!(targetMonster instanceof Avatar)) {
-			targetMonster.setHP(0);
-			return true; 
+		// Verbose variable/easy to change
+		int healthIncreaseValue = 5;
+		
+		// Check if the +5 HP is greater than max hp, if so make monster HP = max
+		if ( (targetMonster.getHP() + healthIncreaseValue) > targetMonster.getMaxHP()) {
+			targetMonster.setHP(targetMonster.getMaxHP());
 		}
 		else {
-			return false;
-		}	
+			targetMonster.setHP(targetMonster.getHP() + healthIncreaseValue);
+		}
+		
+		return true; 
 	}
 	// ================================================================================
-	
 	
 	// Getters to communicate target information
 	public boolean targetEnemy() {
@@ -56,5 +56,9 @@ public class A_EntropicDecay implements Ability {
 	
 	public Call_IDs getCallID() {
 		return callID; 
+	}
+	
+	public EffectAnimation getEffectAnimation() {
+		return eAnimation;
 	}
 }

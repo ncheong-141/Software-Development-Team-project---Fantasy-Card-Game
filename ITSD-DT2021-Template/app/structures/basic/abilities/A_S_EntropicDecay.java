@@ -1,41 +1,42 @@
 package structures.basic.abilities;
+
 import structures.GameState;
+import structures.basic.Avatar;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_Truestrike implements Ability {
+public class A_S_EntropicDecay implements Ability {
+	
 	
 	// Ability attributes 
 	private boolean enemyTarget; 
 	private Class<? extends Monster> targetType;
-	private Call_IDs callID; 
-	
+	private Call_IDs callID;
+	EffectAnimation eAnimation;
 	
 	// Constructor
-	public A_Truestrike(boolean enemyTarget, Class<? extends Monster> targetType) {
+	public A_S_EntropicDecay(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		this.eAnimation = eAnimation;
 		
 		this.callID = Call_IDs.noTimeConstraint;
-	}
-	
-	public A_Truestrike() {
-		this.enemyTarget = false;
-		this.targetType = null; 
-		
-		this.callID = Call_IDs.noTimeConstraint; 
 	}
 	
 	/* Class methods */
 	
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
-	// Deal 2 damage to  an enemy Unit
+	// Reduce non-avatar entity HP to 0
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		// Reduce Monster HP by 2
-		targetMonster.setHP(targetMonster.getHP() - 2);
-		
-		return true; 
+		if (!(targetMonster instanceof Avatar)) {
+			targetMonster.setHP(0);
+			return true; 
+		}
+		else {
+			return false;
+		}	
 	}
 	// ================================================================================
 	
@@ -51,5 +52,9 @@ public class A_Truestrike implements Ability {
 	
 	public Call_IDs getCallID() {
 		return callID; 
+	}
+	
+	public EffectAnimation getEffectAnimation() {
+		return eAnimation;
 	}
 }

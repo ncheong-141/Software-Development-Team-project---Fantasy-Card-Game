@@ -1,6 +1,7 @@
 
 package structures.basic.abilities;
 import structures.GameState;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
 public class A_U_DrawCardOnUnitDeath implements Ability {
@@ -9,22 +10,18 @@ public class A_U_DrawCardOnUnitDeath implements Ability {
 		private boolean enemyTarget; 
 		private Class<? extends Monster> targetType; 
 		private Call_IDs callID; 
+		EffectAnimation eAnimation; 
 		
 		// Constructors
-		public A_U_DrawCardOnUnitDeath(boolean enemyTarget, Class<? extends Monster> targetType) {
+		public A_U_DrawCardOnUnitDeath(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 			this.enemyTarget = enemyTarget;
 			this.targetType = targetType; 
+			this.eAnimation = eAnimation; 
 			
 			this.callID = Call_IDs.onDeath;
 		}
 		
-		public A_U_DrawCardOnUnitDeath() {
-			this.enemyTarget = false;
-			this.targetType = null; 
-			
-			this.callID = Call_IDs.onDeath;
-		}
-		
+
 		/* Class methods */
 		
 		// ABILITY IMPLEMENTATION
@@ -51,6 +48,10 @@ public class A_U_DrawCardOnUnitDeath implements Ability {
 		
 		public Call_IDs getCallID() { 
 			return callID;
+		}
+		
+		public EffectAnimation getEffectAnimation() {
+			return eAnimation;
 		}
 }
 

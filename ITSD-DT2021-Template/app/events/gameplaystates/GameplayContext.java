@@ -1,14 +1,16 @@
-package events.tileplaystates;
+package events.gameplaystates;
 
 import java.util.ArrayList;
 
 import structures.GameState;
 import structures.basic.Card;
+import structures.basic.Tile;
 import structures.basic.Unit;
 
 
 // TEMP
 import akka.actor.ActorRef;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 
 
 /*
@@ -19,56 +21,48 @@ import akka.actor.ActorRef;
 public class GameplayContext {
 
 	// Attributes
-	private GameplayStates				currentStates;
+	private ITilePlayStates				currentStates;		// Current Tile state reference for executing
 
-	private Card 						loadedCard; 	// any Card that is currently in selected mode from previous action
-	private Class<?> 					cardClasstype; 
-
-	private Unit						loadedUnit; 	// any Unit that is currently in selected mode from previous action
-	private GameState					gameStateRef; 
-	private String						tileFlag; 
-	private int 						tilex;
-	private int							tiley; 
-	
-	private boolean						combinedActive;	// reference for states to indicate multiple substates will occur
-	
-	// Temp variables just to make code work
-
-	ActorRef out; 
+	private Card 						loadedCard; 		// Any Card in select mode from a previous action
+	private Class<?> 					cardClasstype; 		// Class type of the Card
+	private Unit						loadedUnit; 		// Any Unit that is currently in selected mode from previous action
+	private GameState					gameStateRef; 		// GameState reference to use game variables when dealing with gameplay control flow
+	private String						tileFlag; 			// Flag for detailing the status of the current tile clicked 
+	private Tile						clickedTile;		// Current tile clicked reference
+	private boolean						combinedActive;		// Variable to indicate multiple Unit states will be processed
+	public ActorRef 					out; 				// Front end reference			
 	
 	// Constructor
-	public GameplayContext(GameState gameState, ActorRef out, int tilex, int tiley) {
+	public GameplayContext(GameState gameState, ActorRef out) {
+		
+		// Setting attributes 
 		this.currentStates = null; 
 		this.gameStateRef = gameState;
-		this.tilex = tilex;
-		this.tiley = tiley; 
-
-		// Temp variable setting 
 		this.out = out; 
 	}
 	
-	// Class methods
 	
 	// State method (called from within Context) 
-	public void executeAndCreateSubStates() {
+	public void executeAndCreateUnitStates() {
 		
 		
 		/* -----------------------------------------------------------------------------------------------
 		 * Check if a (friendly/enemy) Unit has been clicked/is on the tile clicked (or if its empty)
 		 * ----------------------------------------------------------------------------------------------- */
+
 		
-		// Flag needed to determine what what substate is required (e.g. SummonMonster or CastSpell)
-		if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (isUnitFriendly())) {
+		// Flag needed to determine what what Unit state is required (e.g. SummonMonster or CastSpell)
+		if (checkUnitPresentOnTile() && (isUnitFriendly())) {
 			this.setTileFlag("friendly unit");
 		}
-		else if (checkUnitPresentOnTile(gameStateRef, tilex, tiley) && (!isUnitFriendly())) {
+		else if (checkUnitPresentOnTile() && (!isUnitFriendly())) {
 			this.setTileFlag("enemy unit");
 		}
 		else {
 			this.setTileFlag("empty"); 
 		}
 		
-		
+		System.out.println(this.tileFlag);
 		
 		/*
 		 * Combination of different user inputs to substates 
@@ -83,20 +77,17 @@ public class GameplayContext {
 
 		// Execute state created from previous user input (specified in TileClicked)
 		currentStates.execute(this);
-		
-		
-		
 	}
 	
 	
 	
 	
 	// Getters and setters
-	public GameplayStates getCurrentStates() {
+	public ITilePlayStates getCurrentStates() {
 		return currentStates;
 	}
 
-	public void addCurrentState(GameplayStates state) {
+	public void addCurrentState(ITilePlayStates state) {
 		this.currentStates = state;
 	}
 	
@@ -140,22 +131,13 @@ public class GameplayContext {
 		this.tileFlag = tileFlag;
 	}
 	
-	public int getTilex() {
-		return tilex;
-	}
-
-	public int getTiley() {
-		return tiley;
+	public Tile getClickedTile() {
+		return clickedTile; 
 	}
 	
-	public void setTilex(int x) {
-		this.tilex = x;
+	public void setClickedTile(Tile newClicked) {
+		this.clickedTile = newClicked; 
 	}
-	
-	public void setTiley(int y) {
-		this.tiley = y;
-	}
-	
 	public boolean getCombinedActive() {
 		return combinedActive;
 	}
@@ -165,8 +147,8 @@ public class GameplayContext {
 	}
 	
 	/* Helper methods */
-	private boolean checkUnitPresentOnTile(GameState gameState, int tilex, int tiley) {	
-		return (gameState.getBoard().getTile(tilex , tiley).getUnitOnTile() != null);
+	private boolean checkUnitPresentOnTile() {	
+		return (clickedTile.getUnitOnTile() != null);
 	}
 	
 	public void deselectAllAfterActionPerformed() { 
@@ -174,11 +156,12 @@ public class GameplayContext {
 		gameStateRef.deselectAllEntities();
 		this.loadedUnit = null;
 		this.loadedCard = null;
+
 	}
 	
 	
 	private boolean isUnitFriendly() {
-		return gameStateRef.getBoard().getTile(tilex, tiley).getUnitOnTile().getOwner() == gameStateRef.getTurnOwner();
+		return clickedTile.getUnitOnTile().getOwner() == gameStateRef.getTurnOwner();
 	}
 	
 	// Debug
@@ -196,7 +179,7 @@ public class GameplayContext {
 		// Add unit print
 		
 		// Tile print
-		System.out.println("Tile (x,y) : (" + tilex + "," + tiley + ")");
+		System.out.println("Tile (x,y) : (" + clickedTile.getTilex() + "," + clickedTile.getTiley() + ")");
 
 	}
 	

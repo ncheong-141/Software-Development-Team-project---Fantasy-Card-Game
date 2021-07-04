@@ -1,4 +1,4 @@
-package events.tileplaystates;
+package events.gameplaystates.unitplaystates;
 
 import java.util.ArrayList;
 
@@ -7,13 +7,30 @@ import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.UnitMoving;
 import events.UnitStopped;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.GameState;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
 
-public class UnitMoveActionSubState implements GameplayStates {
+public class UnitMoveActionState implements IUnitPlayStates {
 
+	/*** State attributes ***/
+	private Tile currentTile; 
+	private Tile targetTile; 
+	
+	/*** State constructor ***/
+	/* 
+	 * Changed constructor to input current and target tiles to decouple Unit states from TileClicked
+	 * Previously Unit states had tilex, tiley be used from context which were variables recieved from TileClicked. 
+	 * Decoupling required to use unit States from the ComputerPlayer. */
+	
+	public UnitMoveActionState(Tile currentTile, Tile targetTile) {
+		this.currentTile = currentTile;
+		this.targetTile = targetTile; 
+	}
+	
 	/*** State method ***/
 	
 	public void execute(GameplayContext context) {
@@ -21,6 +38,9 @@ public class UnitMoveActionSubState implements GameplayStates {
 		System.out.println("In UnitMoveActionSubState.");
 		context.debugPrint();
 		
+		/*** Unit checks here? ***/
+		
+	
 		// Perform unit move function
 		unitMove(context); 
 		
@@ -33,12 +53,9 @@ public class UnitMoveActionSubState implements GameplayStates {
 		
 		/***	Condition here for combined substate executing, which requires selection is maintained	***/
 		if(!(context.getCombinedActive())) {
-			
 		
 			/** Reset entity selection and board **/  
-			// Deselect after action finished *if* not in the middle of move-attack action
 			context.deselectAllAfterActionPerformed();
-			
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 		}
@@ -54,15 +71,16 @@ public class UnitMoveActionSubState implements GameplayStates {
 		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(mSelected.getPosition().getTilex(),mSelected.getPosition().getTiley(),mSelected.getMovesLeft());
 		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley(), mSelected.getAttackRange(), mSelected.getMovesLeft()));
 		actRange.addAll(mRange);
-		Tile current = context.getGameStateRef().getBoard().getTile(mSelected.getPosition().getTilex(),mSelected.getPosition().getTiley());
-		Tile target = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
-		System.out.println("Movement target tile is x: " + target.getTilex() + ", y: " + target.getTiley());
+//		Tile current = context.getGameStateRef().getBoard().getTile(mSelected.getPosition().getTilex(),mSelected.getPosition().getTiley());
+//		Tile target = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
+		
+		System.out.println("Movement target tile is x: " + targetTile.getTilex() + ", y: " + targetTile.getTiley());
 
 		// If target tile is in movement range && monster can move, move there
 		System.out.println("MovesLeft: " + mSelected.getMovesLeft());
 		System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
 		
-		if(mRange.contains(target) && mSelected.move(target)) {
+		if(mRange.contains(targetTile) && mSelected.move(targetTile)) {
 			
 			System.out.println("MovesLeft: " + mSelected.getMovesLeft());
 			System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
@@ -71,22 +89,22 @@ public class UnitMoveActionSubState implements GameplayStates {
 			GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
 			GeneralCommandSets.threadSleep();
 			// Redraw selected tile visual
-			BasicCommands.drawTile(context.out, current, 0);
+			BasicCommands.drawTile(context.out, currentTile, 0);
 			GeneralCommandSets.threadSleep();GeneralCommandSets.threadSleep();
 
 			// Update Tiles and Unit
-			current.removeUnit();
-			target.addUnit(mSelected);
-			mSelected.setPositionByTile(target);
-			BasicCommands.addPlayer1Notification(context.out, "Unit moving...", 4);
-			GeneralCommandSets.threadSleep();
+			currentTile.removeUnit();
+			targetTile.addUnit(mSelected);
+			mSelected.setPositionByTile(targetTile);
+//			BasicCommands.addPlayer1Notification(context.out, "Unit moving...", 4);
+//			GeneralCommandSets.threadSleep();
 			
 			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
 			// Move animation
 			BasicCommands.playUnitAnimation(context.out, mSelected, UnitAnimationType.move);
 			GeneralCommandSets.threadSleep();
 			// Initiate move
-			BasicCommands.moveUnitToTile(context.out, mSelected, context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley()));
+			BasicCommands.moveUnitToTile(context.out, mSelected, targetTile);
 			GeneralCommandSets.threadSleep();	
 		}
 		// Destination is not in movement range/unit cannot move

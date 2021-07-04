@@ -6,7 +6,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
-import events.tileplaystates.*;
+import events.gameplaystates.GameplayContext;
+import events.gameplaystates.tileplaystates.CardPreviouslySelectedState;
+import events.gameplaystates.tileplaystates.SingleSelectedState;
+import events.gameplaystates.tileplaystates.UnitPreviouslySelectedState;
+import events.gameplaystates.*;
+
 import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.BigCard;
@@ -48,10 +53,11 @@ public class TileClicked implements EventProcessor{
 		int tilex = message.get("tilex").asInt();
 		int tiley = message.get("tiley").asInt();
 		
-		// Start the GameplayState (State Pattern for TileClicked control flow) 
-		GameplayContext gameplayContext = new GameplayContext(gameState, out, tilex, tiley);
-		
 		System.out.println("In TileClicked.");
+		
+		// Start the GameplayState (State Pattern for TileClicked control flow) 
+		GameplayContext gameplayContext = new GameplayContext(gameState, out);
+		gameplayContext.setClickedTile(gameState.getBoard().getTile(tilex, tiley));
 		
 		/* --------------------------------------------------------------------------------
 		 * Check previous User inputs (will be either Card Selected State or Unit Selected)
@@ -59,15 +65,9 @@ public class TileClicked implements EventProcessor{
 
 		if (checkCardClicked(gameState)) {
 			
-			// Before calling substate:
-			// Check units are not selected and deselect if they are
-			
 			gameplayContext.addCurrentState(new CardPreviouslySelectedState());
 		} 
-		else if (gameState.getBoard().getUnitSelected() != null) {
-			
-			// Before calling substate:
-			// Check cards are not selected and deselect if they are
+		else if (checkUnitSelected(gameState)) {
 			
 			gameplayContext.addCurrentState(new UnitPreviouslySelectedState());
 			
@@ -85,10 +85,10 @@ public class TileClicked implements EventProcessor{
 		/*
 		 * Execute State. Each state holds the game logic required to execute the desired functionality
 		 * Note, some States here create sub-states. 
-		 * E.g. CardSelectedState deals with the previous user input of a Card click and generates a new substate 
+		 * E.g. CardSelectedState deals with the previous user input of a Card click and generates a new Unit state 
 		 * based on what the user has currently clicked (a unit or empty tile) 
 		 */
-		gameplayContext.executeAndCreateSubStates();
+		gameplayContext.executeAndCreateUnitStates();
 		
 		
 	}
@@ -99,6 +99,11 @@ public class TileClicked implements EventProcessor{
 	
 	private boolean checkCardClicked(GameState gameState) {
 		return (gameState.getTurnOwner().getHand().getSelectedCard() != null);
+
+	}
+	
+	private boolean checkUnitSelected(GameState gameState) {
+		return (gameState.getBoard().getUnitSelected() != null);
 	}
 
 

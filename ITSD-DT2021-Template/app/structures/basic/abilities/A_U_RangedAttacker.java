@@ -4,7 +4,7 @@ import structures.GameState;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
+public class A_U_RangedAttacker implements Ability {
 	
 		// Ability attributes 
 		private boolean enemyTarget; 
@@ -13,31 +13,30 @@ public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
 		EffectAnimation eAnimation; 
 		
 		// Constructors
-		public A_U_PlayersDrawCardOnUnitSummon(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
+		public A_U_RangedAttacker(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 			this.enemyTarget = enemyTarget;
 			this.targetType = targetType; 
-			this.eAnimation = eAnimation;
+			this.eAnimation = eAnimation; 
 		
-			this.callID = Call_IDs.onSummon;
+			this.callID = Call_IDs.construction;
 		}
 		
-		
+
 		/* Class methods */
 		
 		// ABILITY IMPLEMENTATION
 		// ================================================================================
-		// Both players draw a card when this Unit is summoned. 
-		// Ignore the Monster input since this ability doesnt affect Monsters
+		// Monster can attack from anywhere on the Board
+		// Ignore GameState input since Ability deals with Unit internal values
 		public boolean execute(Monster targetMonster, GameState gameState) {
-			return execute(gameState); 
+			return execute(targetMonster); 
 		}
 		
-		// Can also just call this method, monsters shouldnt be inputed anyway
-		public boolean execute(GameState gameState) {
-		
-			gameState.getPlayerOne().getHand().drawCard(gameState.getPlayerOne().getDeck());
-			gameState.getPlayerTwo().getHand().drawCard(gameState.getPlayerTwo().getDeck());
+		// Alternative method signature that reflects actual behaviour
+		public boolean execute(Monster targetMonster) {
 
+			// Range value set to arbitrary high number for now
+			targetMonster.setAttackRange(60);
 			return true; 
 		}
 		// ================================================================================
