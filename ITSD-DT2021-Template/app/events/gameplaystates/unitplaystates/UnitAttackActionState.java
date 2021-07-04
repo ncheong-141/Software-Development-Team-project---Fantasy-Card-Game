@@ -123,7 +123,6 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			// If Avatar damaged ability check
 			
 			/***	Play animations and set visuals		***/
-			
 			// Check for attacker animations
 			EffectAnimation arrows = checkRangedAttacker(attacker);
 			
@@ -146,6 +145,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			/***	Death and counter-attack check	***/
 			if(!survived) {
 				System.out.println("Defender is dead.");		
+				
+				// Check for attacker destination and reachable by defender (ranged/adjacent)
+				
+				// Counter attack
 				
 				// Play animation + sleep to let it happen
 				BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
