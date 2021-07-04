@@ -44,11 +44,10 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 					IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
 					UnitAttackState.execute(context);
 					break;
-					
 				}
 			}
-			
 		}
+		// CombinedAction state controls state flow
 		context.setCombinedActive(true);
 		
 		// Build reference variables
