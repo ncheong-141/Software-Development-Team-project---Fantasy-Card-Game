@@ -643,7 +643,8 @@ public class CommandDemo {
 		humanAvatar.toggleCooldown();
 		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 
-		humanAvatar.setAttackValue(5);
+		humanAvatar.setAttackValue(1);
+		humanAvatar.setAttackRange(150);		// 60 or 150 both work until move elsewhere
 		Tile tOne = g.getGameBoard().getTile(1, 2);
 		tOne.addUnit(humanAvatar);
 
