@@ -296,7 +296,7 @@ public class ComputerPlayer extends Player {
 					continue;
 				}
 				else {
-					//this part of the code is exectuted if the tileUsed set already contains target tile t
+					//this part of the code is executed if the tileUsed set already contains target tile t
 					do {
 						//incrementing k
 						k++;
