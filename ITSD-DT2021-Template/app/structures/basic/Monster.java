@@ -248,7 +248,7 @@ public class Monster extends Unit{
 		return false;
 	}
 	
-	public ArrayList <Ability> getAbility() {
+	public ArrayList <Ability> getMonsterAbility() {
 		return abilities;
 	}
 	
