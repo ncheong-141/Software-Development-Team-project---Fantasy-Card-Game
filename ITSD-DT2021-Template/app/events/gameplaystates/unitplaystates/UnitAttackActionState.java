@@ -7,6 +7,7 @@ import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
+import structures.basic.Avatar;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 import structures.basic.Position;
@@ -68,8 +69,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		// Adjacent enemies with Provoke
 		if(tileInAttackRange()) {
 			unitAttack(context);
-			
-			// This might always happen regardless of Combined(move always before attack?)
+
 			/***	Condition here for combined substate executing, which requires selection is maintained	***/
 			if(!(context.getCombinedActive())) {
 				
@@ -100,13 +100,14 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getMovesLeft());
 		actRange.addAll(mRange);
 		
-		// If attacker's attack is successful
+		boolean survived;		// stores attack outcomes
+
+		//	>>>>> Begin attack		//
+		
 		if(attacker.attack()) {
 			System.out.println("Attack successful.");
 			
-			// Deselect tiles
-			System.out.println("Started drawing Tiles");
-			//GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
+			/***	Un-highlight range tiles (minus attacker/defender)	***/
 			for (Tile t : actRange) {
 				// Leave defender tile highlighted
 				if(t == targetTile) {
@@ -115,44 +116,67 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				BasicCommands.drawTile(context.out, t, 0);
 				GeneralCommandSets.threadSleep();
 			}
-			System.out.println("Finished drawing Tiles method");
-			GeneralCommandSets.threadSleepLong();
 			
-			boolean survived = defender.defend(attacker.getAttackValue());
+			/***	Update defender		***/
+			survived = defender.defend(attacker.getAttackValue());
 			System.out.println("Defender has " + defender.getHP() + " HP");
 			
 			// If Avatar damaged ability check
 			
-			// Play animations and set visuals
-			// Non-ranged attacker
+			/***	Play animations and set visuals		***/
+				// Non-ranged attacker
 			if(attacker.getAttackRange() == 1) {
 				BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
 			} 
-			// Ranged attacker, different animation
+				// Ranged attacker, different animation
 			else {
 				EffectAnimation arrows = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles);
 				BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
 				BasicCommands.playProjectileAnimation(context.out, arrows, 0, currentTile, targetTile);
 			}
+			
 			BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.hit);
-			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 			BasicCommands.setUnitHealth(context.out, defender, defender.getHP());
-			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 
-			// Defender death + counter attack check
+			// Re-idle
+			BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);
+			if(survived) {	BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle); }
+			GeneralCommandSets.threadSleep();		
+			
+			/***	Death and counter-attack check	***/
 			if(!survived) {
 				System.out.println("Defender is dead.");		
 				
 				// Play animation + sleep to let it happen
 				BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
-				try {Thread.sleep(1500);} catch (InterruptedException e) {e.printStackTrace();}
+				try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}
+				
+				// Avatar death check
+				if(defender instanceof Avatar) {
+					
+					// Game ends
+					context.getGameStateRef().gameOver();
+					
+					// Player notification
+					String winnerWinnerChickenDinner = "";
+					if(context.getGameStateRef().getPlayerOne() == defender.getOwner()) {
+						winnerWinnerChickenDinner = "You lose!";
+					} else {
+						winnerWinnerChickenDinner = "You win!";
+					}
+					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
+					return;
+					
+				}
+				
+				// Delete method
+				unitDeath(context, targetTile);
 				
 				// Remove from front-end
 				BasicCommands.deleteUnit(context.out, defender);
 				try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 				
-				// Delete method
-				unitDeath(context, targetTile);
 				
 			} else {
 				System.out.println("Counter-attack incoming...");
@@ -163,15 +187,16 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			
 				// If Avatar damaged ability check
 				
+				// Re-idle -- need checks for both attack and counter target survival before re-idle
+//				if(survived) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);	}
+//				BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);
+//				GeneralCommandSets.threadSleep();	
+				
 			}
 			
-			// Re-idle -- need checks for both attack and counter target survival before re-idle
-			BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);
-			if(survived) {	BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle); }
-			GeneralCommandSets.threadSleep();		
-			
 		} 
-		// Unit is unable to attack for some reason - internal attack values/summon cooldown/etc.
+		
+		// Unit attack failed - internal attack values/summon cooldown/etc.
 		else {
 			System.out.println("Unit cannot attack.");
 		}
@@ -186,7 +211,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		return false;
 	}
 	
-	// Helper method to update internal game data and delete a Unit onDeath
+	// Unit death method to update location data and delete a Unit from Board
 	private void unitDeath(GameplayContext context, Tile grave) {
 		
 		Monster deadUnit = grave.getUnitOnTile();
@@ -194,7 +219,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		// Check for onDeath ability
 		if(deadUnit.hasAbility()) {
 			for(Ability a : deadUnit.getAbility()) {
-				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(attacker,context.getGameStateRef()); }
+				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); }
 			}
 		}
 		
@@ -202,7 +227,6 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		grave.removeUnit();
 		deadUnit.setPosition(new Position(-1,-1,-1,-1));
 		
-		System.out.println("grave occupied: " + grave.getUnitOnTile());
 		// Dereference object
 	}
 	
