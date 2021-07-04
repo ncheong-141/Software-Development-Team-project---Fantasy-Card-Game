@@ -185,10 +185,10 @@ public class GameState {
 		e.emptyMana(); //empty mana for player who ends the turn
 		e.toCoolDown(); //switch avatars status for current turnOwner
 	    deselectAllEntities();
-		GeneralCommandSets.boardVisualReset(out, this); 
+		GeneralCommandSets.boardVisualReset(this.out, this); 
 		deselectAllEntities();	 //current turnOwner Hand is off?
 
-		getTurnOwner().getHand().drawCard(out, this.getTurnOwner().getDeck());
+		getTurnOwner().getHand().drawCard(this.out, this.getTurnOwner().getDeck());
 
 		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
 
