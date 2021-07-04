@@ -178,9 +178,9 @@ public class GameState {
 		e.emptyMana(); //empty mana for player who ends the turn
 		e.toCoolDown(); //switch avatars status for current turnOwner
 	    deselectAllEntities();
-		GeneralCommandSets.boardVisualReset(out, gameState); 
+		GeneralCommandSets.boardVisualReset(out, this); 
 		deselectAllEntities();	 //current turnOwner Hand is off?
-		getTurnOwner().getHand().drawCard(out, gameState.getTurnOwner().getDeck());
+		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
 
 		turnChange(); // turnOwner exchanged	
 		if (e.isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
@@ -202,15 +202,18 @@ public class GameState {
 	
 	public void setDeckForStart() {	
 		deckPlayerOne = new Deck();
-		playerOne.getDeck().deckOne();
+		deckPlayerOne.deckOne();
+		playerOne.setDeck(deckPlayerOne);
+		
 		deckPlayerTwo = new Deck();
-		playerTwo.getDeck().deckOne();
+		deckPlayerTwo.deckTwo();
+		playerOne.setDeck(deckPlayerTwo);
 	
 	}
 	
 	public void setHandForStart() {
-		playerOne.getHand().initialHand(out, deckPlayerOne);
-		playerTwo.getHand().initialHand(out, deckPlayerTwo);
+		playerOne.getHand().initialHand(deckPlayerOne);
+		playerTwo.getHand().initialHand(deckPlayerTwo);
 	}
 	
 }
