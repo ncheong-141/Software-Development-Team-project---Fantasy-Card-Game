@@ -55,6 +55,13 @@ public class SummonMonsterState implements IUnitPlayStates {
 			/** Reset entity selection and board **/  
 			// Deselect after action finished
 			context.deselectAllAfterActionPerformed();
+			
+			/** Delete card from Hand + update visual **/
+			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
+			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
+
+			// Update UI 
+			BasicCommands.deleteCard(context.out, cardIndexInHand);
 		
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
@@ -90,14 +97,6 @@ public class SummonMonsterState implements IUnitPlayStates {
 			BasicCommands.setPlayer2Mana(out, gameState.getTurnOwner());
 			GeneralCommandSets.threadSleep();
 		}
-		
-		// Delete card from hand
-//		Card selectedCard = context.getLoadedUnit();
-		// Need position in hand from Noah to redraw Card with no highlight
-//		BasicCommands.drawCard(out, selectedCard, intPosition, 0);
-//		GeneralCommandSets.threadSleep();
-//		BasicCommands.deleteCard(out, intPosition);
-//		GeneralCommandSets.threadSleep();
 		
 		// Summon the Monster (instantiate)
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
