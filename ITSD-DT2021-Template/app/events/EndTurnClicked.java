@@ -33,7 +33,7 @@ public class EndTurnClicked implements EventProcessor{
 		gameState.getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
 		emptyMana(); //empty mana for player who ends the turn
 		toCoolDown(); //cool monsters
-		gameState.getTurnOwner().getHand().setPlayingMode(false); //current turnOwner Hand is off?
+		gameState.deselectAllEntities();
 		gameState.turnChange(); // turnOwner exchanged	
 		giveMana(); //give turnCount mana to the player in the beginning of new turn
 		
