@@ -42,11 +42,21 @@ public class AIUnitStateController {
 		// Load relevant data into gameplay context for use in Unit state
 		context.setLoadedUnit(currentTile.getUnitOnTile());
 		
+		IUnitPlayStates unitState = null;
+		
 		// Create unit state object for attack
-		IUnitPlayStates unitState = new UnitAttackActionState(currentTile, targetTile);
+		if(Math.abs(currentTile.getTilex() - targetTile.getTilex()) <=1 && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= 1)) {
+		
+			unitState = new UnitAttackActionState(currentTile, targetTile);
+		}
+		else {
+			unitState = new UnitCombinedActionState(currentTile, targetTile);
+		}
 		
 		// Execute state
-		unitState.execute(context);
+		if (unitState != null) {
+			unitState.execute(context);
+		}
 	}
 	
 	// Unit Move
@@ -61,19 +71,6 @@ public class AIUnitStateController {
 		// Execute state
 		unitState.execute(context);
 	}
-	
-	public void unitMoveAndAttack(Tile currentTile, Tile targetTile) {
-		
-		// Load relevant data into gameplay context for use in Unit state
-		context.setLoadedUnit(currentTile.getUnitOnTile());
-		
-		// Create unit state object for move
-		IUnitPlayStates unitState = new UnitCombinedActionState(currentTile, targetTile);
-		
-		// Execute state
-		unitState.execute(context);
-	}
-	
 	
 	// Summon Monster
 	public void summonMonster(Card monsterToSummon, Tile targetTile) {
