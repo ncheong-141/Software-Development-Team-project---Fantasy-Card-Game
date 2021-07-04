@@ -18,12 +18,6 @@ public class A_Truestrike implements Ability {
 		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
-	public A_Truestrike() {
-		this.enemyTarget = false;
-		this.targetType = null; 
-		
-		this.callID = Call_IDs.noTimeConstraint; 
-	}
 	
 	/* Class methods */
 	

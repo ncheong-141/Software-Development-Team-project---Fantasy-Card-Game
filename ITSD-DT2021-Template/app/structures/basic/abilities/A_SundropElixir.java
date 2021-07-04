@@ -17,13 +17,7 @@ public class A_SundropElixir implements Ability {
 		
 		this.callID = Call_IDs.noTimeConstraint;
 	}
-	
-	public A_SundropElixir() {
-		this.enemyTarget = false;
-		this.targetType = null; 
-		
-		this.callID = Call_IDs.noTimeConstraint;
-	}
+
 	
 	
 	/* Class methods */

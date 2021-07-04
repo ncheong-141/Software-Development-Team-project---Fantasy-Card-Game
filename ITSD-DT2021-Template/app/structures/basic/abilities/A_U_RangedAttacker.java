@@ -18,13 +18,7 @@ public class A_U_RangedAttacker implements Ability {
 			this.callID = Call_IDs.construction;
 		}
 		
-		public A_U_RangedAttacker() {
-			this.enemyTarget = false;
-			this.targetType = null; 
-			
-			this.callID = Call_IDs.construction;
-		}
-		
+
 		/* Class methods */
 		
 		// ABILITY IMPLEMENTATION

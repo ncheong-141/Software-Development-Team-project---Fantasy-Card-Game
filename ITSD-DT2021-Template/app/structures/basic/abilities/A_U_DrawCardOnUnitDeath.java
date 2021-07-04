@@ -18,13 +18,7 @@ public class A_U_DrawCardOnUnitDeath implements Ability {
 			this.callID = Call_IDs.onDeath;
 		}
 		
-		public A_U_DrawCardOnUnitDeath() {
-			this.enemyTarget = false;
-			this.targetType = null; 
-			
-			this.callID = Call_IDs.onDeath;
-		}
-		
+
 		/* Class methods */
 		
 		// ABILITY IMPLEMENTATION

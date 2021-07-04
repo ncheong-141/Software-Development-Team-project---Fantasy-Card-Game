@@ -20,13 +20,6 @@ public class A_EntropicDecay implements Ability {
 		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
-	public A_EntropicDecay() {
-		this.enemyTarget = false;
-		this.targetType = null; 
-		
-		this.callID = Call_IDs.noTimeConstraint;
-	}
-	
 	/* Class methods */
 	
 	// ABILITY IMPLEMENTATION

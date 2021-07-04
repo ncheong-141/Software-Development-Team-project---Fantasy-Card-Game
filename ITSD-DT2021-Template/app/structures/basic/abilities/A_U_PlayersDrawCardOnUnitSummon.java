@@ -18,12 +18,6 @@ public class A_U_PlayersDrawCardOnUnitSummon implements Ability {
 			this.callID = Call_IDs.onSummon;
 		}
 		
-		public A_U_PlayersDrawCardOnUnitSummon() {
-			this.enemyTarget = false;
-			this.targetType = null; 
-			
-			this.callID = Call_IDs.onSummon;
-		}
 		
 		/* Class methods */
 		

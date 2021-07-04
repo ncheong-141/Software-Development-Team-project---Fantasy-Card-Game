@@ -18,12 +18,6 @@ public class A_U_DoubleAttacker implements Ability {
 			this.callID = Call_IDs.construction;
 		}
 		
-		public A_U_DoubleAttacker() {
-			this.enemyTarget = false;
-			this.targetType = null; 
-			
-			this.callID = Call_IDs.construction;
-		}
 		
 		/* Class methods */
 		
