@@ -94,7 +94,7 @@ public class Deck{//class used to create and manage player and ai decks
 		
 	public void delCard(int i){// removes card from the deck and corresponding unit
 		deck.remove(i);
-		unitDeck.remove(i);
+		//unitDeck.remove(i);
 	}
 	
 	//getters and setters

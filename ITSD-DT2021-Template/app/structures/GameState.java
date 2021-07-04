@@ -3,6 +3,7 @@ package structures;
 import events.EndTurnClicked;
 import structures.basic.Avatar;
 import structures.basic.Board;
+import structures.basic.Card;
 import structures.basic.ComputerPlayer;
 import structures.basic.Deck;
 import structures.basic.Hand;
@@ -58,27 +59,35 @@ public class GameState {
 		turnOwner = playerOne;
 
 
+		
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
-//		Hand handPlayerOne = new Hand();
-//		handPlayerOne.drawCard(deckPlayerOne);
-//		playerOne.setHand(handPlayerOne);
+		
 
 		Deck deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
-//		Hand handPlayerTwo = new Hand();
-//		handPlayerTwo.drawCard(deckPlayerTwo);
-//		playerTwo.setHand(handPlayerTwo);
-
-
+		
 		// Instantiate players 								
 		playerOne = new HumanPlayer();
-		playerTwo = new ComputerPlayer(deckPlayerTwo);
-		
 		playerOne.setDeck(deckPlayerOne);
 
+		playerTwo = new ComputerPlayer(deckPlayerTwo);
+		
+		
+		// Set hands
+		Hand handPlayerOne = new Hand();
+		playerOne.setHand(handPlayerOne);
+		handPlayerOne.drawCard(deckPlayerOne);
 
+		Hand handPlayerTwo = new Hand();
+		playerTwo.setHand(handPlayerTwo);
+		handPlayerTwo.drawCard(deckPlayerTwo);
+
+		
+		// Set turn owner
+		this.setTurnOwner(playerOne);
+		
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, Avatar.class);
@@ -188,25 +197,21 @@ public class GameState {
 	/** AI methods **/
 	public void computerEnd() {  
 		
-		e.emptyMana(); //empty mana for player who ends the turn
-		e.toCoolDown(); //switch avatars status for current turnOwner
+		e.emptyMana(this); //empty mana for player who ends the turn
+		e.toCoolDown(this); //switch avatars status for current turnOwner
 	    deselectAllEntities();
 		GeneralCommandSets.boardVisualReset(this.out, this); 
 		deselectAllEntities();	 //current turnOwner Hand is off?
 
 		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
 
-		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
-
-
 		turnChange(); // turnOwner exchanged	
-		if (e.isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
+		if (e.isDeckEmpty(this)) {  //check if both players have enought card in deck left for new turn
 			gameOver();  // if not, gameover(?)
 		}
-		e.giveMana(); //give turnCount mana to the player in the beginning of new turn
-		e.toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
+		e.giveMana(this); //give turnCount mana to the player in the beginning of new turn
+		e.toCoolDown(this); //switch avatars status for new turnOwner in the beginning of new turn
 		//getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
-			
 	}
 	
 	
