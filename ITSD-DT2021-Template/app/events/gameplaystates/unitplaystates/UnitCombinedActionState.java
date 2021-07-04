@@ -31,46 +31,54 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 	
 	public void execute(GameplayContext context) {
 			
-			System.out.println("In UnitCombinedActionSubState.");
-			context.debugPrint();
-			
-			context.setCombinedActive(true);
-			
-			// Build reference variables
-			destination = null;
-			if(destination == null && (enemyTarget != null)) {		
-				System.out.println("Successful. enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	
-			}
-			
-			// Find and set a tile destination for selected unit movement
-			unitDestinationSet(context); 
+		/*
+		 * Human Player accessing this state: has proceeded through tileplaystates checks
+		 * Computer Player accessing this state must check:
+		 * - Proximity of unit
+		 *		>	Near unit - skip to attack state
+		 *		>	Far unit - move state + attack state
+		 */
+	
+		System.out.println("In UnitCombinedActionSubState.");
+		context.debugPrint();
+		
+		context.setCombinedActive(true);
+		
+		// Build reference variables
+		destination = null;
+		if(destination == null && (enemyTarget != null)) {		
+			System.out.println("Successful. enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	
+		}
+		
+		// Find and set a tile destination for selected unit movement
+		unitDestinationSet(context); 
 
-			// Execute selected unit movement
-			IUnitPlayStates unitMoveState = new UnitMoveActionState(currentTile, destination);	
-			System.out.println("Calling MoveAction from CombinedAction...");
-			unitMoveState.execute(context);
-			
-			// Update clicked tile context references (moved here for use of attack, not required anymore for move since inputted tile) 
-			// Update clicked Tile context references for attack state
-			// context.setClickedTile(destination); // Not required anymore since the decouple
-			
-			// System.out.println("Context clicked values are x: " + context.getClickedTile().getTilex() + " and y: " + context.getClickedTile().getTiley());
-			
-			System.out.println("Calling AttackAction from CombinedAction...");
-			// Execute attack between units
-			IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
-			UnitAttackState.execute(context);
-			
-			// Finish combined State execution
-			context.setCombinedActive(false);
-			
-			
-			/** Reset entity selection and board **/  
-			// Deselect after combined action
-			context.deselectAllAfterActionPerformed();
-			
-			// Reset board visual (highlighted tiles)
-			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+		// Execute selected unit movement
+		IUnitPlayStates unitMoveState = new UnitMoveActionState(currentTile, destination);	
+		System.out.println("Calling MoveAction from CombinedAction...");
+		unitMoveState.execute(context);
+		
+		// Update clicked tile context references (moved here for use of attack, not required anymore for move since inputted tile) 
+		// Update clicked Tile context references for attack state
+		// context.setClickedTile(destination); // Not required anymore since the decouple
+		
+		// System.out.println("Context clicked values are x: " + context.getClickedTile().getTilex() + " and y: " + context.getClickedTile().getTiley());
+		
+		System.out.println("Calling AttackAction from CombinedAction...");
+		// Execute attack between units
+		IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
+		UnitAttackState.execute(context);
+		
+		// Finish combined State execution
+		context.setCombinedActive(false);
+		
+		
+		/** Reset entity selection and board **/  
+		// Deselect after combined action
+		context.deselectAllAfterActionPerformed();
+		
+		// Reset board visual (highlighted tiles)
+		GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 
 	}
 
