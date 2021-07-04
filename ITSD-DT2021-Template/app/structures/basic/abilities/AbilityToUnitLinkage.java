@@ -32,7 +32,13 @@ public class AbilityToUnitLinkage {
 
 		
 		/*** Units ***/ 
-		
+		UnitAbility.put("Windshrike", constructArrayListAbility(new A_U_DrawCardOnUnitDeath(false, Monster.class))				// Windshrike
+										/*, + another ability*/);																
+		UnitAbility.put("Blaze Hound", constructArrayListAbility(new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class)));	// Blaze Hound
+		UnitAbility.put("Azurite Lion", constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class)));				// Azurite Lion
+		UnitAbility.put("Serpenti", constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class)));					// Serpenti
+		UnitAbility.put("Fire Spitter", constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class)));				// Fire Spitter
+		UnitAbility.put("Pyromancer", constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class)));					// Pyromancer
 		
 	}
 	
@@ -41,20 +47,28 @@ public class AbilityToUnitLinkage {
 	// For constructing an array list to input into the HashMap 
 	// Overloaded method to account for 1,2 or 3 skills
 	
-	private static ArrayList<Ability> constructArrayListAbility(Ability ability){
-		ArrayList<Ability> abilityContainer = new ArrayList<Ability>(10);
-		abilityContainer.add(ability);
-		
+	private static ArrayList<Ability> constructArrayListAbility(Ability ... args){
+		ArrayList<Ability> abilityContainer = new ArrayList<Ability>();
+		for(Ability a : args) {
+			abilityContainer.add(a);
+		}
 		return abilityContainer; 
 	}
 	
-	private static ArrayList<Ability> constructArrayListAbility(Ability ability1, Ability ability2){
-		ArrayList<Ability> abilityContainer = new ArrayList<Ability>(10);
-		abilityContainer.add(ability1);
-		abilityContainer.add(ability2);
-		
-		return abilityContainer; 
-	}
+//	private static ArrayList<Ability> constructArrayListAbility(Ability ability){
+//		ArrayList<Ability> abilityContainer = new ArrayList<Ability>(10);
+//		abilityContainer.add(ability);
+//		
+//		return abilityContainer; 
+//	}
+	
+//	private static ArrayList<Ability> constructArrayListAbility(Ability ability1, Ability ability2){
+//		ArrayList<Ability> abilityContainer = new ArrayList<Ability>(10);
+//		abilityContainer.add(ability1);
+//		abilityContainer.add(ability2);
+//		
+//		return abilityContainer; 
+//	}
 	
 	
 }
