@@ -155,9 +155,6 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				// Avatar death check
 				if(defender instanceof Avatar) {
 					
-					// Game ends
-					context.getGameStateRef().gameOver();
-					
 					// Player notification
 					String winnerWinnerChickenDinner = "";
 					if(context.getGameStateRef().getPlayerOne() == defender.getOwner()) {
@@ -166,8 +163,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 						winnerWinnerChickenDinner = "You win!";
 					}
 					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
-					return;
 					
+					// Game ends
+					context.getGameStateRef().gameOver();
+					return;
 				}
 				
 				// Delete method
@@ -183,7 +182,23 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				
 				// Counter attack here - use counter Monster method
 				
-				// Death check
+				// Death check		
+				// Avatar death check
+//				if(defender instanceof Avatar) {
+//					
+//					// Player notification
+//					String winnerWinnerChickenDinner = "";
+//					if(context.getGameStateRef().getPlayerOne() == defender.getOwner()) {
+//						winnerWinnerChickenDinner = "You lose!";
+//					} else {
+//						winnerWinnerChickenDinner = "You win!";
+//					}
+//					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
+//					
+//					// Game ends
+//					context.getGameStateRef().gameOver();
+//					return;
+//				}
 			
 				// If Avatar damaged ability check
 				

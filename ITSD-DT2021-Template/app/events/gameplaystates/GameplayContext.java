@@ -29,7 +29,7 @@ public class GameplayContext {
 	private GameState					gameStateRef; 		// GameState reference to use game variables when dealing with gameplay control flow
 	private String						tileFlag; 			// Flag for detailing the status of the current tile clicked 
 	private Tile						clickedTile;		// Current tile clicked reference
-	private boolean						combinedActive;		// Reference for states to indicate multiple Unit states will occur
+	private boolean						combinedActive;		// Variable to indicate multiple Unit states will be processed
 	public ActorRef 					out; 				// Front end reference			
 	
 	// Constructor
@@ -49,6 +49,7 @@ public class GameplayContext {
 		/* -----------------------------------------------------------------------------------------------
 		 * Check if a (friendly/enemy) Unit has been clicked/is on the tile clicked (or if its empty)
 		 * ----------------------------------------------------------------------------------------------- */
+
 		
 		// Flag needed to determine what what Unit state is required (e.g. SummonMonster or CastSpell)
 		if (checkUnitPresentOnTile() && (isUnitFriendly())) {
@@ -61,7 +62,7 @@ public class GameplayContext {
 			this.setTileFlag("empty"); 
 		}
 		
-		
+		System.out.println(this.tileFlag);
 		
 		/*
 		 * Combination of different user inputs to substates 
@@ -155,6 +156,7 @@ public class GameplayContext {
 		gameStateRef.deselectAllEntities();
 		this.loadedUnit = null;
 		this.loadedCard = null;
+
 	}
 	
 	

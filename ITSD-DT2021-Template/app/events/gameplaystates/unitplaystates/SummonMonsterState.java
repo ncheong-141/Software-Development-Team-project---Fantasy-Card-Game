@@ -8,6 +8,7 @@ import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.GameState;
+import structures.basic.abilities.*;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
@@ -90,6 +91,13 @@ public class SummonMonsterState implements IUnitPlayStates {
 			GeneralCommandSets.threadSleep();
 		}
 		
+		// Delete card from hand
+//		Card selectedCard = context.getLoadedUnit();
+		// Need position in hand from Noah to redraw Card with no highlight
+//		BasicCommands.drawCard(out, selectedCard, intPosition, 0);
+//		GeneralCommandSets.threadSleep();
+//		BasicCommands.deleteCard(out, intPosition);
+//		GeneralCommandSets.threadSleep();
 		
 		// Summon the Monster (instantiate)
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
@@ -122,15 +130,19 @@ public class SummonMonsterState implements IUnitPlayStates {
 		GeneralCommandSets.threadSleep();
 		
 		// Check for on-summon triggers
-		
-		// Delete card from hand
-//		Card selectedCard = context.getLoadedUnit();
-		// Need position in hand from Noah to redraw Card with no highlight
-//		BasicCommands.drawCard(out, selectedCard, intPosition, 0);
-//		GeneralCommandSets.threadSleep();
-//		BasicCommands.deleteCard(out, intPosition);
-//		GeneralCommandSets.threadSleep();
-		
+			// Trigger abilities that permanently change the new object
+			for(Ability a : summonedMonster.getAbility()) {
+				if(a.getCallID() == Call_IDs.construction) {
+					a.execute(summonedMonster, gameState);
+				}
+			}
+	
+			// Trigger abilities that happen at the game logic point of a new summon
+			for(Ability a : summonedMonster.getAbility()) {
+				if(a.getCallID() == Call_IDs.onSummon) {
+					a.execute(summonedMonster, gameState);
+				}
+			}
 		
 	}
 	

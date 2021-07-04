@@ -117,18 +117,7 @@ public class BasicObjectBuilders {
 			if(AbilityToUnitLinkage.UnitAbility.containsKey(mUnit.getName())) {
 //				if(mUnit.getAbility() == null) {	mUnit.setAbility(new ArrayList <Ability> ());	}
 				mUnit.setAbility(AbilityToUnitLinkage.UnitAbility.get(mUnit.getName()));
-			}
-			
-			// Check for immediate ability execution
-			for(Ability a : mUnit.getAbility()) {
-				if(a.getCallID() == Call_IDs.construction) {
-					a.execute(mUnit);
-				}
-			}
-			
-			
-			
-			// Print statement of abilities to show it has worked
+			}	
 			
 			return mUnit; 
 			

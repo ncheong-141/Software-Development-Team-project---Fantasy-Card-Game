@@ -57,6 +57,10 @@ public class CastSpellState implements IUnitPlayStates {
 			/** Reset entity selection and board **/  
 			// Deselect after action finished *if* not in the middle of move-attack action
 			context.deselectAllAfterActionPerformed();
+			
+			// Delete card from Hand + update visual
+//			context.getGameStateRef().getTurnOwner().getHand().removeCard(position);
+			// BasicCommand
 		
 			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
