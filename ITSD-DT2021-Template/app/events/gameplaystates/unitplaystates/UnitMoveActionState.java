@@ -96,8 +96,8 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			currentTile.removeUnit();
 			targetTile.addUnit(mSelected);
 			mSelected.setPositionByTile(targetTile);
-			BasicCommands.addPlayer1Notification(context.out, "Unit moving...", 4);
-			GeneralCommandSets.threadSleep();
+//			BasicCommands.addPlayer1Notification(context.out, "Unit moving...", 4);
+//			GeneralCommandSets.threadSleep();
 			
 			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
 			// Move animation
