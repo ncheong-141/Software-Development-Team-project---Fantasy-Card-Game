@@ -1,41 +1,49 @@
 package structures.basic.abilities;
+
 import structures.GameState;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_Truestrike implements Ability {
-	
+public class A_S_SundropElixir implements Ability {
+
 	// Ability attributes 
 	private boolean enemyTarget; 
-	private Class<? extends Monster> targetType;
-	private Call_IDs callID; 
-	EffectAnimation eAnimation;
-	
+	private Class<? extends Monster> targetType; 
+	private Call_IDs callID;
+	EffectAnimation eAnimation; 
 	
 	// Constructor
-	public A_Truestrike(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
+	public A_S_SundropElixir(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
 		this.eAnimation = eAnimation; 
 		
 		this.callID = Call_IDs.noTimeConstraint;
 	}
+
 	
 	
 	/* Class methods */
 	
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
-	// Deal 2 damage to  an enemy Unit
+	// Add 5 health to a Unit. This Cannot take a unit over its starting health.
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		// Reduce Monster HP by 2
-		targetMonster.setHP(targetMonster.getHP() - 2);
+		// Verbose variable/easy to change
+		int healthIncreaseValue = 5;
+		
+		// Check if the +5 HP is greater than max hp, if so make monster HP = max
+		if ( (targetMonster.getHP() + healthIncreaseValue) > targetMonster.getMaxHP()) {
+			targetMonster.setHP(targetMonster.getMaxHP());
+		}
+		else {
+			targetMonster.setHP(targetMonster.getHP() + healthIncreaseValue);
+		}
 		
 		return true; 
 	}
 	// ================================================================================
-	
 	
 	// Getters to communicate target information
 	public boolean targetEnemy() {

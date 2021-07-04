@@ -5,7 +5,7 @@ import structures.basic.Avatar;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_StaffofYkir implements Ability {
+public class A_S_StaffofYkir implements Ability {
 
 	// Ability attributes 
 	private boolean enemyTarget; 
@@ -14,7 +14,7 @@ public class A_StaffofYkir implements Ability {
 	EffectAnimation eAnimation; 
 	
 	// Constructor
-	public A_StaffofYkir(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
+	public A_S_StaffofYkir(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
 		this.eAnimation = eAnimation;
