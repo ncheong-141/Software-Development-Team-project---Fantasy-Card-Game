@@ -56,15 +56,15 @@ public class GameState {
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
-		Hand handPlayerOne = new Hand();
-		handPlayerOne.drawCard(deckPlayerOne);
-		playerOne.setHand(handPlayerOne);
+//		Hand handPlayerOne = new Hand();
+//		handPlayerOne.drawCard(deckPlayerOne);
+//		playerOne.setHand(handPlayerOne);
 
 		Deck deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
-		Hand handPlayerTwo = new Hand();
-		handPlayerTwo.drawCard(deckPlayerTwo);
-		playerTwo.setHand(handPlayerTwo);
+//		Hand handPlayerTwo = new Hand();
+//		handPlayerTwo.drawCard(deckPlayerTwo);
+//		playerTwo.setHand(handPlayerTwo);
 
 
 		// Instantiate players 								
