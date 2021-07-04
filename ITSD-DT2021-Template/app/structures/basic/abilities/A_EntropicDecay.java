@@ -2,6 +2,7 @@ package structures.basic.abilities;
 
 import structures.GameState;
 import structures.basic.Avatar;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
 public class A_EntropicDecay implements Ability {
@@ -11,11 +12,13 @@ public class A_EntropicDecay implements Ability {
 	private boolean enemyTarget; 
 	private Class<? extends Monster> targetType;
 	private Call_IDs callID;
+	EffectAnimation eAnimation;
 	
 	// Constructor
-	public A_EntropicDecay(boolean enemyTarget, Class<? extends Monster> targetType) {
+	public A_EntropicDecay(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		this.eAnimation = eAnimation;
 		
 		this.callID = Call_IDs.noTimeConstraint;
 	}
@@ -49,5 +52,9 @@ public class A_EntropicDecay implements Ability {
 	
 	public Call_IDs getCallID() {
 		return callID; 
+	}
+	
+	public EffectAnimation getEffectAnimation() {
+		return eAnimation;
 	}
 }
