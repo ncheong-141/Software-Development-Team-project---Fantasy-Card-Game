@@ -53,7 +53,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//boardAvatarSetUp(out,g,message);
 		//playerCardSetUp(out, g, message);
 		//CommandDemo.executeTileHighlightDemo(out, g);
-		//CommandDemo.executeAbilityDemo(out, gameState);
+		CommandDemo.executeAbilityDemo(out, gameState);
 	}
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {

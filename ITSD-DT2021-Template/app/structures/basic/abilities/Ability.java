@@ -23,18 +23,6 @@ public interface Ability {
 	public Class<? extends Monster> getTargetType();
 	public boolean targetEnemy(); 
 	
-	public Call_IDs getCallID(); 
-	
-	// Call ID
-	/*
-	 * 0 = No ability 
-	 * 1 = Called on summon (just after construction) 
-	 * 2 = Called on death 
-	 * 3 = Called on enemy player casts spell 
-	 * 4 = Provoke: called on unit selection, move, or attack (check if any enemy unit adjacent has provoke)
-	 * 5 = Called when friendly Avatar is dealt damage 
-	 * 6 = Called when selecting a card (Play anywhere on the board ability) 
-	 * ... 
-	 */
-	
+	// Enum value used to control when an ability is called (e.g. on summon, death etc) 
+	public Call_IDs getCallID(); 	
 }
