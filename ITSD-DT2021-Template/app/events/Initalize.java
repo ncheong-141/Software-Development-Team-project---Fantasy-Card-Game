@@ -43,7 +43,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 		//CommandDemo.executeDemo(out); // this executes the command demo, comment out this when implementing your solution
 		//CommandDemo.executeDemoUnits(out, gameState);
-		CommandDemo.executeDemoUnitsNicholas(out, gameState); 
+		//CommandDemo.executeDemoUnitsNicholas(out, gameState); 
 		//CommandDemo.executeDemoBoard(out, gameState);
 		//CommandDemo.executeDemoDeckHand(out, gameState);
 		// CommandDemo.executeDemoSummon(out, gameState);
@@ -53,6 +53,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//boardAvatarSetUp(out,g,message);
 		//playerCardSetUp(out, g, message);
 		//CommandDemo.executeTileHighlightDemo(out, g);
+		//CommandDemo.executeAbilityDemo(out, gameState);
 	}
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {

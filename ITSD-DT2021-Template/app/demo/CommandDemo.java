@@ -17,6 +17,8 @@ import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
 import structures.basic.UnitAnimationType;
+import structures.basic.abilities.A_U_DoubleAttacker;
+import structures.basic.abilities.Ability;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
@@ -641,7 +643,7 @@ public class CommandDemo {
 		humanAvatar.toggleCooldown();
 		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 
-		humanAvatar.setAttackValue(2);
+		humanAvatar.setAttackValue(5);
 		Tile tOne = g.getGameBoard().getTile(1, 2);
 		tOne.addUnit(humanAvatar);
 
@@ -654,29 +656,29 @@ public class CommandDemo {
 		// Set up an enemy Unit in attack range
 		Card cardfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter,4,Card.class);
 		// friendly
-		Monster fire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,cardfire_spitter,(Player) g.getPlayerOne(), Monster.class);
+//		Monster fire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,cardfire_spitter,(Player) g.getPlayerOne(), Monster.class);
 		// enemy
 		Monster fire_spitter2 = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,cardfire_spitter,(Player) g.getPlayerTwo(), Monster.class);
 		Avatar testAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 54, Avatar.class);
-		fire_spitter.toggleCooldown();
+//		fire_spitter.toggleCooldown();
 		testAvatar.setOwner(g.getPlayerTwo(), g.getBoard());
-		Tile tTwo = g.getBoard().getTile(2, 2);
+//		Tile tTwo = g.getBoard().getTile(2, 2);
 		Tile tThree = g.getBoard().getTile(1,4);
 		Tile tFour = g.getBoard().getTile(0, 1);
-		tTwo.addUnit(fire_spitter);
+//		tTwo.addUnit(fire_spitter);
 		tThree.addUnit(fire_spitter2);
 		tFour.addUnit(testAvatar);
-		fire_spitter.setPositionByTile(tTwo);
+//		fire_spitter.setPositionByTile(tTwo);
 		fire_spitter2.setPositionByTile(tThree);
 		testAvatar.setPositionByTile(tFour);
 		testAvatar.setAttackValue(2);
 		
-		BasicCommands.drawUnit(out, fire_spitter, tTwo);
+//		BasicCommands.drawUnit(out, fire_spitter, tTwo);
 		BasicCommands.drawUnit(out, fire_spitter2, tThree);
 		BasicCommands.drawUnit(out, testAvatar, tFour);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
-		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+//		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+//		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
 		BasicCommands.setUnitAttack(out, fire_spitter2, fire_spitter2.getAttackValue());
 		BasicCommands.setUnitHealth(out, fire_spitter2, fire_spitter2.getHP());
 		BasicCommands.setUnitAttack(out, testAvatar, testAvatar.getAttackValue());
@@ -747,4 +749,70 @@ public class CommandDemo {
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 	}
 
+	public static void executeAbilityDemo (ActorRef out, GameState g) {
+		
+
+		// Draw the Board
+		Board gameBoard = new Board();
+
+		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+			}
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		g.setTurnOwner(g.getPlayerOne());
+		g.getPlayerOne().setMana(8);
+		BasicCommands.setPlayer1Mana(out, g.getPlayerOne());
+		System.out.println("From demo, Player one has: " + g.getPlayerOne().getMana());
+		
+		// loadCard
+		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		// Set up friendly double attacker unit
+		Monster mfire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, g.getTurnOwner(), Monster.class);
+		ArrayList <Ability> temp = new ArrayList <Ability> ();
+		A_U_DoubleAttacker ab1 = new A_U_DoubleAttacker();
+//		A_U_RangedAttacker ab2 = new A_U_RangedAttacker();
+		temp.add(ab1);		/*temp.add(ab2);*/
+		mfire_spitter.setAbility(temp);
+		for(Ability a : mfire_spitter.getAbility()) {	a.execute(mfire_spitter, g);	}
+		mfire_spitter.toggleCooldown();
+		mfire_spitter.setAttackValue(2);
+		mfire_spitter.setHP(4);
+		
+		// Set up an enemy
+		Monster aiAv = g.getComputerAvatar();
+		aiAv.setOwner(g.getPlayerTwo());
+		aiAv.setHP(3);
+		aiAv.setAttackValue(2);
+		
+		// Get Tiles and set Units
+		Tile tileFriendStart = g.getBoard().getTile(5, 1);
+		Tile tileEnemyStart = g.getBoard().getTile(7, 2);
+		
+		aiAv.setPositionByTile(tileEnemyStart);
+		tileEnemyStart.addUnit(aiAv);
+		mfire_spitter.setPositionByTile(tileFriendStart);
+		tileFriendStart.addUnit(mfire_spitter);
+		
+		// Draw stuff
+		BasicCommands.drawUnit(out, mfire_spitter, tileFriendStart);
+		try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, mfire_spitter, mfire_spitter.getAttackValue());
+		try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, mfire_spitter, mfire_spitter.getHP());
+		try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		BasicCommands.drawUnit(out, aiAv, tileEnemyStart);
+		try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitAttack(out, aiAv, aiAv.getAttackValue());
+		try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setUnitHealth(out, aiAv, aiAv.getHP());
+		try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		
+	}
 }
