@@ -45,6 +45,7 @@ public class AIUnitStateController {
 		IUnitPlayStates unitState = null;
 		
 		// Create unit state object for attack
+		// Check condition for if Enemy monster is right next, if so attack, if not, move and attack
 		if(Math.abs(currentTile.getTilex() - targetTile.getTilex()) <=1 && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= 1)) {
 		
 			unitState = new UnitAttackActionState(currentTile, targetTile);
