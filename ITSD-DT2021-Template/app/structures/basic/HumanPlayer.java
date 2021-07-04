@@ -46,13 +46,11 @@ public class HumanPlayer extends Player {
 //		super.firstThreeCards();
 //	}
 
-
 //	@Override assign deckOne for HumanPlayer
 //	public void setDeck(ArrayList<Card> d) {
 //		// TODO Auto-generated method stub
 //		this.d = deck.deckTwo(); // need Deck to return deckOne list
 //	}
-
 
 /*	
 	public void firstThreeCards(ArrayList<Card> hand) {
@@ -65,6 +63,10 @@ public class HumanPlayer extends Player {
 	}
 	
 */
+	
+	
+	
+	
 	
 }
 

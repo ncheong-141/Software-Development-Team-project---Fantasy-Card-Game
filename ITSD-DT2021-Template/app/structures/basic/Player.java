@@ -26,6 +26,7 @@ public class Player {
 	protected Avatar avatar;
 	protected ActorRef out;
 	protected EndTurnClicked e;
+	private GameState g;
 	
 	public Player() {
 		this.health = 20;
@@ -63,7 +64,7 @@ public class Player {
 		int newHealth = health - loseHealth;
 		if(newHealth <= 0) {
 			this.health = 0;
-			GameState.gameOver(); 
+			g.gameOver(); 
 		}
 	}
 
@@ -126,13 +127,16 @@ public class Player {
 	public Deck getDeck() {
 		return deck;
 	}
+	
+//	public void setDeck(){
+//		deck.deckOne();
+//	}
 
 	public Hand getHand() {
 		return hand;
 	}
 
 
-	
 }
 		
 		
