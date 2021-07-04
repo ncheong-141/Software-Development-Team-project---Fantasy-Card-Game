@@ -98,6 +98,7 @@ public class CommandDemo {
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		g.setTurnOwner(g.getPlayerOne());
+		g.getPlayerOne().setMana(8);
 
 
 		// loadCard
