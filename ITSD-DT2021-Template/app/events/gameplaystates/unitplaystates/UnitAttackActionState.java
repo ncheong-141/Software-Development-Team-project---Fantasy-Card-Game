@@ -13,8 +13,7 @@ import structures.basic.Monster;
 import structures.basic.Position;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
-import structures.basic.abilities.Ability;
-import structures.basic.abilities.Call_IDs;
+import structures.basic.abilities.*;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -124,17 +123,17 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			// If Avatar damaged ability check
 			
 			/***	Play animations and set visuals		***/
-				// Non-ranged attacker
-			if(attacker.getAttackRange() == 1) {
-				BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
-			} 
-				// Ranged attacker, different animation
+			
+			// Check for attacker animations
+			EffectAnimation arrows = checkRangedAttacker(attacker);
+			
+			// Non-ranged
+			if(arrows == null) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);		} 
+			// Ranged
 			else {
-				EffectAnimation arrows = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles);
 				BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
 				BasicCommands.playProjectileAnimation(context.out, arrows, 0, currentTile, targetTile);
 			}
-			
 			BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.hit);
 			BasicCommands.setUnitHealth(context.out, defender, defender.getHP());
 			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
@@ -243,6 +242,17 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		deadUnit.setPosition(new Position(-1,-1,-1,-1));
 		
 		// Dereference object
+	}
+	
+	// Check for Ranged Attacker ability and return EffectAnimation if true
+	private EffectAnimation checkRangedAttacker(Monster attacker) {
+		for(Ability a : attacker.getAbility()) {
+			if(a instanceof A_U_RangedAttacker) {
+				return a.getEffectAnimation();
+			}
+		}
+		return null;
+		
 	}
 	
 }
