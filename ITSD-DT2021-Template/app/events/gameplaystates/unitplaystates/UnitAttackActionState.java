@@ -232,7 +232,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		
 		// Check for onDeath ability
 		if(deadUnit.hasAbility()) {
-			for(Ability a : deadUnit.getAbility()) {
+			for(Ability a : deadUnit.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); }
 			}
 		}
@@ -246,7 +246,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	// Check for Ranged Attacker ability and return EffectAnimation if true
 	private EffectAnimation checkRangedAttacker(Monster attacker) {
-		for(Ability a : attacker.getAbility()) {
+		for(Ability a : attacker.getMonsterAbility()) {
 			if(a instanceof A_U_RangedAttacker) {
 				return a.getEffectAnimation();
 			}

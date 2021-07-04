@@ -131,14 +131,14 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 		// Check for on-summon triggers
 			// Trigger abilities that permanently change the new object
-			for(Ability a : summonedMonster.getAbility()) {
+			for(Ability a : summonedMonster.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.construction) {
 					a.execute(summonedMonster, gameState);
 				}
 			}
 	
 			// Trigger abilities that happen at the game logic point of a new summon
-			for(Ability a : summonedMonster.getAbility()) {
+			for(Ability a : summonedMonster.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.onSummon) {
 					a.execute(summonedMonster, gameState);
 				}
