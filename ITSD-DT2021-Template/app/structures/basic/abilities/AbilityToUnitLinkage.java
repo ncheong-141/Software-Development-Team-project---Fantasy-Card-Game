@@ -32,13 +32,13 @@ public class AbilityToUnitLinkage {
 
 		
 		/*** Units ***/ 
-		UnitAbility.put("Windshrike", constructArrayListAbility(new A_U_DrawCardOnUnitDeath(false, Monster.class))				// Windshrike
-										/*, + another ability*/);																
-		UnitAbility.put("Blaze Hound", constructArrayListAbility(new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class)));	// Blaze Hound
-		UnitAbility.put("Azurite Lion", constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class)));				// Azurite Lion
-		UnitAbility.put("Serpenti", constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class)));					// Serpenti
-		UnitAbility.put("Fire Spitter", constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class)));				// Fire Spitter
-		UnitAbility.put("Pyromancer", constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class)));					// Pyromancer
+		UnitAbility.put("Windshrike", 		constructArrayListAbility(new A_U_DrawCardOnUnitDeath(false, Monster.class))				// Windshrike
+											/*, + another ability*/);																
+		UnitAbility.put("Blaze Hound", 		constructArrayListAbility(new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class)));	// Blaze Hound
+		UnitAbility.put("Azurite Lion", 	constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class)));				// Azurite Lion
+		UnitAbility.put("Serpenti", 		constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class)));					// Serpenti
+		UnitAbility.put("Fire Spitter", 	constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class)));				// Fire Spitter
+		UnitAbility.put("Pyromancer", 		constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class)));					// Pyromancer
 		
 	}
 	
