@@ -39,6 +39,9 @@ public class A_U_DoubleAttacker implements Ability {
 		public boolean execute(Monster targetMonster) {
 
 			targetMonster.setAttacksMax(2);
+			
+			// For unusual cases where a Monster is summoned off cooldown (has attacksLeft after summoning):
+			if(targetMonster.getAttacksLeft() > 0) {	targetMonster.setAttacksLeft(targetMonster.getAttacksMax());	}
 			return true; 
 		}
 		// ================================================================================
