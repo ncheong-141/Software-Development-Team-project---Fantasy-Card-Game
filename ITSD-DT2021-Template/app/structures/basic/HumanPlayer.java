@@ -3,12 +3,12 @@ package structures.basic;
 import commands.BasicCommands;
 
 import java.util.ArrayList;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import actors.GameActor;
 import akka.actor.ActorRef;
 import events.CardClicked;
 import events.EndTurnClicked;
+import events.tileplaystates.*;
 import structures.GameState;
 
 
@@ -17,16 +17,25 @@ public class HumanPlayer extends Player {
 	private GameState gameState;
 	private HumanPlayer playerOne;
 	private ComputerPlayer playerTwo;
+	private SummonMonsterSubState summonM;
+	private GameplayContext context;
 	
-	public HumanPlayer(Deck deck) {
-		super(deck);
+	
+	public HumanPlayer() {
+		super();
 	}
-
+		
+	//call execute method to play game in summon object
+	public void summonMonster() {
+		this.summonM.execute(context);
+	}
 	
+
+	//call end turn method in endTurnClicked
 	@Override
 	public void endTurn() {
 		if(gameState.getTurnOwner() == playerOne) {
-			e.processEvent(out, null, null);
+			e.processEvent(out, gameState, null);
 		}
 	}
 

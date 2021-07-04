@@ -15,8 +15,8 @@ public class ComputerPlayer extends Player {
 //	private Tile actorT; //for random back up code
 //	private Tile enemyT; //for random back up code
 	
-	public ComputerPlayer(Deck deck) {
-		super(deck);
+	public ComputerPlayer() {
+		super();
 	}
 
 
