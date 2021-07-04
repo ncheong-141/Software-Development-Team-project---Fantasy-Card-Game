@@ -29,13 +29,15 @@ public class GameState {
 	private Avatar humanAvatar;
 	private Avatar computerAvatar;
 	private int turnCount;
-	private static boolean playerDead;
+	private boolean playerDead;
 	private Player turnOwner;
 	private EndTurnClicked e;
 	private ActorRef out;
 	private GameState gameState;
-	private Monster trackMonster; //YC added
 	private Tile monsterLocation; //YC added
+	private Deck deckPlayerOne;
+	private Deck deckPlayerTwo;
+	
 	public GameState() {
 		
 		turnCount = 0;
@@ -45,20 +47,23 @@ public class GameState {
 		
 		//decks instantiation 
 
-		Deck deckPlayerOne = new Deck(); 
-		deckPlayerOne.deckOne();
+		playerOne = new HumanPlayer();
+		playerTwo = new ComputerPlayer();
+//		Deck deckPlayerOne = new Deck(); 
+//		deckPlayerOne.deckOne();
 		
-		for (int i = 0; i < deckPlayerOne.getDeck().size(); i++) {
-			System.out.println(deckPlayerOne.getDeck().get(i).getCardname());
-		}
+//		for (int i = 0; i < deckPlayerOne.getDeck().size(); i++) {
+//			System.out.println(deckPlayerOne.getDeck().get(i).getCardname());
+//		}
 		//playerOne.setDeck(deckPlayerOne);
 				
-		Deck deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
+//		Deck deckPlayerTwo = new Deck();
+//		deckPlayerTwo.deckTwo();
 		//playerTwo.setDeck(deckPlayerTwo);
 		
-		playerOne = new HumanPlayer(deckPlayerOne);
-		playerTwo = new ComputerPlayer(deckPlayerTwo);
+//		playerOne = new HumanPlayer();
+//		playerTwo = new ComputerPlayer();
+
 
 		
 		gameBoard = new Board();
@@ -70,6 +75,21 @@ public class GameState {
 		computerAvatar.setOwner(playerTwo, gameBoard);
 		
 	}
+	
+	public void setDeckForStart() {	
+		deckPlayerOne = new Deck();
+		playerOne.getDeck().deckOne();
+		deckPlayerTwo = new Deck();
+		playerTwo.getDeck().deckOne();
+	
+	}
+	
+	public void setHandForStart() {
+		playerOne.getHand().initialHand(out, deckPlayerOne);
+		playerTwo.getHand().initialHand(out, deckPlayerOne);
+	}
+	
+	
 	
 	public int getTurnCount() {
 		return turnCount;
@@ -120,7 +140,7 @@ public class GameState {
 		playerTwo = c;
 	}
 	
-	public static void gameOver() {
+	public  void gameOver() {
 		playerDead = true;
 		
 		// call method to finish game
@@ -150,7 +170,6 @@ public class GameState {
 		if(this.getBoard().getUnitSelected() != null) {
 			this.getBoard().setUnitSelected(null);
 		}
-
 		// If there is a card selected in turn owner hand
 		if(this.getTurnOwner().getHand().isPlayingMode()) {
 			this.getTurnOwner().getHand().setSelectedCard(null);
@@ -158,23 +177,59 @@ public class GameState {
 		}
 	}
 	
-	// YC add
-	public Tile locateMonster(Monster trackMonster) {
-		this.monsterLocation = this.getGameBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
-		return monsterLocation;
-	}
+
 	
 	public void computerEnd() {  
 		
-		getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
 		e.emptyMana(); //empty mana for player who ends the turn
 		e.toCoolDown(); //switch avatars status for current turnOwner
 	    deselectAllEntities();
 		GeneralCommandSets.boardVisualReset(out, gameState); 
 		getTurnOwner().getHand().setPlayingMode(false); //current turnOwner Hand is off?
 		turnChange(); // turnOwner exchanged	
+		if (e.isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
+			gameOver();  // if not, gameover(?)
+		}
 		e.giveMana(); //give turnCount mana to the player in the beginning of new turn
 		e.toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
 		getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
+		getTurnOwner().getHand().drawCard(out, gameState.getTurnOwner().getDeck());;
+			
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// YC add
+	public Tile locateMonster(Monster trackMonster) {
+		this.monsterLocation = this.getGameBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
+		return monsterLocation;
 	}
 }

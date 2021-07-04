@@ -20,7 +20,6 @@ public class ComputerPlayer extends Player {
 	}
 
 
-	
 //////////////////////////////////////////////////////////**Ranking Methods**/////////////////////////////////////////////////////////	
 	
 //===========choose by Highest currentHP =============
@@ -145,6 +144,7 @@ public class ComputerPlayer extends Player {
 //	}
 ////	================randomAttack=====back up=================	
 
+	
 	
 	
 

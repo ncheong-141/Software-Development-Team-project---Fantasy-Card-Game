@@ -28,40 +28,32 @@ public class EndTurnClicked implements EventProcessor{
 	
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {  //for HumanPlayer
-			
-			if (isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
-				gameState.gameOver();  // if not, gameover(?)
-			}
-			gameState.getTurnOwner().drawFromDeck(); //draw a card from deck for current turnOwner
+				
 			emptyMana(); //empty mana for player who ends the turn
 			toCoolDown(); //switch avatars status for current turnOwner
 			gameState.deselectAllEntities();
 			GeneralCommandSets.boardVisualReset(out, gameState);
 			gameState.getTurnOwner().getHand().setPlayingMode(false); //current turnOwner hand turn off
 			gameState.turnChange(); // turnOwner exchanged	
+			if (isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
+				gameState.gameOver();  // if not, gameover(?)
+			}
 			giveMana(); //give turnCount mana to the player in the beginning of new turn
 			toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
 			gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
-		
+			gameState.getTurnOwner().getHand().drawCard(out, gameState.getTurnOwner().getDeck());;
 	}
-			
-	
-	
-	
-	
+		
 	// check if players decks are are empty 
 	public boolean isDeckEmpty() {
-		ArrayList<Card> humanDeck = playerOne.getDeck().getDeck();
-		int humanCardLeft = humanDeck.size();
-		ArrayList<Card> computerDeck = playerTwo.getDeck().getDeck();
-		int computerCardLeft = computerDeck.size();
+		ArrayList<Card> turnOwnerDeck = gameState.getTurnOwner().getDeck().getDeck();
+		int deckCardLeft = turnOwnerDeck.size();
 		
-		if(( humanCardLeft < 1) ||(computerCardLeft < 1)) {
+		if(deckCardLeft < 1) {
 			return true;
 		}
 		return false;
 	}
-	
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
@@ -80,4 +72,5 @@ public class EndTurnClicked implements EventProcessor{
 				m.toggleCooldown();				
 		}
 	}
+	
 }
