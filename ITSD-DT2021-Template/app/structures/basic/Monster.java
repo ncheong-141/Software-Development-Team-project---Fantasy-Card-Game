@@ -218,11 +218,8 @@ public class Monster extends Unit{
 		}
 	}
 	
-	public boolean getMonsterAbility() {
-		if(abilities != null) {
-			return true;
-		}
-		return false;
+	public ArrayList <Ability> getMonsterAbility() {
+		return abilities;
 	}
 	
 }
