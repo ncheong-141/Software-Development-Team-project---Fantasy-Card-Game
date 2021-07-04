@@ -188,7 +188,7 @@ public class GameState {
 		GeneralCommandSets.boardVisualReset(this.out, this); 
 		deselectAllEntities();	 //current turnOwner Hand is off?
 
-		getTurnOwner().getHand().drawCard(this.out, this.getTurnOwner().getDeck());
+		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
 
 		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
 
