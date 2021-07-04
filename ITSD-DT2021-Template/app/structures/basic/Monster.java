@@ -28,7 +28,7 @@ public class Monster extends Unit{
 	
 	// Gameplay info
 	protected Player		owner;					// Player who owns the unit
-	protected boolean 		selected;				// Tracks when the unit is selected on board by owner
+	// protected boolean 		selected;				// Tracks when the unit is selected on board by owner
 	protected boolean		onCooldown;				// Tracks when the unit has actions left (move and/or attack)
 	
 	
@@ -47,7 +47,7 @@ public class Monster extends Unit{
 		this.attacksMax = 1;			//
 		this.attackRange = 1;			//
 		
-		this.selected = false;
+//		this.selected = false;
 		this.onCooldown = true;			// Unit is summoned on cooldown
 		
 		this.abilities = null;			// Abilities set in ObjectBuilder for safe object construction
@@ -153,17 +153,17 @@ public class Monster extends Unit{
 		this.attackValue = attackValue;
 	}
 	
-	public boolean isSelected() {
-		return selected;
-	}
+	// public boolean isSelected() {
+	// 	return selected;
+	// }
 	
-	public void setStatus(boolean i) {
-		selected = i;
-	}
+	// public void setStatus(boolean i) {
+	// 	selected = i;
+	// }
 
-	public void toggleSelect() {
-		if(!onCooldown) {	selected = !selected;	}
-	}
+	// public void toggleSelect() {
+	// 	if(!onCooldown) {	selected = !selected;	}
+	// }
 	
 	public Player getOwner() {
 		return owner;

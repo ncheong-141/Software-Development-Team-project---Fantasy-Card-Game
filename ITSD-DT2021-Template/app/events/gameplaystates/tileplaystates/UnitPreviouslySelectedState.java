@@ -97,7 +97,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				System.out.println("Finished de-highlighting tiles.");
 				
 				// Update selected reference (last)
-				selectedUnit.toggleSelect();
+				// selectedUnit.toggleSelect();
 				System.out.println("Monster selected: " + context.getGameStateRef().getBoard().getUnitSelected().isSelected());
 				System.out.println("Deselected monster on Tile " + selectedUnit.getPosition().getTilex() + "," + selectedUnit.getPosition().getTiley());
 				context.deselectAllAfterActionPerformed();

@@ -62,12 +62,12 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 				System.out.println("You own this monster");
 				
 				// Select monster + apply visual
-				m.toggleSelect();
+				//m.toggleSelect();
 				g.getBoard().setUnitSelected(m);
 
 				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
 				System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
-				System.out.println("Monster selected: " + m.isSelected());
+				//System.out.println("Monster selected: " + m.isSelected());
 				GeneralCommandSets.threadSleep();
 
 				// Display movement + attack range tiles
