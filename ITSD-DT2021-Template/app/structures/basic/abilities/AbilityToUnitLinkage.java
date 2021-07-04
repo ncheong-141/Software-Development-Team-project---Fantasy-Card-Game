@@ -21,8 +21,9 @@ public class AbilityToUnitLinkage {
 		
 
 		/* Initiailising abilities with String name keys*/
-
 		// Can maybe grab this info from a file instead if dont want to hard code it in. 
+		
+		// For Abilities constructor (targets enemies?, Class type of target, EffectAnimation)
 		
 		/*** Spells ***/
 		UnitAbility.put("Truestrike", 		constructArrayListAbility(new A_Truestrike(true,Monster.class, null))); 			// Truestrike 
@@ -44,9 +45,7 @@ public class AbilityToUnitLinkage {
 	
 	/* Helper methods */
 	
-	// For constructing an array list to input into the HashMap 
-	// Overloaded method to account for 1,2 or 3 skills
-	
+	// For constructing an array list to input into the HashMap 	
 	private static ArrayList<Ability> constructArrayListAbility(Ability ... args){
 		ArrayList<Ability> abilityContainer = new ArrayList<Ability>();
 		for(Ability a : args) {
@@ -54,21 +53,5 @@ public class AbilityToUnitLinkage {
 		}
 		return abilityContainer; 
 	}
-	
-//	private static ArrayList<Ability> constructArrayListAbility(Ability ability){
-//		ArrayList<Ability> abilityContainer = new ArrayList<Ability>(10);
-//		abilityContainer.add(ability);
-//		
-//		return abilityContainer; 
-//	}
-	
-//	private static ArrayList<Ability> constructArrayListAbility(Ability ability1, Ability ability2){
-//		ArrayList<Ability> abilityContainer = new ArrayList<Ability>(10);
-//		abilityContainer.add(ability1);
-//		abilityContainer.add(ability2);
-//		
-//		return abilityContainer; 
-//	}
-	
 	
 }
