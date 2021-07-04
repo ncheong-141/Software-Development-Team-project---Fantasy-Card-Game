@@ -775,7 +775,7 @@ public class CommandDemo {
 		// Set up friendly double attacker unit
 		Monster mfire_spitter = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, g.getTurnOwner(), Monster.class);
 		ArrayList <Ability> temp = new ArrayList <Ability> ();
-		A_U_DoubleAttacker ab1 = new A_U_DoubleAttacker();
+//		A_U_DoubleAttacker ab1 = new A_U_DoubleAttacker();
 //		A_U_RangedAttacker ab2 = new A_U_RangedAttacker();
 		temp.add(ab1);		/*temp.add(ab2);*/
 		mfire_spitter.setAbility(temp);
