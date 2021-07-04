@@ -113,6 +113,7 @@ public class CommandDemo {
 		
 		ENEMY_fire_spitter.setPositionByTile(gameBoard.getTile(3,4));
 		ENEMY_fire_spitter.setOwner(g.getPlayerTwo());
+		ENEMY_fire_spitter.setHP(1);
 		g.getBoard().getTile(3,4).addUnit(ENEMY_fire_spitter);
 		BasicCommands.drawUnit(out, ENEMY_fire_spitter, gameBoard.getTile(3,4));
 		GeneralCommandSets.threadSleep();
