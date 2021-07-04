@@ -145,9 +145,8 @@ public class GameState {
 		}
 
 		// If there is a card selected in turn owner hand
-		if(this.getTurnOwner().getHand().isPlayingMode()) {
+		if(this.getTurnOwner().getHand().getSelectedCard() != null) {
 			this.getTurnOwner().getHand().setSelectedCard(null);
-			this.getTurnOwner().getHand().setPlayingMode(false);
 		}
 		
 	}
