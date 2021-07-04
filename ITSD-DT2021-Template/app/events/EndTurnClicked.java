@@ -33,15 +33,15 @@ public class EndTurnClicked implements EventProcessor{
 			toCoolDown(); //switch avatars status for current turnOwner
 			gameState.deselectAllEntities();
 			GeneralCommandSets.boardVisualReset(out, gameState);
-			gameState.getTurnOwner().getHand().setPlayingMode(false); //current turnOwner hand turn off
+			gameState.deselectAllEntities();
 			gameState.turnChange(); // turnOwner exchanged	
 			if (isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
 				gameState.gameOver();  // if not, gameover(?)
 			}
 			giveMana(); //give turnCount mana to the player in the beginning of new turn
 			toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
-			gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
-			gameState.getTurnOwner().getHand().drawCard(out, gameState.getTurnOwner().getDeck());;
+			//gameState.getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
+			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());
 	}
 		
 	// check if players decks are are empty 

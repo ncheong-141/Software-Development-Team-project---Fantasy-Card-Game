@@ -218,6 +218,11 @@ public class Monster extends Unit{
 		}
 	}
 	
-	// Getters/setters for Abilities to be put in
+		public boolean hasAbility() {
+		if(abilities != null) {
+			return true;
+		}
+		return false;
+	}
 	
 }

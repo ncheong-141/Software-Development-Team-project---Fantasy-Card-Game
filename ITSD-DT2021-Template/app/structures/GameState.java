@@ -187,7 +187,11 @@ public class GameState {
 	    deselectAllEntities();
 		GeneralCommandSets.boardVisualReset(out, this); 
 		deselectAllEntities();	 //current turnOwner Hand is off?
+
 		getTurnOwner().getHand().drawCard(out, this.getTurnOwner().getDeck());
+
+		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
+
 
 		turnChange(); // turnOwner exchanged	
 		if (e.isDeckEmpty()) {  //check if both players have enought card in deck left for new turn
@@ -205,6 +209,22 @@ public class GameState {
 		this.monsterLocation = this.getGameBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
 		return monsterLocation;
 	}
-
 	
+	
+	public void setDeckForStart() {	
+		deckPlayerOne = new Deck();
+		deckPlayerOne.deckOne();
+		playerOne.setDeck(deckPlayerOne);
+		
+		deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
+		playerOne.setDeck(deckPlayerTwo);
+	
+	}
+	
+	public void setHandForStart() {
+		playerOne.getHand().initialHand(deckPlayerOne);
+		playerTwo.getHand().initialHand(deckPlayerTwo);
+	}
+
 }
