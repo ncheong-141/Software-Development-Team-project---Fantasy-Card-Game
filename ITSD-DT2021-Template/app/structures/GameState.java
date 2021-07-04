@@ -51,6 +51,8 @@ public class GameState {
 		
 		playerOne = new HumanPlayer(deckPlayerOne);
 		playerTwo = new ComputerPlayer(deckPlayerTwo);
+		
+		
 
 		
 		gameBoard = new Board();

@@ -24,7 +24,7 @@ public class Player {
 	protected Avatar avatar;
 	protected Deck deck;
 	protected Hand hand;
-	protected ActorRef out;
+	//protected ActorRef out;
 
 	
 	public Player(Deck deck) {

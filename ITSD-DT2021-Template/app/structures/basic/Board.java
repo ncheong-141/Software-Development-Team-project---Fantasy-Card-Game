@@ -26,6 +26,9 @@ public class Board {
 	//note: still to be implemented, not a fundamental feature
 	private Tile humanStart;
 	private Tile computerStart;
+	
+	private int numUnitsOnBoard;
+	private int boardCapacity;
 
 	private Monster unitSelected;
 
@@ -35,6 +38,8 @@ public class Board {
 	public Board() {
 		X = 9;
 		Y = 5;
+		this.boardCapacity = X*Y;
+		this.numUnitsOnBoard = 0;
 		gameBoard = new Tile[Y][X];
 		for (int i = 0; i<Y; i++) {
 			for (int k = 0; k<X; k++) {
@@ -60,7 +65,24 @@ public class Board {
 		return gameBoard;
 	}
 
-
+	public int getBoardCapacity() {
+		return this.boardCapacity;
+	}
+	
+	public void setUnitCount(int delta) {
+		this.numUnitsOnBoard += delta;
+	}
+	public ArrayList<Tile> getAllTilesList(){
+		ArrayList<Tile> fullTileList = new ArrayList<Tile>();
+		
+		for (int i=0; i<gameBoard.length; i++) {
+			for (int k = 0; k<gameBoard[0].length; k++) {
+				fullTileList.add(gameBoard[i][k]);
+			}
+		}
+		
+		return fullTileList;
+	}
 	public void setGameBoard(Tile[][] gameBoard) {
 		this.gameBoard = gameBoard;
 	}
@@ -169,6 +191,21 @@ public class Board {
 	else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
 			g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }
 
+	//method returns all adijecent enemy tiles for a given position
+	public ArrayList <Tile> adjEnemyTiles(int xPos, int yPos, Player p){
+		ArrayList<Tile> tileList = new ArrayList<Tile>();
+		for (int i = 0; i<rangeH.length; i++) {
+			if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
+			else {
+				if (!(this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getFreeStatus())&& this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getUnitOnTile().getOwner()!=p) {
+					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
+					//System.out.println(posTile.getTilex() + "  " + posTile.getTiley());
+					tileList.add(posTile);	
+				}
+			}
+		}
+		return tileList;
+	}
 
 	//================= UNIT MOVEMENTS METHODS ========================//
 
@@ -212,12 +249,19 @@ public class Board {
 	//the result is returned as a set to eliminate duplicate values within the set
 	public HashSet<Tile> unitAttackableTiles (int xpos, int ypos, int attackRange, int moveRange ){
 		Player p = this.getTile(xpos, ypos).getUnitOnTile().getOwner();
+		
+		ArrayList<Tile> reachTiles;
+		HashSet <Tile> tileList = new HashSet<Tile>();
+		
+		if (moveRange == 0) {
+			return this.calcAttackRange(xpos, ypos, attackRange, p);
+		}
 
 		//get a list of all tiles that the unit can reach given their position and move range
 		//this includes both free and occupied tiles
-		ArrayList <Tile> reachTiles = this.reachableTiles(xpos, ypos, moveRange);
+		reachTiles = this.reachableTiles(xpos, ypos, moveRange);
 
-		HashSet <Tile> tileList = new HashSet<Tile>();
+		
 
 		//iterate over the list of tiles that can be reached 
 		//if the tile has an enemy unit it is added to the set (no duplicate values)
@@ -242,7 +286,7 @@ public class Board {
 		return tileList;	
 	}		  
 	//6A) 
-	private HashSet<Tile> calcAttackRange(int xpos, int ypos, int attackRange, Player p){
+	public HashSet<Tile> calcAttackRange(int xpos, int ypos, int attackRange, Player p){
 		HashSet<Tile> tileList = new HashSet<Tile>();
 
 		System.out.println(xpos + " --- " + ypos);
@@ -306,6 +350,17 @@ public class Board {
 				}
 				return monsterList;
 			}
-			  
+	
+	public ArrayList<Tile> allFreeTiles(){
+		ArrayList<Tile> freeTilesList = new ArrayList<Tile>();
+		for (int i = 0; i <gameBoard.length; i++) {
+			for (int k =0; k<gameBoard[0].length; k++) {
+				if (gameBoard[i][k].getUnitOnTile() == null) 							{
+					freeTilesList.add(gameBoard[i][k]);
+				}
+			}	
+		}
+		return freeTilesList;
+	}
 }
 
