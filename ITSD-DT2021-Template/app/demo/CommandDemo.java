@@ -777,7 +777,7 @@ public class CommandDemo {
 		ArrayList <Ability> temp = new ArrayList <Ability> ();
 //		A_U_DoubleAttacker ab1 = new A_U_DoubleAttacker();
 //		A_U_RangedAttacker ab2 = new A_U_RangedAttacker();
-		temp.add(ab1);		/*temp.add(ab2);*/
+//		temp.add(ab1);		/*temp.add(ab2);*/
 		mfire_spitter.setAbility(temp);
 		for(Ability a : mfire_spitter.getAbility()) {	a.execute(mfire_spitter, g);	}
 		mfire_spitter.toggleCooldown();
