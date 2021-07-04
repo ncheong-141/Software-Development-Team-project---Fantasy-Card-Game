@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import structures.basic.abilities.*;
+import sun.jvm.hotspot.ObjectHistogram;
 
 public class Monster extends Unit{
 
@@ -47,7 +48,6 @@ public class Monster extends Unit{
 		this.attacksMax = 1;			//
 		this.attackRange = 1;			//
 		
-//		this.selected = false;
 		this.onCooldown = true;			// Unit is summoned on cooldown
 		
 		this.abilities = null;			// Abilities set in ObjectBuilder for safe object construction
@@ -125,6 +125,22 @@ public class Monster extends Unit{
 		}
 	}
 	
+	// Heal (adjust health)
+	// Updates HP from a heal action
+	public void heal(int h) {
+		if(this.HP + h > this.maxHP) {
+			this.HP = this.maxHP;
+		}
+		else {
+			this.HP += h;
+		}
+	}
+	
+	// Buff (adjust attack)
+	// Adjusts attackValue statistic from a buff action
+	public void buff(int b) {
+		this.attackValue += b;
+	}
 	
 	
 	/* Getters and setters */ 
@@ -152,18 +168,6 @@ public class Monster extends Unit{
 	public void setAttackValue(int attackValue) {
 		this.attackValue = attackValue;
 	}
-	
-	// public boolean isSelected() {
-	// 	return selected;
-	// }
-	
-	// public void setStatus(boolean i) {
-	// 	selected = i;
-	// }
-
-	// public void toggleSelect() {
-	// 	if(!onCooldown) {	selected = !selected;	}
-	// }
 	
 	public Player getOwner() {
 		return owner;
