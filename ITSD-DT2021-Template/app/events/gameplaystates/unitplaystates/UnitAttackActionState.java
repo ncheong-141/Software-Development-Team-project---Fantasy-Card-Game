@@ -7,9 +7,15 @@ import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
+import structures.basic.Position;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
+import structures.basic.abilities.Ability;
+import structures.basic.abilities.Call_IDs;
+import utils.BasicObjectBuilders;
+import utils.StaticConfFiles;
 
 public class UnitAttackActionState implements IUnitPlayStates {
 
@@ -48,10 +54,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		defender = targetTile.getUnitOnTile();
 		
 		// Gather ranges
-		// Build attacker's attackRange for checks --- formula needs to be changed to just adjacent attack tiles, as
-		// this state assumes units are next to each other before attack can occur
-		// For attacker: attackRange should reflect the attacks it has left + range
-		// For defender: attackRange should reflect an assumed ability to attack (range 1) since counter is not the same - generic adjacent range
+		// Build attacker/defender attackRanges for checks --- formula should only ever reflect attackRange in this state, not
+		// cumulative attack + move range (since all movement takes place before this state).
+		// For attacker: attackRange should reflect unit's attacks range (omit move range)
+		// For defender: counterRange should reflect unit's attack range (omit move range)
 		ArrayList <Tile> temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
 		attackerAttackRange = temp;
 		temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), defender.getMovesLeft()));
@@ -63,6 +69,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		if(tileInAttackRange()) {
 			unitAttack(context);
 			
+			// This might always happen regardless of Combined(move always before attack?)
 			/***	Condition here for combined substate executing, which requires selection is maintained	***/
 			if(!(context.getCombinedActive())) {
 				
@@ -93,10 +100,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getMovesLeft());
 		actRange.addAll(mRange);
 		
-		// If attacker can attack (true returned by Monster method)
+		// If attacker's attack is successful
 		if(attacker.attack()) {
 			System.out.println("Attack successful.");
-			boolean survived = defender.defend(attacker.getAttackValue());
 			
 			// Deselect tiles
 			System.out.println("Started drawing Tiles");
@@ -112,36 +118,57 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			System.out.println("Finished drawing Tiles method");
 			GeneralCommandSets.threadSleepLong();
 			
+			boolean survived = defender.defend(attacker.getAttackValue());
+			System.out.println("Defender has " + defender.getHP() + " HP");
+			
+			// If Avatar damaged ability check
+			
 			// Play animations and set visuals
-			BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
+			// Non-ranged attacker
+			if(attacker.getAttackRange() == 1) {
+				BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
+			} 
+			// Ranged attacker, different animation
+			else {
+				EffectAnimation arrows = BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles);
+				BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
+				BasicCommands.playProjectileAnimation(context.out, arrows, 0, currentTile, targetTile);
+			}
 			BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.hit);
 			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 			BasicCommands.setUnitHealth(context.out, defender, defender.getHP());
 			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-			
+
 			// Defender death + counter attack check
 			if(!survived) {
-				System.out.println("Defender is dead.");
+				System.out.println("Defender is dead.");		
 				
 				// Play animation + sleep to let it happen
 				BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
-				try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+				try {Thread.sleep(1500);} catch (InterruptedException e) {e.printStackTrace();}
 				
-				// Remove unit from front-end
+				// Remove from front-end
 				BasicCommands.deleteUnit(context.out, defender);
 				try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 				
-				// Update internal Tile values
-				
-				// Destroy object?
+				// Delete method
+				unitDeath(context, targetTile);
 				
 			} else {
 				System.out.println("Counter-attack incoming...");
 				
-				// Counter attack here
+				// Counter attack here - use counter Monster method
+				
+				// Death check
+			
+				// If Avatar damaged ability check
 				
 			}
 			
+			// Re-idle -- need checks for both attack and counter target survival before re-idle
+			BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);
+			if(survived) {	BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle); }
+			GeneralCommandSets.threadSleep();		
 			
 		} 
 		// Unit is unable to attack for some reason - internal attack values/summon cooldown/etc.
@@ -153,9 +180,30 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	/*	Helper methods	*/
 	
+	// Checks the user's selected Tile is within the attack range of the selected unit
 	private boolean tileInAttackRange() {
 		if(attackerAttackRange.contains(targetTile)) return true;
 		return false;
+	}
+	
+	// Helper method to update internal game data and delete a Unit onDeath
+	private void unitDeath(GameplayContext context, Tile grave) {
+		
+		Monster deadUnit = grave.getUnitOnTile();
+		
+		// Check for onDeath ability
+		if(deadUnit.hasAbility()) {
+			for(Ability a : deadUnit.getAbility()) {
+				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(attacker,context.getGameStateRef()); }
+			}
+		}
+		
+		// Update internal Tile values
+		grave.removeUnit();
+		deadUnit.setPosition(new Position(-1,-1,-1,-1));
+		
+		System.out.println("grave occupied: " + grave.getUnitOnTile());
+		// Dereference object
 	}
 	
 }
