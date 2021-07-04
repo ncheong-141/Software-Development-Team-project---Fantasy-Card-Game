@@ -28,10 +28,10 @@ public class AbilityToUnitLinkage {
 		// For Abilities constructor (execution targets enemies?, Class type of target, EffectAnimation)
 		
 						/*** Spells ***/
-	/*Truestrike*/		UnitAbility.put("Truestrike", 		constructArrayListAbility(new A_Truestrike(true,Monster.class, null))); 	
-	/*Sundrop Elixir*/	UnitAbility.put("Sundrop Elixir", 	constructArrayListAbility(new A_SundropElixir(false, Monster.class, null)));
-	/*Staff of Y'Kir*/	UnitAbility.put("Staff of Y'Kir", 	constructArrayListAbility(new A_StaffofYkir(false, Avatar.class, null)));	
-	/*Entropic Decay*/	UnitAbility.put("Entropic Decay", 	constructArrayListAbility(new A_EntropicDecay(true, Monster.class, null)));	
+	/*Truestrike*/		UnitAbility.put("Truestrike", 		constructArrayListAbility(new A_S_Truestrike(true,Monster.class, null))); 	
+	/*Sundrop Elixir*/	UnitAbility.put("Sundrop Elixir", 	constructArrayListAbility(new A_S_SundropElixir(false, Monster.class, null)));
+	/*Staff of Y'Kir*/	UnitAbility.put("Staff of Y'Kir", 	constructArrayListAbility(new A_S_StaffofYkir(false, Avatar.class, null)));	
+	/*Entropic Decay*/	UnitAbility.put("Entropic Decay", 	constructArrayListAbility(new A_S_EntropicDecay(true, Monster.class, null)));	
 			
 					
 						/*** Units ***/ 
