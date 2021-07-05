@@ -58,6 +58,11 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 			
 			// Near --- enemy unit tile has total tile index difference of <=1 on either Board dimension, which does not require the unit to move before attack
 			// Change to Board adjacentEnemies.contains(targetTile) method
+			
+//			int mRange = currentTile.getUnitOnTile().getAttackRange();
+//			if((Math.abs(currentTile.getTilex() - targetTile.getTilex()) <= mRange && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= mRange))) {
+//				
+//			}
 			if(Math.abs(currentTile.getTilex() - targetTile.getTilex()) <=1 && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= 1)) {
 				
 				// Attack

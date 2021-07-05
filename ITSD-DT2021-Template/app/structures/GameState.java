@@ -74,7 +74,9 @@ public class GameState {
 		playerTwo = new ComputerPlayer();
 		playerTwo.setDeck(deckPlayerTwo);
 		
-		
+		for (Card c : playerOne.getDeck().getDeck()) {
+			System.out.println("cardname " +c.getCardname());
+		}
 		// Set hands
 		Hand handPlayerOne = new Hand();
 		playerOne.setHand(handPlayerOne);

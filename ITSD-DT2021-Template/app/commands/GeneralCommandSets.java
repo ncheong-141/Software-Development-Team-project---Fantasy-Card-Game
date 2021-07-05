@@ -32,8 +32,8 @@ public class GeneralCommandSets {
 		if (tilesToDraw.size() < bufferSize) {
 			for (int i = 0; i < tilesToDraw.size(); i++) {
 				BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
-				try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}	
 			}
+			try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}	
 		}
 		else { 
 			
@@ -47,19 +47,20 @@ public class GeneralCommandSets {
 				if (bNum < batchSize -1 ) {
 					for (int i = bNum*bufferSize; i < (bNum+1)*bufferSize; i++) {
 						BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
-						try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 					}
+					try {Thread.sleep(threadSleepTimeLong);} catch (InterruptedException e) {e.printStackTrace();}
+
 				}
 				// If bNum is the final batch, only iterate up to the ArrayList length 
 				else {
 					for (int i = bNum*bufferSize; i < tilesToDraw.size(); i++) {
 						BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
-						try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 					}
+					try {Thread.sleep(threadSleepTimeLong);} catch (InterruptedException e) {e.printStackTrace();}
 				}
 				
 				// Long sleep to allow for buffer to empty properly...
-				threadSleepOverride(1000); 
+				//threadSleepOverride(1000); 
 			}
 		}
 	}
@@ -129,5 +130,16 @@ public class GeneralCommandSets {
 		try {Thread.sleep(ms);} catch (InterruptedException e) {e.printStackTrace();}
 
 	}
+	
+	
+	
+	//** Debugging commands **// 
+	
+	// Summon Unit
+	
+	// Create card
+	
+	// 
+	
 	
 }
