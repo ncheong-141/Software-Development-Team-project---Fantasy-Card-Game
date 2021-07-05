@@ -16,19 +16,19 @@ public class Monster extends Unit{
 	// Basic Monster attributes
 	public String 					name; 
 	protected int 					HP;				// Monster's current health value, between 0 - maxHP
-	protected int 					maxHP;			// Max limit on Monster's health (reference for healing actions)
+	protected int 					maxHP;			// Maximum value a Monster's HP can be
 	protected int 					attackValue; 	// How much damage Monster does in one attack action
 	protected ArrayList <Ability>	abilities;		// Any abilities the Monster has
 	
-	// Action range values
+	// Action values
 	protected int 			movesLeft;				// number of move actions Monster has left, tracks directly to range
 	protected int 			attacksLeft;			// number of attack actions Monster has 'leftover', != range
 	protected int			attacksMax;				// max number of attack actions a Monster can have, reset by Cooldown
-	protected int 			attackRange;			// integer range for attacks
+	protected int 			attackRange;			// integer range of tiles (in all directions) for attacks
 	
 	// Gameplay info
 	protected Player		owner;					// Player who owns the unit
-	protected boolean		onCooldown;				// Tracks when the unit has actions left (move and/or attack)
+	protected boolean		onCooldown;				// Tracks when the unit is capable of actions, where true = able
 	
 	
 	/* Constructor(s) */
