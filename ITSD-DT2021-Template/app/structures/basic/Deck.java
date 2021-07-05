@@ -41,7 +41,9 @@ public class Deck{//class used to create and manage player and ai decks
 		for (int i=0; i<=9; i++) {// cycles through the list and creates two instances of each card
 			card = BasicObjectBuilders.loadCard(cardList[i], i+1, Card.class);
 			deck.add(card);
+			card.setConfigFile(cardList[i]);
 			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
+			card.setConfigFile(cardList[i]);
 			deck.add(card);
 			}
 		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit

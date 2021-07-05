@@ -37,7 +37,12 @@ public class CastSpellState implements IUnitPlayStates {
 
 		// Create spell from the Card in context
 		// StaticConfFiles needs to be able to be linked to Card. 
-		Spell spellToCast = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 0, Spell.class); 
+		//Spell spellToCast = (Spell) BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 0, Spell.class); 
+		System.out.println("Static config file is:" + context.getLoadedCard().getConfigFile());
+		
+		Spell spellToCast = (Spell) BasicObjectBuilders.loadCard( context.getLoadedCard().getConfigFile(), context.getLoadedCard().getId(), Spell.class); 
+
+		
 		GeneralCommandSets.threadSleep();
 
 		// Set ability to Spell

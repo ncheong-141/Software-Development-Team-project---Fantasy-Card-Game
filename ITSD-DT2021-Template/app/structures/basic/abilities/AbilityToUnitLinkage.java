@@ -29,8 +29,6 @@ public class AbilityToUnitLinkage {
 		
 		// For Abilities constructor (execution targets enemies?, Class type of target, EffectAnimation)
 		
-		EffectAnimation e = new EffectAnimation(); 
-
 						/*** Spells ***/
 	/*Truestrike*/		UnitAbility.put("Truestrike", 		constructArrayListAbility(new A_S_Truestrike(true,Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation))))); 	
 	/*Sundrop Elixir*/	UnitAbility.put("Sundrop Elixir", 	constructArrayListAbility(new A_S_SundropElixir(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
