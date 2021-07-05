@@ -74,8 +74,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 //		computerAvatar.setOwner(g.getPlayerTwo(), g.getBoard());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
-//		humanAvatar.setAttackValue(2);
-//		computerAvatar.setAttackValue(2);
+		humanAvatar.setAttackValue(2);
+		computerAvatar.setAttackValue(2);
 		
 		//display avatars on board
 		Tile tOne = g.getGameBoard().getTile(1, 2);
