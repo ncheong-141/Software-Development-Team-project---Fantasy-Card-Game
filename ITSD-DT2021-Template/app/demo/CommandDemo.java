@@ -262,6 +262,9 @@ public class CommandDemo {
 			i++;
 		}
 		
+		// Give player mana
+		g.getTurnOwner().setMana(8);
+		
 	}
 
 	public static void executeDemoSummon(ActorRef out, GameState g) {
