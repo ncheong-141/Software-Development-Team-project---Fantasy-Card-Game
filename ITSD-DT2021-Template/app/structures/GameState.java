@@ -72,7 +72,7 @@ public class GameState {
 		playerTwo = new ComputerPlayer();
 		playerTwo.setDeck(deckPlayerTwo);
 		
-		for (Card c : playerOne.getDeck().getDeck()) {
+		for (Card c : playerOne.getDeck().getCardList()) {
 			System.out.println("cardname " +c.getCardname());
 		}
 		// Set hands
@@ -115,7 +115,6 @@ public class GameState {
 	public void setPlayerDead(boolean playerDead) {
 		this.playerDead = playerDead;
 	}
-
 
 	public Player getTurnOwner() {
 		return turnOwner;

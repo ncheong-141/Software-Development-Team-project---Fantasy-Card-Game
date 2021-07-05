@@ -49,7 +49,7 @@ public class Hand {
 		ArrayList<Card> drawDeck= deck.getCardList();
 		Card drawn= drawDeck.get(0);
 		if (curr<6) {//checks that hand is not full
-			hand.add(drawn);
+			handList.add(drawn);
 		//increments current card count
 
 			curr++;
@@ -70,7 +70,7 @@ public class Hand {
 	
 	public void removeCard(int i) {
 
-		hand.remove(i);
+		handList.remove(i);
 		setCurr(getCurr()-1);
 
 	}

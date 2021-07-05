@@ -22,7 +22,7 @@ import akka.actor.ActorRef;
 
 public class GeneralCommandSets {
 	
-	private static final int threadSleepTime = 400; 
+	private static final int threadSleepTime = 30; 
 	private static final int threadSleepTimeLong = 400; 
 	private static final int bufferSize = 16; 
 	
@@ -141,7 +141,7 @@ public class GeneralCommandSets {
 
 		// draw cards in hand
 		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
-		for(Card c : gameState.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+		for(Card c : gameState.getTurnOwner().getHand().getHandList()) { // get list of cards from Hand from Player
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 			GeneralCommandSets.threadSleep(); 

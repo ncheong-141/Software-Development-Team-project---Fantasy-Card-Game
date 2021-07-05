@@ -45,7 +45,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
 
 
-		CommandDemo.executeDemoTester(out,gameState); // this executes the command demo, comment out this when implementing your solution
+		//CommandDemo.executeDemoTester(out,gameState); // this executes the command demo, comment out this when implementing your solution
 		// CommandDemo.executeDemoUnits(out, gameState);
 		//CommandDemo.executeDemoUnitsNicholas(out, gameState); 
 		//CommandDemo.executeDemoBoard(out, gameState);
@@ -54,8 +54,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//CommandDemo.executeDemoBoard(out, g);
 		//CommandDemo.executeDemoDeckHand(out, gameState);
 		//CommandDemo.executeDemoSummon(out, gameState);
-//		boardAvatarSetUp(out,gameState,message);
-//		playerCardSetUp(out, gameState, message);
+		boardAvatarSetUp(out,gameState,message);
+		playerCardSetUp(out, gameState, message);
 		//CommandDemo.executeTileHighlightDemo(out, g);
 		//CommandDemo.executeAbilityDemo(out, gameState);
 
@@ -82,8 +82,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		//display avatars on board
 
-		Tile tOne = g.getGameBoard().getTile(1, 2);
-		Tile tTwo = g.getGameBoard().getTile(7, 2);
+		Tile tOne = g.getBoard().getTile(1, 2);
+		Tile tTwo = g.getBoard().getTile(7, 2);
 		humanAvatar.setPositionByTile(tOne);
 		computerAvatar.setPositionByTile(tTwo);
 
@@ -121,7 +121,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		int i = 0;
 		
-		for (Card c : g.getPlayerOne().getHand().getHand()) {
+		for (Card c : g.getPlayerOne().getHand().getHandList()) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}

@@ -97,24 +97,24 @@ public class Deck{//class used to create and manage player and ai decks
 	}
 	
 	//getters and setters
-	public void setDeck(ArrayList<Card> deck) {
+	public void setCardList(ArrayList<Card> deck) {
 		this.cardList = deck;
 	}
-	public ArrayList<Card> getDeck() {
+	public ArrayList<Card> getCardList() {
 		return cardList;
 	}
 
 	//method to test deck creation in eclipse
 	public void pod(Deck deck) {
 		ArrayList<Card> check= new ArrayList<Card>();
-		check=deck.getDeck();
+		check=deck.getCardList();
 		for(int i=0; i<check.size();i++) {
 			System.out.print(check.get(i).getCardname());
 		}
 	}
 	
 	public void shuffleDeck() {
-		Collections.shuffle(deck);
+		Collections.shuffle(cardList);
 	}
 
 }
