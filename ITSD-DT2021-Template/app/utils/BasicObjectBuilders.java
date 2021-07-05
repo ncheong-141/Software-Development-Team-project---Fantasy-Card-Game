@@ -20,6 +20,7 @@ import structures.basic.Unit;
 import structures.basic.abilities.Ability;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import structures.basic.abilities.Call_IDs;
+import utils.StaticConfFiles;
 
 /**
  * This class contains methods for producing basic objects from configuration files
@@ -46,10 +47,28 @@ public class BasicObjectBuilders {
 	 * @return
 	 */
 	
-	public static Card loadCard(String configurationFile, int id, Class<? extends Card> classtype) {
+	// ObjectBuilder for Unit cards; mapper uses the cardConfig file to make the Card,
+	// and the resulting Card object stores the unitConfig file for later use in summoning
+	public static Card loadCard(String cardConfigurationFile, String unitConfig, int id, Class<? extends Card> classtype) {
 		try {
-			Card card = mapper.readValue(new File(configurationFile), classtype);
+			Card card = mapper.readValue(new File(cardConfigurationFile), classtype);
 			card.setId(id);
+			card.setConfigFile(unitConfig);
+			return card;
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return null;
+	}
+	
+	// Alternative Builder for non-unit cards, overloaded method signature for easy use
+	// Config file here stores the card's config file (for Spell card use)
+	public static Card loadCard(String cardConfigurationFile, int id, Class<? extends Card> classtype) {
+		try {
+			Card card = mapper.readValue(new File(cardConfigurationFile), classtype);
+			card.setId(id);
+			card.setConfigFile(cardConfigurationFile);
 			return card;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,7 +102,7 @@ public class BasicObjectBuilders {
 	 * @param configFile
 	 * @return
 	 */
-	// Leave this intact to support game loading code
+	// Leave this intact to support game loading code ---?? Reconsider
 	public static Unit loadUnit(String configFile, int id,  Class<? extends Unit> classType) {
 		
 		try {
@@ -100,6 +119,7 @@ public class BasicObjectBuilders {
 	public static Monster loadMonsterUnit(String configFile, Card statsRef, Player p, Class<? extends Monster> classType) {
 
 		try {
+			System.out.println("configFile name in objectbuilder is: "+ configFile);
 			Monster mUnit = mapper.readValue(new File(configFile), classType);
 			
 			// Set monster attributes from reference Card info
