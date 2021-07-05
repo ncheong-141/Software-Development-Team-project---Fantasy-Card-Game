@@ -116,11 +116,11 @@ public class BasicObjectBuilders {
 	}
 	
 	// Alternative ObjectBuilder that uses the Monster constructor
-	public static Monster loadMonsterUnit(String configFile, Card statsRef, Player p, Class<? extends Monster> classType) {
+	public static Monster loadMonsterUnit(String u_configFile, Card statsRef, Player p, Class<? extends Monster> classType) {
 
 		try {
-			System.out.println("configFile name in objectbuilder is: "+ configFile);
-			Monster mUnit = mapper.readValue(new File(configFile), classType);
+			System.out.println("configFile name in objectbuilder is: "+ u_configFile);
+			Monster mUnit = mapper.readValue(new File(u_configFile), classType);
 			
 			// Set monster attributes from reference Card info
 			mUnit.setId(statsRef.getId());
