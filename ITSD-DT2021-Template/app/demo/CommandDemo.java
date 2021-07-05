@@ -102,7 +102,7 @@ public class CommandDemo {
 
 
 		// loadCard
-		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
+		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 0, Card.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
 		// Enemy unit
@@ -137,13 +137,23 @@ public class CommandDemo {
 		
 		// loadCard
 		Card ctrustrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_truestrike, 1, Card.class);
-		GeneralCommandSets.threadSleep();
+		ctrustrike.setConfigFile(StaticConfFiles.c_truestrike);
+		Card cstaffofykir = BasicObjectBuilders.loadCard(StaticConfFiles.c_staff_of_ykir, 2, Card.class);
+		cstaffofykir.setConfigFile(StaticConfFiles.c_staff_of_ykir);
+		Card centropybrokenskill = BasicObjectBuilders.loadCard(StaticConfFiles.c_entropic_decay, 3, Card.class);
+		centropybrokenskill.setConfigFile(StaticConfFiles.c_entropic_decay);
+		Card csundropelixir = BasicObjectBuilders.loadCard(StaticConfFiles.c_sundrop_elixir, 4, Card.class);
+		csundropelixir.setConfigFile(StaticConfFiles.c_sundrop_elixir);
 
-
+		
 		// Create a tempHand for testing
 		ArrayList <Card> cards = new ArrayList <Card> ();
 		cards.add(cfire_spitter);
 		cards.add(ctrustrike);
+		cards.add(csundropelixir);
+		cards.add(cstaffofykir);
+		cards.add(centropybrokenskill);
+
 
 		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
 		Hand hand = new Hand(); 
@@ -160,6 +170,7 @@ public class CommandDemo {
 		// Set up friendly Unit to summon next to
 		Avatar humanAvatar = g.getHumanAvatar();
 		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
+		BasicCommands.drawUnit(out, humanAvatar, g.getBoard().getTile(1, 2));
 		GeneralCommandSets.threadSleep();
 
 	}
