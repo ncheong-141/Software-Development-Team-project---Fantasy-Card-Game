@@ -1,6 +1,8 @@
 package structures.basic;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
@@ -121,9 +123,6 @@ public class Deck{//class used to create and manage player and ai decks
 	}
 	
 	public void shuffleDeck() {
-		//write in sprint 4
-		//connect to gameState for both decks to shuffle before game commences
-		//shuffle deck, reorder unitDeck to match shuffled deck?
+		Collections.shuffle(deck);
 	}
 }
-	
