@@ -51,15 +51,15 @@ public class SummonMonsterState implements IUnitPlayStates {
 			
 			// Execute summon method
 			summonMonster(context.getGameStateRef(), context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
+
+			/** Delete card from Hand + update visual **/
+			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
+			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
 			
 			/** Reset entity selection and board **/  
 			// Deselect after action finished
 			context.deselectAllAfterActionPerformed();
 			
-			/** Delete card from Hand + update visual **/
-			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
-			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
-
 			// Update UI 
 			BasicCommands.deleteCard(context.out, cardIndexInHand);
 		
