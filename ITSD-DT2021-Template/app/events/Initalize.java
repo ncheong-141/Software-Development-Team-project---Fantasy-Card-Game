@@ -70,9 +70,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		Avatar humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, g.getPlayerOne(), g.getBoard(), Avatar.class);
-
-		Avatar computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, g.getPlayerTwo(), g.getGameBoard(), Avatar.class);
+		Avatar humanAvatar = g.getHumanAvatar();
+		Avatar computerAvatar = g.getComputerAvatar();
 		
 		
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
@@ -117,10 +116,13 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		int i = 0;
+		
 		for (Card c : g.getPlayerOne().getHand().getHand()) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
+		
+		
 
 
 	}
