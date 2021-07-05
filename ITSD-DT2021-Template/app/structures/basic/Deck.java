@@ -39,9 +39,9 @@ public class Deck{//class used to create and manage player and ai decks
 		
 		
 		for (int i=0; i<=7; i++) {// cycles through the list and creates two instances of each card
-			card = BasicObjectBuilders.loadCard(cardList[i], cardList[i], i+2, Card.class);
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i], i+2, Card.class);
 			deck.add(card);
-			card = BasicObjectBuilders.loadCard(cardList[i], cardList[i],i+10, Card.class);
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i],i+10, Card.class);
 			deck.add(card);
 			}
 		for(int j=8; j<=9; j++) {//cycles through spells in list and creates cards for each
@@ -77,9 +77,9 @@ public class Deck{//class used to create and manage player and ai decks
 				StaticConfFiles.u_rock_pulveriser};
 		
 		for (int i=0; i<=7; i++) {// cycles through the list and creates two instances of each card
-			card = BasicObjectBuilders.loadCard(cardList[i], cardList[i], i+22, Card.class);
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i], i+22, Card.class);
 			deck.add(card);
-			card = BasicObjectBuilders.loadCard(cardList[i], cardList[i],i+30, Card.class);
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i],i+30, Card.class);
 			deck.add(card);
 			}
 		for(int j=8; j<=9; j++) {//cycles through spells in list and creates cards for each
