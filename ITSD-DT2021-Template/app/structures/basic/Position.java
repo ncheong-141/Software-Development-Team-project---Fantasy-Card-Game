@@ -50,6 +50,10 @@ public class Position {
 		this.tiley = tilexy;
 	}
 	
+	public Tile getTile(Board board) {
+		return board.getTile(tilex, tiley);
+	}
+	
 	
 	
 	
