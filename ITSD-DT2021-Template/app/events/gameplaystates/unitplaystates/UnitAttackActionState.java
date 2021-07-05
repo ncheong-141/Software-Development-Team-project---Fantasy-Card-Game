@@ -53,11 +53,11 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		attacker = (Monster) context.getLoadedUnit();
 		defender = targetTile.getUnitOnTile();
 		
-		// Gather ranges
-		// Build attacker/defender attackRanges for checks --- formula should only ever reflect attackRange in this state, not
-		// cumulative attack + move range (since all movement takes place before this state).
-		// For attacker: attackRange should reflect unit's attacks range (omit move range)
-		// For defender: counterRange should reflect unit's attack range (omit move range)
+		/* Gather ranges
+		/* Build attacker/defender attackRanges for checks --- formula should only reflect attackRange in this state, not
+		/* cumulative attack + move range (since all movement takes place before this state).
+		/* For attacker: attackRange should reflect unit's attacks range (omit move range)
+		/* For defender: counterRange should reflect unit's attack range (omit move range)*/
 		ArrayList <Tile> temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
 		attackerAttackRange = temp;
 		temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), defender.getMovesLeft()));
@@ -123,7 +123,6 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			// If Avatar damaged ability check
 			
 			/***	Play animations and set visuals		***/
-			
 			// Check for attacker animations
 			EffectAnimation arrows = checkRangedAttacker(attacker);
 			
@@ -147,6 +146,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			if(!survived) {
 				System.out.println("Defender is dead.");		
 				
+				// Check for attacker destination and reachable by defender (ranged/adjacent)
+				
+				// Counter attack
+				
 				// Play animation + sleep to let it happen
 				BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
 				try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}
@@ -163,7 +166,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 					}
 					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
 					
-					// Game ends
+					// Call game end method
 					context.getGameStateRef().gameOver();
 					return;
 				}
@@ -233,7 +236,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		// Check for onDeath ability
 		if(deadUnit.hasAbility()) {
 			for(Ability a : deadUnit.getMonsterAbility()) {
-				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); }
+				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); 
+				break;}
 			}
 		}
 		
@@ -241,7 +245,6 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		grave.removeUnit();
 		deadUnit.setPosition(new Position(-1,-1,-1,-1));
 		
-		// Dereference object
 	}
 	
 	// Check for Ranged Attacker ability and return EffectAnimation if true

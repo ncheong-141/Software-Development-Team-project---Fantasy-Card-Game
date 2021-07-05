@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import akka.actor.ActorRef;
 import commands.*;
-import commands.GeneralCommandSets;
 
 
 /**
@@ -167,9 +166,7 @@ public class GameState {
 	}
 
 	public static void gameOver() {
-		playerDead = true;
-
-		// call method to finish game
+		playerDead = true;		
 	}
 
 	// Errr we have two of these!

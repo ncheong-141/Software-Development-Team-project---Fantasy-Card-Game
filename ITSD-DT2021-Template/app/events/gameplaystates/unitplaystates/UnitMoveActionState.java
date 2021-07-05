@@ -38,18 +38,13 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		System.out.println("In UnitMoveActionSubState.");
 		context.debugPrint();
 		
-		/*** Unit checks here? ***/
+		context.setLoadedUnit(currentTile.getUnitOnTile());
+		if(context.getLoadedUnit() == null) {	System.out.println("Error, current tile has no unit.");	}
 		
-	
 		// Perform unit move function
 		unitMove(context); 
 		
-		// Call UnitMoving
-//		UnitMoving rules = new UnitMoving(); 
-		
-		// Call UnitStopped
-//		UnitStopped continued = new UnitStopped();
-		
+		// Loop until moveStopped trigger
 		
 		/***	Condition here for combined substate executing, which requires selection is maintained	***/
 		if(!(context.getCombinedActive())) {
@@ -71,8 +66,6 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(mSelected.getPosition().getTilex(),mSelected.getPosition().getTiley(),mSelected.getMovesLeft());
 		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley(), mSelected.getAttackRange(), mSelected.getMovesLeft()));
 		actRange.addAll(mRange);
-//		Tile current = context.getGameStateRef().getBoard().getTile(mSelected.getPosition().getTilex(),mSelected.getPosition().getTiley());
-//		Tile target = context.getGameStateRef().getBoard().getTile(context.getTilex(), context.getTiley());
 		
 		System.out.println("Movement target tile is x: " + targetTile.getTilex() + ", y: " + targetTile.getTiley());
 
@@ -96,8 +89,6 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			currentTile.removeUnit();
 			targetTile.addUnit(mSelected);
 			mSelected.setPositionByTile(targetTile);
-//			BasicCommands.addPlayer1Notification(context.out, "Unit moving...", 4);
-//			GeneralCommandSets.threadSleep();
 			
 			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
 			// Move animation
@@ -112,4 +103,5 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			System.out.println("Can't complete move.");		
 		}
 	}
+	
 }
