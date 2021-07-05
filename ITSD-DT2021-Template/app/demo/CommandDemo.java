@@ -238,6 +238,8 @@ public class CommandDemo {
 
 		Deck playOneDeck = g.getPlayerOne().getDeck();
 		Card testCard = playOneDeck.getDeck().get(12);
+		ArrayList <Card> cards = new ArrayList <Card> ();
+		cards.add(testCard);
 
 		System.out.println("config file in demo is: " + testCard.getConfigFile());
 		Monster mcf = BasicObjectBuilders.loadMonsterUnit(testCard.getConfigFile(), testCard, g.getPlayerOne(), Monster.class);
@@ -247,6 +249,18 @@ public class CommandDemo {
 		one.addUnit(mcf);
 		mcf.setPositionByTile(one);
 		BasicCommands.drawUnit(out, mcf, one);
+		
+		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
+		Hand hand = new Hand(); 
+		hand.setHand(cards);
+		g.getTurnOwner().setHand(hand);
+
+		// draw cards in hand
+		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
+		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+			BasicCommands.drawCard(out, c, i, 0);
+			i++;
+		}
 		
 	}
 
