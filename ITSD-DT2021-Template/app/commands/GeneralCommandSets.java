@@ -22,7 +22,7 @@ import akka.actor.ActorRef;
 
 public class GeneralCommandSets {
 	
-	private static final int threadSleepTime = 30; 
+	private static final int threadSleepTime = 400; 
 	private static final int threadSleepTimeLong = 400; 
 	private static final int bufferSize = 16; 
 	
@@ -50,7 +50,7 @@ public class GeneralCommandSets {
 					for (int i = bNum*bufferSize; i < (bNum+1)*bufferSize; i++) {
 						BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
 					}
-					try {Thread.sleep(threadSleepTimeLong);} catch (InterruptedException e) {e.printStackTrace();}
+					try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 
 				}
 				// If bNum is the final batch, only iterate up to the ArrayList length 
@@ -58,7 +58,7 @@ public class GeneralCommandSets {
 					for (int i = bNum*bufferSize; i < tilesToDraw.size(); i++) {
 						BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
 					}
-					try {Thread.sleep(threadSleepTimeLong);} catch (InterruptedException e) {e.printStackTrace();}
+					try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 				}
 				
 				// Long sleep to allow for buffer to empty properly...
