@@ -155,7 +155,7 @@ public class Tile implements Comparable<Tile>{
 		HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
 		
 		
-		if (wBAttackable.size() > currAttackable.size()) this.score += this.bringsEnemyInRange;
+		if (wBAttackable.size() > currAttackable.size()) this.score += bringsEnemyInRange;
 		
 		//all tiles on the board with an enemy unit on it
 		ArrayList <Tile> enemyTilesOnBoard = b.enemyTile(m.getOwner());

@@ -1,10 +1,11 @@
 package structures.basic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class CardCombo implements Comparable<CardCombo> {
 	
-	private ArrayList<Card> cardCombo;
+	private HashSet <Card> cardCombo;
 	
 	//class variables holding information on the specific combination obj
 	//based on cards contained in cardCombo list
@@ -31,10 +32,10 @@ public class CardCombo implements Comparable<CardCombo> {
 	
 	
 	public CardCombo() {
-		cardCombo = new ArrayList<Card>();
+		cardCombo = new HashSet<Card>();
 	}
 	
-	public ArrayList<Card> getCardCombo(){
+	public HashSet<Card> getCardCombo(){
 		return cardCombo;
 	}
 	

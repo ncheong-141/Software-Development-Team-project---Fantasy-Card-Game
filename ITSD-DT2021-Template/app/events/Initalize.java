@@ -1,9 +1,12 @@
 package events;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import commands.GeneralCommandSets;
 import demo.CommandDemo;
 import structures.GameState;
 import structures.basic.Avatar;
@@ -60,27 +63,28 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
 
+		ArrayList<Tile> boardTiles = g.getBoard().getAllTilesList();
 		
-		for (int i = 0; i<g.getBoard().getGameBoard().length; i++) {
-			for (int k = 0; k<g.getBoard().getGameBoard()[0].length; k++) {
-				BasicCommands.drawTile(out, g.getBoard().getGameBoard()[i][k], 0);
-			}
-		}
+		GeneralCommandSets.drawBoardTiles(out, boardTiles, 0);
+
+		
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		Avatar humanAvatar = g.getHumanAvatar();
-//		humanAvatar.setOwner(g.getPlayerOne(), g.getBoard());
 		Avatar computerAvatar = g.getComputerAvatar();
-//		computerAvatar.setOwner(g.getPlayerTwo(), g.getBoard());
+		
+		
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		humanAvatar.setAttackValue(2);
 		computerAvatar.setAttackValue(2);
 		
+		
 		//display avatars on board
 		Tile tOne = g.getGameBoard().getTile(1, 2);
 		Tile tTwo = g.getGameBoard().getTile(7, 2);
-				
+		humanAvatar.setPositionByTile(tOne);
+		computerAvatar.setPositionByTile(tTwo);
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		tOne.addUnit(humanAvatar);
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
@@ -113,7 +117,14 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		BasicCommands.setPlayer2Mana(out, g.getPlayerTwo());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		//need to display player's hand - instantiation of decks done in game state
+		int i = 0;
+		
+		for (Card c : g.getPlayerOne().getHand().getHand()) {
+			BasicCommands.drawCard(out, c, i, 0);
+			i++;
+		}
+		
+		
 
 
 	}

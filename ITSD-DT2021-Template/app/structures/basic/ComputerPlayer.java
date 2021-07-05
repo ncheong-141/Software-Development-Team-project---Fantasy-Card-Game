@@ -109,22 +109,25 @@ public class ComputerPlayer extends Player {
 		ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
 		
 		//converting hand to an array for ease of indexing
-		Card [] hand = new Card [this.hand.getHand().size()-1];
-		for (int i = 0; i<hand.length; i++) {
-			hand[i] = list.get(i);
+		Card [] playableCards = new Card [this.playableCards().size()-1];
+		for (int i = 0; i<playableCards.length; i++) {
+			playableCards[i] = list.get(i);
 		}
+		
+		Arrays.sort(playableCards);
+		
 		//!!!!!NOTE: order array - card will implement comparable on mana cost
 		
 		//instantiating a combo object (as an array list of card objects)
 		CardCombo combo = new CardCombo();
 		
 		//iterating over the hand array
-		for (int k = 0; k<hand.length; k++) {
+		for (int k = 0; k<playableCards.length; k++) {
 			//adding the card at position kth in hand to a combo
-			combo.add(hand[k]);
+			combo.add(playableCards[k]);
 			
 			//creating variable to track how much mana the player has left after (hypothetically) playing card k
-			int manaLeft = this.getMana() - hand[k].getManacost();
+			int manaLeft = this.getMana() - playableCards[k].getManacost();
 			
 			//if playing card k clears the player's mana
 			//or if the leftover mana is less than the mana cost of the least "expensive" card in the ordered array
@@ -132,7 +135,7 @@ public class ComputerPlayer extends Player {
 			//list containing card k added to overall comboList
 			//also check if k is the last card in hand
 			//if so this will be a combo on its own and for loop terminates
-			if (manaLeft == 0 || manaLeft < hand[hand.length-1].getManacost() || k == hand.length-1) {
+			if (manaLeft == 0 || manaLeft < playableCards[playableCards.length-1].getManacost() || k == playableCards.length-1) {
 				comboList.add(combo);
 				//reference combo is re-assigned a new ArrayList obj (empty)
 				combo = new CardCombo();
@@ -143,23 +146,23 @@ public class ComputerPlayer extends Player {
 			//if the leftover mana is bigger than the least expensive card in the array
 			//iterate over the array, starting from k+1th to check possible combos
 			else {
-				for (int i = k+1; i<hand.length; i++) {
+				for (int i = k+1; i<playableCards.length; i++) {
 					//if the next card's cost clears leftover mana
 					//add card to current combo, add combo to combo list
 					//reset combo and reset mana to player's mana - cost of card k
-					if (hand[i].getManacost() == manaLeft) {
-						combo.add(hand[i]);
+					if (playableCards[i].getManacost() == manaLeft) {
+						combo.add(playableCards[i]);
 						comboList.add(combo);
 						combo = new CardCombo();
-						manaLeft = this.getMana() - hand[k].getManacost();
+						manaLeft = this.getMana() - playableCards[k].getManacost();
 					}
 					//if leftover mana is more than enough to add the next card to the current combo
 					//add card to combo, update leftover mana
-					else if (hand[i].getManacost()<manaLeft) {
-						combo.add(hand[i]);
-						manaLeft -= hand[i].getManacost();
+					else if (playableCards[i].getManacost()<manaLeft) {
+						combo.add(playableCards[i]);
+						manaLeft -= playableCards[i].getManacost();
 						//if leftover mana is less than cheapest card no need to check rest of the array
-						if (manaLeft < hand[hand.length-1].getManacost())break;
+						if (manaLeft < playableCards[playableCards.length-1].getManacost())break;
 					}
 					//if leftover mana is not enough for next card, move on to next card
 					else {

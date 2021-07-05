@@ -237,47 +237,7 @@ public class CommandDemo {
 
 
 	public static void executeDemoBoard(ActorRef out, GameState g) {
-		Board gameBoard = new Board();
-
-		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
-			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
-				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
-			}
-		}
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-
-		Avatar humanAvatar = g.getHumanAvatar();
-		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
-		Avatar computerAvatar = g.getComputerAvatar();
-		computerAvatar.setOwner(g.getPlayerTwo(), gameBoard);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-
-		humanAvatar.setAttackValue(5);
-		computerAvatar.setAttackValue(2);
-
-		//display avatars on board
-		Tile tOne = g.getGameBoard().getTile(1, 2);
-		Tile tTwo = g.getGameBoard().getTile(7, 2);
-
-		BasicCommands.drawUnit(out, humanAvatar, tOne);
-		tOne.addUnit(humanAvatar);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
-		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-
-		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
-		tTwo.addUnit(computerAvatar);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
-		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}	
-
-		ArrayList <Tile> display = gameBoard.allSummonableTiles(g.getPlayerOne());
-		for (Tile t : display) {
-			BasicCommands.drawTile(out, t, 2);
-			try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		}
+		
 
 	}
 
