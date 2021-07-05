@@ -50,7 +50,7 @@ public class SummonMonsterState implements IUnitPlayStates {
 		if(tileInSummonRange() && sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard())) {
 			
 			// Execute summon method
-			summonMonster(context.getGameStateRef(), context.out, "dont have u_config file yet", context.getLoadedCard(), this.targetTile);
+			summonMonster(context.getGameStateRef(), context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
 			
 			/** Reset entity selection and board **/  
 			// Deselect after action finished
@@ -102,7 +102,7 @@ public class SummonMonsterState implements IUnitPlayStates {
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		
 		// Need some code about retrieving StaticConfFiles matching card from Deck here
-		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter,statsRef,gameState.getTurnOwner(),Monster.class);		
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(u_configFile,statsRef,gameState.getTurnOwner(),Monster.class);		
 		summonedMonster.setPositionByTile(gameState.getBoard().getTile(summonTile.getTilex(),summonTile.getTiley()));
 		summonedMonster.setOwner(gameState.getTurnOwner());
 		GeneralCommandSets.threadSleep(); 
@@ -130,6 +130,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 		// Check for on-summon triggers
 			// Trigger abilities that permanently change the new object
+			
+		if(summonedMonster.getMonsterAbility() != null) {
 			for(Ability a : summonedMonster.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.construction) {
 					a.execute(summonedMonster, gameState);
@@ -142,6 +144,9 @@ public class SummonMonsterState implements IUnitPlayStates {
 					a.execute(summonedMonster, gameState);
 				}
 			}
+		}
+		
+
 		
 	}
 	
