@@ -130,6 +130,7 @@ public class CommandDemo {
 		fire_spitter.setAttacksLeft(10);
 		fire_spitter.setMovesLeft(3);
 		fire_spitter.setCooldown(false);
+		fire_spitter.setAbility(AbilityToUnitLinkage.UnitAbility.get(cfire_spitter.getCardname()));
 		g.getBoard().getTile(3,2).addUnit(fire_spitter);
 		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
 		GeneralCommandSets.threadSleep();
