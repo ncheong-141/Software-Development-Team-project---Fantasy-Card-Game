@@ -1,18 +1,26 @@
 package utils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import structures.basic.Avatar;
 import structures.basic.BigCard;
+import structures.basic.Board;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
+import structures.basic.HumanPlayer;
 import structures.basic.Monster;
+import structures.basic.Player;
 import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
+import structures.basic.abilities.Ability;
+import structures.basic.abilities.AbilityToUnitLinkage;
+import structures.basic.abilities.Call_IDs;
+import utils.StaticConfFiles;
 
 /**
  * This class contains methods for producing basic objects from configuration files
@@ -39,10 +47,28 @@ public class BasicObjectBuilders {
 	 * @return
 	 */
 	
-	public static Card loadCard(String configurationFile, int id, Class<? extends Card> classtype) {
+	// ObjectBuilder for Unit cards; mapper uses the cardConfig file to make the Card,
+	// and the resulting Card object stores the unitConfig file for later use in summoning
+	public static Card loadCard(String cardConfigurationFile, String unitConfig, int id, Class<? extends Card> classtype) {
 		try {
-			Card card = mapper.readValue(new File(configurationFile), classtype);
+			Card card = mapper.readValue(new File(cardConfigurationFile), classtype);
 			card.setId(id);
+			card.setConfigFile(unitConfig);
+			return card;
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return null;
+	}
+	
+	// Alternative Builder for non-unit cards, overloaded method signature for easy use
+	// Config file here stores the card's config file (for Spell card use)
+	public static Card loadCard(String cardConfigurationFile, int id, Class<? extends Card> classtype) {
+		try {
+			Card card = mapper.readValue(new File(cardConfigurationFile), classtype);
+			card.setId(id);
+			card.setConfigFile(cardConfigurationFile);
 			return card;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,7 +102,7 @@ public class BasicObjectBuilders {
 	 * @param configFile
 	 * @return
 	 */
-	// Leave this intact to support game loading code
+	// Leave this intact to support game loading code ---?? Reconsider
 	public static Unit loadUnit(String configFile, int id,  Class<? extends Unit> classType) {
 		
 		try {
@@ -89,18 +115,59 @@ public class BasicObjectBuilders {
 		return null;
 	}
 	
-	// Use this within our game logic
-	public static Monster loadMonsterUnit(String configFile, int id, Card statsRef, Class<? extends Monster> classType) {
+	// Alternative ObjectBuilder that uses the Monster constructor
+	public static Monster loadMonsterUnit(String configFile, Card statsRef, Player p, Class<? extends Monster> classType) {
+
+		try {
+			System.out.println("configFile name in objectbuilder is: "+ configFile);
+			Monster mUnit = mapper.readValue(new File(configFile), classType);
+			
+			// Set monster attributes from reference Card info
+			mUnit.setId(statsRef.getId());
+			mUnit.setName(statsRef.getCardname());				// Check mapper doesn't do this?
+			mUnit.setHP(statsRef.getBigCard().getHealth());
+			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
+			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
+			
+			// 
+			mUnit.setOwner(p);
+			
+			System.out.println("mUnit has name " + mUnit.getName());
+			System.out.println("mUnit has ID " + mUnit.getId());
+			
+			// Ability setting
+			if(AbilityToUnitLinkage.UnitAbility.containsKey(mUnit.getName())) {
+//				if(mUnit.getAbility() == null) {	mUnit.setAbility(new ArrayList <Ability> ());	}
+				mUnit.setAbility(AbilityToUnitLinkage.UnitAbility.get(mUnit.getName()));
+			}	
+			
+			return mUnit; 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		
+		}
+		
+		return null;
+	}
+	
+	// Alt method signature with no Player, currently in place for easier development (final submission will use Player signature)
+	public static Monster loadMonsterUnit(String configFile, Card statsRef, Class<? extends Monster> classType) {
 
 		try {
 			Monster mUnit = mapper.readValue(new File(configFile), classType);
 			
-			// Set monster attributes from Card
+			// Set monster attributes from reference Card
+			mUnit.setId(statsRef.getId());
+			
 			mUnit.setName(statsRef.getCardname());
 			mUnit.setHP(statsRef.getBigCard().getHealth());
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
-			mUnit.setId(id);
+			
+//			mUnit.setOwner(p);
+			
+			System.out.println("mUnit has ID " + mUnit.getId());
 			
 			return mUnit; 
 			
@@ -113,11 +180,19 @@ public class BasicObjectBuilders {
 	}
 	
 	
-	public static Avatar loadAvatar(String configFile, int id,  Class<? extends Avatar> classType) {
+	public static Avatar loadAvatar(String configFile, int id, Player p, Board b, Class<? extends Avatar> classType) {
 		
 		try {
 			Avatar unit = mapper.readValue(new File(configFile), classType);
 			unit.setId(id);
+			unit.setOwner(p,b);
+
+			if(p instanceof HumanPlayer) {
+				unit.setName("Human Avatar");
+			} else {
+				unit.setName("AI Avatar");
+			}
+			
 			return unit;
 		} catch (Exception e) {
 			e.printStackTrace();

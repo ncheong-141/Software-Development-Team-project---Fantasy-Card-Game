@@ -1,4 +1,6 @@
 package structures.basic.abilities;
+import structures.GameState;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
 public interface Ability {
@@ -14,7 +16,7 @@ public interface Ability {
 	// - If an ability was not required to execute on a monster or Avatar, then make a new method execute() in that ability and implement there. 
 	// - Return a boolean to flag if the ability was cast successfully. (if not, ability not used) 
 	
-	public boolean execute(Monster monsterEntity); 
+	public boolean execute(Monster monsterEntity, GameState gameState); 
 	
 
 	// Enforce the getting of targetType and boolean for targeting enemy (if none applies, leave methods empty) such that attributes must be set
@@ -22,4 +24,9 @@ public interface Ability {
 	public Class<? extends Monster> getTargetType();
 	public boolean targetEnemy(); 
 	
+	// Enum value used to control when an ability is called (e.g. on summon, death etc) 
+	public Call_IDs getCallID(); 	
+	
+	// Effect animation for front end display
+	public EffectAnimation getEffectAnimation();
 }

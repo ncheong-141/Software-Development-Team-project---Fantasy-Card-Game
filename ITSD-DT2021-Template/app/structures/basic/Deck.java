@@ -38,17 +38,17 @@ public class Deck{//class used to create and manage player and ai decks
 				StaticConfFiles.u_silverguard_knight};
 		
 		
-		for (int i=0; i<=9; i++) {// cycles through the list and creates two instances of each card
-			card = BasicObjectBuilders.loadCard(cardList[i], i+1, Card.class);
+		for (int i=0; i<=7; i++) {// cycles through the list and creates two instances of each card
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i], i+2, Card.class);
 			deck.add(card);
-			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i],i+10, Card.class);
 			deck.add(card);
 			}
-		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+1, Unit.class);
-			unitDeck.add(unit);
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+11, Unit.class);
-			unitDeck.add(unit);
+		for(int j=8; j<=9; j++) {//cycles through spells in list and creates cards for each
+			card = BasicObjectBuilders.loadCard(cardList[j],j+10, Card.class);
+			deck.add(card);
+			card = BasicObjectBuilders.loadCard(cardList[j],j+12, Card.class);
+			deck.add(card);
 		}
 		}
 		
@@ -76,23 +76,24 @@ public class Deck{//class used to create and manage player and ai decks
 				StaticConfFiles.u_serpenti,
 				StaticConfFiles.u_rock_pulveriser};
 		
-		for (int i=0; i<=9; i++) {//cycles through card list twice and creates two of each card and adds to deck
-			card = BasicObjectBuilders.loadCard(cardList[i], i+1, Card.class);
+		for (int i=0; i<=7; i++) {// cycles through the list and creates two instances of each card
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i], i+22, Card.class);
 			deck.add(card);
-			card = BasicObjectBuilders.loadCard(cardList[i], i+11, Card.class);
+			card = BasicObjectBuilders.loadCard(cardList[i], unitList[i],i+30, Card.class);
 			deck.add(card);
 			}
-		for(int j=0; j<=7; j++) {//cycles through unit list and creates two of each unit
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+1, Unit.class);
-			unitDeck.add(unit);
-			unit= BasicObjectBuilders.loadUnit(unitList[j], j+11, Unit.class);
-			unitDeck.add(unit);
+		for(int j=8; j<=9; j++) {//cycles through spells in list and creates cards for each
+			card = BasicObjectBuilders.loadCard(cardList[j],j+30, Card.class);
+			deck.add(card);
+			card = BasicObjectBuilders.loadCard(cardList[j],j+32, Card.class);
+			deck.add(card);
 		}
+		
 		}
 		
 	public void delCard(int i){// removes card from the deck and corresponding unit
 		deck.remove(i);
-		unitDeck.remove(i);
+		//unitDeck.remove(i);
 	}
 	
 	//getters and setters

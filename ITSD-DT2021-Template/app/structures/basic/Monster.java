@@ -5,74 +5,85 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import commands.BasicCommands;
-import structures.basic.abilities.Ability;
-import utils.BasicObjectBuilders;
-import utils.StaticConfFiles;
+import structures.basic.abilities.*;
 
 public class Monster extends Unit{
 
 	
 	@JsonIgnore
-	
 	protected static ObjectMapper mapper = new ObjectMapper(); // Jackson Java Object Serializer, is used to read java objects from a file
 	
-	public String name; 
-	protected int HP;
-	protected int maxHP;
-	protected int attackValue; 
+	// Basic Monster attributes
+	public String 					name; 
+	protected int 					HP;				// Monster's current health value, between 0 - maxHP
+	protected int 					maxHP;			// Maximum value a Monster's HP can be
+	protected int 					attackValue; 	// How much damage Monster does in one attack action
+	protected ArrayList <Ability>	abilities;		// Any abilities the Monster has
 	
-	protected int movesLeft;							// move actions left, tracks directly to range
-	protected int attacksLeft;							// attack actions left, != range
-	protected int attackRange;							// tile range for attacks
+	// Action values
+	protected int 			movesLeft;				// number of move actions Monster has left, tracks directly to range
+	protected int 			attacksLeft;			// number of attack actions Monster has 'leftover', != range
+	protected int			attacksMax;				// max number of attack actions a Monster can have, reset by Cooldown
+	protected int 			attackRange;			// integer range of tiles (in all directions) for attacks
 	
-	protected Player				owner;				// Player who owns the unit
-	protected boolean 				selected;			// Tracks when the unit is selected on board by owner
-	protected boolean				onCooldown;			// Tracks when the unit has actions left (move and/or attack)
-	protected ArrayList <Ability>	monsterAbility;		// Any abilities the Monster has
+	// Gameplay info
+	protected Player		owner;					// Player who owns the unit
+	protected boolean		onCooldown;				// Tracks when the unit is capable of actions, where true = able
+	
 	
 	/* Constructor(s) */
-	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
-		
-		super(id, animations, correction); // Specify id, UnitAnimationSet, ImageCorrection and/or Tile 
-		
-	}
 	
 	// Default constructor for JSON
-	public Monster(/*Card statsRef, Player o*/) {
+	public Monster() {
 		super(); 
+		
+		// Some attributes are set by JSON Mapper (Unit class) or in the 
+		// loadMonsterUnit ObjectBuilder method (using the Card object as reference):
+			// name, HP, maxHP, attackValue, owner, abilities
 
 		this.movesLeft = 0;				//
 		this.attacksLeft = 0;			// Unit is summoned on cooldown 
+		this.attacksMax = 1;			//
 		this.attackRange = 1;			//
 		
-		this.selected = false;
-//		owner = o;
 		this.onCooldown = true;			// Unit is summoned on cooldown
-		System.out.println("As a Monster I am: " + this.getOnCooldown());
+		
+		this.abilities = null;			// Abilities set in ObjectBuilder for safe object construction
 		
 	}
+	
+	public Monster(int id, UnitAnimationSet animations, ImageCorrection correction) {
+		
+		// Specify id, UnitAnimationSet, ImageCorrection and/or Tile
+		super(id, animations, correction);  
+
+	}
+	
+
 
 	/* Class methods */ 
 	
-	// Move unit
-	// Attack unit
-	// Receive damage (HP reduction, counter attack if not from Spell) 
-	// Use their ability
+	/* Move unit
+	 * Attack unit
+	 * Counter attack (specialised attack, works even onCooldown)
+	 * Defend (HP reduction from any source) 
+	 * Use ability (applicable to some)
+	 */
 	
 	// Move
-	// Returns outcome of an attempt to move (successful or not) and updates move variables
+	// Returns the outcome of an attempt to move (successful or not) and updates move/location variables
 	public boolean move(Tile t) {
 		if(movesLeft > 0 && !(onCooldown)) {
+			
 			// Check change in Board dimension indices from current to t
 			int xchange = Math.abs(this.getPosition().getTilex() - t.getTilex());
 			int ychange = Math.abs(this.getPosition().getTiley() - t.getTiley());
-			// Move fails if index change exceeds ability to move
+			// Move fails if total change exceeds ability to move
 			if(xchange + ychange > movesLeft) {	return false;	}
 			
 			movesLeft -= (xchange+ychange);
-			// Set position
 			this.setPositionByTile(t);
+			
 		} else {	return false;	}
 		
 		if(this.movesLeft == 0 && this.attacksLeft == 0) {	// this should check attack range == 0 really
@@ -82,7 +93,7 @@ public class Monster extends Unit{
 	}
 	
 	// Attack
-	// Returns the outcome of an attack (successful or not) and updates attack variables
+	// Returns the outcome of an attempt to attack (successful or not) and updates attack variables
 	public boolean attack() {
 		// Check if Monster is able to attack
 		if(this.onCooldown) {
@@ -95,19 +106,41 @@ public class Monster extends Unit{
 		return true;
 	}
 	
-	// Counter
+	// Counter-attack
+	// Returns the attackValue of a unit, intended to be called after surviving an attack.
+	// Counter is not related to attack actions available.
+	//Method here - no boolean, just return attackValue
+	// counter();
 	
-	// Returns outcome of receiving damaged (attack/counter-attack/Spell dmg) and updates health
+	// Defend (receive damage)
+	// Returns outcome of receiving damage (successful defence or death) and updates health
 	public boolean defend(int d) {
-		if(this.HP - d < 0) {
+		if(this.HP - d <= 0) {
 			this.HP = 0;
-			System.out.println("Unit has died.");
 			return false;
 		} else {
 			this.HP -= d;
 			return true;
 		}
 	}
+	
+	// Heal (adjust health)
+	// Updates HP from a heal action
+	public void heal(int h) {
+		if(this.HP + h > this.maxHP) {
+			this.HP = this.maxHP;
+		}
+		else {
+			this.HP += h;
+		}
+	}
+	
+	// Buff (adjust attack)
+	// Adjusts attackValue statistic from a buff action
+	public void buff(int b) {
+		this.attackValue += b;
+	}
+	
 	
 	/* Getters and setters */ 
 	
@@ -135,25 +168,10 @@ public class Monster extends Unit{
 		this.attackValue = attackValue;
 	}
 	
-	public boolean isSelected() {
-		return selected;
-	}
-	
-	public void setStatus(boolean i) {
-		selected = i;
-	}
-
-	public void toggleSelect() {
-		if(!onCooldown) {
-			selected = !selected;
-		}
-	}
-	
 	public Player getOwner() {
 		return owner;
 	}
 	
-	// Will be removing this when Vic can get owner to be set at object instantiation
 	public void setOwner(Player p) {
 		owner = p;
 	}
@@ -182,6 +200,14 @@ public class Monster extends Unit{
 		this.attacksLeft = a;
 	}
 	
+	public int getAttacksMax() {
+		return attacksMax;
+	}
+	
+	public void setAttacksMax(int mx) {
+		this.attacksMax = mx;
+	}
+	
 	public int getAttackRange() {
 		return attackRange;
 	}
@@ -197,7 +223,7 @@ public class Monster extends Unit{
 
 	// temporary for testing
 	public void setCooldown(boolean b) {
-		onCooldown = b;
+		this.onCooldown = b;
 		this.actionSet();
 	}
 	
@@ -214,10 +240,24 @@ public class Monster extends Unit{
 			this.attacksLeft = 0;
 		} else {
 			this.movesLeft = 2;
-			this.attacksLeft = 1;
+			this.attacksLeft = this.attacksMax;
 		}
 	}
 	
-	// Getters/setters for Abilities to be put in
+	public boolean hasAbility() {
+		if(abilities != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	public ArrayList <Ability> getMonsterAbility() {
+		return abilities;
+	}
+	
+	public void setAbility(ArrayList <Ability> abs) {
+		abilities = abs;
+
+	}
 	
 }

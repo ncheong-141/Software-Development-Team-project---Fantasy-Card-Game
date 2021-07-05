@@ -1,29 +1,33 @@
 package structures.basic.abilities;
+import structures.GameState;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_Truestrike implements Ability {
+public class A_S_Truestrike implements Ability {
 	
 	// Ability attributes 
-	boolean enemyTarget; 
-	Class<? extends Monster> targetType; 
+	private boolean enemyTarget; 
+	private Class<? extends Monster> targetType;
+	private Call_IDs callID; 
+	EffectAnimation eAnimation;
+	
 	
 	// Constructor
-	public A_Truestrike(boolean enemyTarget, Class<? extends Monster> targetType) {
+	public A_S_Truestrike(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
+		this.eAnimation = eAnimation; 
+		
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
-	public A_Truestrike() {
-		this.enemyTarget = false;
-		this.targetType = null; 
-	}
 	
 	/* Class methods */
 	
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
 	// Deal 2 damage to  an enemy Unit
-	public boolean execute(Monster targetMonster) {
+	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		// Reduce Monster HP by 2
 		targetMonster.setHP(targetMonster.getHP() - 2);
@@ -42,4 +46,11 @@ public class A_Truestrike implements Ability {
 		return targetType; 
 	}
 	
+	public Call_IDs getCallID() {
+		return callID; 
+	}
+	
+	public EffectAnimation getEffectAnimation() {
+		return eAnimation;
+	}
 }

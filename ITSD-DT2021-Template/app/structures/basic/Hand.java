@@ -2,34 +2,27 @@ package structures.basic;
 
 import java.util.ArrayList;
 
-import akka.actor.ActorRef;
+
 import commands.BasicCommands;
 import structures.basic.Card;
 
 public class Hand {
 	private int curr;//keeps track of no of cards in hand
 	private ArrayList<Card> hand;// array of card objects comprising the hand
-	private boolean playingMode;//boolean to indicate whether a card is ready to be played
 	private Card selectedCard;//card selected for play
+	private int selCarPos;
 	
-	public Hand(ArrayList<Card> hand) {//constructor for hand 
+	public Hand() {//constructor for hand 
 		super();
 		this.curr = 0;
-		this.hand = hand;
-		this.playingMode=false;
+		this.hand = new ArrayList<Card>() ;
 		this.selectedCard=null;
+		this.selCarPos=-1;
 	}
 	
-	public void initialHand(ActorRef out, Deck deck) { //allows player to receive initial hand
-		
-		
+	public void initialHand(Deck deck) { //allows player to receive initial hand
 		ArrayList<Card> drawDeck= deck.getDeck();//create temporary instance of player deck
-		
-		System.out.println("\n\nIn initialHand");
-		for (Card d : drawDeck) {
-			System.out.println(d.getCardname());
-		}
-		
+			
 		//finds top three cards from deck
 		Card cardOne= drawDeck.get(0);
 		Card cardTwo= drawDeck.get(1);
@@ -54,23 +47,25 @@ public class Hand {
 		setCurr(3);// sets current hand size
 	}
 	//allows players to draw card on round end
-	public void drawCard(ActorRef out, Deck deck) {
+	public void drawCard( Deck deck) {
 		curr=getCurr();
-		if (curr<6) {//checks that hand is not full
-		
 		//creates temporary deck and finds top card	
 		ArrayList<Card> drawDeck= deck.getDeck();
 		Card drawn= drawDeck.get(0);
-		
+		if (curr<6) {//checks that hand is not full
+			hand.add(drawn);
 		//draws top card from deck and increments current card count
-		BasicCommands.drawCard(out, drawn, curr, 0);
-		curr++;
+		//BasicCommands.drawCard(out, drawn, curr, 0);
+			curr++;
 		
-		deck.delCard(0);//removes card from deck
-		setCurr(curr);//sets new no of cards in hand
+			deck.delCard(0);//removes card from deck
+			setCurr(curr);//sets new no of cards in hand
 		}
-		else {//warns player if hand is full
-			BasicCommands.addPlayer1Notification(out, "Hand Full", 2);
+		else {//warns player if hand is full and discards drawn card
+			//BasicCommands.addPlayer1Notification(out, "Hand Full", 2);
+			curr++;
+			deck.delCard(0);//removes card from deck
+			setCurr(curr);//sets new no of cards in hand
 		}
 	}
 	
@@ -78,6 +73,9 @@ public class Hand {
 		return getHand().get(i);
 	}
 	
+	public void removeCard(int i) {
+		hand.remove(i);
+	}
 	
 	//getters and setters
 	public int getCurr() {
@@ -92,18 +90,19 @@ public class Hand {
 	public void setHand(ArrayList<Card> hand) {
 		this.hand = hand;
 	}
-	public boolean isPlayingMode() {
-		return playingMode;
-	}
-	public void setPlayingMode(boolean playingMode) {
-		this.playingMode = playingMode;
-	}
 	public Card getSelectedCard() {
 		return selectedCard;
 	}
 	public void setSelectedCard(Card selectedCard) {
 		this.selectedCard = selectedCard;
 	}
+	public int getSelCarPos() {
+		return selCarPos;
+	}
+	public void setSelCarPos(int selCarPos) {
+		this.selCarPos = selCarPos;
+	}
+	
 }
 		
 		

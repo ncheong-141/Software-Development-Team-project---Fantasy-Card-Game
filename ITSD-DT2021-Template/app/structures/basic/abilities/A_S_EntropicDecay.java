@@ -1,24 +1,26 @@
 package structures.basic.abilities;
 
+import structures.GameState;
 import structures.basic.Avatar;
+import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_EntropicDecay implements Ability {
+public class A_S_EntropicDecay implements Ability {
 	
 	
 	// Ability attributes 
-	boolean enemyTarget; 
-	Class<? extends Monster> targetType; 
+	private boolean enemyTarget; 
+	private Class<? extends Monster> targetType;
+	private Call_IDs callID;
+	EffectAnimation eAnimation;
 	
 	// Constructor
-	public A_EntropicDecay(boolean enemyTarget, Class<? extends Monster> targetType) {
+	public A_S_EntropicDecay(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
-	}
-	
-	public A_EntropicDecay() {
-		this.enemyTarget = false;
-		this.targetType = null; 
+		this.eAnimation = eAnimation;
+		
+		this.callID = Call_IDs.noTimeConstraint;
 	}
 	
 	/* Class methods */
@@ -26,7 +28,7 @@ public class A_EntropicDecay implements Ability {
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
 	// Reduce non-avatar entity HP to 0
-	public boolean execute(Monster targetMonster) {
+	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		if (!(targetMonster instanceof Avatar)) {
 			targetMonster.setHP(0);
@@ -46,5 +48,13 @@ public class A_EntropicDecay implements Ability {
 	
 	public Class<? extends Monster> getTargetType() {
 		return targetType; 
+	}
+	
+	public Call_IDs getCallID() {
+		return callID; 
+	}
+	
+	public EffectAnimation getEffectAnimation() {
+		return eAnimation;
 	}
 }
