@@ -27,11 +27,7 @@ public class Hand {
 		Card cardOne= drawDeck.get(0);
 		Card cardTwo= drawDeck.get(1);
 		Card cardThree= drawDeck.get(2);
-		
-		//draws top three deck cards into hand
-//		BasicCommands.drawCard(out, cardOne, 1, 0);
-//		BasicCommands.drawCard(out, cardTwo, 2, 0);
-//		BasicCommands.drawCard(out, cardThree, 3, 0);
+
 		
 		//adds the cards to the Hand class's array of Cards to keep track 
 		//of them for later playing and deleting of cards
@@ -54,15 +50,13 @@ public class Hand {
 		Card drawn= drawDeck.get(0);
 		if (curr<6) {//checks that hand is not full
 			hand.add(drawn);
-		//draws top card from deck and increments current card count
-		//BasicCommands.drawCard(out, drawn, curr, 0);
+		//increments current card count
 			curr++;
 		
 			deck.delCard(0);//removes card from deck
 			setCurr(curr);//sets new no of cards in hand
 		}
 		else {//warns player if hand is full and discards drawn card
-			//BasicCommands.addPlayer1Notification(out, "Hand Full", 2);
 			curr++;
 			deck.delCard(0);//removes card from deck
 			setCurr(curr);//sets new no of cards in hand
@@ -75,6 +69,7 @@ public class Hand {
 	
 	public void removeCard(int i) {
 		hand.remove(i);
+		setCurr(getCurr()-1);
 	}
 	
 	//getters and setters
