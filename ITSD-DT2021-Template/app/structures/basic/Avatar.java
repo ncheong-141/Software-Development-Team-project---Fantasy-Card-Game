@@ -1,6 +1,6 @@
 package structures.basic;
 
-import java.util.ArrayList;
+
 //=============================Class description =============================//
 //this represent the avatar that both the human player and computer player will use to play the game
 //this class stores a reference to the board where the avatar are placed (at specific positions)
@@ -45,6 +45,8 @@ public class Avatar extends Monster {
 			b.getTile(7,2).addUnit(this);
 		}
 	}
+	
+	
 
 	
 }

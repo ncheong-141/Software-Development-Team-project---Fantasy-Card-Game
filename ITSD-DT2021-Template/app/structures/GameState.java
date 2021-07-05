@@ -35,8 +35,6 @@ public class GameState {
 	private Board 			gameBoard;			// Board object which holds all Unit positions aswell as contains operations to find specific tiles sets. 
 	private HumanPlayer 	playerOne;			// Player one, the human player which holds all data for the player such as Hand and Deck for holding current cards. Also holds the control flow for drawing Cards from a Deck etc 
 	private ComputerPlayer 	playerTwo;			// Player two, computer player which holds the same as the above + AI logic for ranking combinations of instructions and actioning them. 
-	private Avatar 			humanAvatar;		// Do we need avatars in gameState? can it not just be in Board? 
-	private Avatar 			computerAvatar;
 	private int			 	turnCount;			// Tracker variable for the current number of turns 
 	private static boolean 	playerDead;			// Boolean variable which is set when either avatar is defeated
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
@@ -88,11 +86,9 @@ public class GameState {
 		// Set turn owner
 		this.setTurnOwner(playerOne);
 		
-		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
+		// Board instantiation 
 		gameBoard = new Board();
-		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, gameBoard, Avatar.class);
-
-		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, gameBoard, Avatar.class);
+		
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/
