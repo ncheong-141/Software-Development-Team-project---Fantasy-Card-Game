@@ -42,9 +42,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
 
 
-		//CommandDemo.executeDemo(out); // this executes the command demo, comment out this when implementing your solution
+		CommandDemo.executeDemoTester(out,gameState); // this executes the command demo, comment out this when implementing your solution
 		// CommandDemo.executeDemoUnits(out, gameState);
-		CommandDemo.executeDemoUnitsNicholas(out, gameState); 
+		//CommandDemo.executeDemoUnitsNicholas(out, gameState); 
 		//CommandDemo.executeDemoBoard(out, gameState);
 		//CommandDemo.executeDemoDeckHand(out, gameState);
 		// CommandDemo.executeDemoSummon(out, gameState);
