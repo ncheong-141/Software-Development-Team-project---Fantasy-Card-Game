@@ -8,8 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import structures.basic.Avatar;
 import structures.basic.BigCard;
+import structures.basic.Board;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
+import structures.basic.HumanPlayer;
 import structures.basic.Monster;
 import structures.basic.Player;
 import structures.basic.Spell;
@@ -158,11 +160,19 @@ public class BasicObjectBuilders {
 	}
 	
 	
-	public static Avatar loadAvatar(String configFile, int id,  Class<? extends Avatar> classType) {
+	public static Avatar loadAvatar(String configFile, int id, Player p, Board b, Class<? extends Avatar> classType) {
 		
 		try {
 			Avatar unit = mapper.readValue(new File(configFile), classType);
 			unit.setId(id);
+			unit.setOwner(p,b);
+
+			if(p instanceof HumanPlayer) {
+				unit.setName("Human Avatar");
+			} else {
+				unit.setName("AI Avatar");
+			}
+			
 			return unit;
 		} catch (Exception e) {
 			e.printStackTrace();

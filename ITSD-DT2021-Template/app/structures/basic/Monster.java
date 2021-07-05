@@ -38,7 +38,7 @@ public class Monster extends Unit{
 		super(); 
 		
 		// Some attributes are set by JSON Mapper (Unit class) or in the 
-		// loadMonsterUnit ObjectBuilder method:
+		// loadMonsterUnit ObjectBuilder method (using the Card object as reference):
 			// name, HP, maxHP, attackValue, owner, abilities
 
 		this.movesLeft = 0;				//
@@ -107,7 +107,8 @@ public class Monster extends Unit{
 	}
 	
 	// Counter-attack
-	// Returns the attackValue of a defending unit that has survived, counter is not reliant on attack actions
+	// Returns the attackValue of a unit, intended to be called after surviving an attack.
+	// Counter is not related to attack actions available.
 	//Method here - no boolean, just return attackValue
 	// counter();
 	
