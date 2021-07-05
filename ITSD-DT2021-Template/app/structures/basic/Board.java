@@ -3,8 +3,8 @@ package structures.basic;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import akka.actor.ActorRef;
-import commands.BasicCommands;
+
+
 import structures.GameState;
 import utils.BasicObjectBuilders;
 
