@@ -22,13 +22,12 @@ public class Monster extends Unit{
 	
 	// Action range values
 	protected int 			movesLeft;				// number of move actions Monster has left, tracks directly to range
-	protected int 			attacksLeft;			// number of attack actions Monster has left, != range
+	protected int 			attacksLeft;			// number of attack actions Monster has 'leftover', != range
 	protected int			attacksMax;				// max number of attack actions a Monster can have, reset by Cooldown
 	protected int 			attackRange;			// integer range for attacks
 	
 	// Gameplay info
 	protected Player		owner;					// Player who owns the unit
-	// protected boolean 		selected;				// Tracks when the unit is selected on board by owner
 	protected boolean		onCooldown;				// Tracks when the unit has actions left (move and/or attack)
 	
 	
