@@ -43,6 +43,66 @@ public class CommandDemo {
 	 * anything happens.
 	 */
 
+	public static void executeDemoTester(ActorRef out, GameState gameState) {
+		
+		// Instantites players, deck, hand and board done in gameSate
+		
+		
+		// Set player HP, Mana
+		gameState.getPlayerOne().setHealth(8);
+		gameState.getPlayerOne().setMana(10);
+		
+		gameState.getPlayerTwo().setHealth(8);
+		gameState.getPlayerTwo().setMana(10);
+
+		
+		// Create Card objects to use
+		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
+		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
+		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
+
+
+		// Add them to the hand
+		
+		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
+		Monster[] fmArray = new Monster[5]; 
+		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerOne(), Monster.class);
+		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerOne(), Monster.class);
+		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerOne(), Monster.class);
+		fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerOne(), Monster.class);
+		fmArray[4] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerOne(), Monster.class);
+		
+		for (int i = 0; i < fmArray.length; i++) {
+			fmArray[i].setPositionByTile(gameState.getBoard().getTile(0, i));
+			gameState.getBoard().getTile(0, i).addUnit(fmArray[i]);
+			fmArray[i].setMovesLeft(2);
+			fmArray[i].setAttacksLeft(1);
+			fmArray[i].setCooldown(false);
+		}
+		 
+		
+		/** UI **/
+		
+		// Display states
+		GeneralCommandSets.updatePlayerStats(out, gameState);
+		
+		// Draw board
+		GeneralCommandSets.boardVisualReset(out, gameState);
+		
+		// Draw avatars
+		GeneralCommandSets.drawUnitWithStats(out, gameState.getHumanAvatar(), gameState.getBoard().getTile(1, 2));
+		GeneralCommandSets.drawUnitWithStats(out, gameState.getComputerAvatar(), gameState.getBoard().getTile(7, 2));
+		
+		// Draw units 
+		for (int i = 0; i < fmArray.length; i++) {
+			GeneralCommandSets.drawUnitWithStats(out,fmArray[i], fmArray[i].getPosition().getTile(gameState.getBoard()));
+		}
+		
+		// Draw cards
+		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHand());
+		
+		
+	}
 
 	public static void executeDemoUnits(ActorRef out, GameState gameState) {
 
@@ -100,15 +160,23 @@ public class CommandDemo {
 		g.setTurnOwner(g.getPlayerOne());
 		g.getPlayerOne().setMana(8);
 
-
+		// Set up friendly Unit to summon next to
+		Avatar humanAvatar = g.getHumanAvatar();
+		BasicCommands.drawUnit(out, humanAvatar, g.getBoard().getTile(1, 2));
+		GeneralCommandSets.threadSleep();
+		
 		// loadCard
-		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 0, Card.class);
+		Card enemyfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, StaticConfFiles.u_fire_spitter, 102, Card.class);
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		Card friendfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, StaticConfFiles.u_fire_spitter, 103, Card.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		Card twofriendfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, StaticConfFiles.u_fire_spitter, 104, Card.class);
 
+		
 		// Enemy unit
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Monster ENEMY_fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
+		Monster ENEMY_fire_spitter = BasicObjectBuilders.loadMonsterUnit(enemyfire_spitter.getConfigFile(), enemyfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
 		GeneralCommandSets.threadSleep();
 		
 		ENEMY_fire_spitter.setPositionByTile(gameBoard.getTile(3,4));
@@ -121,17 +189,17 @@ public class CommandDemo {
 		
 		// drawUnit
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
-		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerOne(), Monster.class);
+		Monster ffire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(friendfire_spitter.getConfigFile(), friendfire_spitter, (Player) g.getPlayerOne(), Monster.class);
 		GeneralCommandSets.threadSleep();
 
 
-		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
-		fire_spitter.setOwner(g.getTurnOwner());
-		fire_spitter.setAttacksLeft(10);
-		fire_spitter.setMovesLeft(3);
-		fire_spitter.setCooldown(false);
-		g.getBoard().getTile(3,2).addUnit(fire_spitter);
-		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
+		ffire_spitter.setPositionByTile(gameBoard.getTile(3,2));
+		ffire_spitter.setOwner(g.getTurnOwner());
+		ffire_spitter.setAttacksLeft(10);
+		ffire_spitter.setMovesLeft(3);
+		ffire_spitter.setCooldown(false);
+		g.getBoard().getTile(3,2).addUnit(ffire_spitter);
+		BasicCommands.drawUnit(out, ffire_spitter, gameBoard.getTile(3,2));
 		GeneralCommandSets.threadSleep();
 
 		
@@ -148,7 +216,7 @@ public class CommandDemo {
 		
 		// Create a tempHand for testing
 		ArrayList <Card> cards = new ArrayList <Card> ();
-		cards.add(cfire_spitter);
+		cards.add(twofriendfire_spitter);
 		cards.add(ctrustrike);
 		cards.add(csundropelixir);
 		cards.add(cstaffofykir);
@@ -166,12 +234,6 @@ public class CommandDemo {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
-
-		// Set up friendly Unit to summon next to
-		Avatar humanAvatar = g.getHumanAvatar();
-		humanAvatar.setOwner(g.getPlayerOne(), gameBoard);
-		BasicCommands.drawUnit(out, humanAvatar, g.getBoard().getTile(1, 2));
-		GeneralCommandSets.threadSleep();
 
 	}
 

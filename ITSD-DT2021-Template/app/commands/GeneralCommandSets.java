@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import structures.GameState;
 import structures.basic.Avatar;
 import structures.basic.Board;
+import structures.basic.Card;
+import structures.basic.Hand;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.Unit;
@@ -20,13 +22,13 @@ import akka.actor.ActorRef;
 
 public class GeneralCommandSets {
 	
-	private static final int threadSleepTime = 30; 
+	private static final int threadSleepTime = 400; 
 	private static final int threadSleepTimeLong = 400; 
 	private static final int bufferSize = 16; 
 	
 	// Draw tiles to the board
 	public static void drawBoardTiles(ActorRef out, ArrayList<Tile> tilesToDraw, int tileColour) {
-	
+
 		// Iterate over tiles
 		// Need to consider the maximum buffer size and do this in batches if over 16 tiles to highlight (buffer size = 16)
 		if (tilesToDraw.size() < bufferSize) {
@@ -48,7 +50,7 @@ public class GeneralCommandSets {
 					for (int i = bNum*bufferSize; i < (bNum+1)*bufferSize; i++) {
 						BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
 					}
-					try {Thread.sleep(threadSleepTimeLong);} catch (InterruptedException e) {e.printStackTrace();}
+					try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 
 				}
 				// If bNum is the final batch, only iterate up to the ArrayList length 
@@ -56,7 +58,7 @@ public class GeneralCommandSets {
 					for (int i = bNum*bufferSize; i < tilesToDraw.size(); i++) {
 						BasicCommands.drawTile(out, tilesToDraw.get(i), tileColour);
 					}
-					try {Thread.sleep(threadSleepTimeLong);} catch (InterruptedException e) {e.printStackTrace();}
+					try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 				}
 				
 				// Long sleep to allow for buffer to empty properly...
@@ -77,9 +79,9 @@ public class GeneralCommandSets {
 		
 	
 		BasicCommands.drawUnit(out, unit, onTile);
-		try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep(); 
 		BasicCommands.playUnitAnimation(out, unit, UnitAnimationType.idle);
-		try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep(); 
 		
 		if (unit.getClass() == Monster.class || unit.getClass() == Avatar.class) {
 			
@@ -88,9 +90,9 @@ public class GeneralCommandSets {
 			
 			// Set Unit statistics
 			BasicCommands.setUnitHealth(out, mUnit, mUnit.getHP());
-			try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
+			GeneralCommandSets.threadSleep(); 
 			BasicCommands.setUnitAttack(out, mUnit, mUnit.getAttackValue());
-			try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
+			GeneralCommandSets.threadSleep(); 
 		}
 	}
 	
@@ -109,15 +111,46 @@ public class GeneralCommandSets {
 			ArrayList <Tile> actRange = new ArrayList <Tile> (gameState.getBoard().unitAttackableTiles(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley(), mUnit.getAttackRange(), mUnit.getMovesLeft()));
 			actRange.addAll(gameState.getBoard().unitMovableTiles(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley(), mUnit.getMovesLeft()));
 			
-			for(Tile t : actRange) {
-				BasicCommands.drawTile(out, t, 0);
-			}
+			drawBoardTiles(out, actRange, 0);
 			
 		}
 		
 	}
 	
 	
+	// Update player stats
+	public static void updatePlayerStats(ActorRef out, GameState gameState) {
+		
+		// Set player 1 stats in UI
+		BasicCommands.setPlayer1Health(out, gameState.getPlayerOne());
+		GeneralCommandSets.threadSleep(); 
+		BasicCommands.setPlayer1Mana(out, gameState.getPlayerOne());
+		GeneralCommandSets.threadSleep(); 
+
+		
+		// Set player 2 stats in UI
+		BasicCommands.setPlayer2Health(out, gameState.getPlayerTwo());
+		GeneralCommandSets.threadSleep(); 
+		BasicCommands.setPlayer2Mana(out, gameState.getPlayerTwo());
+		GeneralCommandSets.threadSleep(); 
+
+	}
+	
+	// Draw entire Hand 
+	public static void drawCardsInHand(ActorRef out, GameState gameState, ArrayList<Card> cardsInHand) {
+
+		// draw cards in hand
+		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
+		for(Card c : gameState.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+			BasicCommands.drawCard(out, c, i, 0);
+			i++;
+			GeneralCommandSets.threadSleep(); 
+		}
+	}
+	
+	
+	
+	// General thread commands
 	public static void threadSleep() {
 		try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 	}
@@ -130,16 +163,6 @@ public class GeneralCommandSets {
 		try {Thread.sleep(ms);} catch (InterruptedException e) {e.printStackTrace();}
 
 	}
-	
-	
-	
-	//** Debugging commands **// 
-	
-	// Summon Unit
-	
-	// Create card
-	
-	// 
 	
 	
 }
