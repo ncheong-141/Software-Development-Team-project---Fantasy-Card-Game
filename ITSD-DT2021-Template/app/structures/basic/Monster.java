@@ -37,7 +37,7 @@ public class Monster extends Unit{
 	public Monster() {
 		super(); 
 		
-		// Some attributes are set by JSON Mapper (Unit constructor) or in the 
+		// Some attributes are set by JSON Mapper (Unit class) or in the 
 		// loadMonsterUnit ObjectBuilder method:
 			// name, HP, maxHP, attackValue, owner, abilities
 
