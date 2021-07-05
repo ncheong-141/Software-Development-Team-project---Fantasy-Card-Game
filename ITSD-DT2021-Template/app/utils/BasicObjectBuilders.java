@@ -185,7 +185,7 @@ public class BasicObjectBuilders {
 		try {
 			Avatar unit = mapper.readValue(new File(configFile), classType);
 			unit.setId(id);
-			unit.setOwner(p,b);
+			unit.setOwner(p);
 
 			if(p instanceof HumanPlayer) {
 				unit.setName("Human Avatar");

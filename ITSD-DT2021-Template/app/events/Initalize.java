@@ -79,10 +79,12 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		humanAvatar.setAttackValue(2);
 		computerAvatar.setAttackValue(2);
 		
+		
 		//display avatars on board
 		Tile tOne = g.getGameBoard().getTile(1, 2);
 		Tile tTwo = g.getGameBoard().getTile(7, 2);
-				
+		humanAvatar.setPositionByTile(tOne);
+		computerAvatar.setPositionByTile(tTwo);
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		tOne.addUnit(humanAvatar);
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
