@@ -31,13 +31,6 @@ public class HumanPlayer extends Player {
 	}
 	
 
-	//call end turn method in endTurnClicked
-	@Override
-	public void endTurn() {
-		if(gameState.getTurnOwner() == playerOne) {
-			e.processEvent(out, gameState, null);
-		}
-	}
 
 //	@Override  give 3 card in the first round from deckOne
 	
@@ -64,6 +57,8 @@ public class HumanPlayer extends Player {
 	
 */
 	
+	// To do:
+	// Move hand instantiation/set up from gamestate into Player constructor
 	
 	
 	

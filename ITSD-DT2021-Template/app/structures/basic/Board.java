@@ -102,9 +102,6 @@ public class Board {
 		return gameBoard[y][x];
 	}
 
-	//humanStart = gameBoard[3][2];
-	//computerStart = gameBoard[3][8];
-
 
 	//=====================PLAYABLE TILES METHODS==================//
 
@@ -151,7 +148,6 @@ public class Board {
 
 
 	//2A)Method returns all tiles where a ENEMY unit is present (excl. avatar)
-
 	public ArrayList<Tile> enemyTile(Player p){
 		ArrayList<Tile> tileRange = new ArrayList<Tile>();
 		for (int i = 0; i <gameBoard.length; i++) {
@@ -339,19 +335,18 @@ public class Board {
 		return monsterList;
 
 	}
-
-			
-			public ArrayList<Monster> friendlyUnitList (Player p){
-				ArrayList<Monster> monsterList = new ArrayList<Monster>();
-				for (int i = 0; i <gameBoard.length; i++) {
-					for (int k =0; k<gameBoard[0].length; k++) {
-						if (gameBoard[i][k].getUnitOnTile() != null && gameBoard[i][k].getUnitOnTile().getOwner()==p) 							{
-							monsterList.add(gameBoard[i][k].getUnitOnTile());
-						}
-					}	
-				}
-				return monsterList;
+		
+		public ArrayList<Monster> friendlyUnitList (Player p){
+			ArrayList<Monster> monsterList = new ArrayList<Monster>();
+			for (int i = 0; i <gameBoard.length; i++) {
+				for (int k =0; k<gameBoard[0].length; k++) {
+					if (gameBoard[i][k].getUnitOnTile() != null && gameBoard[i][k].getUnitOnTile().getOwner()==p) 							{
+						monsterList.add(gameBoard[i][k].getUnitOnTile());
+					}
+				}	
 			}
+			return monsterList;
+		}
 	
 	public ArrayList<Tile> allFreeTiles(){
 		ArrayList<Tile> freeTilesList = new ArrayList<Tile>();
@@ -366,3 +361,10 @@ public class Board {
 	}
 }
 
+	// To do:
+	// Update boardCapacity method
+	// allSummonableTiles() will probably need a change (once NV decide)
+	// Either find or make an adjacent tile method (all tiles, don't care about occupied)
+	// Think about stopping movement through enemy units
+	// Change return type of attackableTiles to ArrayList
+	// coolDownCheck method content needs uncommenting once it works/is functional with endTurn

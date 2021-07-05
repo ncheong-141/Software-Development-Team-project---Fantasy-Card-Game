@@ -153,3 +153,10 @@ public class Card implements Comparable<Card> {
 		return this.configFile;
 	}
 }
+
+// To do:
+// Add modifiers to constructor attributes
+// targetEnemy needs to loop over Abilities ArrayList (not just check one)
+// Change from using Builder in hasAbility method to another check for ability
+// Add Ability ArrayList, link with UnitLinkage and sort out Builders and associated object construction methods
+// Add a classType indicator attribute (instead of the bigCard method check right now)

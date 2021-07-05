@@ -34,5 +34,8 @@ public class Avatar extends Monster {
 	
 	
 
+	// To do: 
+	// Override defend method to adjust Player health as well
+	// Delete setPositionByPlayer (+ call in setOwner), and implement manually in Initalize
 	
 }

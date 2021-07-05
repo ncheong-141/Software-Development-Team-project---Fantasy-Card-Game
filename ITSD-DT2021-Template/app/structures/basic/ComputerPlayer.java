@@ -65,7 +65,7 @@ public class ComputerPlayer extends Player {
 	//method returns playable cards from the player's hand based on the mana cost
 	private ArrayList <Card> playableCards(){
 		ArrayList<Card> cardList = new ArrayList<Card>();
-		for (Card c : this.hand.getHand()) if (c.getManacost() <= this.getMana()) cardList.add(c);
+		for (Card c : this.hand.getHandList()) if (c.getManacost() <= this.getMana()) cardList.add(c);
 		return cardList;
 	}
 	
@@ -109,9 +109,11 @@ public class ComputerPlayer extends Player {
 		ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
 		
 		//converting hand to an array for ease of indexing
+
 		Card [] playableCards = new Card [this.playableCards().size()-1];
 		for (int i = 0; i<playableCards.length; i++) {
 			playableCards[i] = list.get(i);
+
 		}
 		
 		Arrays.sort(playableCards);
@@ -299,11 +301,11 @@ public class ComputerPlayer extends Player {
 	}	
 		
 	// after all actions, ComputerPlayer call computerEndTurn() to ends the turn
-	@Override
+	// Removed @Override
 	public void endTurn() {
 		gameState.computerEnd();
-
 	}
+	
 	/**
 	 * METHOD 4
 	 * 
@@ -592,4 +594,5 @@ public class ComputerPlayer extends Player {
 //		return toRandom.get(index);
 //	}
 ////	================randomAttack=====back up=================	
-	
+// To do:
+// Move hand instantiation/set up from gamestate into Player constructor

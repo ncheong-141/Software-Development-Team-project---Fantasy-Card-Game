@@ -8,20 +8,20 @@ import structures.basic.Card;
 
 public class Hand {
 	private int curr;//keeps track of no of cards in hand
-	private ArrayList<Card> hand;// array of card objects comprising the hand
+	private ArrayList<Card> handList;// array of card objects comprising the hand
 	private Card selectedCard;//card selected for play
 	private int selCarPos;
 	
 	public Hand() {//constructor for hand 
 		super();
 		this.curr = 0;
-		this.hand = new ArrayList<Card>() ;
+		this.handList = new ArrayList<Card>() ;
 		this.selectedCard=null;
 		this.selCarPos=-1;
 	}
 	
 	public void initialHand(Deck deck) { //allows player to receive initial hand
-		ArrayList<Card> drawDeck= deck.getDeck();//create temporary instance of player deck
+		ArrayList<Card> drawDeck= deck.getCardList();//create temporary instance of player deck
 			
 		//finds top three cards from deck
 		Card cardOne= drawDeck.get(0);
@@ -31,9 +31,9 @@ public class Hand {
 		
 		//adds the cards to the Hand class's array of Cards to keep track 
 		//of them for later playing and deleting of cards
-		hand.add(cardOne);
-		hand.add(cardTwo);
-		hand.add(cardThree);
+		handList.add(cardOne);
+		handList.add(cardTwo);
+		handList.add(cardThree);
 		 
 		//removes top three cards from deck
 		deck.delCard(0);
@@ -46,11 +46,12 @@ public class Hand {
 	public void drawCard( Deck deck) {
 		curr=getCurr();
 		//creates temporary deck and finds top card	
-		ArrayList<Card> drawDeck= deck.getDeck();
+		ArrayList<Card> drawDeck= deck.getCardList();
 		Card drawn= drawDeck.get(0);
 		if (curr<6) {//checks that hand is not full
 			hand.add(drawn);
 		//increments current card count
+
 			curr++;
 		
 			deck.delCard(0);//removes card from deck
@@ -64,12 +65,14 @@ public class Hand {
 	}
 	
 	public Card getCardFromHand(int i) {
-		return getHand().get(i);
+		return getHandList().get(i);
 	}
 	
 	public void removeCard(int i) {
+
 		hand.remove(i);
 		setCurr(getCurr()-1);
+
 	}
 	
 	//getters and setters
@@ -79,11 +82,11 @@ public class Hand {
 	public void setCurr(int curr) {
 		this.curr = curr;
 	}
-	public ArrayList<Card> getHand() {
-		return hand;
+	public ArrayList<Card> getHandList() {
+		return handList;
 	}
-	public void setHand(ArrayList<Card> hand) {
-		this.hand = hand;
+	public void setHandList(ArrayList<Card> hand) {
+		this.handList = hand;
 	}
 	public Card getSelectedCard() {
 		return selectedCard;
@@ -100,5 +103,6 @@ public class Hand {
 	
 }
 		
-		
+	// To do:
+	// Update getter for Card ArrayList to a more transparent name
 			

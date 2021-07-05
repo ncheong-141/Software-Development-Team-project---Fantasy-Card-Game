@@ -56,8 +56,6 @@ public class GameState {
 		turnCount = 0;
 		playerDead = false;
 		turnOwner = playerOne;
-
-
 		
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
@@ -80,11 +78,11 @@ public class GameState {
 		// Set hands
 		Hand handPlayerOne = new Hand();
 		playerOne.setHand(handPlayerOne);
-		handPlayerOne.drawCard(deckPlayerOne);
+		handPlayerOne.initialHand(deckPlayerOne);
 
 		Hand handPlayerTwo = new Hand();
 		playerTwo.setHand(handPlayerTwo);
-		handPlayerTwo.drawCard(deckPlayerTwo);
+		handPlayerTwo.initialHand(deckPlayerTwo);
 
 		
 		// Set turn owner
@@ -136,12 +134,6 @@ public class GameState {
 
 		turnCount++;
 	}
-
-	// ----------------------
-	public Board getGameBoard() {
-		return gameBoard;
-	}
-	// ---------------------- delete
 
 	public HumanPlayer getPlayerOne() {
 		return playerOne;
@@ -216,7 +208,7 @@ public class GameState {
 	
 	// YC add
 	public Tile locateMonster(Monster trackMonster) {
-		this.monsterLocation = this.getGameBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
+		this.monsterLocation = this.getBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
 		return monsterLocation;
 	}
 	
@@ -272,6 +264,9 @@ public class GameState {
 			}
 		}
 	}
+			// To do:
+			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
+			// Move hand instantiation/set up from gamestate into Player constructor
+			// Move AbilityUnitLinkage call into GameState
 	
-
 }

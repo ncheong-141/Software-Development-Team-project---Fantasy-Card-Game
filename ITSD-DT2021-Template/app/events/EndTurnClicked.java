@@ -41,7 +41,7 @@ public class EndTurnClicked implements EventProcessor{
 		
 	// check if players decks are are empty 
 	public boolean isDeckEmpty(GameState gameState) {
-		ArrayList<Card> turnOwnerDeck = gameState.getTurnOwner().getDeck().getDeck();
+		ArrayList<Card> turnOwnerDeck = gameState.getTurnOwner().getDeck().getCardList();
 		int deckCardLeft = turnOwnerDeck.size();
 		
 		if(deckCardLeft < 1) {
@@ -69,3 +69,6 @@ public class EndTurnClicked implements EventProcessor{
 	}
 	
 }
+
+// To do:
+// Move extra methods to gameState

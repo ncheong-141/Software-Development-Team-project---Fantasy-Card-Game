@@ -57,5 +57,7 @@ public class AbilityToUnitLinkage {
 		}
 		return abilityContainer; 
 	}
+	// To do:
+	// Put in gamestate after integrating changes with Card
 	
 }

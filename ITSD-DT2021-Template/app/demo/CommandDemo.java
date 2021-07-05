@@ -99,7 +99,7 @@ public class CommandDemo {
 		}
 		
 		// Draw cards
-		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHand());
+		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHandList());
 		
 		
 	}
@@ -225,12 +225,12 @@ public class CommandDemo {
 
 		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
 		Hand hand = new Hand(); 
-		hand.setHand(cards);
+		hand.setHandList(cards);
 		g.getTurnOwner().setHand(hand);
 
 		// draw cards in hand
 		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
-		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+		for(Card c : g.getTurnOwner().getHand().getHandList()) { // get list of cards from Hand from Player
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
@@ -239,7 +239,7 @@ public class CommandDemo {
 
 
 	public static void executeDemoBoard(ActorRef out, GameState g) {
-		
+
 
 	}
 
@@ -259,7 +259,7 @@ public class CommandDemo {
 		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 
 		Deck playOneDeck = g.getPlayerOne().getDeck();
-		Card testCard = playOneDeck.getDeck().get(12);
+		Card testCard = playOneDeck.getCardList().get(12);
 		ArrayList <Card> cards = new ArrayList <Card> ();
 		cards.add(testCard);
 
@@ -274,12 +274,12 @@ public class CommandDemo {
 		
 		// Use temporary setHand to give to HumanPlayer for testing - proper Hand creation needs to be setup
 		Hand hand = new Hand(); 
-		hand.setHand(cards);
+		hand.setHandList(cards);
 		g.getTurnOwner().setHand(hand);
 
 		// draw cards in hand
 		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
-		for(Card c : g.getTurnOwner().getHand().getHand()) { // get list of cards from Hand from Player
+		for(Card c : g.getTurnOwner().getHand().getHandList()) { // get list of cards from Hand from Player
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
@@ -296,7 +296,7 @@ public class CommandDemo {
 
 	public static void executeTileHighlightDemo (ActorRef out, GameState g) {
 
-		Board board = g.getGameBoard();
+		Board board = g.getBoard();
 
 		Tile tone = board.getTile(3,1);
 		Tile tTwo = board.getTile(4, 3);
@@ -346,7 +346,7 @@ public class CommandDemo {
 		 * for (Tile t : listMove) { BasicCommands.drawTile(out, t, 1); } try
 		 * {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
 		 */
-		HashSet<Tile> list = g.getGameBoard().unitAttackableTiles(1, 2, 2,3);
+		HashSet<Tile> list = g.getBoard().unitAttackableTiles(1, 2, 2,3);
 
 		for (Tile t : list) {
 			BasicCommands.drawTile(out, t, 2);

@@ -6,9 +6,7 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
-import actors.GameActor;
-import events.CardClicked;
-import events.EndTurnClicked;
+
 import structures.GameState;
 /**
  * A basic representation of of the Player. A player
@@ -24,8 +22,6 @@ public class Player {
 	protected Hand hand;
 	protected Deck deck;
 	protected Avatar avatar;
-	protected ActorRef out;
-	protected EndTurnClicked e;
 	private GameState g;
 	
 	public Player() {
@@ -66,31 +62,6 @@ public class Player {
 			this.health = 0;
 			g.gameOver(); 
 		}
-	}
-
-	//create first 3 cards in hand
-//	public void firstThreeCards() {
-//		this.hand = new Hand(this.deck.getDeck());		
-//		hand.initialHand(out, deck);
-//		System.out.println("In setPlayerHand()");
-//		for (Card d : this.deck.getDeck()) {
-//			System.out.println(d.getCardname());
-//		}
-//	}
-	
-//	//draw card from deck when round ends, top card in deck is deleted
-//	public void drawFromDeck() {
-//			this.hand.drawCard(out, deck); 
-//		}
-
-	
-//	playing cards,take the position of card in hand
-//	public void playCard(int p) {
-//		this.hand.getCardFromHand(p);
-//	}
-	
-	public void endTurn() {
-		e.processEvent(out, null, null);
 	}
 	
 
@@ -139,5 +110,7 @@ public class Player {
 
 }
 		
-		
+		// To do:
+		// Move setting of deck and instantiation of it from the gameState into the Player constructor
+		// Move hand instantiation/set up from gamestate into Player constructor
 

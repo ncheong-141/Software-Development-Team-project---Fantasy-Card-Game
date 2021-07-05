@@ -29,4 +29,7 @@ public class ComputerInstruction {
 		return actor;
 	}
 	
+	// To do:
+	// Change constructors to match AIUnitStateController method signatures
+	
 }

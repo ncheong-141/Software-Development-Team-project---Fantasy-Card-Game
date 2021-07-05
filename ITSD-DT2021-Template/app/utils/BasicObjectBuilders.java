@@ -128,7 +128,7 @@ public class BasicObjectBuilders {
 			mUnit.setHP(statsRef.getBigCard().getHealth());
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
-			
+
 			// 
 			mUnit.setOwner(p);
 			

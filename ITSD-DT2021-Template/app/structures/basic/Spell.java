@@ -45,4 +45,7 @@ public class Spell extends Card {
 		this.abilityDescription = description;
 	}
 	
+	// To do:
+	// Add attribute modifiers
+	
 }
