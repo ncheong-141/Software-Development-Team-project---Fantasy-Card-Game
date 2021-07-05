@@ -10,7 +10,18 @@ import java.util.ArrayList;
 public class Avatar extends Monster {
 
 	
-	public Avatar() {}
+	public Avatar() {
+		this.HP = 20;
+		this.maxHP = 20;
+		this.attackValue = 2;
+		
+		this.movesLeft = 2;			
+		this.attacksLeft = 1;		
+		this.attacksMax = 1;		
+		this.attackRange = 1;		
+		
+		this.onCooldown = false;	// Avatars start turn on the Board
+	}
 
 	
 	//when the owner is set for an avatar, this method also takes care of assigning the avatar to the relevant 
