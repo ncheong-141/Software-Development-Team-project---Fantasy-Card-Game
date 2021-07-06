@@ -18,8 +18,6 @@ public class ComputerPlayer extends Player {
 	private ArrayList<Tile> attackRange;
 
 
-//	private Tile actorT; //for random back up code
-//	private Tile enemyT; //for random back up code
 
 	Board gameBoard;
 	boolean playedAllPossibleCards;
@@ -555,44 +553,3 @@ public class ComputerPlayer extends Player {
 		
 	 ***/
 
-////	==================randomAttack=====back up=====================
-//
-//	public void randomAttack() {
-//		this.actorT = this.getRandomActorT();        //set chosen actorM
-//		this.enemyT = this.getRandomEnemyT(actorT);  // set chosen enemyM
-//		
-//		
-//		//=========attack action begin========
-//		
-//		//sort out attackLeft
-//		int attackLeft = actorT.getUnitOnTile().getAttacksLeft()- 1; // set remain attack value	
-//		if(attackLeft == 0) { //if no attack left, cool monster
-//			actorT.getUnitOnTile().toggleCooldown();
-//		}
-//		//need animation
-//		
-//		//sort out HP left
-//		int hpLeft = enemyT.getUnitOnTile().getHP();
-//		//need animation?
-//		
-//	}
-//		
-//	//helper method
-//	private Tile getRandomActorT() {
-//		actorT = this.getRandomTile(attackTiles); // get a random actoRM
-//		return actorT;
-//	}	
-//	//helper method	
-//	private Tile getRandomEnemyT(Tile t) { //given a actor monster, pick random target
-//		targetInRange = getTargetTiles(t); //get list of enemy for actorM
-//		enemyT = this.getRandomTile(targetInRange); // get one in list randomly
-//		return enemyT;
-//	}
-//	
-//	public Tile getRandomTile(ArrayList<Tile> toRandom) {
-//		int index = (int) Math.random() * ( toRandom.size() - 0 );
-//		return toRandom.get(index);
-//	}
-////	================randomAttack=====back up=================	
-// To do:
-// Move hand instantiation/set up from gamestate into Player constructor

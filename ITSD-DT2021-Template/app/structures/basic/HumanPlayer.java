@@ -23,6 +23,7 @@ public class HumanPlayer extends Player {
 	
 	public HumanPlayer() {
 		super();
+		this.deck.deckOne();
 	}
 		
 	//call execute method to play game in summon object
