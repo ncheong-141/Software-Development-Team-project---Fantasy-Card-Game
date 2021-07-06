@@ -59,6 +59,8 @@ public class GameState {
 		playerDead = false;
 		turnOwner = playerOne;
 		
+		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
+		
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
@@ -95,6 +97,9 @@ public class GameState {
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
 
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
+		
+		//playerOne.setAvatar(humanAvatar);
+		//playerTwo.setAvatar(computerAvatar);
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/

@@ -9,8 +9,10 @@ import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.GameState;
 import structures.basic.abilities.*;
+import structures.basic.Avatar;
 import structures.basic.Card;
 import structures.basic.EffectAnimation;
+import structures.basic.HumanPlayer;
 import structures.basic.Monster;
 import structures.basic.Player;
 import structures.basic.Tile;
@@ -56,7 +58,12 @@ public class SummonMonsterState implements IUnitPlayStates {
 			context.getGameStateRef().getBoard().setUnitCount(1);
 
 			/** Delete card from Hand + update visual **/
+			
+			// Index variables
 			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
+			int oldHandSize =  context.getGameStateRef().getTurnOwner().getHand().getHandList().size(); 	// How many UI cards to delete
+
+			// Remove card
 			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
 			
 			/** Reset entity selection and board **/  
@@ -64,7 +71,12 @@ public class SummonMonsterState implements IUnitPlayStates {
 			context.deselectAllAfterActionPerformed();
 			
 			// Update UI 
-			BasicCommands.deleteCard(context.out, cardIndexInHand);
+			// BasicCommands.deleteCard(context.out, cardIndexInHand);
+			
+			// Only update Hand for Human player
+			if (context.getGameStateRef().getTurnOwner() instanceof HumanPlayer) {
+				GeneralCommandSets.drawCardsInHand(context.out, context.getGameStateRef(), oldHandSize, context.getGameStateRef().getTurnOwner().getHand().getHandList());
+			}
 		
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
@@ -144,7 +156,33 @@ public class SummonMonsterState implements IUnitPlayStates {
 			// Trigger abilities that happen at the game logic point of a new summon
 			for(Ability a : summonedMonster.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.onSummon) {
-					a.execute(summonedMonster, gameState);
+					System.out.println("Ability:" + a);
+					
+					// Target logic
+					if (a.getTargetType() == Avatar.class) {
+						
+						/**
+						 * 
+						 * NOT HARD CODED IN HUMAN AND COMPUTER AVATAR RIGHT NOW
+						 */
+						
+						if (a.targetEnemy() == false) {									
+							a.execute(gameState.getHumanAvatar(), gameState);					
+						}
+						else {
+							a.execute(gameState.getComputerAvatar(), gameState);
+						}
+					}
+					else if (a.getTargetType() == Monster.class) {
+							
+						if (a.targetEnemy() == false) {
+							// Assume can only target itself or avatars
+							a.execute(summonedMonster, gameState);
+						} else {
+							// Not acting on enemy monsters atm? 
+						}		
+					}
+					
 				}
 			}
 		}

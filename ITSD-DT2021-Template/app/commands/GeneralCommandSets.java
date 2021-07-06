@@ -96,6 +96,44 @@ public class GeneralCommandSets {
 		}
 	}
 	
+	
+	/// Redraw all Unit stats general command
+	public static void redrawAllUnitStats(ActorRef out, GameState gameState) {
+		
+		System.out.println("In redrawAllUnitStats"); 
+		
+		// Loop over all friendly and enemy tiles and update
+		for (Tile t : gameState.getBoard().friendlyTile(gameState.getPlayerOne())) {
+			
+			// Redraw stats
+			BasicCommands.setUnitAttack(out, t.getUnitOnTile(), t.getUnitOnTile().getAttackValue());
+			threadSleep();
+			BasicCommands.setUnitHealth(out, t.getUnitOnTile(), t.getUnitOnTile().getHP());
+			threadSleep();
+		}
+		
+		for (Tile t : gameState.getBoard().enemyTile(gameState.getPlayerOne())) {
+			
+			// Redraw stats
+			BasicCommands.setUnitAttack(out, t.getUnitOnTile(), t.getUnitOnTile().getAttackValue());
+			threadSleep();
+			BasicCommands.setUnitHealth(out, t.getUnitOnTile(), t.getUnitOnTile().getHP());
+			threadSleep();
+		}
+		
+		// Avatars
+		BasicCommands.setUnitAttack(out, gameState.getHumanAvatar(), gameState.getHumanAvatar().getAttackValue());
+		threadSleep();
+		BasicCommands.setUnitHealth(out, gameState.getHumanAvatar(), gameState.getHumanAvatar().getHP());
+		threadSleep();
+
+		BasicCommands.setUnitAttack(out, gameState.getComputerAvatar(), gameState.getComputerAvatar().getAttackValue());
+		threadSleep();
+		BasicCommands.setUnitHealth(out, gameState.getComputerAvatar(), gameState.getComputerAvatar().getHP());
+		threadSleep();
+		
+	}
+	
 	// Reset tiles covering a given unit's range
 	public static void drawUnitDeselect(ActorRef out, GameState gameState, Unit unit) {
 		if(unit.getClass() == Monster.class || unit.getClass() == Avatar.class) {
@@ -137,11 +175,18 @@ public class GeneralCommandSets {
 	}
 	
 	// Draw entire Hand 
-	public static void drawCardsInHand(ActorRef out, GameState gameState, ArrayList<Card> cardsInHand) {
+	public static void drawCardsInHand(ActorRef out, GameState gameState, int oldHandSize, ArrayList<Card> cardsInHand) {
 
+		// Delete all cards 
+		for (int i = 0; i < oldHandSize; i++) {
+			BasicCommands.deleteCard(out, i);
+		}
+		GeneralCommandSets.threadSleep(); 
+
+		 
 		// draw cards in hand
 		int i = 0;	// position in hand where card is drawn, assumes Hand is not currently holding illegal number (>6)
-		for(Card c : gameState.getTurnOwner().getHand().getHandList()) { // get list of cards from Hand from Player
+		for(Card c : cardsInHand) { // get list of cards from Hand from Player
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 			GeneralCommandSets.threadSleep(); 
