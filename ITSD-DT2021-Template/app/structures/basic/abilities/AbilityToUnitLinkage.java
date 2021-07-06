@@ -43,13 +43,8 @@ public class AbilityToUnitLinkage {
 	/* Comodo Charger */	UnitAbility.put("Comodo Charger", 		constructArrayListAbility());
 	/* Hailstone Golem */	UnitAbility.put("Hailstone Golem", 		constructArrayListAbility());
 //	/* Pureblade Enforcer */UnitAbility.put("Pureblade Enforcer", 	constructArrayListAbility(new A_U_BuffAttackHPIfEnemySpellCast()));
-<<<<<<< HEAD
 	/* Azure Herald */		UnitAbility.put("Azure Herald", 		constructArrayListAbility(new A_U_HealAvatarHPIfSummoned(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 //	/* Silverguard Knight */UnitAbility.put("Silverguard Knight", 	constructArrayListAbility());
-=======
-//	/* Azure Herald */		UnitAbility.put("Azure Herald", 		constructArrayListAbility(new A_U_HealAvatarHPIfSummoned()));
-//	/* Silverguard Knight */UnitAbility.put("Silverguard Knight", 	constructArrayListAbility((new A_U_Provoke()), (new A_U_BuffAttackIfAvatarTakesDamage()));
->>>>>>> 34b8f56cf82174758da61a32d43cb921e67fd7e2
 	/* Azurite Lion */		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
 	/* Fire Spitter */		UnitAbility.put("Fire Spitter", 		constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
 //	/* Ironcliff Guardian */UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility((new A_U_SummonAnywhere()), (new A_U_Provoke());
