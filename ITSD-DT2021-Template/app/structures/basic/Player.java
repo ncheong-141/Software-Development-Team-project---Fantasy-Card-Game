@@ -62,7 +62,7 @@ public class Player {
 		int newHealth = health - loseHealth;
 		if(newHealth <= 0) {
 			this.health = 0;
-			g.gameOver(); 
+			GameState.gameOver(); 
 		}
 	}
 	
