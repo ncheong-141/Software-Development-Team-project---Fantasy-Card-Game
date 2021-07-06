@@ -20,29 +20,18 @@ import commands.*;
 
 //player draws a card and mana is drained
 public class EndTurnClicked implements EventProcessor{
-
-//	private GameState gameState;
 	
 	@Override
 	public void processEvent (ActorRef out, GameState gameState, JsonNode message){
 		gameState.endTureStateChange();
 		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
-			ComputerPlayerTurn compTurn = new ComputerPlayerTurn(out, gameState);
-	
+			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
+			compTurn.processComputerActions(out, gameState);
 		}
 	}
 }
 		
-//	// check if players decks are are empty 
-//	public boolean isDeckEmpty(GameState gameState) {
-//		ArrayList<Card> turnOwnerDeck = gameState.getTurnOwner().getDeck().getCardList();
-//		int deckCardLeft = turnOwnerDeck.size();
-//		
-//		if(deckCardLeft < 1) {
-//			return true;
-//		}
-//		return false;
-//	}
+
 	
 //	//give turnCount mana to the player just in the beginning of new turn	
 //	public void giveMana(GameState gameState) {  

@@ -11,6 +11,9 @@ import structures.basic.ComputerPlayer;
 import structures.basic.Tile;
 
 public class ComputerPlayerTurn {
+	
+	
+	ComputerAttackMonsterLogic al;
 
 	public void processComputerActions(ActorRef out, GameState g) {
 		ComputerPlayer compPlayer = g.getPlayerTwo();
@@ -39,6 +42,11 @@ public class ComputerPlayerTurn {
 		//iterate
 		
 		//method to return list of monsters to perform an attack (+ move if relevant)
+		
+		al.smartAttack();
+		
+		
+		
 		
 		//iterate
 	}
