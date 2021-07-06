@@ -22,8 +22,7 @@ public class Player {
 	protected Hand hand;
 	protected Deck deck;
 	protected Avatar avatar;
-	private GameState g;
-	
+
 	public Player() {
 		this.health = 20;
 		this.mana = 0;
@@ -64,7 +63,17 @@ public class Player {
 		}
 	}
 	
-
+// add to assist Avatar class
+	public void changeHealth(int delta) {
+		this.health += delta;
+		if (this.health > 20) this.health = 20;
+		if (this.health<=0 ) {
+			this.health=0;
+			GameState.gameOver();
+		}
+	}
+		
+	
 // getters & setters	
 	public Avatar getAvatar() {
 		return avatar;
@@ -80,6 +89,7 @@ public class Player {
 	
 	public void setHealth(int health) {
 		this.health = health;
+		if (this.health <= 0) GameState.gameOver();  
 	}
 	
 	public int getMana() {
