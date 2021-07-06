@@ -21,7 +21,8 @@ public class A_U_Flying {
 		this.callID = Call_IDs.construction;
 	}
 	
-
+	// Flying units can move through enemy units
+	
 	/* Class methods */
 	
 	// ABILITY IMPLEMENTATION
@@ -34,7 +35,7 @@ public class A_U_Flying {
 		int boardLength = gameState.getBoard().getBoardLength(); 
 		
 		// Set max moves to board length and width (gameState.getBoard().get....)
-		//targetMonster.setMaxMoves(60);
+		targetMonster.setMovesMax(boardWidth*boardLength);
 		return true;
 	}
 
