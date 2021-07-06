@@ -21,7 +21,7 @@ import commands.*;
 //player draws a card and mana is drained
 public class EndTurnClicked implements EventProcessor{
 
-	private GameState gameState;
+//	private GameState gameState;
 	
 	@Override
 	public void processEvent (ActorRef out, GameState gameState, JsonNode message){
