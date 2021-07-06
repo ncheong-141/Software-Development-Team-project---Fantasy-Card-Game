@@ -4,7 +4,7 @@ import structures.GameState;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_U_BuffAvatarHPIfSummoned implements Ability {
+public class A_U_HealAvatarHPIfSummoned implements Ability {
 
 	
 	// Ability attributes 
@@ -14,7 +14,7 @@ public class A_U_BuffAvatarHPIfSummoned implements Ability {
 	EffectAnimation eAnimation; 
 	
 	// Constructors
-	public A_U_BuffAvatarHPIfSummoned(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
+	public A_U_HealAvatarHPIfSummoned(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
 		this.eAnimation = eAnimation; 
