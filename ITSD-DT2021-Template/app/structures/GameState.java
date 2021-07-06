@@ -43,7 +43,7 @@ public class GameState {
 	private EndTurnClicked e;					// 
 	private ActorRef out;						// Do we need this?
 	
-	private ArrayList<Tile> tileHighlightContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
+	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
 	private Monster trackMonster; 				// YC added
 	private Tile monsterLocation; 				// YC added
@@ -165,12 +165,12 @@ public class GameState {
 		return gameBoard; 
 	}
 	
-	public ArrayList<Tile> getTileHighlightContainer() {
-		return tileHighlightContainer; 
+	public ArrayList<Tile> getTileAdjustedRangeContainer() {
+		return tileAdjustedRangeContainer; 
 	}
 	
-	public void setTileHighlightContainer(ArrayList<Tile> tilesToHighlight) {
-		tileHighlightContainer = tilesToHighlight;
+	public void setTileAdjustedRangeContainer(ArrayList<Tile> tilesToHighlight) {
+		tileAdjustedRangeContainer = tilesToHighlight;
 	}
 
 

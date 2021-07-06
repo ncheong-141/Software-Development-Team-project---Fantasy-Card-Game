@@ -32,7 +32,7 @@ public class A_U_SummonAnywhere {
 		// This ability is called when in the SummonMonsterState
 		
 		// Set the highlight tile container (used for ability specifics) in GameState to the tiles to be highlighted
-		gameState.setTileHighlightContainer(gameState.getBoard().allFreeTiles());
+		gameState.setTileAdjustedRangeContainer(gameState.getBoard().allFreeTiles());
 		
 		// Display in CardClicked as has connection to front end
 
