@@ -28,7 +28,7 @@ public class Board {
 	private Tile computerStart;
 	
 	private int numUnitsOnBoard;
-	private int boardCapacity;
+	private final int boardCapacity;
 
 	private Monster unitSelected;
 
@@ -69,7 +69,7 @@ public class Board {
 		return this.boardCapacity;
 	}
 	
-	public void setUnitCount(int delta) {
+	public void updateUnitCount(int delta) {
 		this.numUnitsOnBoard += delta;
 	}
 
@@ -128,6 +128,13 @@ public class Board {
 	//for any given tile it returns a list of tile in range
 	//the range here is based on game specifications (any tile adjacent to a friendly unit)
 	ArrayList<Tile> calcRange(Tile t){
+		ArrayList<Tile> tileRange = this.adjTiles(t);
+		tileRange.removeIf(tile -> !(tile.getFreeStatus()));
+		return tileRange;
+		
+	}
+	
+	private ArrayList<Tile> adjTiles(Tile t){
 		ArrayList<Tile> tileRange = new ArrayList<Tile>();
 		int xPos = t.getTilex();
 		int yPos = t.getTiley();
@@ -136,11 +143,11 @@ public class Board {
 		for (int i = 0; i<rangeH.length; i++) {
 			if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
 			else {
-				if (this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getFreeStatus()) {
+				
 					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
 					//System.out.println(posTile.getTilex() + "  " + posTile.getTiley());
 					tileRange.add(posTile);	
-				}
+				
 			}
 		}
 		return tileRange;
@@ -191,18 +198,9 @@ public class Board {
 
 	//method returns all adijecent enemy tiles for a given position
 	public ArrayList <Tile> adjEnemyTiles(int xPos, int yPos, Player p){
-		ArrayList<Tile> tileList = new ArrayList<Tile>();
-		for (int i = 0; i<rangeH.length; i++) {
-			if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
-			else {
-				if (!(this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getFreeStatus())&& this.getTile(xPos+rangeW[i], yPos+rangeH[i]).getUnitOnTile().getOwner()!=p) {
-					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
-					//System.out.println(posTile.getTilex() + "  " + posTile.getTiley());
-					tileList.add(posTile);	
-				}
-			}
-		}
-		return tileList;
+		ArrayList<Tile> tileRange = this.adjTiles(this.getTile(xPos, yPos));
+		tileRange.removeIf(tile -> (tile.getFreeStatus()||tile.getUnitOnTile().getOwner()==p));
+		return tileRange;
 	}
 
 	//================= UNIT MOVEMENTS METHODS ========================//
@@ -245,14 +243,15 @@ public class Board {
 
 	//6) unitAttackableTiles - returns a set of all tiles that a unit located at xpos and ypos can attack based on its attack and move range
 	//the result is returned as a set to eliminate duplicate values within the set
-	public HashSet<Tile> unitAttackableTiles (int xpos, int ypos, int attackRange, int moveRange ){
+	public ArrayList<Tile> unitAttackableTiles (int xpos, int ypos, int attackRange, int moveRange ){
 		Player p = this.getTile(xpos, ypos).getUnitOnTile().getOwner();
 		
 		ArrayList<Tile> reachTiles;
 		HashSet <Tile> tileList = new HashSet<Tile>();
 		
 		if (moveRange == 0) {
-			return this.calcAttackRange(xpos, ypos, attackRange, p);
+			ArrayList<Tile> list = new ArrayList<Tile>(this.calcAttackRange(xpos, ypos, attackRange, p));
+			return list;
 		}
 
 		//get a list of all tiles that the unit can reach given their position and move range
@@ -280,8 +279,9 @@ public class Board {
 			HashSet <Tile> attRange = calcAttackRange(t.getTilex(), t.getTiley(), attackRange, p);
 			tileList.addAll(attRange);
 
-		}			
-		return tileList;	
+		}	
+		ArrayList<Tile> list = new ArrayList<Tile>(tileList);
+		return list;	
 	}		  
 	//6A) 
 	public HashSet<Tile> calcAttackRange(int xpos, int ypos, int attackRange, Player p){
@@ -319,17 +319,17 @@ public class Board {
 	//this variable signal that the monster cannot attack/move in the current turn (right after summoning)
 
 
-	public ArrayList<Monster> coolDownCheck (){
+	public ArrayList<Monster> coolDownCheck (Player p){
 		ArrayList<Monster> monsterList = new ArrayList<Monster>();
 
 		for (int i = 0; i <gameBoard.length; i++) {
 
 			for (int k =0; k<gameBoard[0].length; k++) {
-				/*
-				 * if ((gameBoard[i][k].getUnitOnTile() != null)&&
-				 * gameBoard[i][k].getUnitOnTile().getOnCooldown()) {
-				 * monsterList.add(this.gameBoard[i][k].getUnitOnTile()); }
-				 */
+				
+				if ((gameBoard[i][k].getUnitOnTile() != null)&& gameBoard[i][k].getUnitOnTile().getOnCooldown() && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+					monsterList.add(this.gameBoard[i][k].getUnitOnTile()); 
+				}
+				 
 			}
 		}
 		return monsterList;
@@ -359,12 +359,14 @@ public class Board {
 		}
 		return freeTilesList;
 	}
+	
+	
 }
 
 	// To do:
-	// Update boardCapacity method
+	
 	// allSummonableTiles() will probably need a change (once NV decide)
-	// Either find or make an adjacent tile method (all tiles, don't care about occupied)
+	
 	// Think about stopping movement through enemy units
-	// Change return type of attackableTiles to ArrayList
-	// coolDownCheck method content needs uncommenting once it works/is functional with endTurn
+	
+	

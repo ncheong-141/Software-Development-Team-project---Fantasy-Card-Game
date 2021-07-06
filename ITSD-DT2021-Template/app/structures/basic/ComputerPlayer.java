@@ -26,22 +26,7 @@ public class ComputerPlayer extends Player {
 	boolean madeAllPossibleMoves;
 	Monster dummy;
 	
-	public ComputerPlayer(Deck d) {
-		super();
-		this.madeAllPossibleMoves = false;
-		this.playedAllPossibleCards = false;
-		this.dummy = new Monster();
-		dummy.setOwner(this);
-	}
-	
-	public ComputerPlayer(Deck d, Board b) {
-		super();
-		this.gameBoard = b;
-		this.madeAllPossibleMoves = false;
-		this.madeAllPossibleMoves = true;
-		this.dummy = new Monster();
-		dummy.setOwner(this);
-	}
+
 	
 	public ComputerPlayer() {
 		super(); 
@@ -49,6 +34,10 @@ public class ComputerPlayer extends Player {
 		this.playedAllPossibleCards = false;
 		this.dummy = new Monster();
 		dummy.setOwner(this);
+		this.deck = new Deck();
+		this.deck.deckTwo();
+		this.hand = new Hand();
+		this.hand.initialHand(deck);
 	}
 	
 	public void setGameBoard(Board b) {
@@ -118,7 +107,7 @@ public class ComputerPlayer extends Player {
 		
 		Arrays.sort(playableCards);
 		
-		//!!!!!NOTE: order array - card will implement comparable on mana cost
+		
 		
 		//instantiating a combo object (as an array list of card objects)
 		CardCombo combo = new CardCombo();
@@ -183,7 +172,7 @@ public class ComputerPlayer extends Player {
 	 * METHOD 3
 	 */
 	//this method checks if a given card combination is playable
-	//a combination is playable iff all the cards in the combination can be played on the abord (playable tiles are available)
+	//a combination is playable iff all the cards in the combination can be played on the board (playable tiles are available)
 	//method return true iff card combination is playable
 	private boolean playableCombo(CardCombo combo) {
 		//number of playable tiles available to computer player
@@ -223,6 +212,44 @@ public class ComputerPlayer extends Player {
 			else return false;
 		}
 	}	
+	
+	
+	public static void calcTileScore(Monster m, Board b, Tile targetTile) {
+		//tile where monster is currently located
+		Tile currTile = b.getTile(m.getPosition().getTilex(), m.getPosition().getTiley());
+
+		//calculate which enemy tiles are in range from the would be (WB) tile
+		HashSet <Tile> wBAttackable = b.calcAttackRange(targetTile.getTilex(), targetTile.getTiley(), m.getAttackRange(), m.getOwner());
+		
+		//get all tiles that this monster could attack from its current tile (with enemies on them)
+		HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
+		
+		
+		if (wBAttackable.size() > currAttackable.size()) targetTile.setScore(Tile.getBringsEnemyInRange());
+		
+		//all tiles on the board with an enemy unit on it
+		ArrayList <Tile> enemyTilesOnBoard = b.enemyTile(m.getOwner());
+		
+		int currAttackableByEnemy = 0;
+		int wBAttackableByEnemy = 0;
+		
+		for (Tile t : enemyTilesOnBoard) {
+			Monster mnstr = t.getUnitOnTile();
+			int x = t.getTilex();
+			int y = t.getTiley();
+			
+			//NOTE need to check when moves left gets reset
+			ArrayList<Tile> tilesEnemyCanAttack = b.unitAttackableTiles(x, y, mnstr.getAttackRange(), mnstr.getMovesLeft());
+			
+			if (tilesEnemyCanAttack.contains(targetTile)) wBAttackableByEnemy++;
+			if (tilesEnemyCanAttack.contains(currTile)) currAttackableByEnemy ++;
+		}
+		
+		
+		if (wBAttackableByEnemy > currAttackableByEnemy) targetTile.setScore(Tile.getInRangeScore());
+		
+		//return targetTile.getScore();
+	}
 
 //===========choose by Highest currentHP =============
 	public Tile selectAttackerByHP(){
@@ -472,7 +499,7 @@ public class ComputerPlayer extends Player {
 				this.m = m;
 				this.list = b.unitMovableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getMovesLeft());
 				if(list != null && !(list.isEmpty())) {
-					for (Tile t : list) t.calcTileScore(m, b);
+					for (Tile t : list) calcTileScore(m,b,t);
 					Collections.sort(list);
 					this.score = this.list.get(0).getScore();
 				}
@@ -595,4 +622,4 @@ public class ComputerPlayer extends Player {
 //	}
 ////	================randomAttack=====back up=================	
 // To do:
-// Move hand instantiation/set up from gamestate into Player constructor
+
