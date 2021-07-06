@@ -42,6 +42,8 @@ public class GameState {
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
 	private EndTurnClicked e;					// 
 	private ActorRef out;						// Do we need this?
+	
+	private ArrayList<Tile> tileHighlightContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
 	private Monster trackMonster; 				// YC added
 	private Tile monsterLocation; 				// YC added
@@ -159,9 +161,16 @@ public class GameState {
 		playerDead = true;		
 	}
 
-	// Errr we have two of these!
 	public Board getBoard() {
 		return gameBoard; 
+	}
+	
+	public ArrayList<Tile> getTileHighlightContainer() {
+		return tileHighlightContainer; 
+	}
+	
+	public void setTileHighlightContainer(ArrayList<Tile> tilesToHighlight) {
+		tileHighlightContainer = tilesToHighlight;
 	}
 
 
@@ -230,8 +239,10 @@ public class GameState {
 	/** Generalised method for finding if any monsters require their ability to be executed.
 	 * 	Called in relevant places
 	 ***/
-	public void checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
+	public boolean checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
 
+		boolean abilityFound = false; 
+		
 		// Loop over all tiles
 		for (Tile tile : this.getBoard().getAllTilesList()) {
 
@@ -243,6 +254,7 @@ public class GameState {
 
 				if (ability.getCallID() == callID) {
 					abilityContainer.add(ability);
+					abilityFound = true;
 				}
 			}
 
@@ -260,7 +272,25 @@ public class GameState {
 				ability.execute(targetMonster, this);
 			}
 		}
+		
+		return abilityFound; 
 	}
+	
+	
+	/** 
+	 * Method for obtaining the enemy player reference 
+	 */
+	public Player getEnemyPlayer() {
+		
+		// Check if the turn owner is instance of human player, if so return the computer player
+		if (this.getTurnOwner() instanceof HumanPlayer) {
+			return this.getPlayerTwo(); 
+		}
+		else {
+			return this.getPlayerOne(); 
+		}
+	}
+	
 			// To do:
 			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
 			// Move hand instantiation/set up from gamestate into Player constructor

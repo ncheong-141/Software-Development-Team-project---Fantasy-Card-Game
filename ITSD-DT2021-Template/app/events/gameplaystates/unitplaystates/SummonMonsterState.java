@@ -51,6 +51,9 @@ public class SummonMonsterState implements IUnitPlayStates {
 			
 			// Execute summon method
 			summonMonster(context.getGameStateRef(), context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
+			
+			// Update board counter for num Monsters
+			context.getGameStateRef().getBoard().setUnitCount(1);
 
 			/** Delete card from Hand + update visual **/
 			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
@@ -123,10 +126,10 @@ public class SummonMonsterState implements IUnitPlayStates {
 		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
-		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
-		GeneralCommandSets.threadSleep();
-		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
-		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
+//		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
+//		GeneralCommandSets.threadSleep();
 		
 		// Check for on-summon triggers
 			// Trigger abilities that permanently change the new object
