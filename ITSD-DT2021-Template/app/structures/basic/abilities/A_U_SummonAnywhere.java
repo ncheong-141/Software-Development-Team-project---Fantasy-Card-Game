@@ -4,7 +4,7 @@ import structures.GameState;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_U_SummonAnywhere {
+public class A_U_SummonAnywhere implements Ability {
 	// Ability attributes 
 	private boolean enemyTarget; 
 	private Class<? extends Monster> targetType;
@@ -18,7 +18,7 @@ public class A_U_SummonAnywhere {
 		this.targetType = targetType; 
 		this.eAnimation = eAnimation; 
 		
-		this.callID = Call_IDs.onSummon;
+		this.callID = Call_IDs.onCardClicked;
 	}
 	
 	
