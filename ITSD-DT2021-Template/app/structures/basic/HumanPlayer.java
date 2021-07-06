@@ -30,35 +30,13 @@ public class HumanPlayer extends Player {
 //		this.summonM.execute(context);
 	}
 	
-
-
-//	@Override  give 3 card in the first round from deckOne
-	
-//	public void firstThreeCards() {
-//		// TODO Auto-generated method stub
-//		super.firstThreeCards();
-//	}
-
-//	@Override assign deckOne for HumanPlayer
-//	public void setDeck(ArrayList<Card> d) {
-//		// TODO Auto-generated method stub
-//		this.d = deck.deckTwo(); // need Deck to return deckOne list
-//	}
-
-/*	
-	public void firstThreeCards(ArrayList<Card> hand) {
-//		this.hand = new Hand(this.deck.getDeck());	
-				
-		System.out.println("In setPlayerHand()");
-		for (Card d : this.deck.getDeck()) {
-			System.out.println(d.getCardname());
-		}
+	public String toString() {
+		return "Player One";
 	}
 	
-*/
-	
-	// To do:
-	// Move hand instantiation/set up from gamestate into Player constructor
+
+
+
 	
 	
 	

@@ -16,7 +16,7 @@ public class ComputerPlayerTurn {
 		ComputerPlayer compPlayer = g.getPlayerTwo();
 		AIUnitStateController controller = new AIUnitStateController(out, g);
 		
-		ArrayList<ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
+		ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 		
 		cardsToPlay = compPlayer.playCards();
 		

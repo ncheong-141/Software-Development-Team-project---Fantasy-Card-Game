@@ -11,7 +11,7 @@ public class Avatar extends Monster {
 
 	
 	public Avatar() {
-		this.HP = 20;
+		//this.HP = 20;
 		this.maxHP = 20;
 		this.attackValue = 2;
 		

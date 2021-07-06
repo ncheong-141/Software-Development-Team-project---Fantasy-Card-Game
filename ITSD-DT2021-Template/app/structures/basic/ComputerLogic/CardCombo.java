@@ -42,6 +42,9 @@ public class CardCombo implements Comparable<CardCombo> {
 		cardCombo.add(c);
 	}
 	
+	public boolean isEmpty() {
+		return cardCombo.isEmpty();
+	}
 	
 	public int getScore() {
 		return this.score;

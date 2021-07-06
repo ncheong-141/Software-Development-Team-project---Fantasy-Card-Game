@@ -27,7 +27,9 @@ public class ComputerPlayer extends Player {
 		this.hand.initialHand(deck);
 	}
 	
-	
+	public String toString() {
+		return "Player Two";
+	}
 	public void setGameBoard(Board b) {
 		this.gameBoard = b;
 	}
@@ -45,13 +47,13 @@ public class ComputerPlayer extends Player {
 		this.hPBenchMark = hp;
 	}
 	
-	public ArrayList<ComputerInstruction> playCards(){
+	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(){
 		ComputerPlayCardsLogic play = new ComputerPlayCardsLogic(this);
 		
 		return play.playCards();
 	}
 	
-	public ArrayList<ComputerInstruction> moveMonsters(){
+	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> moveMonsters(){
 		ComputerMoveMonsterLogic move = new ComputerMoveMonsterLogic(this);
 		return move.movesUnits();
 	}
@@ -66,6 +68,8 @@ public class ComputerPlayer extends Player {
 		
 		//get all tiles that this monster could attack from its current tile (with enemies on them)
 		HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
+		
+		System.out.println(wBAttackable.size() + "  " + currAttackable.size());
 		
 		
 		if (wBAttackable.size() > currAttackable.size()) targetTile.setScore(Tile.getBringsEnemyInRange());

@@ -20,12 +20,16 @@ public class ComputerPlayCardsLogic {
 		this.player = p;
 		this.hand = p.getHand();
 		this.gameBoard = p.getGameBoard();
+		System.out.println("Cards in comp player's hand \n");
+		for (Card c : this.hand.getHandList()) System.out.println(c.getCardname() + " manacost " + c.getManacost());
 	}
 	
 	
-	public ArrayList<ComputerInstruction> playCards(){
+	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(){
+		
 		
 		ArrayList<Card> cardList = this.playableCards();
+		System.out.println("in comp player card logic. playable cards list size: " + cardList.size());
 		//getting the list of possible card combinations
 		ArrayList <CardCombo> possCombos = this.cardCombos(cardList);
 		
@@ -67,7 +71,12 @@ public class ComputerPlayCardsLogic {
 			//a card combination (combo) is represented as a set
 			ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
 			
-			//converting hand to an array for ease of indexing
+			if (list.size() == 0) {
+				System.out.println("no playable cards at this time");
+				return comboList;
+			}
+			
+			//converting playablecards list into an array to an array for ease of indexing
 			Card [] playableCards = new Card [this.playableCards().size()-1];
 			for (int i = 0; i<playableCards.length; i++) {
 				playableCards[i] = list.get(i);
@@ -147,6 +156,8 @@ public class ComputerPlayCardsLogic {
 			//number of tiles adj to a friendly unit
 			int tilesAvailable = this.gameBoard.allSummonableTiles(player).size();
 			int tilesNeeded = 0;
+			
+			if (tilesAvailable <=0 || combo.getCardCombo().isEmpty()) return false;
 			//count how many cards in the card combo need to be played in a tile adj to a friendly unit
 			//NOTE: need to implement check to see if board still has capacity (max number of units X*Y)
 			for (Card c : combo.getCardCombo()) {
@@ -188,6 +199,7 @@ public class ComputerPlayCardsLogic {
 		 * @return one CardCombo obj, which is the best card combination out of the given list
 		 */
 			private CardCombo chooseCombo(ArrayList<CardCombo> possCombos) {
+				if (possCombos.isEmpty()) return new CardCombo();
 				if (player.getHealth() <= player.getHPBenchMark()) {
 					for (CardCombo cb : possCombos) {
 						cb.calcDefenseScore();
@@ -211,8 +223,9 @@ public class ComputerPlayCardsLogic {
 		//methods returns list of cards that computer player wants to play
 		//as a list of ComputerMoves objs (Card + target tile)
 			private ArrayList<ComputerInstruction> computeMoves(CardCombo combo){
-				ArrayList<ComputerInstruction> compInstructions = new ArrayList<ComputerInstruction>();
 				
+				ArrayList<ComputerInstruction> compInstructions = new ArrayList<ComputerInstruction>();
+				if (combo.isEmpty()) return compInstructions;
 				ArrayList <Tile> tiles = null;
 				Tile t = null;
 				int i = 0;

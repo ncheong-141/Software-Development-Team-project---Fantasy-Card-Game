@@ -11,7 +11,7 @@ import commands.*;
  * the end-turn button.
  * 
  * { 
- *   messageType = “endTurnClicked”
+ *   messageType = 
  * }
  * 
  * @author Dr. Richard McCreadie
@@ -67,6 +67,8 @@ public class EndTurnClicked implements EventProcessor{
 				m.toggleCooldown();				
 		}
 	}
+	
+	
 	
 }
 

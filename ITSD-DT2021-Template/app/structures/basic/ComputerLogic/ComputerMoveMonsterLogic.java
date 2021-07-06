@@ -27,8 +27,10 @@ public class ComputerMoveMonsterLogic {
 			 * @return returns a list of ComputerInstruction object
 			 * each object contains a monster (currently on the board) and a destination tile
 			 */
-			public ArrayList<ComputerInstruction> movesUnits(){
+			public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> movesUnits(){
 				ArrayList<Monster> movableMonsters = this.allMovableMonsters();
+				if(movableMonsters.isEmpty()) return new ArrayList<structures.basic.ComputerLogic.ComputerInstruction>();
+				
 				
 				MonsterTileOption [] listofMTO = this.getMonstersOptions(movableMonsters);
 				

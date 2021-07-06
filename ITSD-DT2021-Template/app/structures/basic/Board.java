@@ -173,7 +173,7 @@ public class Board {
 		ArrayList<Tile> tileRange = new ArrayList<Tile>();
 		for (int i = 0; i <gameBoard.length; i++) {
 			for (int k =0; k<gameBoard[0].length; k++) {
-				if (gameBoard[i][k].getUnitOnTile() != null && (!(gameBoard[i][k].getUnitOnTile() instanceof Avatar)) && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+				if (gameBoard[i][k].getUnitOnTile() != null  && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
 					tileRange.add(gameBoard[i][k]);
 				}
 			}	
@@ -250,20 +250,7 @@ public class Board {
 		return list;
 	}
 	
-	private HashSet<Tile> method(Tile t, int moves){
-		HashSet<Tile> set = new HashSet<Tile>();
-		
-		if (moves <=0) { 
-			set.add(t);
-			return set;
-		}
-		else {
-			
-		}
-		
-		return set;
-	}
-	
+	//======INNNER CLASS=====//
 	class State {
 		int xpos, ypos, moves;
 		Tile t;

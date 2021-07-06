@@ -51,7 +51,7 @@ public class GameState {
 
 	/** Constructor **/
 	public GameState() {
-
+		
 		/* Set attributes */ 
 		turnCount = 0;
 		playerDead = false;
@@ -68,8 +68,11 @@ public class GameState {
 		// Instantiate players 								
 		playerOne = new HumanPlayer();
 		playerOne.setDeck(deckPlayerOne);
-
+		
+		
+		
 		playerTwo = new ComputerPlayer();
+		//playerTwo.setGameBoard(gameBoard);
 		//playerTwo.setDeck(deckPlayerTwo);
 		//playerTwo.setDummy();
 		
@@ -92,10 +95,16 @@ public class GameState {
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, gameBoard, Avatar.class);
-		humanAvatar.setOwner(playerOne);
+		//humanAvatar.setOwner(playerOne);
 
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, gameBoard, Avatar.class);
-		computerAvatar.setOwner(playerTwo);
+		//computerAvatar.setOwner(playerTwo);
+		
+		System.out.println("board: " + this.getBoard());
+		System.out.println();
+		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
+		System.out.println();
+		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner());
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/

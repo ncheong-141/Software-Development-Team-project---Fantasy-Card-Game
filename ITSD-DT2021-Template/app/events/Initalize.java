@@ -100,6 +100,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}	
+		
+		g.getPlayerTwo().setGameBoard(g.getBoard());
 
 	}
 	
