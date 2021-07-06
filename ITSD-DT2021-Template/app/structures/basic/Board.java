@@ -2,7 +2,8 @@ package structures.basic;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
+import java.util.LinkedList;
+import java.util.Queue;
 
 import commands.BasicCommands;
 import structures.GameState;
@@ -204,6 +205,76 @@ public class Board {
 	}
 
 	//================= UNIT MOVEMENTS METHODS ========================//
+	
+	/**
+	 * alternative approach
+	 * 
+	 * trying to create method that does not allow for moving through enemies
+	 * 	
+	 */
+	
+	public ArrayList<Tile> moves(int xpos, int ypos, int moves){
+		HashSet <Tile> tileList = new HashSet<Tile>();
+		
+		boolean[][][] visited = new boolean[this.Y][this.X][1];
+		
+		Tile startTile = this.getTile(xpos, ypos);
+		
+		State startState = new State(startTile, startTile.getUnitOnTile().getMovesLeft());
+		
+		Queue<State> queue = new LinkedList<State>();
+		
+		queue.add(startState);
+		
+		while(! queue.isEmpty()) {
+			State current = queue.poll();
+			if (current.moves == 0) {
+				tileList.add(current.t);
+				continue;
+			}
+			
+			else {
+				ArrayList<Tile> reachTiles = this.adjTiles(current.t);
+				reachTiles.removeIf(tile ->!(tile.getFreeStatus()));
+				for (Tile t : reachTiles) {
+					if (visited[t.getTiley()][t.getTilex()][0] != true) {
+						State nextState = new State(t, current.moves-1);
+						queue.add(nextState);
+						visited[t.getTiley()][t.getTilex()][0] = true;
+					}	
+				}
+			}
+		}
+		
+		ArrayList <Tile> list = new ArrayList<Tile>(tileList);
+		return list;
+	}
+	
+	private HashSet<Tile> method(Tile t, int moves){
+		HashSet<Tile> set = new HashSet<Tile>();
+		
+		if (moves <=0) { 
+			set.add(t);
+			return set;
+		}
+		else {
+			
+		}
+		
+		return set;
+	}
+	
+	class State {
+		int xpos, ypos, moves;
+		Tile t;
+		
+		public State(Tile t, int moves) {
+			this.moves = moves;
+			this.t= t;
+			this.xpos = t.getTilex();
+			this.ypos = t.getTiley();
+		}
+	}
 
 	//5) unitMovableTiles - this method returns a list of all tiles a selected unit can move to
 	//within a given range based on the specified position
