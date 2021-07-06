@@ -2,6 +2,7 @@ package structures.basic;
 
 import java.util.ArrayList;
 import structures.basic.Unit;
+import structures.basic.abilities.Ability;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 
@@ -26,6 +27,7 @@ public class Card implements Comparable<Card> {
 	private BigCard bigCard;//display element for selected card
 	
 	private String configFile;
+	private ArrayList<Ability> abilityList;
 	
 	public Card() {};
 	
@@ -37,6 +39,7 @@ public class Card implements Comparable<Card> {
 		this.miniCard = miniCard;
 		this.bigCard = bigCard;
 		this.configFile="";
+		this.abilityList=new ArrayList<Ability>();
 	}
 	
 	
@@ -44,29 +47,24 @@ public class Card implements Comparable<Card> {
 	
 	//checks whether card targets spell or enemy
 	public boolean targetEnemy() {
-		boolean result= AbilityToUnitLinkage.UnitAbility.get(getCardname()).get(0).targetEnemy();
+		boolean result=false;
+		for (Ability a: this.abilityList) {
+			if (a.targetEnemy()==true){
+				result=true;
+			}
+			else {
+				result=false;
+			}
+		}
 		return result;
 	}
 	
 	//checks that monster/spell associated with card has an ability
 	public boolean hasAbility(){
 		boolean result= false;
-		if(this.getBigCard().getAttack()>0) {//checks whether card is a monster
-		//create a temporary	
-			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+this.getCardname(), this, Monster.class);
-			if(mon.getMonsterAbility()!=null) {//if monster has ability, a true result is given
+			if(this.abilityList!=null) {
 				result=true;
-			}else {//if monster doesn't have an ability a false result is give
-				result=false;
 			}
-		}else if(this.getBigCard().getAttack()<0) {//checks whether card is a spell
-			Spell spell = (Spell)BasicObjectBuilders.loadCard("StaticConfFiles.c_"+this.getCardname(),99, Spell.class);
-			if(spell.getAbility()!=null) {//if spell has an effect(should always have one) returns a true result
-				result=true;
-			}else {//if spell has no ability(should never happen) false result returned
-				result=false;
-			}
-		}
 		return result;
 		}
 
@@ -105,8 +103,6 @@ public class Card implements Comparable<Card> {
 		return 0;
 		}
 	}
-	
-	
 	
 	//getters and setters
 	public int getId() {
@@ -148,6 +144,7 @@ public class Card implements Comparable<Card> {
 		return this.configFile;
 	}
 }
+
 
 // To do:
 // Add modifiers to constructor attributes
