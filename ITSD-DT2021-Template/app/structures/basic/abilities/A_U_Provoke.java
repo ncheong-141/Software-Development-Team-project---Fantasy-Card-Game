@@ -72,7 +72,7 @@ public class A_U_Provoke implements Ability{
 		else {
 
 			// Set container in gameState to highlight tiles (done in UnitDisplayActionState, where this ability was called)
-			gameState.setTileHighlightContainer(enemyTileToHighlight);
+			gameState.setTileAdjustedRangeContainer(enemyTileToHighlight);
 			
 			return true; 
 		}
