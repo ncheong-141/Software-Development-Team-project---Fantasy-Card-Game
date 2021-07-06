@@ -42,7 +42,7 @@ public class A_U_Provoke implements Ability{
 		 */
 		
 		int selectedUnitX = targetMonster.getPosition().getTilex(); 
-		int selectedUnitY = targetMonster.getPosition().getTilex(); 		
+		int selectedUnitY = targetMonster.getPosition().getTiley(); 		
 		
 		// Get all tiles adjacent to the selected unit with an enemy 
 		ArrayList<Tile> enemyAdjTiles = gameState.getBoard().adjEnemyTiles(selectedUnitX, selectedUnitY, gameState.getTurnOwner());
