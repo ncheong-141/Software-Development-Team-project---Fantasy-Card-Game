@@ -22,6 +22,7 @@ public class Player {
 	protected Hand hand;
 	protected Deck deck;
 	protected Avatar avatar;
+	private int test =1;
 
 	public Player() {
 		this.health = 20;

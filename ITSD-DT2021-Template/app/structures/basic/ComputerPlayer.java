@@ -2,12 +2,7 @@ package structures.basic;
 import structures.basic.ComputerLogic.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-<<<<<<< HEAD
-import events.gameplaystates.unitplaystates.*;
 
-
-=======
->>>>>>> d6e19c99516a578d5d1214c77f2aadf8f255c033
 import structures.GameState;
 public class ComputerPlayer extends Player {
 	
