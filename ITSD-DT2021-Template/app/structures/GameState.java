@@ -43,8 +43,7 @@ public class GameState {
 	private EndTurnClicked e;					// 
 	private ActorRef out;						// Do we need this?
 
-	private Monster trackMonster; 				// YC added
-	private Tile monsterLocation; 				// YC added
+
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
@@ -185,33 +184,59 @@ public class GameState {
 
 	}
 
-	/** AI methods **/
-	public void computerEnd() {  
+	/** methods to change GameState data when EndTurn**/
+	public void endTureStateChange() {  
 		
-		e.emptyMana(this); //empty mana for player who ends the turn
-		e.toCoolDown(this); //switch avatars status for current turnOwner
+		emptyMana(); //empty mana for player who ends the turn
+	//	e.toCoolDown(this); //switch avatars status for current turnOwner
 	    deselectAllEntities();
-		GeneralCommandSets.boardVisualReset(this.out, this); 
-		deselectAllEntities();	 //current turnOwner Hand is off?
-
-		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
-
-		turnChange(); // turnOwner exchanged	
-		if (e.isDeckEmpty(this)) {  //check if both players have enought card in deck left for new turn
-			gameOver();  // if not, gameover(?)
+		GeneralCommandSets.boardVisualReset(this.out, this);  //visual
+		if (isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
+			gameOver();  // if not, gameover
+		} else {
+			getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());  //if holds enough card, get card from deck
 		}
-		e.giveMana(this); //give turnCount mana to the player in the beginning of new turn
-		e.toCoolDown(this); //switch avatars status for new turnOwner in the beginning of new turn
-		//getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
+		turnChange(); // turnOwner exchanged	
+		giveMana(); //give turnCount mana to the player in the beginning of new turn
+	//	e.toCoolDown(this); //switch avatars status for new turnOwner in the beginning of new turn
 	}
 	
 	
-	// YC add
-	public Tile locateMonster(Monster trackMonster) {
-		this.monsterLocation = this.getBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
-		return monsterLocation;
+	//give turnCount mana to the player just in the beginning of new turn	
+	public void giveMana() {  
+			getTurnOwner().setMana(getTurnCount());  
 	}
 	
+	//empty mana for player who ends the turn
+	public void emptyMana() {
+		getTurnOwner().setMana(0);
+	}
+	
+	// check if players decks are are empty 
+	public boolean isDeckEmpty() {
+		ArrayList<Card> turnOwnerDeck = getTurnOwner().getDeck().getCardList();
+		int deckCardLeft = turnOwnerDeck.size();
+		if(deckCardLeft < 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	//cooldown monsters
+	public void toCoolDown() {
+		ArrayList<Monster> toCool = getBoard().friendlyUnitList(getTurnOwner());				
+		for(Monster m : toCool){
+				m.toggleCooldown();				
+			}
+		}
+	
+	/** methods to change GameState data when EndTurn**/
+	
+	
+	
+	
+
 	
 	public void setDeckForStart() {	
 		deckPlayerOne = new Deck();
