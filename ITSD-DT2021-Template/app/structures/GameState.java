@@ -243,6 +243,8 @@ public class GameState {
 	 ***/
 	public boolean checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
 
+		boolean abilityFound = false; 
+		
 		// Loop over all tiles
 		for (Tile tile : this.getBoard().getAllTilesList()) {
 
@@ -254,6 +256,7 @@ public class GameState {
 
 				if (ability.getCallID() == callID) {
 					abilityContainer.add(ability);
+					abilityFound = true;
 				}
 			}
 
@@ -271,6 +274,8 @@ public class GameState {
 				ability.execute(targetMonster, this);
 			}
 		}
+		
+		return abilityFound; 
 	}
 	
 	
