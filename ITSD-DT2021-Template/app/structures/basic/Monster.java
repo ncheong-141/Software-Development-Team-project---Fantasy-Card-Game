@@ -109,10 +109,12 @@ public class Monster extends Unit{
 	}
 	
 	// Counter-attack
-	// Returns the attackValue of a unit, intended to be called after surviving an attack.
+	// Logic-related method name for retrieving attackValue of unit, called after surviving an attack.
 	// Counter is not related to attack actions available.
-	//Method here - no boolean, just return attackValue
-	// counter();
+	// Application-relevant name for retrieving attackValue.
+	public int counter() {
+		return attackValue;
+	}
 	
 	// Defend (receive damage)
 	// Returns outcome of receiving damage (successful defence or death) and updates health
