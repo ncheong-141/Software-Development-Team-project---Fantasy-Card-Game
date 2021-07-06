@@ -1,20 +1,21 @@
 package events;
 
+
+
+import akka.actor.ActorRef;
 import java.util.ArrayList;
-//import com.fasterxml.jackson.databind.JsonNode;
-//import akka.actor.ActorRef;
 import structures.GameState;
 import events.gameplaystates.unitplaystates.AIUnitStateController;
-import structures.basic.ComputerInstruction;
+import structures.basic.ComputerLogic.*;
 import structures.basic.ComputerPlayer;
 
 public class ComputerPlayerTurn {
 
-	public void processComputerActions() {
-		//ComputerPlayer compPlayer = g.getPlayerTwo();
-		//AIUnitStateController controller = new AIUnitStateController(out, g, message);
+	public void processComputerActions(ActorRef out, GameState g) {
+		ComputerPlayer compPlayer = g.getPlayerTwo();
+		AIUnitStateController controller = new AIUnitStateController(out, g, message);
 		
-		//ArrayList<ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
+		ArrayList<ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 		
 		//cardsToPlay = compPlayer.playComputerCards();
 

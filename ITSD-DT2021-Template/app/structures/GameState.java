@@ -62,15 +62,16 @@ public class GameState {
 		deckPlayerOne.deckOne();
 		
 
-		Deck deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
+		//Deck deckPlayerTwo = new Deck();
+		//deckPlayerTwo.deckTwo();
 		
 		// Instantiate players 								
 		playerOne = new HumanPlayer();
 		playerOne.setDeck(deckPlayerOne);
 
 		playerTwo = new ComputerPlayer();
-		playerTwo.setDeck(deckPlayerTwo);
+		//playerTwo.setDeck(deckPlayerTwo);
+		//playerTwo.setDummy();
 		
 		for (Card c : playerOne.getDeck().getCardList()) {
 			System.out.println("cardname " +c.getCardname());
@@ -80,9 +81,9 @@ public class GameState {
 		playerOne.setHand(handPlayerOne);
 		handPlayerOne.initialHand(deckPlayerOne);
 
-		Hand handPlayerTwo = new Hand();
-		playerTwo.setHand(handPlayerTwo);
-		handPlayerTwo.initialHand(deckPlayerTwo);
+		//Hand handPlayerTwo = new Hand();
+		//playerTwo.setHand(handPlayerTwo);
+		//handPlayerTwo.initialHand(deckPlayerTwo);
 
 		
 		// Set turn owner
