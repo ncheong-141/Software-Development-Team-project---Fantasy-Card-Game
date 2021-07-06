@@ -22,26 +22,39 @@ public class ComputerMoveMonsterLogic {
 	
 	//====================MOVING OF UNITS ON BOARD METHOD=======================//
 	
-			public ArrayList<ComputerInstruction> compPlayerMovesUnits(){
-				MonsterTileOption [] listofMTO = this.getMonstersOptions(this.allMovableMonsters());
+			/**
+			 * public method used in ComputerPlayer
+			 * @return returns a list of ComputerInstruction object
+			 * each object contains a monster (currently on the board) and a destination tile
+			 */
+			public ArrayList<ComputerInstruction> movesUnits(){
+				ArrayList<Monster> movableMonsters = this.allMovableMonsters();
+				
+				MonsterTileOption [] listofMTO = this.getMonstersOptions(movableMonsters);
+				
 				return this.matchMonsterAndTile(listofMTO);
 			}
 			
+			/**
+			 * @return method returns a list of monster that the player can move in the current turn
+			 * a monster can be moved iff it has moves left and if onCoolDown == false (monster has started on the board)
+			 */
 			private ArrayList <Monster> allMovableMonsters(){
 				ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitList(player);
 				
-				myMonsters.removeIf(m -> (m.getMovesLeft()<=0));
+				myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
 				
 				return myMonsters;
 			}
 			
+			/**
+			 * 
+			 * @param list of monster objects
+			 * @return an array of MonsterTileOption objects
+			 * each object in the array being return contains a monster and a list of tiles where that monster can move to
+			 */
 			private MonsterTileOption[] getMonstersOptions(ArrayList<Monster> list){
-				
-				//array list implementation
-				//ArrayList<MonsterTileOption> monsterTiles = new ArrayList<MonsterTileOption>();
-				//for (Monster m : list) {
-					//monsterTiles.add(new MonsterTileOption(m, this.gameBoard));
-				//}
+
 				MonsterTileOption[] optionList = new MonsterTileOption[list.size()];
 				
 				for (int i = 0; i<optionList.length; i++) {
@@ -51,6 +64,11 @@ public class ComputerMoveMonsterLogic {
 				return optionList;
 			}
 		
+			/**
+			 * 
+			 * @param optionList - list of MonsterTileOption objects
+			 * @return a list of ComputerInstruction objects each containing a monster and a target tile (where the monster will move to)
+			 */
 			private ArrayList<ComputerInstruction> matchMonsterAndTile (MonsterTileOption[] optionList){
 				//sorting array based on value of top tile 
 				Arrays.sort(optionList);
@@ -121,10 +139,14 @@ public class ComputerMoveMonsterLogic {
 			}
 			//=========================inner class===============================//
 			
-			//this inner class represent a pairing of a monster belonging to comp player
-			//and a list of tiles that the given monster can move to
-			//each object has a score that is equal to the score of the first tile in the list
-			//the list is ordered based on tile score (tile implements comparable)
+			/**
+			 * this inner class represent a pairing of a monster belonging to comp player
+				and a list of tiles that the given monster can move to
+				each object has a score that is equal to the score of the first tile in the list
+				the list is ordered based on tile score (tile implements comparable)
+			 * 
+			 */
+			
 			static class MonsterTileOption implements Comparable<MonsterTileOption> {
 				Monster m; 
 				ArrayList<Tile> list;

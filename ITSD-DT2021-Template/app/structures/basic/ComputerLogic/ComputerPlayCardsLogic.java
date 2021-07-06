@@ -15,18 +15,37 @@ public class ComputerPlayCardsLogic {
 	private Hand hand;
 	private Board gameBoard;
 	private ComputerPlayer player;
+	
 	public ComputerPlayCardsLogic(ComputerPlayer p) {
 		this.player = p;
 		this.hand = p.getHand();
 		this.gameBoard = p.getGameBoard();
 	}
 	
+	
+	public ArrayList<ComputerInstruction> playCards(){
+		
+		ArrayList<Card> cardList = this.playableCards();
+		//getting the list of possible card combinations
+		ArrayList <CardCombo> possCombos = this.cardCombos(cardList);
+		
+		CardCombo combinationToBePlayed = this.chooseCombo(possCombos);
+		
+		//extracting the best card combination based on logic in chooseCombo method
+		ArrayList<ComputerInstruction> cardsToBePlayed = this.computeMoves(combinationToBePlayed); 
+		
+		//returning the choosen combination of cards 
+		return cardsToBePlayed;
+		
+	}
 	//========================PLAYING CARDS METHODS ===================================//
 	
-		/**
-		 * METHOD 1 
-		 * 
-		 */
+	/**
+	 * playableCards
+	 * @return ArrayList of Card objects
+	 * List contains all cards that the player could play. 
+	 * The individual mana cost of every single card in the last is less than or equal to mana currently available to player
+	 */
 		//method returns playable cards from the player's hand based on the mana cost
 		private ArrayList <Card> playableCards(){
 			ArrayList<Card> cardList = new ArrayList<Card>();
@@ -34,47 +53,21 @@ public class ComputerPlayCardsLogic {
 			return cardList;
 		}
 		
-		/*****
-		//card(s) permutations algorithm
-		
-		Let comboList be a list of card combinations
-		Let combo be a list of cards 
-		Let hand be an array of cards currently in player's hand
-		1)set k = 0
-		2)while k < hand length repeat:
-			3)set card = hand[k]
-			4)add card to current combo list
-			5)update mana left to pay for card[k]
-			6)if mana left = 0 OR mana left < mana cost of cheapest card OR if card is last card in hand
-				6.1)add this combo to list of combos
-			7)else set i = k+1
-			8)while i < length of hand repeat:
-				8.1) if mana cost of i = mana left
-					8.1.1) add i to current combo
-					8.1.2) add current combo to combo list
-					8.1.3) reset mana left to total mana - k mana cost
-					8.1.4) reset combo (new empty combo) and continue
-				8.2) else if mana cost of i is < mana left
-					8.2.1) add i to current combo
-					8.2.2) update mana left and continue
-					8.2.3) if new left mana value is less than last card in hand break
-				8.3) else continue 
-		9) terminate yielding list of combos
 
 		
-		****/
-		
 		/**
-		 * METHOD 2
+		 * @param list of card objects
+		 * @return list of all possible playable combinations of cards from the given list
+		 * card permutation algorithm provided at the bottom of this class
 		 */
+		
 		private ArrayList<CardCombo> cardCombos(ArrayList <Card> list){
 			
 			//method will return a list of combinations of cards
-			//a card combination (combo) is represented as an ArrayList
+			//a card combination (combo) is represented as a set
 			ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
 			
 			//converting hand to an array for ease of indexing
-
 			Card [] playableCards = new Card [this.playableCards().size()-1];
 			for (int i = 0; i<playableCards.length; i++) {
 				playableCards[i] = list.get(i);
@@ -82,9 +75,7 @@ public class ComputerPlayCardsLogic {
 			}
 			
 			Arrays.sort(playableCards);
-			
-			
-			
+
 			//instantiating a combo object (as an array list of card objects)
 			CardCombo combo = new CardCombo();
 			
@@ -145,11 +136,12 @@ public class ComputerPlayCardsLogic {
 		}
 		
 		/**
-		 * METHOD 3
+		 * 
+		 * @param combo = CardCombo object. This object represent a possible card combination 
+		 * it is represented as a set of cards
+		 * @return method returns true if and only if every card in the combination could be summoned on the current board
 		 */
-		//this method checks if a given card combination is playable
-		//a combination is playable iff all the cards in the combination can be played on the board (playable tiles are available)
-		//method return true iff card combination is playable
+	
 		private boolean playableCombo(CardCombo combo) {
 			//number of playable tiles available to computer player
 			//number of tiles adj to a friendly unit
@@ -191,25 +183,9 @@ public class ComputerPlayCardsLogic {
 		}	
 		
 		/**
-		 * METHOD 4
 		 * 
-		 */
-		//return card(s) to be played by comp player
-			public ArrayList <ComputerInstruction> playComputerCards(){
-				
-				//getting the list of possible card combinations
-				ArrayList <CardCombo> possCombos = this.cardCombos(this.playableCards());
-				
-				//extracting the best card combination based on logic in chooseCombo method
-				
-				ArrayList<ComputerInstruction> cardsToBePlayed = this.computeMoves(this.chooseCombo(possCombos)); 
-				
-				//returning the choosen combination of cards 
-				return cardsToBePlayed;
-			}
-		
-		/**
-		 * METHOD 5
+		 * @param possCombos = list of playable card combinations
+		 * @return one CardCombo obj, which is the best card combination out of the given list
 		 */
 			private CardCombo chooseCombo(ArrayList<CardCombo> possCombos) {
 				if (player.getHealth() <= player.getHPBenchMark()) {
@@ -227,7 +203,10 @@ public class ComputerPlayCardsLogic {
 			}
 		
 		/**
-		 * METHOD 6
+		 * 
+		 * @param combo = CardCombo object
+		 * @return a list of ComputerInstruction objects
+		 * each computer instruction object contains a card from the given card combination and the target tile where to play it
 		 */
 		//methods returns list of cards that computer player wants to play
 		//as a list of ComputerMoves objs (Card + target tile)
@@ -252,4 +231,35 @@ public class ComputerPlayCardsLogic {
 				
 				return compInstructions;
 			}
+			
+			
+			/*****
+			//card(s) permutations algorithm
+			
+			Let comboList be a list of card combinations
+			Let combo be a list of cards 
+			Let hand be an array of cards currently in player's hand
+			1)set k = 0
+			2)while k < hand length repeat:
+				3)set card = hand[k]
+				4)add card to current combo list
+				5)update mana left to pay for card[k]
+				6)if mana left = 0 OR mana left < mana cost of cheapest card OR if card is last card in hand
+					6.1)add this combo to list of combos
+				7)else set i = k+1
+				8)while i < length of hand repeat:
+					8.1) if mana cost of i = mana left
+						8.1.1) add i to current combo
+						8.1.2) add current combo to combo list
+						8.1.3) reset mana left to total mana - k mana cost
+						8.1.4) reset combo (new empty combo) and continue
+					8.2) else if mana cost of i is < mana left
+						8.2.1) add i to current combo
+						8.2.2) update mana left and continue
+						8.2.3) if new left mana value is less than last card in hand break
+					8.3) else continue 
+			9) terminate yielding list of combos
+
+			
+			****/
 }
