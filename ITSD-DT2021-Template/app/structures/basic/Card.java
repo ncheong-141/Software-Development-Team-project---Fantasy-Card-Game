@@ -17,15 +17,15 @@ import utils.BasicObjectBuilders;
  */
 public class Card implements Comparable<Card> {
 	
-	int id;//unique identifier for each card
+	private int id;//unique identifier for each card
 	
-	String cardname;//name of card
-	int manacost;//mana cost to play associated unit
+	private String cardname;//name of card
+	private int manacost;//mana cost to play associated unit
 	
-	MiniCard miniCard;//display element for unselected cards
-	BigCard bigCard;//display element for selected card
+	private MiniCard miniCard;//display element for unselected cards
+	private BigCard bigCard;//display element for selected card
 	
-	String configFile;
+	private String configFile;
 	
 	public Card() {};
 	
@@ -38,10 +38,6 @@ public class Card implements Comparable<Card> {
 		this.bigCard = bigCard;
 		this.configFile="";
 	}
-	
-	
-	
-	
 	
 	
 	//shortcut methods for ability access
@@ -90,7 +86,6 @@ public class Card implements Comparable<Card> {
 			return false;
 		}
 	}
-	
 	
 	//method to return integer value of unit ability effect 
 	//i.e if ability is +2 damage, the method would return 2
