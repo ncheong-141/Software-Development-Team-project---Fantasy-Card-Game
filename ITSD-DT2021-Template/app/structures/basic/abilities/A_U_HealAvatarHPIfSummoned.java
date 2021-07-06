@@ -1,6 +1,7 @@
 package structures.basic.abilities;
 
 import structures.GameState;
+import structures.basic.Avatar;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
@@ -31,8 +32,15 @@ public class A_U_HealAvatarHPIfSummoned implements Ability {
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		// Heal the Avatar 3 HP
-		targetMonster.heal(3);
-		return true; 
+		if (targetMonster.getClass() == targetType) {
+			System.out.println("Avatar HP:" + targetMonster.getHP());
+			targetMonster.heal(3);
+			System.out.println("Avatar HP:" + targetMonster.getHP());
+			return true; 
+		}
+		System.out.println("did not go in for avatar");
+
+		return false; 
 	}
 
 	// ================================================================================
