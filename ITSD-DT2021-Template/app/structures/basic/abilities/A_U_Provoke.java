@@ -35,6 +35,11 @@ public class A_U_Provoke implements Ability{
 		
 		// Changes a temp storage of tiles to highlight (stored in gameState)
 		// targetMonster inputed is the selected Monster, so need to check all around for Monsters with provoke
+		/**
+		 * This ability is checked for relative to the selected unit and is called to check when a new Unit is selected.
+		 * In the ability implementation, it checks for enemies in adjacent tiles, if they have provoke, it sets the Tile container for highlighted Tiles 
+		 * in gameState which is then displayed to the Front end through the UnitDisplayActionState (control flow branch).
+		 */
 		
 		int selectedUnitX = targetMonster.getPosition().getTilex(); 
 		int selectedUnitY = targetMonster.getPosition().getTilex(); 		
