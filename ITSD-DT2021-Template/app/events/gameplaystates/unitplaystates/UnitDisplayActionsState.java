@@ -4,6 +4,8 @@ import structures.GameState;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.Unit;
+import structures.basic.abilities.Call_IDs;
+
 import java.util.ArrayList;
 import akka.actor.ActorRef;
 import commands.*;
@@ -40,8 +42,26 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		// Get the newly selected unit
 		Unit newlySelectedUnit = currentTile.getUnitOnTile();
 		
-		// Display unit selected actions
-		boolean outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
+		boolean outcome = false; 
+		
+		// Check for skills which can affect where unit can move 
+		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, (Monster) newlySelectedUnit)) {
+			 System.out.println("Using Ability version of highlighting tiles.");
+			 
+			 // Draw out only playable tiles due to external factors such as abilities
+			 GeneralCommandSets.drawBoardTiles(context.out, context.getGameStateRef().getTileHighlightContainer(), 2);
+			 
+			 // Clear the container after displaying
+			 context.getGameStateRef().getTileHighlightContainer().clear();
+			 
+			 // Set boolean to control unit selected
+			 outcome = true;
+		}
+		else {
+			// Display unit selected actions
+			outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
+		}
+
 		
 		if(outcome) {
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
