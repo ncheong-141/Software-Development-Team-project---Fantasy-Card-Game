@@ -4,7 +4,7 @@ import structures.GameState;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_U_Flying {
+public class A_U_Flying implements Ability {
 
 	// Ability attributes 
 	private boolean enemyTarget; 
