@@ -52,15 +52,27 @@ public class CardClicked implements EventProcessor{
 		
 		//creates a placeholder for the clicked card
 			Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
+			
 		//tells the game state that a card in hand is to be played
 			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
 			gameState.getPlayerOne().getHand().setSelCarPos(handPosition);
+			
 		//checks that the clicked card is a monster card using its attack value
-		if (clickedCard.getBigCard().getAttack() > 0){ //for summoning monsters
-			ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getPlayerOne());	
-			GeneralCommandSets.drawBoardTiles(out, display, 2);	
-		}//a loop which checks that a card is a spell, then displays playable tiles depending on spell target
-		else if (clickedCard.getBigCard().getAttack() < 0) {
+			// Check if the card has an ability that affects before summoning
+			if (clickedCard.getAbilityEffect().getCallID() == Call_IDs.onCardClicked) {			
+				// Execute it (null for no target monster)
+				clickedCard.getAbilityEffect().execute(null, gameState); 
+				// Draw the respective tiles (any ability like this will only affect tiles really unless its like, "if you have this card in your had then get 2 HP per turn but that would be weird"/
+				GeneralCommandSets.drawBoardTiles(out, gameState.getTileHighlightContainer(), 2);
+			} else {
+				// Else, draw the summonable tiles as normal
+				ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getPlayerOne());	
+				GeneralCommandSets.drawBoardTiles(out, display, 2);	
+				}
+		
+		
+		//a loop which checks that a card is a spell, then displays playable tiles depending on spell target
+		if (clickedCard.getBigCard().getAttack() < 0) {
 			//for spell targeting enemy units
 			if(AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==true){
