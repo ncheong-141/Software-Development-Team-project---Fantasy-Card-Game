@@ -39,7 +39,7 @@ public class Monster extends Unit{
 		
 		// Some attributes are set by JSON Mapper (Unit class) or in the 
 		// loadMonsterUnit ObjectBuilder method (using the Card object as reference):
-			// name, HP, maxHP, attackValue, owner, abilities
+			// id, name, HP, maxHP, attackValue, owner, abilities
 
 		this.movesLeft = 0;				//
 		this.attacksLeft = 0;			// Unit is summoned on cooldown 
