@@ -65,7 +65,7 @@ public class Deck{//class used to create and manage player and ai decks
 		String[] cardConfigNames= {//list of cards in AI player deck
 				StaticConfFiles.c_blaze_hound,
 				StaticConfFiles.c_bloodshard_golem,
-				StaticConfFiles.c_hailstone_golemR,
+				StaticConfFiles.c_hailstone_golem,
 				StaticConfFiles.c_planar_scout,
 				StaticConfFiles.c_pyromancer,
 				StaticConfFiles.c_windshrike,
@@ -76,7 +76,7 @@ public class Deck{//class used to create and manage player and ai decks
 		String[] unitConfigNames= {//list of units in AI player deck
 				StaticConfFiles.u_blaze_hound,
 				StaticConfFiles.u_bloodshard_golem,
-				StaticConfFiles.u_hailstone_golem,
+				StaticConfFiles.u_hailstone_golemR,
 				StaticConfFiles.u_planar_scout,
 				StaticConfFiles.u_pyromancer,
 				StaticConfFiles.u_windshrike,
