@@ -1,5 +1,5 @@
-package structures.basic;
-
+package structures.basic.ComputerLogic;
+import structures.basic.*; 
 import java.util.ArrayList;
 import java.util.HashSet;
 

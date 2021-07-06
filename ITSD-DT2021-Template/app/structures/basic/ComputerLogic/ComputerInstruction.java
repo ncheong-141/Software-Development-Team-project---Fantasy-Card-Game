@@ -1,4 +1,5 @@
-package structures.basic;
+package structures.basic.ComputerLogic;
+import structures.basic.*;
 
 public class ComputerInstruction {
 	protected Card card;
