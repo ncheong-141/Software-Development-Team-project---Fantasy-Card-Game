@@ -188,7 +188,9 @@ public class GameState {
 		if(this.getTurnOwner().getHand().getSelectedCard() != null) {
 			this.getTurnOwner().getHand().setSelectedCard(null);
 		}
-
+		
+		// Clear the temp TileRange container between actions 
+		tileAdjustedRangeContainer.clear(); 
 	}
 
 	/** AI methods **/

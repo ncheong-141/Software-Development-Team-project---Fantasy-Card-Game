@@ -52,7 +52,7 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 			 GeneralCommandSets.drawBoardTiles(context.out, context.getGameStateRef().getTileAdjustedRangeContainer(), 2);
 			 
 			 // Clear the container after displaying
-			 context.getGameStateRef().getTileAdjustedRangeContainer().clear();
+			// context.getGameStateRef().getTileAdjustedRangeContainer().clear();
 			 
 			 // Set boolean to control unit selected
 			 outcome = true;
@@ -64,8 +64,8 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 
 		
 		if(outcome) {
+			context.deselectAllAfterActionPerformed();
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
-			//System.out.println(context.getGameStateRef().getBoard().getUnitSelected().name);
 		} else {
 			return;
 		}
