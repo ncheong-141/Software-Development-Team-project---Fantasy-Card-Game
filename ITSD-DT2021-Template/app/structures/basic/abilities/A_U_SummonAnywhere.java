@@ -18,7 +18,7 @@ public class A_U_SummonAnywhere implements Ability {
 		this.targetType = targetType; 
 		this.eAnimation = eAnimation; 
 		
-		this.callID = Call_IDs.onSummon;
+		this.callID = Call_IDs.onCardClicked;
 	}
 	
 	
