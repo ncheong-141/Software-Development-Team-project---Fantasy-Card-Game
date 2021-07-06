@@ -195,6 +195,10 @@ public class GameState {
 			gameOver();  // if not, gameover
 		} else {
 			getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());  //if holds enough card, get card from deck
+			
+			Card card = turnOwner.getDeck().getCardList().get(0);
+			int handPos = (turnOwner.getHand().getHandList().size())-1;
+			BasicCommands.drawCard(out, card, handPos, null);
 		}
 		turnChange(); // turnOwner exchanged	
 		giveMana(); //give turnCount mana to the player in the beginning of new turn

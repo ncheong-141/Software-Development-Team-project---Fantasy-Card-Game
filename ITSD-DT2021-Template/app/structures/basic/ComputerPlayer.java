@@ -7,7 +7,7 @@ import structures.GameState;
 public class ComputerPlayer extends Player {
 	
 //attack needed attributes
-	private AIUnitStateController a;
+//	private AIUnitStateController a;
 	private HumanPlayer playerOne;
 	private HumanPlayer playerTwo;
 	private GameState gameState;
