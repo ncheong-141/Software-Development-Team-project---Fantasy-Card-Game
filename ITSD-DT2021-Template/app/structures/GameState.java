@@ -91,10 +91,8 @@ public class GameState {
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
-		humanAvatar.setOwner(playerOne);
 
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
-		computerAvatar.setOwner(playerTwo);
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/
