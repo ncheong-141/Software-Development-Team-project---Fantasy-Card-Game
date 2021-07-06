@@ -65,7 +65,7 @@ public class Deck{//class used to create and manage player and ai decks
 		String[] cardConfigNames= {//list of cards in AI player deck
 				StaticConfFiles.c_blaze_hound,
 				StaticConfFiles.c_bloodshard_golem,
-				StaticConfFiles.c_hailstone_golem,
+				StaticConfFiles.c_hailstone_golemR,
 				StaticConfFiles.c_planar_scout,
 				StaticConfFiles.c_pyromancer,
 				StaticConfFiles.c_windshrike,
