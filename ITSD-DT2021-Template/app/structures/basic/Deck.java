@@ -16,6 +16,9 @@ public class Deck{//class used to create and manage player and ai decks
 	public void deckOne() {// creates an instance of the human player deck
 		Card card;
 		Unit unit;
+		int start=2;//takes into account 0,1 being reserved for avatar ids
+		
+		
 		String[] cardConfigNames = {// list of cards in player deck
 				StaticConfFiles.c_azure_herald,
 				StaticConfFiles.c_azurite_lion,
@@ -36,18 +39,20 @@ public class Deck{//class used to create and manage player and ai decks
 				StaticConfFiles.u_ironcliff_guardian,
 				StaticConfFiles.u_pureblade_enforcer,
 				StaticConfFiles.u_silverguard_knight};
+		int monsters= unitConfigNames.length;
+		int spells= cardConfigNames.length-unitConfigNames.length;
 		
 		
-		for (int i=0; i<=7; i++) {// cycles through the list and creates two instances of each card
-			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+2, Card.class);
+		for (int i=0;i<= cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
+			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+start, Card.class);
 			cardList.add(card);
-			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+10, Card.class);
+			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+monsters+start, Card.class);
 			cardList.add(card);
 			}
-		for(int j=8; j<=9; j++) {//cycles through spells in list and creates cards for each
-			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+10, Card.class);
+		for(int j=cardConfigNames.length-spells+1; j<=cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
+			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+monsters+start, Card.class);
 			cardList.add(card);
-			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+12, Card.class);
+			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+monsters+spells+start, Card.class);
 			cardList.add(card);
 		}
 		}
@@ -55,6 +60,8 @@ public class Deck{//class used to create and manage player and ai decks
 	public void deckTwo() {// creates AI player deck
 		Card card;
 		Unit unit;
+		int start=2;//takes into account 0,1 being reserved for avatar ids
+		
 		String[] cardConfigNames= {//list of cards in AI player deck
 				StaticConfFiles.c_blaze_hound,
 				StaticConfFiles.c_bloodshard_golem,
@@ -75,17 +82,20 @@ public class Deck{//class used to create and manage player and ai decks
 				StaticConfFiles.u_windshrike,
 				StaticConfFiles.u_serpenti,
 				StaticConfFiles.u_rock_pulveriser};
+		int monsters= unitConfigNames.length;
+		int spells= cardConfigNames.length-unitConfigNames.length;
+		int deckLength= cardConfigNames.length*2;
 		
-		for (int i=0; i<=7; i++) {// cycles through the list and creates two instances of each card
-			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+22, Card.class);
+		for (int i=0; i<=cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
+			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+deckLength+start, Card.class);
 			cardList.add(card);
-			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+30, Card.class);
+			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+deckLength+monsters+start, Card.class);
 			cardList.add(card);
 			}
-		for(int j=8; j<=9; j++) {//cycles through spells in list and creates cards for each
-			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+30, Card.class);
+		for(int j=cardConfigNames.length-spells+1; j<=cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
+			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+deckLength+monsters+start, Card.class);
 			cardList.add(card);
-			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+32, Card.class);
+			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+deckLength+monsters+spells+start, Card.class);
 			cardList.add(card);
 		}
 		
@@ -96,6 +106,11 @@ public class Deck{//class used to create and manage player and ai decks
 		//unitDeck.remove(i);
 	}
 	
+	
+	public void shuffleDeck() {
+		Collections.shuffle(cardList);
+	}
+
 	//getters and setters
 	public void setCardList(ArrayList<Card> deck) {
 		this.cardList = deck;
@@ -103,22 +118,4 @@ public class Deck{//class used to create and manage player and ai decks
 	public ArrayList<Card> getCardList() {
 		return cardList;
 	}
-
-	//method to test deck creation in eclipse
-	public void pod(Deck deck) {
-		ArrayList<Card> check= new ArrayList<Card>();
-		check=deck.getCardList();
-		for(int i=0; i<check.size();i++) {
-			System.out.print(check.get(i).getCardname());
-		}
-	}
-	
-	public void shuffleDeck() {
-		Collections.shuffle(cardList);
-	}
-
 }
-	
-// To do:
-// Less hard coding in the deck construction loops
-// Adjust deck getter name to be more transparent
