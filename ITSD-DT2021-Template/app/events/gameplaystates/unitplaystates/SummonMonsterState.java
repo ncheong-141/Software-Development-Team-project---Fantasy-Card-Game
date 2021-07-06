@@ -123,10 +123,10 @@ public class SummonMonsterState implements IUnitPlayStates {
 		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
-		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
-		GeneralCommandSets.threadSleep();
-		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
-		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
+//		GeneralCommandSets.threadSleep();
+//		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
+//		GeneralCommandSets.threadSleep();
 		
 		// Check for on-summon triggers
 			// Trigger abilities that permanently change the new object
