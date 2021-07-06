@@ -14,15 +14,14 @@ import structures.GameState;
 
 
 public class HumanPlayer extends Player {
-	private GameState gameState;
-	private HumanPlayer playerOne;
-	private ComputerPlayer playerTwo;
+
 //	private SummonMonsterSubState summonM;
-//	private GameplayContext context;
-	
+
 	
 	public HumanPlayer() {
 		super();
+		this.deck = new Deck();
+		this.deck.deckOne();
 	}
 		
 	//call execute method to play game in summon object

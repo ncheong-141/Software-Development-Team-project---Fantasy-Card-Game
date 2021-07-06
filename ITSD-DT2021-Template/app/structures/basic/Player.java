@@ -22,11 +22,14 @@ public class Player {
 	protected Hand hand;
 	protected Deck deck;
 	protected Avatar avatar;
-	private GameState g;
-	
+	private int test =1;
+
 	public Player() {
 		this.health = 20;
 		this.mana = 0;
+		this.deck = new Deck();
+		this.hand = new Hand();
+		this.hand.initialHand(deck);
 	}
 	
 	//add Mana and check maximum	
@@ -60,11 +63,21 @@ public class Player {
 		int newHealth = health - loseHealth;
 		if(newHealth <= 0) {
 			this.health = 0;
-			g.gameOver(); 
+			GameState.gameOver(); 
 		}
 	}
 	
-
+// add to assist Avatar class
+	public void changeHealth(int delta) {
+		this.health += delta;
+		if (this.health > 20) this.health = 20;
+		if (this.health<=0 ) {
+			this.health=0;
+			GameState.gameOver();
+		}
+	}
+		
+	
 // getters & setters	
 	public Avatar getAvatar() {
 		return avatar;
@@ -80,6 +93,7 @@ public class Player {
 	
 	public void setHealth(int health) {
 		this.health = health;
+		if (this.health <= 0) GameState.gameOver();  
 	}
 	
 	public int getMana() {
