@@ -51,6 +51,9 @@ public class SummonMonsterState implements IUnitPlayStates {
 			
 			// Execute summon method
 			summonMonster(context.getGameStateRef(), context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
+			
+			// Update board counter for num Monsters
+			context.getGameStateRef().getBoard().setUnitCount(1);
 
 			/** Delete card from Hand + update visual **/
 			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
