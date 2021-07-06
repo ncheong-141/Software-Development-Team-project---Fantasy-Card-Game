@@ -29,6 +29,10 @@ public class A_U_Flying {
 	// Monster can move anywhere on the Board
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
+		// Set to board maximum dimensions
+		int boardWidth = gameState.getBoard().getBoardWidth(); 
+		int boardLength = gameState.getBoard().getBoardLength(); 
+		
 		// Set max moves to board length and width (gameState.getBoard().get....)
 		//targetMonster.setMaxMoves(60);
 		return true;

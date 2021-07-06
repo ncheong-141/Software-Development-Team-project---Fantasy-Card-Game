@@ -29,14 +29,14 @@ public class A_U_RangedAttacker implements Ability {
 		// Monster can attack from anywhere on the Board
 		// Ignore GameState input since Ability deals with Unit internal values
 		public boolean execute(Monster targetMonster, GameState gameState) {
-			return execute(targetMonster); 
-		}
-		
-		// Alternative method signature that reflects actual behaviour
-		public boolean execute(Monster targetMonster) {
+			
 
-			// Range value set to arbitrary high number for now
-			targetMonster.setAttackRange(60);
+			// Set to board maximum dimensions
+			int boardWidth = gameState.getBoard().getBoardWidth(); 
+			int boardLength = gameState.getBoard().getBoardLength(); 
+			
+			// Set attack range to this (so can hit from corner to opposite corner)
+			targetMonster.setAttackRange(boardWidth + boardLength);
 			return true; 
 		}
 		// ================================================================================
