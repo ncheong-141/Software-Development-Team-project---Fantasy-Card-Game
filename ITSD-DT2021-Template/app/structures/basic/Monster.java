@@ -22,8 +22,9 @@ public class Monster extends Unit{
 	
 	// Action values
 	protected int 			movesLeft;				// number of move actions Monster has left, tracks directly to range
+	protected int			movesMax;				// max number of move actions Monster can use per turn, reset by Cooldown
 	protected int 			attacksLeft;			// number of attack actions Monster has 'leftover', != range
-	protected int			attacksMax;				// max number of attack actions a Monster can have, reset by Cooldown
+	protected int			attacksMax;				// max number of attack actions a Monster can use per turn, reset by Cooldown
 	protected int 			attackRange;			// integer range of tiles (in all directions) for attacks
 	
 	// Gameplay info
@@ -42,6 +43,7 @@ public class Monster extends Unit{
 			// id, name, HP, maxHP, attackValue, owner, abilities
 
 		this.movesLeft = 0;				//
+		this.movesMax = 2;				//
 		this.attacksLeft = 0;			// Unit is summoned on cooldown 
 		this.attacksMax = 1;			//
 		this.attackRange = 1;			//
@@ -137,7 +139,7 @@ public class Monster extends Unit{
 	
 	// Buff (adjust attack)
 	// Adjusts attackValue statistic from a buff action
-	public void buff(int b) {
+	public void buffAttack(int b) {
 		this.attackValue += b;
 	}
 	
@@ -192,6 +194,14 @@ public class Monster extends Unit{
 		this.movesLeft = m;
 	}
 	
+	public int getMovesMax() {
+		return movesMax;
+	}
+	
+	public void setMovesMax(int mmx) {
+		this.movesMax = mmx;
+	}
+	
 	public int getAttacksLeft() {
 		return attacksLeft;
 	}
@@ -239,7 +249,7 @@ public class Monster extends Unit{
 			this.movesLeft = 0;
 			this.attacksLeft = 0;
 		} else {
-			this.movesLeft = 2;
+			this.movesLeft = this.movesMax;
 			this.attacksLeft = this.attacksMax;
 		}
 	}
@@ -257,7 +267,7 @@ public class Monster extends Unit{
 	
 	public void setAbility(ArrayList <Ability> abs) {
 		abilities = abs;
-
+		// Call construction abilities?
 	}
 	
 }
