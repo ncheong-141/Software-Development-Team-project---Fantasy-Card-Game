@@ -29,13 +29,13 @@ public class Tile implements Comparable<Tile>{
 	int tilex;
 	int tiley;
 	
-	private static  double inRangeScore = - 0.5;
+	private static  int inRangeScore = - 1;
 	
-	private static  double bringsEnemyInRange = 0.2; 
+	private static  int bringsEnemyInRange = 2; 
 	// Added attribute
 	boolean free;
 	Monster unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
-	double score;
+	int score;
 
 	public Tile() {}
 	
@@ -118,7 +118,7 @@ public class Tile implements Comparable<Tile>{
 		return unitOnTile; 
 	}
 	
-	public void setScore(double d) {
+	public void setScore(int d) {
 		this.score = d;
 	}
 	
@@ -150,11 +150,11 @@ public class Tile implements Comparable<Tile>{
 	
 
 
-	public static double getInRangeScore() {
+	public static int getInRangeScore() {
 		return inRangeScore;
 	}
 
-	public static double getBringsEnemyInRange() {
+	public static int getBringsEnemyInRange() {
 		return bringsEnemyInRange;
 	}
 
@@ -184,7 +184,7 @@ public class Tile implements Comparable<Tile>{
 		return 0;
 	}
 
-	public double getScore() {
+	public int getScore() {
 		return score;
 	}
 	

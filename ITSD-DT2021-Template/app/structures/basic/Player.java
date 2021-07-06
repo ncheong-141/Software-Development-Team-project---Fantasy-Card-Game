@@ -27,9 +27,9 @@ public class Player {
 	public Player() {
 		this.health = 20;
 		this.mana = 0;
-		this.deck = new Deck();
-		this.hand = new Hand();
-		this.hand.initialHand(deck);
+		/*
+		 * this.deck = new Deck(); this.hand = new Hand(); this.hand.initialHand(deck);
+		 */
 	}
 	
 	//add Mana and check maximum	

@@ -157,7 +157,7 @@ public class ComputerMoveMonsterLogic {
 					this.m = m;
 					this.list = b.unitMovableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getMovesLeft());
 					if(list != null && !(list.isEmpty())) {
-						for (Tile t : list) ComputerPlayer.calcTileScore(m,b,t);
+						for (Tile t : list) ComputerPlayer.calcTileMoveScore(m,b,t);
 						Collections.sort(list);
 						this.score = this.list.get(0).getScore();
 					}

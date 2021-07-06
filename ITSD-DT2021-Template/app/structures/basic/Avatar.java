@@ -8,21 +8,22 @@ package structures.basic;
 //==========================================================================//
 
 public class Avatar extends Monster {
-
-	
 	public Avatar() {
-		//this.HP = 20;
+		
+	}
+	
+
+
+	public void avatarSetUp(Player p) {
 		this.maxHP = 20;
 		this.attackValue = 2;
-		
 		this.movesLeft = 2;			
 		this.attacksLeft = 1;		
 		this.attacksMax = 1;		
 		this.attackRange = 1;		
-		
-		this.onCooldown = false;	// Avatars start turn on the Board
+		this.onCooldown = false;
+		this.setOwner(p);
 	}
-
 	
 	//when the owner is set for an avatar, this method also takes care of assigning the avatar to the relevant 
 	//starting position, which is based on the type of owner

@@ -54,15 +54,14 @@ public class GameState {
 		/* Set attributes */ 
 		turnCount = 0;
 		playerDead = false;
-		turnOwner = playerOne;
 		
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
 		
 
-		//Deck deckPlayerTwo = new Deck();
-		//deckPlayerTwo.deckTwo();
+		Deck deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
 		
 		// Instantiate players 								
 		playerOne = new HumanPlayer();
@@ -71,9 +70,9 @@ public class GameState {
 		
 		
 		playerTwo = new ComputerPlayer();
-		//playerTwo.setGameBoard(gameBoard);
-		//playerTwo.setDeck(deckPlayerTwo);
-		//playerTwo.setDummy();
+		playerTwo.setGameBoard(gameBoard);
+		playerTwo.setDeck(deckPlayerTwo);
+		
 		
 		for (Card c : playerOne.getDeck().getCardList()) {
 			System.out.println("cardname " +c.getCardname());
@@ -83,9 +82,9 @@ public class GameState {
 		playerOne.setHand(handPlayerOne);
 		handPlayerOne.initialHand(deckPlayerOne);
 
-		//Hand handPlayerTwo = new Hand();
-		//playerTwo.setHand(handPlayerTwo);
-		//handPlayerTwo.initialHand(deckPlayerTwo);
+		Hand handPlayerTwo = new Hand();
+		playerTwo.setHand(handPlayerTwo);
+		handPlayerTwo.initialHand(deckPlayerTwo);
 
 		
 		// Set turn owner
@@ -93,11 +92,12 @@ public class GameState {
 		
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
-		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, gameBoard, Avatar.class);
-		//humanAvatar.setOwner(playerOne);
-
-		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, gameBoard, Avatar.class);
-		//computerAvatar.setOwner(playerTwo);
+		
+		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
+		humanAvatar.avatarSetUp(playerOne);
+		
+		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
+		computerAvatar.avatarSetUp(playerTwo);
 		
 		System.out.println("board: " + this.getBoard());
 		System.out.println();
@@ -302,5 +302,10 @@ public class GameState {
 			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
 			// Move hand instantiation/set up from gamestate into Player constructor
 			// Move AbilityUnitLinkage call into GameState
+
+	public static void computerEnd() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

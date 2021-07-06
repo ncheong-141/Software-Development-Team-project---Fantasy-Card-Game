@@ -1,22 +1,130 @@
 package structures.basic.ComputerLogic;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 
 import structures.GameState;
 import structures.basic.*;
+import structures.basic.ComputerLogic.ComputerMoveMonsterLogic.MonsterTileOption;
 public class ComputerAttackMonsterLogic {
 	private Board gameBoard;
-	private ComputerPlayer playerTwo;
-	private GameState gameState;
+	private static int killMod = 2;
+	private static int isAvatar = 2;
+	private static int hasSpecialAbility = 1;
+	private ComputerPlayer player;
 	private ArrayList<Tile> attackerTiles; // all tiles holds all ComputerPlayer monster
 	private ArrayList<Tile> targetInRange;  //a list of attackable enemy for each attacker
 	private Tile target; //attack target
-	private Tile attacker; 
 
 	public ComputerAttackMonsterLogic(ComputerPlayer p) {
-		this.playerTwo = p;
+		this.player = p;
 		this.gameBoard = p.getGameBoard();
 	}
 	
+	private ArrayList<Monster> monstersThatCanAttack(){
+		ArrayList <Monster> list = gameBoard.friendlyUnitList(player);
+		list.removeIf(m->(m.getAttacksLeft() <=0 || m.getOnCooldown()));
+		return list;		
+	}
+	
+	private MonsterTargetOption [] getMonstersPossTargets(ArrayList<Monster> monstersThatCanAttackList, Board b){
+		
+		
+		if(monstersThatCanAttackList.isEmpty()) return null;
+		
+		MonsterTargetOption [] list = new MonsterTargetOption[monstersThatCanAttackList.size()-1];
+		
+		int i = 0;
+		for (Monster m : monstersThatCanAttackList) {
+			
+			MonsterTargetOption attackTargets = new MonsterTargetOption(m, this.gameBoard);
+			
+			if (attackTargets.getList().isEmpty()) continue;
+			
+			else {
+				list[i] = attackTargets;
+				i++;
+			}
+			
+		}
+		
+		return list;
+	}
+	
+	private ArrayList<ComputerInstruction> matchMonsterAndTarget(MonsterTargetOption[] targOptsList){
+		ArrayList<ComputerInstruction> list = new ArrayList<ComputerInstruction>();
+		
+		if (targOptsList == null) return list;
+		
+		HashSet <Monster> targets = new HashSet<Monster>();
+		int j =0;
+		int k = 0;
+		for (int i = 0; i<targOptsList.length; i++) {
+			//need to implement solution similar to tile algs in move logic
+		}
+		
+		return list;
+	}
+	
+	public static void calcTileAttackScore(Monster m, Board b, Tile targetTile) {
+		//tile where monster is currently located
+		Tile currTile = b.getTile(m.getPosition().getTilex(), m.getPosition().getTiley());
+		Monster enemy = targetTile.getUnitOnTile();
+		
+		int score = 0;
+		
+		if (enemy instanceof Avatar) score += isAvatar;
+		if(enemy.getHP() <= m.getAttackValue()) score += killMod;
+		if(enemy.hasAbility()) score += hasSpecialAbility;
+		
+		targetTile.setScore(score);
+	}
+	
+	
+	static class MonsterTargetOption implements Comparable<MonsterTileOption> {
+		Monster m; 
+		Board b;
+		ArrayList<Tile> list;
+		int score;
+		MonsterTargetOption(Monster m, Board b){
+			this.m = m;
+			this.b =b;
+			list = b.unitAttackableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getAttackRange(), m.getMovesLeft());
+			this.checkValidTargets();
+			this.scoreTileList();
+			Collections.sort(list);
+		}
+		
+		private void checkValidTargets() {
+			list.removeIf(tile -> (tile.getUnitOnTile().getAttackValue() >= m.getHP()));
+		}
+		public void scoreTileList() {
+			for (Tile t : list) {
+				calcTileAttackScore(m, b, t);
+			}
+		}
+		
+		public Monster getM() {
+			return m;
+		}
+		
+		public ArrayList<Tile> getList(){
+			return this.list;
+		}
+		
+		public int getScore() {
+			return this.score;
+		}
+		
+
+		@Override
+		public int compareTo(MonsterTileOption o) {
+		
+			if (this.score > o.getScore()) return 1;
+			else if (this.score < o.getScore()) return -1;
+			else return 0;
+		}
+	}
 	//////////////Yufen Attack Method/////
 
 	//if wrap all selecting target methods in another class, this is in ComputerPlayer or AI execution class?
@@ -164,7 +272,7 @@ public class ComputerAttackMonsterLogic {
 		public ArrayList<Tile> getTargetTiles(Tile t){
 		    targetInRange = gameBoard.unitAttackableTiles(t.getXpos(),t.getYpos(), t.getUnitOnTile().getAttackRange(), t.getUnitOnTile().getMovesLeft());
 		    for (Tile rt : targetInRange) {
-		        if (rt.getUnitOnTile().getOwner() != playerTwo) {  //tiles don't belong to computer player are enemy's
+		        if (rt.getUnitOnTile().getOwner() != player) {  //tiles don't belong to computer player are enemy's
 		            targetInRange.add(rt);
 		        }
 		    }
@@ -173,7 +281,7 @@ public class ComputerAttackMonsterLogic {
 
 	//<helper>
 		public ArrayList<Tile> findAttacker(){  // find a list of tiles that hold monsters can perform attack
-		    attackerTiles = gameBoard.friendlyTile(playerTwo);
+		    attackerTiles = gameBoard.friendlyTile(player);
 		    
 		    for (Tile t : attackerTiles) {
 		        if (t.getUnitOnTile().getAttacksLeft() == 0 ) {  // if there is no attack time left, skip this monster in attack action
