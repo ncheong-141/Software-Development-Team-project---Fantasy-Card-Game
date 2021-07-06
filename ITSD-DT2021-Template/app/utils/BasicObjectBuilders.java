@@ -180,7 +180,7 @@ public class BasicObjectBuilders {
 	}
 	
 	
-	public static Avatar loadAvatar(String configFile, int id, Player p, Board b, Class<? extends Avatar> classType) {
+	public static Avatar loadAvatar(String configFile, int id, Player p, Class<? extends Avatar> classType) {
 		
 		try {
 			Avatar unit = mapper.readValue(new File(configFile), classType);
