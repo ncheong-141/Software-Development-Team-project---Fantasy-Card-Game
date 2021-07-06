@@ -30,7 +30,7 @@ public class A_S_Truestrike implements Ability {
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		// Reduce Monster HP by 2
-		targetMonster.setHP(targetMonster.getHP() - 2);
+		targetMonster.defend(2);
 		
 		return true; 
 	}
