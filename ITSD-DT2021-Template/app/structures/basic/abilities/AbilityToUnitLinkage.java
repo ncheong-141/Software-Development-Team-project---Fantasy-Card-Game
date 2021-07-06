@@ -43,20 +43,24 @@ public class AbilityToUnitLinkage {
 	/* Comodo Charger */	UnitAbility.put("Comodo Charger", 		constructArrayListAbility());
 	/* Hailstone Golem */	UnitAbility.put("Hailstone Golem", 		constructArrayListAbility());
 //	/* Pureblade Enforcer */UnitAbility.put("Pureblade Enforcer", 	constructArrayListAbility(new A_U_BuffAttackHPIfEnemySpellCast()));
+<<<<<<< HEAD
 	/* Azure Herald */		UnitAbility.put("Azure Herald", 		constructArrayListAbility(new A_U_HealAvatarHPIfSummoned(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 //	/* Silverguard Knight */UnitAbility.put("Silverguard Knight", 	constructArrayListAbility());
+=======
+//	/* Azure Herald */		UnitAbility.put("Azure Herald", 		constructArrayListAbility(new A_U_HealAvatarHPIfSummoned()));
+//	/* Silverguard Knight */UnitAbility.put("Silverguard Knight", 	constructArrayListAbility((new A_U_Provoke()), (new A_U_BuffAttackIfAvatarTakesDamage()));
+>>>>>>> 34b8f56cf82174758da61a32d43cb921e67fd7e2
 	/* Azurite Lion */		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
 	/* Fire Spitter */		UnitAbility.put("Fire Spitter", 		constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
-//	/* Ironcliff Guardian */UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility());
+//	/* Ironcliff Guardian */UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility((new A_U_SummonAnywhere()), (new A_U_Provoke());
 	
 		/***	Deck 2		***/
-//	/* Planar Scout */		UnitAbility.put("Planar Scout", 		constructArrayListAbility());
-//	/* Rock Pulveriser */	UnitAbility.put("Rock Pulveriser",		constructArrayListAbility());
+//	/* Planar Scout */		UnitAbility.put("Planar Scout", 		constructArrayListAbility(new A_U_SummonAnywhere());
+//	/* Rock Pulveriser */	UnitAbility.put("Rock Pulveriser",		constructArrayListAbility(new A_U_Provoke());
 	/* Pyromancer */		UnitAbility.put("Pyromancer", 			constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
-//	/* Bloodshard Golem */	UnitAbility.put("Bloodshard Golem", 	constructArrayListAbility());
+	/* Bloodshard Golem */	UnitAbility.put("Bloodshard Golem", 	constructArrayListAbility());
 	/* Blaze Hound */		UnitAbility.put("Blaze Hound", 			constructArrayListAbility(new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class, null)));
-	/* Windshrike */		UnitAbility.put("Windshrike", 			constructArrayListAbility(new A_U_DrawCardOnUnitDeath(false, Monster.class, null))	
-															/*, + another ability*/);																
+//	/* Windshrike */		UnitAbility.put("Windshrike", 			constructArrayListAbility((new A_U_Flying()), (new A_U_DrawCardOnUnitDeath(false, Monster.class, null))));																
 	/* Hailstone Golem 		--- identical to Deck 1	*/
 	/* Serpenti */			UnitAbility.put("Serpenti", 			constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
 	
