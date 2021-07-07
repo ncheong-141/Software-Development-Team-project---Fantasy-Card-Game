@@ -50,7 +50,14 @@ public class Board {
 			}
 		}
 	}
-
+	
+	public int getBoardWidth() {
+		return this.X;
+	}
+	
+	public int getBoardLength() {
+		return this.Y;
+	}
 
 
 	public Tile getHumanStart() {

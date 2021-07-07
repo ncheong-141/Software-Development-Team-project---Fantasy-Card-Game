@@ -49,9 +49,9 @@ public class BasicObjectBuilders {
 	
 	// ObjectBuilder for Unit cards; mapper uses the cardConfig file to make the Card,
 	// and the resulting Card object stores the unitConfig file for later use in summoning
-	public static Card loadCard(String cardConfigurationFile, String unitConfig, int id, Class<? extends Card> classtype) {
+	public static Card loadCard(String cardConfigFile, String unitConfig, int id, Class<? extends Card> classtype) {
 		try {
-			Card card = mapper.readValue(new File(cardConfigurationFile), classtype);
+			Card card = mapper.readValue(new File(cardConfigFile), classtype);
 			card.setId(id);
 			card.setConfigFile(unitConfig);
 			return card;
@@ -64,11 +64,11 @@ public class BasicObjectBuilders {
 	
 	// Alternative Builder for non-unit cards, overloaded method signature for easy use
 	// Config file here stores the card's config file (for Spell card use)
-	public static Card loadCard(String cardConfigurationFile, int id, Class<? extends Card> classtype) {
+	public static Card loadCard(String cardConfigFile, int id, Class<? extends Card> classtype) {
 		try {
-			Card card = mapper.readValue(new File(cardConfigurationFile), classtype);
+			Card card = mapper.readValue(new File(cardConfigFile), classtype);
 			card.setId(id);
-			card.setConfigFile(cardConfigurationFile);
+			card.setConfigFile(cardConfigFile);
 			return card;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,7 +129,6 @@ public class BasicObjectBuilders {
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
 
-			// 
 			mUnit.setOwner(p);
 			
 			System.out.println("mUnit has name " + mUnit.getName());
@@ -180,7 +179,7 @@ public class BasicObjectBuilders {
 	}
 	
 	
-	public static Avatar loadAvatar(String configFile, int id, Player p, Board b, Class<? extends Avatar> classType) {
+	public static Avatar loadAvatar(String configFile, int id, Player p, Class<? extends Avatar> classType) {
 		
 		try {
 			Avatar unit = mapper.readValue(new File(configFile), classType);

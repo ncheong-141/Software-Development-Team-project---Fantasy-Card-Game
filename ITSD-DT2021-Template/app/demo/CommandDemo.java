@@ -99,7 +99,7 @@ public class CommandDemo {
 		}
 		
 		// Draw cards
-		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHandList());
+		//GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHandList());
 		
 		
 	}

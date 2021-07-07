@@ -33,14 +33,9 @@ public class A_S_SundropElixir implements Ability {
 		// Verbose variable/easy to change
 		int healthIncreaseValue = 5;
 		
-		// Check if the +5 HP is greater than max hp, if so make monster HP = max
-		if ( (targetMonster.getHP() + healthIncreaseValue) > targetMonster.getMaxHP()) {
-			targetMonster.setHP(targetMonster.getMaxHP());
-		}
-		else {
-			targetMonster.setHP(targetMonster.getHP() + healthIncreaseValue);
-		}
-		
+		// Check if the +5 HP is greater than max hp, if so make monster HP = max (done in .heal() method)
+		targetMonster.heal(healthIncreaseValue);
+
 		return true; 
 	}
 	// ================================================================================

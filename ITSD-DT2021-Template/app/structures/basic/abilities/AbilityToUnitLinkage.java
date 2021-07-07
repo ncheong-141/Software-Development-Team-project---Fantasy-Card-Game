@@ -30,21 +30,39 @@ public class AbilityToUnitLinkage {
 		// For Abilities constructor (execution targets enemies?, Class type of target, EffectAnimation)
 		
 						/*** Spells ***/
-	/*Truestrike*/		UnitAbility.put("Truestrike", 		constructArrayListAbility(new A_S_Truestrike(true,Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation))))); 	
-	/*Sundrop Elixir*/	UnitAbility.put("Sundrop Elixir", 	constructArrayListAbility(new A_S_SundropElixir(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
-	/*Staff of Y'Kir*/	UnitAbility.put("Staff of Y'Kir'", 	constructArrayListAbility(new A_S_StaffofYkir(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));	
-	/*Entropic Decay*/	UnitAbility.put("Entropic Decay", 	constructArrayListAbility(new A_S_EntropicDecay(true, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_martyrdom)))));	
-			
+		// Deck 1
+	/* Truestrike */		UnitAbility.put("Truestrike", 		constructArrayListAbility(new A_S_Truestrike(true,Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation))))); 	
+	/* Sundrop Elixir */	UnitAbility.put("Sundrop Elixir", 	constructArrayListAbility(new A_S_SundropElixir(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
+		// Deck 2
+	/* Staff of Y'Kir */	UnitAbility.put("Staff of Y'Kir'", 	constructArrayListAbility(new A_S_StaffofYkir(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));	
+	/* Entropic Decay */	UnitAbility.put("Entropic Decay", 	constructArrayListAbility(new A_S_EntropicDecay(true, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_martyrdom)))));	
+			System.out.println("Linked spells");
 					
 						/*** Units ***/ 
-	/*Windshrike*/		UnitAbility.put("Windshrike", 		constructArrayListAbility(new A_U_DrawCardOnUnitDeath(false, Monster.class, null))	
-															/*, + another ability*/);																
-	/*Blaze Hound*/		UnitAbility.put("Blaze Hound", 		constructArrayListAbility(new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class, null)));
-	/*Azurite Lion*/	UnitAbility.put("Azurite Lion", 	constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
-	/*Serpenti*/		UnitAbility.put("Serpenti", 		constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
-	/*Fire Spitter*/	UnitAbility.put("Fire Spitter", 	constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
-	/*Pyromancer*/		UnitAbility.put("Pyromancer", 		constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
-		
+		/***	Deck 1		***/
+	/* Comodo Charger */	UnitAbility.put("Comodo Charger", 		constructArrayListAbility());
+	/* Hailstone Golem */	UnitAbility.put("Hailstone Golem", 		constructArrayListAbility());
+	/* Pureblade Enforcer */UnitAbility.put("Pureblade Enforcer", 	constructArrayListAbility(new A_U_BuffAttackHPIfEnemySpellCast(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
+	/* Azure Herald */		UnitAbility.put("Azure Herald", 		constructArrayListAbility(new A_U_HealAvatarHPIfSummoned(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
+	/* Silverguard Knight */UnitAbility.put("Silverguard Knight", 	constructArrayListAbility(/*new A_U_Provoke(),*/
+																	new A_U_BuffAttackIfAvatarTakesDamage(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
+	/* Azurite Lion */		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
+	/* Fire Spitter */		UnitAbility.put("Fire Spitter", 		constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
+	/* Ironcliff Guardian */UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility((new A_U_SummonAnywhere(false, Monster.class, null)))/*, 
+																	(new A_U_Provoke())*/);
+			System.out.println("Deck 1 done");
+		/***	Deck 2		***/
+	/* Planar Scout */		UnitAbility.put("Planar Scout", 		constructArrayListAbility(new A_U_SummonAnywhere(false, Monster.class, null)));
+	/* Rock Pulveriser */	UnitAbility.put("Rock Pulveriser",		constructArrayListAbility(/*new A_U_Provoke()*/));
+	/* Pyromancer */		UnitAbility.put("Pyromancer", 			constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
+	/* Bloodshard Golem */	UnitAbility.put("Bloodshard Golem", 	constructArrayListAbility());
+	/* Blaze Hound */		UnitAbility.put("Blaze Hound", 			constructArrayListAbility(new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class, null)));
+	/* Windshrike */		UnitAbility.put("Windshrike", 			constructArrayListAbility((new A_U_Flying(false, Monster.class, null)),
+																	(new A_U_DrawCardOnUnitDeath(false, Monster.class, null))));																
+	/* Hailstone Golem 		--- identical to Deck 1	*/
+	/* Serpenti */			UnitAbility.put("Serpenti", 			constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
+	
+	
 	}
 	
 	/* Helper methods */
