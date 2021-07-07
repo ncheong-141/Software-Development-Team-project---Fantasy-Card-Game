@@ -163,7 +163,7 @@ public class SummonMonsterState implements IUnitPlayStates {
 						
 						/**
 						 * 
-						 * NOT HARD CODED IN HUMAN AND COMPUTER AVATAR RIGHT NOW
+						 * NOTE HARD CODED IN HUMAN AND COMPUTER AVATAR RIGHT NOW
 						 */
 						
 						if (a.targetEnemy() == false) {									

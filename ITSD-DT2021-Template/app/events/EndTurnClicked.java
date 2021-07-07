@@ -25,7 +25,7 @@ public class EndTurnClicked implements EventProcessor{
 	public void processEvent (ActorRef out, GameState gameState, JsonNode message){
 		
 		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
-		gameState.endTureStateChange();
+		gameState.endTurnStateChange(out);
 		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
 			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
 			compTurn.processComputerActions(out, gameState);
@@ -34,7 +34,6 @@ public class EndTurnClicked implements EventProcessor{
 }
 		
 
-	
 //	//give turnCount mana to the player just in the beginning of new turn	
 //	public void giveMana(GameState gameState) {  
 //			gameState.getTurnOwner().setMana(gameState.getTurnCount());  
@@ -52,6 +51,7 @@ public class EndTurnClicked implements EventProcessor{
 //				m.toggleCooldown();				
 //		}
 //	}
+
 
 
 // To do:

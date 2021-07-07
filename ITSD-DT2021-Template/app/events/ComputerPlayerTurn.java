@@ -8,6 +8,7 @@ import structures.GameState;
 import events.gameplaystates.unitplaystates.AIUnitStateController;
 import structures.basic.ComputerLogic.*;
 import structures.basic.ComputerPlayer;
+import structures.basic.Player;
 import structures.basic.Tile;
 
 public class ComputerPlayerTurn {
@@ -16,8 +17,9 @@ public class ComputerPlayerTurn {
 	ComputerAttackMonsterLogic al;
 
 	public void processComputerActions(ActorRef out, GameState g) {
-		g.getPlayerTwo().setGameBoard(g.getBoard());
-		ComputerPlayer compPlayer = g.getPlayerTwo();
+		ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
+		pl2.setGameBoard(g.getBoard());
+		ComputerPlayer compPlayer = pl2;
 		AIUnitStateController controller = new AIUnitStateController(out, g);
 		
 		ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
