@@ -29,13 +29,13 @@ public class Tile implements Comparable<Tile>{
 	int tilex;
 	int tiley;
 	
-	private static  double inRangeScore = - 0.5;
+	private static  int inRangeScore = - 1;
 	
-	private static  double bringsEnemyInRange = 0.2; 
+	private static  int bringsEnemyInRange = 2; 
 	// Added attribute
 	boolean free;
 	Monster unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
-	double score;
+	int score;
 
 	public Tile() {}
 	
@@ -118,6 +118,10 @@ public class Tile implements Comparable<Tile>{
 		return unitOnTile; 
 	}
 	
+	public void setScore(int d) {
+		this.score = d;
+	}
+	
 	//added method to be able to add and remove any unit to/ from a tile
 	//the method takes in a Monster type object (which could be a Monster or Avatar)
 	//both methods check that the tile is actually free when adding a moster
@@ -144,41 +148,14 @@ public class Tile implements Comparable<Tile>{
 		}
 	}
 	
-	public double calcTileScore(Monster m, Board b) {
-		//tile where monster is currently located
-		Tile currTile = b.getTile(m.getPosition().getTilex(), m.getPosition().getTiley());
 
-		//calculate which enemy tiles are in range from the would be (WB) tile
-		HashSet <Tile> wBAttackable = b.calcAttackRange(xpos, ypos, m.getAttackRange(), m.getOwner());
-		
-		//get all tiles that this monster could attack from its current tile (with enemies on them)
-		HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
-		
-		
-		if (wBAttackable.size() > currAttackable.size()) this.score += bringsEnemyInRange;
-		
-		//all tiles on the board with an enemy unit on it
-		ArrayList <Tile> enemyTilesOnBoard = b.enemyTile(m.getOwner());
-		
-		int currAttackableByEnemy = 0;
-		int wBAttackableByEnemy = 0;
-		
-		for (Tile t : enemyTilesOnBoard) {
-			Monster mnstr = t.getUnitOnTile();
-			int x = t.getTilex();
-			int y = t.getTiley();
-			
-			//NOTE need to check when moves left gets reset
-			HashSet<Tile> tilesEnemyCanAttack = b.unitAttackableTiles(x, y, mnstr.getAttackRange(), mnstr.getMovesLeft());
-			
-			if (tilesEnemyCanAttack.contains(this)) wBAttackableByEnemy++;
-			if (tilesEnemyCanAttack.contains(currTile)) currAttackableByEnemy ++;
-		}
-		
-		
-		if (wBAttackableByEnemy > currAttackableByEnemy) this.score += inRangeScore;
-		
-		return score;
+
+	public static int getInRangeScore() {
+		return inRangeScore;
+	}
+
+	public static int getBringsEnemyInRange() {
+		return bringsEnemyInRange;
 	}
 
 	/**
@@ -207,7 +184,7 @@ public class Tile implements Comparable<Tile>{
 		return 0;
 	}
 
-	public double getScore() {
+	public int getScore() {
 		return score;
 	}
 	
