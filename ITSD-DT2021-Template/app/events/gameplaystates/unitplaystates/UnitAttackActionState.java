@@ -58,15 +58,16 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		/* cumulative attack + move range (since all movement takes place before this state).
 		/* For attacker: attackRange should reflect unit's attacks range (omit move range)
 		/* For defender: counterRange should reflect unit's attack range (omit move range)*/
-		ArrayList <Tile> temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
+		ArrayList <Tile> temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), 0));
 		attackerAttackRange = temp;
-		temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), defender.getMovesLeft()));
+		temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), 0));
 		defenderCounterRange = temp;
 		
 		// Checks;
 		// Tile not in attack range
 		// Adjacent enemies with Provoke
 		if(tileInAttackRange()) {
+			
 			unitAttack(context);
 
 			/***	Condition here for combined substate executing, which requires selection is maintained	***/
@@ -99,17 +100,22 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getMovesLeft());
 		actRange.addAll(mRange);
 		
-		boolean survived;		// stores attack outcomes
+		// Stores interaction outcomes
+		boolean survived;		
 
-		//	>>>>> Begin attack		//
+		/***		>>>>> Attack			***/
+		
 		System.out.println(attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 		if(attacker.attack()) {
-			System.out.println("Attack successful.");
-			System.out.println(attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
+			System.out.println("Attack successful. " + attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 			
-			/***	Un-highlight range tiles (minus attacker/defender)	***/
+			// Update defender
+			survived = defender.defend(attacker.getAttackValue());
+			System.out.println("Defender has " + defender.getHP() + " HP");
+			
+			/***	Re-draw range tiles (leave attacker/defender highlighted for user)	***/
 			for (Tile t : actRange) {
-				// Leave defender tile highlighted
+				// Defender
 				if(t == targetTile) {
 					continue;
 				}
@@ -117,94 +123,70 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				GeneralCommandSets.threadSleep();
 			}
 			
-			/***	Update defender		***/
-			survived = defender.defend(attacker.getAttackValue());
-			System.out.println("Defender has " + defender.getHP() + " HP");
-			
-			// If Avatar damaged ability check
-			
 			/***	Play animations and set visuals		***/
+			playAttackAnimations(attacker, defender, context);
+			
+			// If friendly Avatar damaged ability check
+			checkAvatarDamaged(defender, context);
 
-			EffectAnimation arrows = checkRangedAttacker(attacker);			
-			// Non-ranged
-			if(arrows == null) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);		} 
-			// Ranged
-			else {
-				BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
-				BasicCommands.playProjectileAnimation(context.out, arrows, 0, currentTile, targetTile);
-			}
-			BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.hit);
-			BasicCommands.setUnitHealth(context.out, defender, defender.getHP());
-			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
-
-			// Re-idle
+			// Re-idle alive units
 			BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);
-			if(survived) {	BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle); }
-			GeneralCommandSets.threadSleep();		
+			if(survived) {	BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);	}
+			GeneralCommandSets.threadSleep();	
 			
-			/***	Death check	***/
-			if(!survived) {
-				System.out.println("Defender is dead.");		
-				
-				// Play animation + sleep to let it happen
-				BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
-				try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}			
-				
-				// Avatar death check
-				if(defender instanceof Avatar) {
+				/***	Death check	***/
+				if(!survived) {
+					// Play animation + sleep to let it happen
+					BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
+					try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}		
 					
-					// Player notification
-					String winMessage = "";
-					if(context.getGameStateRef().getPlayerOne() == defender.getOwner()) {
-						winMessage = "You lose!";
-					} else {
-						winMessage = "You win!";
+					// Check for Avatar death/game end
+					if(checkForAvatarDeath(defender, context)) {
+						return;
 					}
-					BasicCommands.addPlayer1Notification(context.out,winMessage, 0);
-					
-					// Call game end method
-					context.getGameStateRef().gameOver();
-					return;
-				}
-				
-				// Delete method
-				unitDeath(context, targetTile);	
+					// Unit dies
+					else {
+						unitDeath(context, targetTile);
+					}	
 
 			}
 			
-			/***	Counter-attack	***/
+			/***	>>>>> Counter-attack			***/
 			else {
 				System.out.println("Counter-attack incoming...");
 				
 				// Check for attacker destination and reachable by defender (ranged/adjacent)
+					// Ranged defender check
 				
 				// Counter attack
-				attacker.defend(defender.counter());
+				survived = attacker.defend(defender.counter());
 				
-				// Death check		
-				// Avatar death check
-				if(attacker instanceof Avatar) {
+				/***	Play animations and set visuals		***/
+				playAttackAnimations(defender, attacker, context);
+				
+				// If friendly Avatar damaged ability check
+				checkAvatarDamaged(attacker, context);
+				
+				/***	Death check	***/
+				if(!survived) {
+					// Play animation + sleep to let it happen
+					BasicCommands.playUnitAnimation(context.out, attacker, UnitAnimationType.death);
+					try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}		
 					
-					// Player notification
-					String winnerWinnerChickenDinner = "";
-					if(context.getGameStateRef().getPlayerOne() == attacker.getOwner()) {
-						winnerWinnerChickenDinner = "You lose!";
-					} else {
-						winnerWinnerChickenDinner = "You win!";
+					// Check for Avatar death/game end
+					if(checkForAvatarDeath(attacker, context)) {
+						return;
 					}
-					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
-					
-					// Game ends
-					context.getGameStateRef().gameOver();
-					return;
+					// Unit dies
+					else {
+						unitDeath(context, currentTile);
+					}	
 				}
-			
-				// If Avatar damaged ability check
 				
-				// Re-idle -- need checks for both attack and counter target survival before re-idle
-//				if(survived) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);	}
-//				BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);
-//				GeneralCommandSets.threadSleep();	
+				// Re-idle alive units
+				if(survived) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);	}
+				BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);
+				GeneralCommandSets.threadSleep();	
 				
 			}
 		}
@@ -225,7 +207,26 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		return false;
 	}
 	
-	/***			Methods for attack stages			***/
+	/***			Methods used by attack stages			***/
+	
+	
+	// Playing attack animations/effects for attacker and receiver
+	// --- note order of input arguments is key to output
+	private void playAttackAnimations(Monster attacker, Monster receiver, GameplayContext context) {
+		
+		EffectAnimation arrows = checkRangedAttacker(attacker);			
+		// Ranged
+		if(arrows != null) {
+			BasicCommands.playProjectileAnimation(context.out, arrows, 0, attacker.getPosition().getTile(context.getGameStateRef().getBoard()), receiver.getPosition().getTile(context.getGameStateRef().getBoard()));
+		}
+		// Executes for both ranged and non-ranged attacks
+		BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
+		
+		BasicCommands.playUnitAnimation(context.out, receiver, UnitAnimationType.hit);
+		BasicCommands.setUnitHealth(context.out, receiver, receiver.getHP());
+		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+		
+	}
 	
 	// Unit death --- method to update location data and delete a Unit from Board
 	private void unitDeath(GameplayContext context, Tile grave) {
@@ -252,18 +253,58 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		
 	}
 	
+	// Avatar death check --- method checks that the death of a unit is not an Avatar, calls gameOver if so
+	private boolean checkForAvatarDeath(Monster deadUnit, GameplayContext context) {
+		
+		if(isAvatar(deadUnit)) {
+			
+			// Player notification
+			String endgameMessage = "";
+			if(context.getGameStateRef().getPlayerOne() == deadUnit.getOwner()) {
+				endgameMessage += "You lose!";
+			} else {
+				endgameMessage += "You win!";
+			}
+			BasicCommands.addPlayer1Notification(context.out,endgameMessage, 2);
+			
+			// Game ends
+			context.getGameStateRef().gameOver();
+			return true;
+			
+		}
+		return false;
+	}
+	
 	/***			Small checks			***/
+	
+	// Simple helper to check if a Monster is an Avatar
+	private boolean isAvatar(Monster m) {
+		if(m.getClass() == Avatar.class) {	return true;	}
+		return false;
+	}
 	
 	// Check for Ranged Attacker ability and return EffectAnimation if true
 	private EffectAnimation checkRangedAttacker(Monster attacker) {
 		if(attacker.hasAbility()) {
 			for (Ability a : attacker.getMonsterAbility()) {
 				if(a instanceof A_U_RangedAttacker) {
-					return a.getEffectAnimation();
+					return a.getEffectAnimation();			// will need to change this when effectanimation stored in monster?
 				}
 			}
 		}
-		return null;
+		return null;	
+	}
+	
+	// Check if a Monster that has received damage:
+	// 1) is an Avatar
+	// 2) will trigger any present friendly Unit with a related ability
+	private boolean checkAvatarDamaged(Monster m, GameplayContext context) {
+		
+		if(!(isAvatar(m))) {	return false;	}
+		
+		// search board for unit with ability
+		
+		return true;
 		
 	}
 	
