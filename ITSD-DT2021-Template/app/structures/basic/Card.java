@@ -76,10 +76,14 @@ public class Card implements Comparable<Card> {
 		return this.getBigCard().getAttack();
 	}
 	
-	//helper method to show where card(if monster) is playable
+	//helper method to show where card is playable
 	public boolean playableAnywhere() {
-		if(this.getCardname().equals("Ironcliff Guardian") || this.getCardname().contentEquals("Planar Scout")) {
-			return true;
+		if(hasAbility()) {
+			for(Ability a: this.abilityList) {
+			if(a.getClass()==A_U_SummonAnywhere.class) {
+				return true;
+			}
+		}
 		}else {
 			return false;
 		}
@@ -87,10 +91,13 @@ public class Card implements Comparable<Card> {
 	
 	//method to return integer value of unit ability effect 
 	//i.e if ability is +2 damage, the method would return 2
-	public int getAbilityEffect() {
-		int result=0;
-		return result;
-	}
+//	public int getAbilityEffect() {
+//		int resultOne;
+//		for(Ability a: this.abilityList) {
+//			a.
+//		}
+//		return resultOne;
+//	}
 	
 	@Override
 	//compares mana cost of two cards for ai logic
@@ -143,6 +150,15 @@ public class Card implements Comparable<Card> {
 	public String getConfigFile() {
 		return this.configFile;
 	}
+
+	public ArrayList<Ability> getAbilityList() {
+		return abilityList;
+	}
+
+	public void setAbilityList(ArrayList<Ability> abilityList) {
+		this.abilityList = abilityList;
+	}
+	
 }
 
 
