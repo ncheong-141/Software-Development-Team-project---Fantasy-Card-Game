@@ -65,7 +65,8 @@ public class CardCombo implements Comparable<CardCombo> {
 			if (c.getCardAttack() >0) this.attackScore += c.getCardAttack();
 			else if (c.getCardAttack()<= 0) {
 				if (c.targetEnemy()) {
-					this.attackScore += c.getAbilityEffect();
+//					this.attackScore += c.getAbilityEffect();
+					// Commented to allow compile
 				}
 			}
 		}
@@ -81,7 +82,8 @@ public class CardCombo implements Comparable<CardCombo> {
 			if (c.getCardHP()>0) this.defenseScore += c.getCardHP();
 			else if(c.getCardHP()<=0){
 				if (!c.targetEnemy()) {
-					this.defenseScore += c.getAbilityEffect();
+//					this.defenseScore += c.getAbilityEffect();
+					// Commented to allow compile
 				}
 			}
 		}
