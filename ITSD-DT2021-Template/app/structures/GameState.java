@@ -40,12 +40,11 @@ public class GameState {
 	private int			 	turnCount;			// Tracker variable for the current number of turns 
 	private static boolean 	playerDead;			// Boolean variable which is set when either avatar is defeated
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
-	private ActorRef out;						// Do we need this?
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
-	private Monster trackMonster; 				// YC added
-	private Tile monsterLocation; 				// YC added
+
+
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
@@ -60,14 +59,14 @@ public class GameState {
 
 	/** Constructor **/
 	public GameState() {
-
+		
 		/* Set attributes */ 
 		turnCount = 0;
 		playerDead = false;
-		turnOwner = playerOne;
 		
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
 		
+
 		/* two player mode (comment or uncomment */
 		twoPlayerMode(); 
 		
@@ -104,6 +103,22 @@ public class GameState {
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
 		
+
+		// Chiara's Avatar fix
+//		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
+//		humanAvatar.avatarSetUp();
+//		humanAvatar.setOwner(playerOne);
+//		
+//		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
+//		computerAvatar.avatarSetUp();
+//		computerAvatar.setOwner(playerTwo);
+//		
+//		System.out.println("board: " + this.getBoard());
+//		System.out.println();
+//		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
+//		System.out.println();
+//		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
+
 		// Avatar instantiation
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
@@ -269,11 +284,10 @@ public class GameState {
 		// Clear the temp TileRange container between actions 
 		tileAdjustedRangeContainer.clear(); 
 	}
-
 	
 	
 	/** Methods to change GameState data when EndTurn**/
-	public void endTureStateChange(ActorRef out) {  
+	public void endTurnStateChange(ActorRef out) {  
 		
 		emptyMana(); 	//empty mana for player who ends the turn
 	    deselectAllEntities();
@@ -316,6 +330,7 @@ public class GameState {
 		getTurnOwner().setMana(0);
 	}
 	
+
 	// check if players decks are are empty 
 	public boolean isDeckEmpty() {
 		ArrayList<Card> turnOwnerDeck = getTurnOwner().getDeck().getCardList();
@@ -350,16 +365,11 @@ public class GameState {
 	
 	}
 	
-	public void setHandForStart() {
-		playerOne.getHand().initialHand(deckPlayerOne);
-		playerTwo.getHand().initialHand(deckPlayerTwo);
-	}
-	
 	public void computerEnd() {
 		
 	}
-
 	
+	/** methods to change GameState data when EndTurn**/
 	
 	
 	
@@ -434,5 +444,10 @@ public class GameState {
 			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
 			// Move hand instantiation/set up from gamestate into Player constructor
 			// Move AbilityUnitLinkage call into GameState
+
+//	public static void computerEnd() {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }

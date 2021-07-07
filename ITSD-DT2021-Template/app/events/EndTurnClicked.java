@@ -11,7 +11,7 @@ import commands.*;
  * the end-turn button.
  * 
  * { 
- *   messageType = “endTurnClicked”
+ *   messageType = 
  * }
  * 
  * @author Dr. Richard McCreadie
@@ -20,22 +20,20 @@ import commands.*;
 
 //player draws a card and mana is drained
 public class EndTurnClicked implements EventProcessor{
-
+	
 	@Override
-	public void processEvent (ActorRef out, GameState gameState, JsonNode message) {
+	public void processEvent (ActorRef out, GameState gameState, JsonNode message){
 		
-		gameState.endTureStateChange(out);
-//		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
-//			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
-//			compTurn.processComputerActions(out, gameState);
-//		}
+		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
+		gameState.endTurnStateChange(out);
+		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
+			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
+			compTurn.processComputerActions(out, gameState);
+		}
 	}
 }
-	
-
-	
-	
 		
+
 //	//give turnCount mana to the player just in the beginning of new turn	
 //	public void giveMana(GameState gameState) {  
 //			gameState.getTurnOwner().setMana(gameState.getTurnCount());  
@@ -53,7 +51,7 @@ public class EndTurnClicked implements EventProcessor{
 //				m.toggleCooldown();				
 //		}
 //	}
-	
+
 
 
 // To do:
