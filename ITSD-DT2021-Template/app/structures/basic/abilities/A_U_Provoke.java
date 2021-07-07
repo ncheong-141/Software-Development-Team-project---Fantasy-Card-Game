@@ -86,16 +86,16 @@ public class A_U_Provoke implements Ability{
 //		}
 
 		// Check if there was any enemies with provoke and return a flag accordingly 
-		if (enemyTileToHighlight.isEmpty()) {
-			return false;
-		}				
-		else {
-
-			// Set container in gameState to highlight tiles (done in UnitDisplayActionState, where this ability was called)
-			gameState.setTileAdjustedRangeContainer(enemyTileToHighlight);
-			
+//		if (enemyTileToHighlight.isEmpty()) {
+//			return false;
+//		}				
+//		else {
+//
+//			// Set container in gameState to highlight tiles (done in UnitDisplayActionState, where this ability was called)
+//			gameState.setTileAdjustedRangeContainer(enemyTileToHighlight);
+//			
 			return true; 
-		}
+//		}
 	}
 	// ================================================================================
 	

@@ -90,6 +90,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 				System.out.println("Tile is not in summon range.");
 			} else if(!(sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard()))) {
 				System.out.println("Insufficient mana to summon this monster.");
+				BasicCommands.addPlayer1Notification(context.out, "Get some mana!!", 1);
+				GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 			} else {
 				System.out.println("Can't summon Monster, please try again.");
 			}
