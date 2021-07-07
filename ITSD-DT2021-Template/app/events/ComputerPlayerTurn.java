@@ -24,20 +24,30 @@ public class ComputerPlayerTurn {
 		
 		cardsToPlay = compPlayer.playCards();
 		
-		for (ComputerInstruction cI : cardsToPlay) {
+		if (!cardsToPlay.isEmpty() && cardsToPlay != null) {
+			for (ComputerInstruction cI : cardsToPlay) {
+			//card get class 
 			controller.summonMonster(cI.getCard(), cI.getTargetTile());
+			//spell treated as a card 
+			}
+		
 		}
 		
 		attacksToPerform = compPlayer.performAttacks();
 		
 		//need to double check method for attack in AI state controller
 
-		monstersToMove = compPlayer.moveMonsters();
 		
-		for (ComputerInstruction cI : cardsToPlay) {
+		monstersToMove = compPlayer.moveMonsters();
+		//check if empty
+		
+		if (!monstersToMove.isEmpty() && monstersToMove != null) {
+			for (ComputerInstruction cI : monstersToMove) {
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
 			controller.unitMove(currTile, cI.getTargetTile());
+			}
 		}
+		
 		
 		
 		//iterate over list and call method in controller
