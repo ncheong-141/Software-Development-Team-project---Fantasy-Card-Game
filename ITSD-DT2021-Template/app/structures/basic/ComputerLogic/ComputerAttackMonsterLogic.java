@@ -33,10 +33,12 @@ public class ComputerAttackMonsterLogic {
 			}else{    //if there is good target, perform attack 
 				target = selectAttackTarget(attacker);
 				
-				//attack action from here
-				if(attacker.getUnitOnTile().attack()) { 
-					System.out.println("Attack successful.");
-				}
+				//actual attack action from here
+				//need unit animation stuff
+				//every attack is successful under this logic
+
+				System.out.println("Attack successful.");
+				
 			}        
 		}
 	}
@@ -52,18 +54,16 @@ public class ComputerAttackMonsterLogic {
 			Target Selection Priority:
 				1.try kill the one with highest attackValue, if none
 				2.try kill the one with highest attackLeft, if none
-				3.try kill the one with lowest HP, if can't kill any
-				4.otherwise, it's not worth attack
+				3.try kill the one with lowest HP, if can't kill any still
+				4.return null
 
-	 if not target return after selection, for this attacker. choose not to attack
+	 if no target return after selection, for this attacker. choose not to attack
 	 go on to next actionable attacker
 	*/
 
 
-
 	//<helper> target selection process
-	public Tile selectAttackTarget(Tile t){
-		    
+	public Tile selectAttackTarget(Tile t){		    
 		if( getHightAttackValue(t) != null){
 			return target;
 		}else if(getHightAttackLeft(t) != null){
@@ -79,17 +79,14 @@ public class ComputerAttackMonsterLogic {
 	//<helper> select target in range with high damage, and can be killed
 	private Tile getHightAttackValue(Tile t){
 		    
-	//from a list of t attackable tiles range, find the tile hold enemy with highest attack value, and check if it can be killed after attack.
+		//from a list of t attackable tiles range, find the tile hold enemy with highest attack value, and check if it can be killed after attack.
 		Tile chosenE = targetInRange.get(0);    //set compared chosenE as the first tile in targetInRange
-		
-	//loop through targetInRange, find the enemy with highest attack times left
-		for (int i = 1; i < targetInRange.size(); i++) {  
+		for (int i = 1; i < targetInRange.size(); i++) {  ////loop through targetInRange, find the enemy with highest attack times left
 			if(targetInRange.get(i).getUnitOnTile().getAttackValue() > chosenE.getUnitOnTile().getAttackValue()) {  
 				chosenE = targetInRange.get(i);  
 			}	
 		}
-		    // check if attacker can kill this one, avoid future threat and counter attack
-		if ((chosenE.getUnitOnTile().getHP() - t.getUnitOnTile().getHP())<=0 ){  
+		if ((chosenE.getUnitOnTile().getHP() - t.getUnitOnTile().getHP())<=0 ){  //// check if attacker can kill this one, avoid future threat and counter attack
 			return chosenE;
 		}else { 
 			return null;
@@ -99,17 +96,14 @@ public class ComputerAttackMonsterLogic {
 	//<helper> select target in range with more times to attack, and can be killed
 	private Tile getHightAttackLeft(Tile t){
 		    
-		    //from a list of t attackable tiles range, find the tile hold enemy with highest attack times left, and check if it can be killed after attack.
+		 //from a list of t attackable tiles range, find the tile hold enemy with highest attack times left, and check if it can be killed after attack.
 		Tile chosenE = targetInRange.get(0);    //set compared chosenE as the first tile in targetInRange
-		
-		//loop through targetInRange, find the enemy with highest attack times left
-		for (int i = 1; i < targetInRange.size(); i++) {  
+		for (int i = 1; i < targetInRange.size(); i++) {  //loop through targetInRange, find the enemy with highest attack times left
 			if(targetInRange.get(i).getUnitOnTile().getAttacksLeft() > chosenE.getUnitOnTile().getAttacksLeft()) {  
 				chosenE = targetInRange.get(i);  
 			}	
 		}
-		// check if attacker can kill this one, avoid future threat and counter attack
-		if ((chosenE.getUnitOnTile().getHP() - t.getUnitOnTile().getHP())<=0 ){  
+		if ((chosenE.getUnitOnTile().getHP() - t.getUnitOnTile().getHP())<=0 ){  //// check if attacker can kill this one, avoid future threat and counter attack
 			return chosenE;
 		}else { 
 			return null;
@@ -121,15 +115,12 @@ public class ComputerAttackMonsterLogic {
 		    
 		//from a list of t attackable tiles range, find the tile hold enemy with lowest HP left, and check if it can be killed after attack.
 		Tile chosenE = targetInRange.get(0);    //set compared chosenE as the first tile in targetInRange
-		
-		//loop through targetInRange, find the enemy with highest attack times left
-		for (int i = 1; i < targetInRange.size(); i++) {  
+		for (int i = 1; i < targetInRange.size(); i++) {  ////loop through targetInRange, find the enemy with highest attack times left
 			if(targetInRange.get(i).getUnitOnTile().getHP() > chosenE.getUnitOnTile().getHP()) {  
 				chosenE = targetInRange.get(i);  
 			}	
 		}
-		// check if attacker can kill this one, avoid counter attack
-		if ((chosenE.getUnitOnTile().getHP() - t.getUnitOnTile().getHP())<=0 ){  
+		if ((chosenE.getUnitOnTile().getHP() - t.getUnitOnTile().getHP())<=0 ){  //// check if attacker can kill this one, avoid counter attack
 			return chosenE;
 		}else { 
 			return null; 
