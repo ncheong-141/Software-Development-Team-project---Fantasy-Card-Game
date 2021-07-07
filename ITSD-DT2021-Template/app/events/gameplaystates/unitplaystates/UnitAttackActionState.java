@@ -102,9 +102,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		boolean survived;		// stores attack outcomes
 
 		//	>>>>> Begin attack		//
-		
+		System.out.println(attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 		if(attacker.attack()) {
 			System.out.println("Attack successful.");
+			System.out.println(attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 			
 			/***	Un-highlight range tiles (minus attacker/defender)	***/
 			for (Tile t : actRange) {
@@ -123,9 +124,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			// If Avatar damaged ability check
 			
 			/***	Play animations and set visuals		***/
-			// Check for attacker animations
-			EffectAnimation arrows = checkRangedAttacker(attacker);
-			
+
+			EffectAnimation arrows = checkRangedAttacker(attacker);			
 			// Non-ranged
 			if(arrows == null) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);		} 
 			// Ranged
@@ -142,29 +142,25 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			if(survived) {	BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle); }
 			GeneralCommandSets.threadSleep();		
 			
-			/***	Death and counter-attack check	***/
+			/***	Death check	***/
 			if(!survived) {
 				System.out.println("Defender is dead.");		
 				
-				// Check for attacker destination and reachable by defender (ranged/adjacent)
-				
-				// Counter attack
-				
 				// Play animation + sleep to let it happen
 				BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
-				try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}
+				try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}			
 				
 				// Avatar death check
 				if(defender instanceof Avatar) {
 					
 					// Player notification
-					String winnerWinnerChickenDinner = "";
+					String winMessage = "";
 					if(context.getGameStateRef().getPlayerOne() == defender.getOwner()) {
-						winnerWinnerChickenDinner = "You lose!";
+						winMessage = "You lose!";
 					} else {
-						winnerWinnerChickenDinner = "You win!";
+						winMessage = "You win!";
 					}
-					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
+					BasicCommands.addPlayer1Notification(context.out,winMessage, 0);
 					
 					// Call game end method
 					context.getGameStateRef().gameOver();
@@ -172,35 +168,36 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				}
 				
 				// Delete method
-				unitDeath(context, targetTile);
-				
-				// Remove from front-end
-				BasicCommands.deleteUnit(context.out, defender);
-				try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-				
-				
-			} else {
+				unitDeath(context, targetTile);	
+
+			}
+			
+			/***	Counter-attack	***/
+			else {
 				System.out.println("Counter-attack incoming...");
 				
-				// Counter attack here - use counter Monster method
+				// Check for attacker destination and reachable by defender (ranged/adjacent)
+				
+				// Counter attack
+				attacker.defend(defender.counter());
 				
 				// Death check		
 				// Avatar death check
-//				if(defender instanceof Avatar) {
-//					
-//					// Player notification
-//					String winnerWinnerChickenDinner = "";
-//					if(context.getGameStateRef().getPlayerOne() == defender.getOwner()) {
-//						winnerWinnerChickenDinner = "You lose!";
-//					} else {
-//						winnerWinnerChickenDinner = "You win!";
-//					}
-//					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
-//					
-//					// Game ends
-//					context.getGameStateRef().gameOver();
-//					return;
-//				}
+				if(attacker instanceof Avatar) {
+					
+					// Player notification
+					String winnerWinnerChickenDinner = "";
+					if(context.getGameStateRef().getPlayerOne() == attacker.getOwner()) {
+						winnerWinnerChickenDinner = "You lose!";
+					} else {
+						winnerWinnerChickenDinner = "You win!";
+					}
+					BasicCommands.addPlayer1Notification(context.out,winnerWinnerChickenDinner, 0);
+					
+					// Game ends
+					context.getGameStateRef().gameOver();
+					return;
+				}
 			
 				// If Avatar damaged ability check
 				
@@ -210,8 +207,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 //				GeneralCommandSets.threadSleep();	
 				
 			}
+		}
 			
-		} 
 		
 		// Unit attack failed - internal attack values/summon cooldown/etc.
 		else {
@@ -228,7 +225,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		return false;
 	}
 	
-	// Unit death method to update location data and delete a Unit from Board
+	/***			Methods for attack stages			***/
+	
+	// Unit death --- method to update location data and delete a Unit from Board
 	private void unitDeath(GameplayContext context, Tile grave) {
 		
 		Monster deadUnit = grave.getUnitOnTile();
@@ -236,22 +235,32 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		// Check for onDeath ability
 		if(deadUnit.hasAbility()) {
 			for(Ability a : deadUnit.getMonsterAbility()) {
-				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); 
-				break;}
+				if(a.getCallID() == Call_IDs.onDeath) {	
+					a.execute(deadUnit,context.getGameStateRef()); 
+					break;
+				}
 			}
 		}
 		
-		// Update internal Tile values
+		// Update internal location values
 		grave.removeUnit();
-		deadUnit.setPosition(new Position(-1,-1,-1,-1));
+		deadUnit.setPosition(new Position(-1,-1,-1,-1));	// might not need
+		
+		// Remove from front-end
+		BasicCommands.deleteUnit(context.out, defender);
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 	}
 	
+	/***			Small checks			***/
+	
 	// Check for Ranged Attacker ability and return EffectAnimation if true
 	private EffectAnimation checkRangedAttacker(Monster attacker) {
-		for(Ability a : attacker.getMonsterAbility()) {
-			if(a instanceof A_U_RangedAttacker) {
-				return a.getEffectAnimation();
+		if(attacker.hasAbility()) {
+			for (Ability a : attacker.getMonsterAbility()) {
+				if(a instanceof A_U_RangedAttacker) {
+					return a.getEffectAnimation();
+				}
 			}
 		}
 		return null;
