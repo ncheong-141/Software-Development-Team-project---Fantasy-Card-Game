@@ -43,13 +43,13 @@ public class Deck{//class used to create and manage player and ai decks
 		int spells= cardConfigNames.length-unitConfigNames.length;
 		
 		
-		for (int i=0;i<= cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
+		for (int i=0;i< cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+monsters+start, Card.class);
 			cardList.add(card);
 			}
-		for(int j=cardConfigNames.length-spells+1; j<=cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
+		for(int j=cardConfigNames.length-spells; j<cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+monsters+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+monsters+spells+start, Card.class);
@@ -86,13 +86,13 @@ public class Deck{//class used to create and manage player and ai decks
 		int spells= cardConfigNames.length-unitConfigNames.length;
 		int deckLength= cardConfigNames.length*2;
 		
-		for (int i=0; i<=cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
+		for (int i=0; i<cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+deckLength+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+deckLength+monsters+start, Card.class);
 			cardList.add(card);
 			}
-		for(int j=cardConfigNames.length-spells+1; j<=cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
+		for(int j=cardConfigNames.length-spells; j<cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+deckLength+monsters+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+deckLength+monsters+spells+start, Card.class);

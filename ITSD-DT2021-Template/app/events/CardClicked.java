@@ -61,18 +61,21 @@ public class CardClicked implements EventProcessor{
 			
 		//checks that the clicked card is a monster card using its attack value
 			// Check if the card has an ability that affects before summoning
-			for(Ability a: clickedCard.getAbilityList()) {
-			
-			if (a.getCallID() == Call_IDs.onCardClicked) {			
-				// Execute it (null for no target monster)
-				a.execute(null, gameState); 
-				// Draw the respective tiles (any ability like this will only affect tiles really unless its like, "if you have this card in your had then get 2 HP per turn but that would be weird"/
-				GeneralCommandSets.drawBoardTiles(out, gameState.getTileAdjustedRangeContainer(), 2);
-			} else {
-				// Else, draw the summonable tiles as normal
-				ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getTurnOwner());	
-				GeneralCommandSets.drawBoardTiles(out, display, 2);	
+			if(clickedCard.hasAbility()) {
+				for(Ability a: clickedCard.getAbilityList()) {
+					
+					if (a.getCallID() == Call_IDs.onCardClicked) {			
+						// Execute it (null for no target monster)
+						a.execute(null, gameState); 
+						// Draw the respective tiles (any ability like this will only affect tiles really unless its like, "if you have this card in your had then get 2 HP per turn but that would be weird"/
+						GeneralCommandSets.drawBoardTiles(out, gameState.getTileAdjustedRangeContainer(), 2);
+					} else {
+						// Else, draw the summonable tiles as normal
+						ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getTurnOwner());	
+						GeneralCommandSets.drawBoardTiles(out, display, 2);	
+						}
 				}
+			
 			}
 		
 		//a loop which checks that a card is a spell, then displays playable tiles depending on spell target
