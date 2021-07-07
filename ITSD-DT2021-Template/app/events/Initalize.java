@@ -45,7 +45,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		// Initialising ability to unit linkage data to reference whenever loading units. 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
 
-		twoPlayerMode(out, gameState,message); 
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
 		
@@ -97,8 +96,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	}
 	
 	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
-		g.getPlayerOne().setMana(2);
-		g.getPlayerTwo().setMana(2);
+		g.getPlayerOne().setMana(10);
+		g.getPlayerTwo().setMana(10);
 		
 		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
@@ -114,54 +113,12 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		int i = 0;
 		
-		for (Card c : g.getPlayerOne().getHand().getHandList()) {
+		for (Card c : g.getTurnOwner().getHand().getHandList()) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
 	}
-	
-	private static void twoPlayerMode(ActorRef out, GameState gameState, JsonNode message) {
-		
 
-		// Set player2 to a new human player (Need to control the enemy player actions
-		gameState.setTwoPlayerMode(new HumanPlayer());
-		
-		HumanPlayer player1 = gameState.getPlayerOne(); 
-		HumanPlayer player2 = gameState.getPlayerTwoHuman(); 
-		
-		
-		/* Card and Hand setting */
-		
-		// Want to clear hand and get units of choice
-		gameState.getPlayerOne().getHand().getHandList().clear();
-		
-		// Variables to shorten access
-		ArrayList<Card> drawDeck1 = gameState.getPlayerOne().getDeck().getCardList();
-		ArrayList<Card> drawDeck2 = gameState.getPlayerTwoHuman().getDeck().getCardList();
-
-		
-		// Cards you want from deck 1 (max 5)
-		int[] cardIDList1 = {0,1,2};
-		
-		for (int i = 0; i < cardIDList1.length; i++) {
-			gameState.getPlayerOne().getHand().getHandList().add(drawDeck1.get(i));
-			player1.getDeck().delCard(cardIDList1[i]);
-		}
-		player1.getHand().setCurr(cardIDList1.length);
-
-		
-		// Cards you want to start with from deck 2 (max 5)
-		int[] cardIDList2 = {0,1,2};
-
-		for (int i = 0; i < cardIDList2.length; i++) {
-			gameState.getPlayerOne().getHand().getHandList().add(drawDeck2.get(i));
-			player1.getDeck().delCard(cardIDList2[i]);
-		}
-		player1.getHand().setCurr(cardIDList2.length);
-		
-		// Pass control of AI avatar to human player
-		gameState.getComputerAvatar().setOwner(player2);
-	}
 }
 
 

@@ -33,8 +33,8 @@ public class GameState {
 
 	/** GameState attributes **/
 	private Board 			gameBoard;			// Board object which holds all Unit positions aswell as contains operations to find specific tiles sets. 
-	private HumanPlayer 	playerOne;			// Player one, the human player which holds all data for the player such as Hand and Deck for holding current cards. Also holds the control flow for drawing Cards from a Deck etc 
-	private ComputerPlayer 	playerTwo;			// Player two, computer player which holds the same as the above + AI logic for ranking combinations of instructions and actioning them.	
+	private Player 			playerOne;			// Player one, the human player which holds all data for the player such as Hand and Deck for holding current cards. Also holds the control flow for drawing Cards from a Deck etc 
+	private Player 			playerTwo;			// Player two, computer player which holds the same as the above + AI logic for ranking combinations of instructions and actioning them.	
 	private Avatar 			humanAvatar;		// Do we need avatars in gameState? can it not just be in Board? 
 	private Avatar 			computerAvatar;
 	private int			 	turnCount;			// Tracker variable for the current number of turns 
@@ -53,9 +53,10 @@ public class GameState {
 	// Need to remove
 	EndTurnClicked e; 
 	
-	/** DEBUG/TESTING VARIABLES (initialised in own method called externally) */
-	private HumanPlayer playerTwoHuman; 
-	
+	/* Debug/two player mode */
+	private boolean 		twoPlayerMode;
+
+
 
 	/** Constructor **/
 	public GameState() {
@@ -67,32 +68,34 @@ public class GameState {
 		
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
 		
-		// Deck instantiations 
-		Deck deckPlayerOne = new Deck(); 
-		deckPlayerOne.deckOne();
+		/* two player mode (comment or uncomment */
+		twoPlayerMode(); 
 		
+		if (twoPlayerMode != true) {
+			
+			// Deck instantiations 
+			Deck deckPlayerOne = new Deck(); 
+			deckPlayerOne.deckOne();
+			
+			Deck deckPlayerTwo = new Deck();
+			deckPlayerTwo.deckTwo();
+					
+			// Instantiate players 								
+			playerOne = new HumanPlayer();
+			playerOne.setDeck(deckPlayerOne);
 
-		Deck deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
-		
-		// Instantiate players 								
-		playerOne = new HumanPlayer();
-		playerOne.setDeck(deckPlayerOne);
+			playerTwo = new ComputerPlayer();
+			playerTwo.setDeck(deckPlayerTwo);
+			
+			// Set hands
+			Hand handPlayerOne = new Hand();
+			playerOne.setHand(handPlayerOne);
+			handPlayerOne.initialHand(deckPlayerOne);
 
-		playerTwo = new ComputerPlayer();
-		playerTwo.setDeck(deckPlayerTwo);
-		
-		for (Card c : playerOne.getDeck().getCardList()) {
-			System.out.println("cardname " +c.getCardname());
+			Hand handPlayerTwo = new Hand();
+			playerTwo.setHand(handPlayerTwo);
+			handPlayerTwo.initialHand(deckPlayerTwo);
 		}
-		// Set hands
-		Hand handPlayerOne = new Hand();
-		playerOne.setHand(handPlayerOne);
-		handPlayerOne.initialHand(deckPlayerOne);
-
-		Hand handPlayerTwo = new Hand();
-		playerTwo.setHand(handPlayerTwo);
-		handPlayerTwo.initialHand(deckPlayerTwo);
 
 		
 		// Set turn owner
@@ -104,9 +107,7 @@ public class GameState {
 		// Avatar instantiation
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
-		
-		//playerOne.setAvatar(humanAvatar);
-		//playerTwo.setAvatar(computerAvatar);
+
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/
@@ -138,22 +139,23 @@ public class GameState {
 
 	public void turnChange() {
 		if (turnOwner == playerOne) {
-			turnOwner = playerTwo;
+				turnOwner = playerTwo;
 		}
-
-		else turnOwner = playerOne;
+		else {
+			turnOwner = playerOne;
+		}
 
 		turnCount++;
 	}
 
-	public HumanPlayer getPlayerOne() {
-		return playerOne;
+	public Player getPlayerOne() {
+		return  playerOne;
 	}
 
-	public ComputerPlayer getPlayerTwo() {
-		return playerTwo;
+	public Player getPlayerTwo() {
+		return  playerTwo;
 	}
-
+	
 	// Potentially remove
 	public Avatar getHumanAvatar() {
 		return humanAvatar;
@@ -167,21 +169,6 @@ public class GameState {
 	public void setPlayers(HumanPlayer h, ComputerPlayer c) {
 		playerOne = h;
 		playerTwo = c;
-	}
-	
-	public void setTwoPlayerMode(HumanPlayer h1) {
-		playerTwoHuman = h1; 
-
-		Deck deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
-		playerTwoHuman.setDeck(deckPlayerTwo);
-		
-		Hand handPlayerTwo = new Hand();
-		playerTwoHuman.setHand(handPlayerTwo);
-	}
-	
-	public HumanPlayer getPlayerTwoHuman() {
-		return playerTwoHuman;
 	}
 
 	public static void gameOver() {
@@ -200,7 +187,70 @@ public class GameState {
 		tileAdjustedRangeContainer = tilesToHighlight;
 	}
 
+	public boolean isTwoPlayerMode() {
+		return twoPlayerMode;
+	}
 
+	public void setTwoPlayerMode(boolean twoPlayerMode) {
+		this.twoPlayerMode = twoPlayerMode;
+	}
+	
+	
+	
+	
+	/** Two player mode methods (used for debugging) **/
+
+		
+	private void twoPlayerMode() {
+		
+		// Set switch
+		twoPlayerMode = true; 
+		
+		// Instantite players 
+		playerOne = new HumanPlayer();
+		playerTwo= new HumanPlayer(); 
+
+		// Deck instantiations 
+		Deck deckPlayerOne = new Deck(); 
+		deckPlayerOne.deckOne();
+		
+		Deck deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
+				
+		playerOne.setDeck(deckPlayerOne);
+		playerTwo.setDeck(deckPlayerTwo);
+		
+		playerOne.setHand(new Hand());
+		playerTwo.setHand(new Hand());
+	
+		/* Card and Hand setting */
+		// Variables to shorten access
+		ArrayList<Card> drawDeck1 = this.getPlayerOne().getDeck().getCardList();
+		ArrayList<Card> drawDeck2 = this.getPlayerTwo().getDeck().getCardList();
+
+		
+		// Cards you want from deck 1 (max 5)
+		int[] cardIDList1 = {0,1,2};
+		
+		for (int i = 0; i < cardIDList1.length; i++) {
+			this.getPlayerOne().getHand().getHandList().add(drawDeck1.get(i));
+			playerOne.getDeck().delCard(cardIDList1[i]);
+		}
+		playerOne.getHand().setCurr(cardIDList1.length);
+
+		
+		// Cards you want to start with from deck 2 (max 5)
+		int[] cardIDList2 = {0,1,2};
+
+		for (int i = 0; i < cardIDList2.length; i++) {
+			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(i));
+			playerTwo.getDeck().delCard(cardIDList2[i]);
+		}
+		playerTwo.getHand().setCurr(cardIDList2.length);
+	}
+		
+
+	
 	/** Entity selection helper methods **/
 
 	// Deselects Card and Unit (if selected)
@@ -220,32 +270,73 @@ public class GameState {
 		tileAdjustedRangeContainer.clear(); 
 	}
 
-	/** AI methods **/
-	public void computerEnd() {  
+	
+	
+	/** Methods to change GameState data when EndTurn**/
+	public void endTureStateChange(ActorRef out) {  
 		
-		e.emptyMana(this); //empty mana for player who ends the turn
-		e.toCoolDown(this); //switch avatars status for current turnOwner
+		emptyMana(); 	//empty mana for player who ends the turn
 	    deselectAllEntities();
-		GeneralCommandSets.boardVisualReset(this.out, this); 
-		deselectAllEntities();	 //current turnOwner Hand is off?
-
-		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
-
-		turnChange(); // turnOwner exchanged	
-		if (e.isDeckEmpty(this)) {  //check if both players have enought card in deck left for new turn
-			gameOver();  // if not, gameover(?)
+		GeneralCommandSets.boardVisualReset(out, this);  	//visual
+		
+		if (isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
+			gameOver();  // if not, gameover
+		} else {
+			
+			getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());  //if holds enough card, get card from deck
+			
+			Card card = turnOwner.getDeck().getCardList().get(0);
+			int handPos = (turnOwner.getHand().getHandList().size())-1;
+			BasicCommands.drawCard(out, card, handPos, 0);
+			GeneralCommandSets.threadSleepLong();
 		}
-		e.giveMana(this); //give turnCount mana to the player in the beginning of new turn
-		e.toCoolDown(this); //switch avatars status for new turnOwner in the beginning of new turn
-		//getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
+		
+		turnChange(); // turnOwner exchanged	
+		giveMana(); //give turnCount mana to the player in the beginning of new turn
+		toCoolDown(); //switch avatars status for current turnOwner
+
+		if (twoPlayerMode) {
+			// redraw hand to humanplayer
+			int oldCardListSize = this.getEnemyPlayer().getHand().getHandList().size(); 
+			
+			GeneralCommandSets.drawCardsInHand(out, this, oldCardListSize, this.getTurnOwner().getHand().getHandList());
+		}
+		
 	}
 	
 	
-	// YC add
-	public Tile locateMonster(Monster trackMonster) {
-		this.monsterLocation = this.getBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
-		return monsterLocation;
+	//give turnCount mana to the player just in the beginning of new turn	
+	public void giveMana() {  
+			// getTurnOwner().setMana(getTurnCount()); 
+		getTurnOwner().setMana(8); // Setting to 8 just for testing 
 	}
+	
+	//empty mana for player who ends the turn
+	public void emptyMana() {
+		getTurnOwner().setMana(0);
+	}
+	
+	// check if players decks are are empty 
+	public boolean isDeckEmpty() {
+		ArrayList<Card> turnOwnerDeck = getTurnOwner().getDeck().getCardList();
+		int deckCardLeft = turnOwnerDeck.size();
+		if(deckCardLeft < 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	//cooldown monsters
+	public void toCoolDown() {
+		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());			
+		for(Monster m : toCool){
+				m.toggleCooldown();				
+			}
+		}
+	
+	
+	/** methods to change GameState data when EndTurn**/
 	
 	
 	public void setDeckForStart() {	
@@ -255,7 +346,7 @@ public class GameState {
 		
 		deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
-		playerTwo.setDeck(deckPlayerTwo);
+		playerOne.setDeck(deckPlayerTwo);
 	
 	}
 	
@@ -263,6 +354,13 @@ public class GameState {
 		playerOne.getHand().initialHand(deckPlayerOne);
 		playerTwo.getHand().initialHand(deckPlayerTwo);
 	}
+	
+	public void computerEnd() {
+		
+	}
+
+	
+	
 	
 	
 	/** Generalised method for finding if any monsters require their ability to be executed.
@@ -322,13 +420,15 @@ public class GameState {
 	public Player getEnemyPlayer() {
 		
 		// Check if the turn owner is instance of human player, if so return the computer player
-		if (this.getTurnOwner() instanceof HumanPlayer) {
+		if (this.getTurnOwner() == this.playerOne) {
 			return this.getPlayerTwo(); 
 		}
 		else {
 			return this.getPlayerOne(); 
 		}
 	}
+
+	
 	
 			// To do:
 			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
