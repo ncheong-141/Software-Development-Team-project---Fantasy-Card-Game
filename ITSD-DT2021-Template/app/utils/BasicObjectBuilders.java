@@ -78,7 +78,7 @@ public class BasicObjectBuilders {
 		try {
 			Card card = mapper.readValue(new File(cardConfigFile), classtype);
 			card.setId(id);
-			card.setConfigFile(cardConfigurationFile);
+			card.setConfigFile(cardConfigFile);
 			if(AbilityToUnitLinkage.UnitAbility.containsKey(card.getCardname())) {
 				for(Ability a: AbilityToUnitLinkage.UnitAbility.get(card.getCardname())) {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
