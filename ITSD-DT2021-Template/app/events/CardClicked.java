@@ -67,7 +67,7 @@ public class CardClicked implements EventProcessor{
 				// Execute it (null for no target monster)
 				a.execute(null, gameState); 
 				// Draw the respective tiles (any ability like this will only affect tiles really unless its like, "if you have this card in your had then get 2 HP per turn but that would be weird"/
-				GeneralCommandSets.drawBoardTiles(out, gameState.getTileHighlightContainer(), 2);
+				GeneralCommandSets.drawBoardTiles(out, gameState.getTileAdjustedRangeContainer(), 2);
 			} else {
 				// Else, draw the summonable tiles as normal
 				ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getPlayerOne());	
