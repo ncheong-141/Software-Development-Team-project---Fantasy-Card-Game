@@ -2,6 +2,7 @@ package structures.basic;
 
 import java.util.ArrayList;
 import structures.basic.Unit;
+import structures.basic.abilities.A_U_SummonAnywhere;
 import structures.basic.abilities.Ability;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
@@ -86,10 +87,9 @@ public class Card implements Comparable<Card> {
 			if(a.getClass()==A_U_SummonAnywhere.class) {
 				return true;
 			}
+			}
 		}
-		}else {
-			return false;
-		}
+		return false;
 	}
 	
 	//method to return integer value of unit ability effect 
