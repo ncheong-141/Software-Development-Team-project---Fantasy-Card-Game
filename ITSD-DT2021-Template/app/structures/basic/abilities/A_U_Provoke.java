@@ -43,27 +43,47 @@ public class A_U_Provoke implements Ability{
 		
 		int selectedUnitX = targetMonster.getPosition().getTilex(); 
 		int selectedUnitY = targetMonster.getPosition().getTiley(); 		
-		
-		// Get all tiles adjacent to the selected unit with an enemy 
-		ArrayList<Tile> enemyAdjTiles = gameState.getBoard().adjEnemyTiles(selectedUnitX, selectedUnitY, gameState.getTurnOwner());
-		
-		// Container for highlighting tiles (highlight all monsters with provoke, if more than one)
-		ArrayList<Tile> enemyTileToHighlight = new ArrayList<Tile>(); 
 
-		// Loop over enemies and check for an ability with provoke
-		for (Tile enemyTile : enemyAdjTiles) {
-			
-			// Loop over all monster abilities on each tile
-			for (Ability ability : enemyTile.getUnitOnTile().getMonsterAbility()) {
-				
-				// If monster has provoke
-				if (ability instanceof A_U_Provoke) {
-					
-					// Set the tiles to only the enemy Monster position as it can only attack it 
-					enemyTileToHighlight.add(enemyTile);					
-				}
-			}
-		}
+		
+		/***
+		 * 
+		 * 1.) Get the full movement and attack tiles (attack tiles by action tiles - movement tiles)
+		 * 2.) Loop over action range
+		 * 		- Get the full threat range of the provoke monster(s) if present
+		 * 		- Return 
+		 * 3.) Make a new arraylist container for each Tile type (M,T,A,TA,TM) 
+		 * 		- Loop over threat range and check if each tile and classify them accordingly (add to array container) 
+		 * 
+		 * 4.) Enforce conditions on each tile type lists (to formulate list of possible tiles)
+		 * 		- Add all movement tiles 
+		 * 		- Can only add a TA and A tiles if adjecent to a M tile
+		 * 		- Can only add TM tiles if they are cardinally adjacent to a movement tile  
+		 * 	- If youre located in a TM tile you have to attack (cant exit out loop early incase theres more than one) 
+		 *  - treat tile on as a M tile 
+		 * 
+		 */
+		
+		
+//		// Get all tiles adjacent to the selected unit with an enemy 
+//		ArrayList<Tile> enemyAdjTiles = gameState.getBoard().adjEnemyTiles(selectedUnitX, selectedUnitY, gameState.getTurnOwner());
+//		
+//		// Container for highlighting tiles (highlight all monsters with provoke, if more than one)
+//		ArrayList<Tile> enemyTileToHighlight = new ArrayList<Tile>(); 
+//
+//		// Loop over enemies and check for an ability with provoke
+//		for (Tile enemyTile : enemyAdjTiles) {
+//			
+//			// Loop over all monster abilities on each tile
+//			for (Ability ability : enemyTile.getUnitOnTile().getMonsterAbility()) {
+//				
+//				// If monster has provoke
+//				if (ability instanceof A_U_Provoke) {
+//					
+//					// Set the tiles to only the enemy Monster position as it can only attack it 
+//					enemyTileToHighlight.add(enemyTile);					
+//				}
+//			}
+//		}
 
 		// Check if there was any enemies with provoke and return a flag accordingly 
 		if (enemyTileToHighlight.isEmpty()) {
