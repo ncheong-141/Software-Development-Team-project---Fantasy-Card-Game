@@ -12,7 +12,9 @@ import structures.basic.Hand;
 
 import java.util.ArrayList;
 import structures.basic.Tile;
+import structures.basic.abilities.Ability;
 import structures.basic.abilities.AbilityToUnitLinkage;
+import structures.basic.abilities.Call_IDs;
 import utils.BasicObjectBuilders;
 import structures.basic.Board;
 
@@ -44,23 +46,37 @@ public class CardClicked implements EventProcessor{
 		int handPosition = message.get("position").asInt();//gets position in hand of clicked card
 		
 		//checks if a card had previously been selected, if so it removes any traces of this
-		if(gameState.getPlayerOne().getHand().getSelectedCard()!=null){
-			Hand tempHand= gameState.getPlayerOne().getHand();
-			tempHand= gameState.getPlayerOne().getHand();
-			gameState.getPlayerOne().getHand().setSelectedCard(null);
+		if(gameState.getTurnOwner().getHand().getSelectedCard()!=null){
+			Hand tempHand= gameState.getTurnOwner().getHand();
+			tempHand= gameState.getTurnOwner().getHand();
+			gameState.getTurnOwner().getHand().setSelectedCard(null);
 		}
 		
 		//creates a placeholder for the clicked card
 			Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
+			
 		//tells the game state that a card in hand is to be played
-			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
-			gameState.getPlayerOne().getHand().setSelCarPos(handPosition);
+			gameState.getTurnOwner().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
+			gameState.getTurnOwner().getHand().setSelCarPos(handPosition);
+			
 		//checks that the clicked card is a monster card using its attack value
-		if (clickedCard.getBigCard().getAttack() > 0){ //for summoning monsters
-			ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getPlayerOne());	
-			GeneralCommandSets.drawBoardTiles(out, display, 2);	
-		}//a loop which checks that a card is a spell, then displays playable tiles depending on spell target
-		else if (clickedCard.getBigCard().getAttack() < 0) {
+			// Check if the card has an ability that affects before summoning
+			for(Ability a: clickedCard.getAbilityList()) {
+			
+			if (a.getCallID() == Call_IDs.onCardClicked) {			
+				// Execute it (null for no target monster)
+				a.execute(null, gameState); 
+				// Draw the respective tiles (any ability like this will only affect tiles really unless its like, "if you have this card in your had then get 2 HP per turn but that would be weird"/
+				GeneralCommandSets.drawBoardTiles(out, gameState.getTileHighlightContainer(), 2);
+			} else {
+				// Else, draw the summonable tiles as normal
+				ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getPlayerOne());	
+				GeneralCommandSets.drawBoardTiles(out, display, 2);	
+				}
+			}
+		
+		//a loop which checks that a card is a spell, then displays playable tiles depending on spell target
+		if (clickedCard.getBigCard().getAttack() < 0) {
 			//for spell targeting enemy units
 			if(AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==true){
@@ -86,6 +102,3 @@ public class CardClicked implements EventProcessor{
 			}
 	}
 }
-
-
-

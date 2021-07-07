@@ -2,6 +2,7 @@ package structures.basic;
 
 import java.util.ArrayList;
 import structures.basic.Unit;
+import structures.basic.abilities.Ability;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
 
@@ -17,15 +18,17 @@ import utils.BasicObjectBuilders;
  */
 public class Card implements Comparable<Card> {
 	
-	int id;//unique identifier for each card
+	private int id;//unique identifier for each card
 	
-	String cardname;//name of card
-	int manacost;//mana cost to play associated unit
+	private String cardname;//name of card
+	private int manacost;//mana cost to play associated unit
 	
-	MiniCard miniCard;//display element for unselected cards
-	BigCard bigCard;//display element for selected card
+	private MiniCard miniCard;//display element for unselected cards
+	private BigCard bigCard;//display element for selected card
 	
-	String configFile;
+	private String configFile;
+	private ArrayList<Ability> abilityList;
+	private Class<?> associatedClass;
 	
 	public Card() {};
 	
@@ -37,40 +40,33 @@ public class Card implements Comparable<Card> {
 		this.miniCard = miniCard;
 		this.bigCard = bigCard;
 		this.configFile="";
+		this.abilityList=new ArrayList<Ability>();
+		this.associatedClass = Card.class;
 	}
-	
-	
-	
-	
 	
 	
 	//shortcut methods for ability access
 	
 	//checks whether card targets spell or enemy
 	public boolean targetEnemy() {
-		boolean result= AbilityToUnitLinkage.UnitAbility.get(getCardname()).get(0).targetEnemy();
+		boolean result=false;
+		for (Ability a: this.abilityList) {
+			if (a.targetEnemy()==true){
+				result=true;
+			}
+			else {
+				result=false;
+			}
+		}
 		return result;
 	}
 	
 	//checks that monster/spell associated with card has an ability
 	public boolean hasAbility(){
 		boolean result= false;
-		if(this.getBigCard().getAttack()>0) {//checks whether card is a monster
-		//create a temporary	
-			Monster mon = BasicObjectBuilders.loadMonsterUnit("StaticConfFiles.c_"+this.getCardname(), this, Monster.class);
-			if(mon.getMonsterAbility()!=null) {//if monster has ability, a true result is given
+			if(this.abilityList!=null) {
 				result=true;
-			}else {//if monster doesn't have an ability a false result is give
-				result=false;
 			}
-		}else if(this.getBigCard().getAttack()<0) {//checks whether card is a spell
-			Spell spell = (Spell)BasicObjectBuilders.loadCard("StaticConfFiles.c_"+this.getCardname(),99, Spell.class);
-			if(spell.getAbility()!=null) {//if spell has an effect(should always have one) returns a true result
-				result=true;
-			}else {//if spell has no ability(should never happen) false result returned
-				result=false;
-			}
-		}
 		return result;
 		}
 
@@ -82,22 +78,29 @@ public class Card implements Comparable<Card> {
 		return this.getBigCard().getAttack();
 	}
 	
-	//helper method to show where card(if monster) is playable
+	
+	//helper method to show where card is playable
 	public boolean playableAnywhere() {
-		if(this.getCardname().equals("Ironcliff Guardian") || this.getCardname().contentEquals("Planar Scout")) {
-			return true;
+		if(hasAbility()) {
+			for(Ability a: this.abilityList) {
+			if(a.getClass()==A_U_SummonAnywhere.class) {
+				return true;
+			}
+		}
 		}else {
 			return false;
 		}
 	}
 	
-	
 	//method to return integer value of unit ability effect 
 	//i.e if ability is +2 damage, the method would return 2
-	public int getAbilityEffect() {
-		int result=0;
-		return result;
-	}
+//	public int getAbilityEffect() {
+//		int resultOne;
+//		for(Ability a: this.abilityList) {
+//			a.
+//		}
+//		return resultOne;
+//	}
 	
 	@Override
 	//compares mana cost of two cards for ai logic
@@ -110,8 +113,6 @@ public class Card implements Comparable<Card> {
 		return 0;
 		}
 	}
-	
-	
 	
 	//getters and setters
 	public int getId() {
@@ -144,19 +145,24 @@ public class Card implements Comparable<Card> {
 	public void setBigCard(BigCard bigCard) {
 		this.bigCard = bigCard;
 	}
-
 	public void setConfigFile(String configFile) {
 		this.configFile = configFile;
 	}
-	
 	public String getConfigFile() {
 		return this.configFile;
 	}
+	public ArrayList<Ability> getAbilityList() {
+		return abilityList;
+	}
+	public void setAbilityList(ArrayList<Ability> abilityList) {
+		this.abilityList = abilityList;
+	}
+	public Class<?> getAssociatedClass() {
+		return associatedClass;
+	}
+	public void setAssociatedClass(Class<?> associatedUnitClass) {
+		this.associatedClass = associatedUnitClass;
+	}
 }
 
-// To do:
-// Add modifiers to constructor attributes
-// targetEnemy needs to loop over Abilities ArrayList (not just check one)
-// Change from using Builder in hasAbility method to another check for ability
-// Add Ability ArrayList, link with UnitLinkage and sort out Builders and associated object construction methods
-// Add a classType indicator attribute (instead of the bigCard method check right now)
+
