@@ -34,13 +34,12 @@ public class GameState {
 	/** GameState attributes **/
 	private Board 			gameBoard;			// Board object which holds all Unit positions aswell as contains operations to find specific tiles sets. 
 	private HumanPlayer 	playerOne;			// Player one, the human player which holds all data for the player such as Hand and Deck for holding current cards. Also holds the control flow for drawing Cards from a Deck etc 
-	private ComputerPlayer 	playerTwo;			// Player two, computer player which holds the same as the above + AI logic for ranking combinations of instructions and actioning them. 
+	private ComputerPlayer 	playerTwo;			// Player two, computer player which holds the same as the above + AI logic for ranking combinations of instructions and actioning them.	
 	private Avatar 			humanAvatar;		// Do we need avatars in gameState? can it not just be in Board? 
 	private Avatar 			computerAvatar;
 	private int			 	turnCount;			// Tracker variable for the current number of turns 
 	private static boolean 	playerDead;			// Boolean variable which is set when either avatar is defeated
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
-	private EndTurnClicked e;					// 
 	private ActorRef out;						// Do we need this?
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
@@ -50,6 +49,13 @@ public class GameState {
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
+	
+	// Need to remove
+	EndTurnClicked e; 
+	
+	/** DEBUG/TESTING VARIABLES (initialised in own method called externally) */
+	private HumanPlayer playerTwoHuman; 
+	
 
 	/** Constructor **/
 	public GameState() {
@@ -94,8 +100,9 @@ public class GameState {
 		
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
+		
+		// Avatar instantiation
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
-
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
 		
 		//playerOne.setAvatar(humanAvatar);
@@ -160,6 +167,21 @@ public class GameState {
 	public void setPlayers(HumanPlayer h, ComputerPlayer c) {
 		playerOne = h;
 		playerTwo = c;
+	}
+	
+	public void setTwoPlayerMode(HumanPlayer h1) {
+		playerTwoHuman = h1; 
+
+		Deck deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
+		playerTwoHuman.setDeck(deckPlayerTwo);
+		
+		Hand handPlayerTwo = new Hand();
+		playerTwoHuman.setHand(handPlayerTwo);
+	}
+	
+	public HumanPlayer getPlayerTwoHuman() {
+		return playerTwoHuman;
 	}
 
 	public static void gameOver() {
@@ -233,7 +255,7 @@ public class GameState {
 		
 		deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
-		playerOne.setDeck(deckPlayerTwo);
+		playerTwo.setDeck(deckPlayerTwo);
 	
 	}
 	
@@ -256,28 +278,38 @@ public class GameState {
 			// Container for containing all executable abilities
 			ArrayList<Ability> abilityContainer = new ArrayList<Ability>(2); 
 
-			// Loop over abilities and get executing ones
-			for (Ability ability : tile.getUnitOnTile().getMonsterAbility()) {
+			//Check if a unit is on the tile
+			if (tile.getUnitOnTile() != null) {
+				
+				// Check if the unit has abilities
+				if (tile.getUnitOnTile().getMonsterAbility() != null) {
+					
+					// Loop over abilities and get executing ones
+					for (Ability ability : tile.getUnitOnTile().getMonsterAbility()) {
 
-				if (ability.getCallID() == callID) {
-					abilityContainer.add(ability);
-					abilityFound = true;
+						if (ability.getCallID() == callID) {
+							abilityContainer.add(ability);
+							abilityFound = true;
+						}
+					}
+
+					// Execute all contstruction abilities first
+					for (Ability ability : abilityContainer) {
+
+						if (ability.getCallID() == Call_IDs.construction) {
+							ability.execute(targetMonster, this); 
+							abilityContainer.remove(ability);		// Remove this ability to not execute twice
+						}
+					}
+
+					// Execute the rest 
+					for (Ability ability : abilityContainer) {
+						ability.execute(targetMonster, this);
+					}
 				}
+
 			}
 
-			// Execute all contstruction abilities first
-			for (Ability ability : abilityContainer) {
-
-				if (ability.getCallID() == Call_IDs.construction) {
-					ability.execute(targetMonster, this); 
-					abilityContainer.remove(ability);		// Remove this ability to not execute twice
-				}
-			}
-
-			// Execute the rest 
-			for (Ability ability : abilityContainer) {
-				ability.execute(targetMonster, this);
-			}
 		}
 		
 		return abilityFound; 
