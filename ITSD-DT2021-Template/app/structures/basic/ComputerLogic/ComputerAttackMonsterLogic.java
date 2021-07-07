@@ -1,5 +1,6 @@
 package structures.basic.ComputerLogic;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -19,6 +20,21 @@ public class ComputerAttackMonsterLogic {
 	public ComputerAttackMonsterLogic(ComputerPlayer p) {
 		this.player = p;
 		this.gameBoard = p.getGameBoard();
+	}
+	
+	public ArrayList <ComputerInstruction> computerAttacks(){
+		ArrayList <ComputerInstruction> list = new ArrayList<ComputerInstruction>();
+		
+		ArrayList <Monster> monstersThatCanAttack = this.monstersThatCanAttack();
+		
+		if (monstersThatCanAttack.isEmpty()) return list;
+		
+		MonsterTargetOption [] monstersAndTheirListOfTargets = this.getMonstersPossTargets(monstersThatCanAttack, gameBoard);
+		
+		list = this.matchMonsterAndTarget(monstersAndTheirListOfTargets);
+		
+		return list;
+		
 	}
 	
 	private ArrayList<Monster> monstersThatCanAttack(){
@@ -56,11 +72,39 @@ public class ComputerAttackMonsterLogic {
 		
 		if (targOptsList == null) return list;
 		
-		HashSet <Monster> targets = new HashSet<Monster>();
-		int j =0;
+		Arrays.sort(targOptsList);
+		
+		HashSet <Tile> targets = new HashSet<Tile>();
+		
 		int k = 0;
 		for (int i = 0; i<targOptsList.length; i++) {
-			//need to implement solution similar to tile algs in move logic
+			
+			Tile targTile = targOptsList[i].getList().get(k);
+			
+			if (!targets.contains(targTile)) {
+				ComputerInstruction inst = new ComputerInstruction (targOptsList[i].getM(), targTile);
+				list.add(inst);
+				targets.add(targTile);
+				continue;
+			}
+			
+			else {
+				do {
+					
+					k++;
+					targTile = targOptsList[i].getList().get(k);
+					
+				}while(targets.contains(targTile) && k < targOptsList[i].getList().size());
+				
+				if (!targets.contains(targTile)) {
+					ComputerInstruction inst = new ComputerInstruction (targOptsList[i].getM(), targTile);
+					list.add(inst);
+					targets.add(targTile);
+				}
+				
+				k=0;
+			}
+			
 		}
 		
 		return list;
@@ -90,9 +134,13 @@ public class ComputerAttackMonsterLogic {
 			this.m = m;
 			this.b =b;
 			list = b.unitAttackableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getAttackRange(), m.getMovesLeft());
-			this.checkValidTargets();
-			this.scoreTileList();
-			Collections.sort(list);
+			if (!list.isEmpty()) {
+				this.checkValidTargets();
+				this.scoreTileList();
+				Collections.sort(list);
+				this.score = list.get(0).getScore();
+			}
+			
 		}
 		
 		private void checkValidTargets() {
@@ -119,9 +167,9 @@ public class ComputerAttackMonsterLogic {
 
 		@Override
 		public int compareTo(MonsterTileOption o) {
-		
-			if (this.score > o.getScore()) return 1;
-			else if (this.score < o.getScore()) return -1;
+		//same approach as in move logic, trying to order from highest to lowest score
+			if (this.score > o.getScore()) return -1;
+			else if (this.score < o.getScore()) return 1;
 			else return 0;
 		}
 	}

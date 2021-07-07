@@ -23,6 +23,8 @@ public class EndTurnClicked implements EventProcessor{
 	
 	@Override
 	public void processEvent (ActorRef out, GameState gameState, JsonNode message){
+		
+		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
 		gameState.endTureStateChange();
 		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
 			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();

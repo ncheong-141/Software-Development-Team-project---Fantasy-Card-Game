@@ -16,6 +16,7 @@ public class ComputerPlayerTurn {
 	ComputerAttackMonsterLogic al;
 
 	public void processComputerActions(ActorRef out, GameState g) {
+		g.getPlayerTwo().setGameBoard(g.getBoard());
 		ComputerPlayer compPlayer = g.getPlayerTwo();
 		AIUnitStateController controller = new AIUnitStateController(out, g);
 		
@@ -27,7 +28,9 @@ public class ComputerPlayerTurn {
 			controller.summonMonster(cI.getCard(), cI.getTargetTile());
 		}
 		
-		//process attack bf moving!!
+		attacksToPerform = compPlayer.performAttacks();
+		
+		//need to double check method for attack in AI state controller
 
 		monstersToMove = compPlayer.moveMonsters();
 		
@@ -43,7 +46,7 @@ public class ComputerPlayerTurn {
 		
 		//method to return list of monsters to perform an attack (+ move if relevant)
 		
-		al.smartAttack();
+		
 		
 		
 		

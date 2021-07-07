@@ -181,8 +181,9 @@ public class ComputerMoveMonsterLogic {
 				@Override
 				public int compareTo(MonsterTileOption o) {
 				
-					if (this.score > o.getScore()) return 1;
-					else if (this.score < o.getScore()) return -1;
+					//NOTE: if want to order in desc order - hope this works
+					if (this.score > o.getScore()) return -1;
+					else if (this.score < o.getScore()) return 1;
 					else return 0;
 				}
 			}

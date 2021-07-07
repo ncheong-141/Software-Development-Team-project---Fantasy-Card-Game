@@ -54,6 +54,11 @@ public class ComputerPlayer extends Player {
 		return move.movesUnits();
 	}
 	
+	public ArrayList <structures.basic.ComputerLogic.ComputerInstruction> performAttacks(){
+		ComputerAttackMonsterLogic attack = new ComputerAttackMonsterLogic (this);
+		return attack.computerAttacks();
+	}
+	
 	//leaving this method here to be used by both play cards and move logic
 	public static void calcTileMoveScore(Monster m, Board b, Tile targetTile) {
 		//tile where monster is currently located

@@ -14,7 +14,8 @@ public class Avatar extends Monster {
 	
 
 
-	public void avatarSetUp(Player p) {
+	public void avatarSetUp() {
+		this.HP = 20;
 		this.maxHP = 20;
 		this.attackValue = 2;
 		this.movesLeft = 2;			
@@ -22,14 +23,14 @@ public class Avatar extends Monster {
 		this.attacksMax = 1;		
 		this.attackRange = 1;		
 		this.onCooldown = false;
-		this.setOwner(p);
+		//this.setOwner(p);
 	}
 	
 	//when the owner is set for an avatar, this method also takes care of assigning the avatar to the relevant 
 	//starting position, which is based on the type of owner
 	public void setOwner(Player p) {
 		this.owner = p;
-		this.HP = p.getHealth();
+		//this.HP = p.getHealth();
 	}
 
 	

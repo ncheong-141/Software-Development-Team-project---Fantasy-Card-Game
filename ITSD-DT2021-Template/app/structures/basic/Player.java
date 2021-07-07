@@ -21,7 +21,8 @@ public class Player {
 	protected int mana;
 	protected Hand hand;
 	protected Deck deck;
-	protected Avatar avatar;
+	
+	
 	private int test =1;
 
 	public Player() {
@@ -31,6 +32,7 @@ public class Player {
 		 * this.deck = new Deck(); this.hand = new Hand(); this.hand.initialHand(deck);
 		 */
 	}
+	
 	
 	//add Mana and check maximum	
 	public void addMana(int addMana) {
@@ -78,14 +80,7 @@ public class Player {
 	}
 		
 	
-// getters & setters	
-	public Avatar getAvatar() {
-		return avatar;
-	}
-	
-	public void setAvatar(Avatar a) {
-		this.avatar = a;	
-	}
+
 	
 	public int getHealth() {
 		return health;

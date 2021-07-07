@@ -40,8 +40,6 @@ public class GameState {
 	private int			 	turnCount;			// Tracker variable for the current number of turns 
 	private static boolean 	playerDead;			// Boolean variable which is set when either avatar is defeated
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
-	private EndTurnClicked e;					// 
-	private ActorRef out;						// Do we need this?
 
 
 	
@@ -94,16 +92,18 @@ public class GameState {
 		gameBoard = new Board();
 		
 		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
-		humanAvatar.avatarSetUp(playerOne);
+		humanAvatar.avatarSetUp();
+		humanAvatar.setOwner(playerOne);
 		
 		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
-		computerAvatar.avatarSetUp(playerTwo);
+		computerAvatar.avatarSetUp();
+		computerAvatar.setOwner(playerTwo);
 		
 		System.out.println("board: " + this.getBoard());
 		System.out.println();
 		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
 		System.out.println();
-		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner());
+		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/
@@ -199,7 +199,7 @@ public class GameState {
 		emptyMana(); //empty mana for player who ends the turn
 	//	e.toCoolDown(this); //switch avatars status for current turnOwner
 	    deselectAllEntities();
-		GeneralCommandSets.boardVisualReset(this.out, this);  //visual
+		
 		if (isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
 			gameOver();  // if not, gameover
 		} else {
@@ -242,26 +242,6 @@ public class GameState {
 	
 	/** methods to change GameState data when EndTurn**/
 	
-	
-	
-	
-
-	
-	public void setDeckForStart() {	
-		deckPlayerOne = new Deck();
-		deckPlayerOne.deckOne();
-		playerOne.setDeck(deckPlayerOne);
-		
-		deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
-		playerOne.setDeck(deckPlayerTwo);
-	
-	}
-	
-	public void setHandForStart() {
-		playerOne.getHand().initialHand(deckPlayerOne);
-		playerTwo.getHand().initialHand(deckPlayerTwo);
-	}
 	
 	
 	/** Generalised method for finding if any monsters require their ability to be executed.

@@ -184,15 +184,24 @@ public class Board {
 
 	//3)Method returns player's avatar tile position 
 	public Tile ownAvatarTile (Player p) {
+		Tile avatarTile = null;
+		for (int i = 0; i <gameBoard.length; i++) {
+			for (int k =0; k<gameBoard[0].length; k++) {
+				if (gameBoard[i][k].getUnitOnTile() != null && (gameBoard[i][k].getUnitOnTile() instanceof Avatar) && gameBoard[i][k].getUnitOnTile().getOwner()==p) {
+					avatarTile = gameBoard[i][k];
+				}
+			}	
+		}
+		
+		return avatarTile;
+	}
 
-		int x = p.getAvatar().getPosition().getTilex(); int y =
-				p.getAvatar().getPosition().getTiley();
-
-		return this.getTile(x, y); }
+		
 
 	//4) Method return enemy avatar's tile position 
-	public Tile enemyAvatarTile (Player p, GameState g) { if (p instanceof HumanPlayer) { int x =
-			g.getComputerAvatar().getPosition().getTilex(); int y =
+	public Tile enemyAvatarTile (Player p, GameState g) { 
+		if (p instanceof HumanPlayer) { 
+			int x = g.getComputerAvatar().getPosition().getTilex(); int y =
 			g.getComputerAvatar().getPosition().getTiley(); return this.getTile(x, y); }
 	else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
 			g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }

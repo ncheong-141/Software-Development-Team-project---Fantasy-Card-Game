@@ -63,15 +63,24 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
 
-		ArrayList<Tile> boardTiles = g.getBoard().getAllTilesList();
+		//ArrayList<Tile> boardTiles = g.getBoard().getAllTilesList();
 		
-		GeneralCommandSets.drawBoardTiles(out, boardTiles, 0);
-
+		//GeneralCommandSets.drawBoardTiles(out, boardTiles, 0);
+		Board board = g.getBoard();
+		
+		for (int i = 0; i<board.getGameBoard().length; i++) {
+			for (int k = 0; k<board.getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, board.getGameBoard()[i][k], 0);
+			}
+			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		}
 		
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 		Avatar humanAvatar = g.getHumanAvatar();
 		Avatar computerAvatar = g.getComputerAvatar();
+		
+		
 		
 		
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
@@ -101,8 +110,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}	
 		
-		g.getPlayerTwo().setGameBoard(g.getBoard());
-
+		//g.getPlayerTwo().setGameBoard(g.getBoard());
+		//try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}	
 	}
 	
 	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
