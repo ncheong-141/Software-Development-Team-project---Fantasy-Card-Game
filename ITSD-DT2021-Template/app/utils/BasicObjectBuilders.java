@@ -54,6 +54,16 @@ public class BasicObjectBuilders {
 			Card card = mapper.readValue(new File(cardConfigFile), classtype);
 			card.setId(id);
 			card.setConfigFile(unitConfig);
+			if(AbilityToUnitLinkage.UnitAbility.containsKey(card.getCardname())) {
+				for(Ability a: AbilityToUnitLinkage.UnitAbility.get(card.getCardname())) {
+				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
+				}
+			}
+			if(card.getCardAttack()>=0) {
+				card.setAssociatedClass(Monster.class);
+			}else if(card.getCardAttack()<0) {
+				card.setAssociatedClass(Spell.class);
+			}
 			return card;
 		} catch (Exception e) {
 			e.printStackTrace();
