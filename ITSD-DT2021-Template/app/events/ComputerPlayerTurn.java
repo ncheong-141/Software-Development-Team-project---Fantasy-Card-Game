@@ -11,9 +11,9 @@ import structures.basic.ComputerPlayer;
 import structures.basic.Tile;
 
 public class ComputerPlayerTurn {
-	
-	
-	ComputerAttackMonsterLogic al;
+	private ArrayList<Tile> attackerList;
+	private Tile target;
+	private ComputerAttackMonsterLogic al;
 
 	public void processComputerActions(ActorRef out, GameState g) {
 		ComputerPlayer compPlayer = g.getPlayerTwo();
@@ -43,7 +43,20 @@ public class ComputerPlayerTurn {
 		
 		//method to return list of monsters to perform an attack (+ move if relevant)
 		
-		al.smartAttack();
+		
+		//attack process
+		al = new ComputerAttackMonsterLogic (compPlayer);
+		attackerList = al.findAttacker();
+		for (Tile attacker : attackerList) {
+			target = al.selectAttackTarget(attacker);
+			if (target == null) {
+				continue;
+			}
+			else {
+				controller.unitAttack(attacker, target);
+			}
+		}
+		
 		
 		
 		
