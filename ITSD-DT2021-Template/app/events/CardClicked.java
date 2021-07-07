@@ -44,18 +44,18 @@ public class CardClicked implements EventProcessor{
 		int handPosition = message.get("position").asInt();//gets position in hand of clicked card
 		
 		//checks if a card had previously been selected, if so it removes any traces of this
-		if(gameState.getPlayerOne().getHand().getSelectedCard()!=null){
-			Hand tempHand= gameState.getPlayerOne().getHand();
-			tempHand= gameState.getPlayerOne().getHand();
-			gameState.getPlayerOne().getHand().setSelectedCard(null);
+		if(gameState.getTurnOwner().getHand().getSelectedCard()!=null){
+			Hand tempHand= gameState.getTurnOwner().getHand();
+			tempHand= gameState.getTurnOwner().getHand();
+			gameState.getTurnOwner().getHand().setSelectedCard(null);
 		}
 		
 		//creates a placeholder for the clicked card
 			Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
 			
 		//tells the game state that a card in hand is to be played
-			gameState.getPlayerOne().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
-			gameState.getPlayerOne().getHand().setSelCarPos(handPosition);
+			gameState.getTurnOwner().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
+			gameState.getTurnOwner().getHand().setSelCarPos(handPosition);
 			
 		//checks that the clicked card is a monster card using its attack value
 			// Check if the card has an ability that affects before summoning
@@ -98,6 +98,3 @@ public class CardClicked implements EventProcessor{
 			}
 	}
 }
-
-
-
