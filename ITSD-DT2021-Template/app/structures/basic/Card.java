@@ -41,7 +41,7 @@ public class Card implements Comparable<Card> {
 		this.bigCard = bigCard;
 		this.configFile="";
 		this.abilityList=new ArrayList<Ability>();
-		this.associatedUnitClass = Card.class;
+		this.associatedClass = Card.class;
 	}
 	
 	
@@ -158,10 +158,10 @@ public class Card implements Comparable<Card> {
 		this.abilityList = abilityList;
 	}
 	public Class<?> getAssociatedClass() {
-		return associatedUnitClass;
+		return associatedClass;
 	}
 	public void setAssociatedClass(Class<?> associatedUnitClass) {
-		this.associatedUnitClass = associatedUnitClass;
+		this.associatedClass = associatedUnitClass;
 	}
 }
 
