@@ -125,7 +125,7 @@ public class GameState {
 	}
 
 	public void setPlayerDead(boolean playerDead) {
-		this.playerDead = playerDead;
+		GameState.playerDead = playerDead;
 	}
 
 	public Player getTurnOwner() {
@@ -224,20 +224,19 @@ public class GameState {
 	public void endTureStateChange() {  
 		
 		emptyMana(); //empty mana for player who ends the turn
-	//	e.toCoolDown(this); //switch avatars status for current turnOwner
+		toCoolDown(); //switch avatars status for current turnOwner
 	    deselectAllEntities();
 		GeneralCommandSets.boardVisualReset(this.out, this);  //visual
 		if (isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
 			gameOver();  // if not, gameover
 		} else {
 			getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());  //if holds enough card, get card from deck
-			Card card = turnOwner.getDeck().getCardList().get(0);
-			int handPos = (turnOwner.getHand().getHandList().size())-1;
-		
+			int oldCardSize = (turnOwner.getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
+			GeneralCommandSets.drawCardsInHand(out, this, oldCardSize, turnOwner.getHand().getHandList()); //refresh hand ,show with one card added
 		}
 		turnChange(); // turnOwner exchanged	
 		giveMana(); //give turnCount mana to the player in the beginning of new turn
-	//	e.toCoolDown(this); //switch avatars status for new turnOwner in the beginning of new turn
+		toCoolDown(); //switch avatars status for new turnOwner in the beginning of new turn
 	}
 	
 	
@@ -267,8 +266,8 @@ public class GameState {
 		ArrayList<Monster> toCool = getBoard().friendlyUnitList(getTurnOwner());				
 		for(Monster m : toCool){
 				m.toggleCooldown();				
-			}
 		}
+	}
 	
 	/** methods to change GameState data when EndTurn**/
 	
