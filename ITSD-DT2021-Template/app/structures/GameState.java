@@ -34,28 +34,36 @@ public class GameState {
 	/** GameState attributes **/
 	private Board 			gameBoard;			// Board object which holds all Unit positions aswell as contains operations to find specific tiles sets. 
 	private HumanPlayer 	playerOne;			// Player one, the human player which holds all data for the player such as Hand and Deck for holding current cards. Also holds the control flow for drawing Cards from a Deck etc 
-	private ComputerPlayer 	playerTwo;			// Player two, computer player which holds the same as the above + AI logic for ranking combinations of instructions and actioning them. 
+	private ComputerPlayer 	playerTwo;			// Player two, computer player which holds the same as the above + AI logic for ranking combinations of instructions and actioning them.	
 	private Avatar 			humanAvatar;		// Do we need avatars in gameState? can it not just be in Board? 
 	private Avatar 			computerAvatar;
 	private int			 	turnCount;			// Tracker variable for the current number of turns 
 	private static boolean 	playerDead;			// Boolean variable which is set when either avatar is defeated
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
-	private EndTurnClicked e;					// 
-	private ActorRef out;						// Do we need this?
+	
+	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
-	private Monster trackMonster; 				// YC added
-	private Tile monsterLocation; 				// YC added
+
+
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
+	
+	// Need to remove
+	EndTurnClicked e; 
+	
+	/** DEBUG/TESTING VARIABLES (initialised in own method called externally) */
+	private HumanPlayer playerTwoHuman; 
+	
 
 	/** Constructor **/
 	public GameState() {
-
+		
 		/* Set attributes */ 
 		turnCount = 0;
 		playerDead = false;
-		turnOwner = playerOne;
+		
+		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
 		
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
@@ -68,9 +76,13 @@ public class GameState {
 		// Instantiate players 								
 		playerOne = new HumanPlayer();
 		playerOne.setDeck(deckPlayerOne);
-
+		
+		
+		
 		playerTwo = new ComputerPlayer();
+		playerTwo.setGameBoard(gameBoard);
 		playerTwo.setDeck(deckPlayerTwo);
+		
 		
 		for (Card c : playerOne.getDeck().getCardList()) {
 			System.out.println("cardname " +c.getCardname());
@@ -90,11 +102,22 @@ public class GameState {
 		
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
-		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, gameBoard, Avatar.class);
-		humanAvatar.setOwner(playerOne);
+		
 
-		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, gameBoard, Avatar.class);
+		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
+		humanAvatar.avatarSetUp();
+		humanAvatar.setOwner(playerOne);
+		
+		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
+		computerAvatar.avatarSetUp();
 		computerAvatar.setOwner(playerTwo);
+		
+		System.out.println("board: " + this.getBoard());
+		System.out.println();
+		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
+		System.out.println();
+		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
+
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/
@@ -156,14 +179,36 @@ public class GameState {
 		playerOne = h;
 		playerTwo = c;
 	}
+	
+	public void setTwoPlayerMode(HumanPlayer h1) {
+		playerTwoHuman = h1; 
+
+		Deck deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
+		playerTwoHuman.setDeck(deckPlayerTwo);
+		
+		Hand handPlayerTwo = new Hand();
+		playerTwoHuman.setHand(handPlayerTwo);
+	}
+	
+	public HumanPlayer getPlayerTwoHuman() {
+		return playerTwoHuman;
+	}
 
 	public static void gameOver() {
 		playerDead = true;		
 	}
 
-	// Errr we have two of these!
 	public Board getBoard() {
 		return gameBoard; 
+	}
+	
+	public ArrayList<Tile> getTileAdjustedRangeContainer() {
+		return tileAdjustedRangeContainer; 
+	}
+	
+	public void setTileAdjustedRangeContainer(ArrayList<Tile> tilesToHighlight) {
+		tileAdjustedRangeContainer = tilesToHighlight;
 	}
 
 
@@ -181,91 +226,136 @@ public class GameState {
 		if(this.getTurnOwner().getHand().getSelectedCard() != null) {
 			this.getTurnOwner().getHand().setSelectedCard(null);
 		}
-
+		
+		// Clear the temp TileRange container between actions 
+		tileAdjustedRangeContainer.clear(); 
 	}
 
-	/** AI methods **/
-	public void computerEnd() {  
+	/** methods to change GameState data when EndTurn**/
+	public void endTureStateChange() {  
 		
-		e.emptyMana(this); //empty mana for player who ends the turn
-		e.toCoolDown(this); //switch avatars status for current turnOwner
+		emptyMana(); //empty mana for player who ends the turn
+	//	e.toCoolDown(this); //switch avatars status for current turnOwner
 	    deselectAllEntities();
-		GeneralCommandSets.boardVisualReset(this.out, this); 
-		deselectAllEntities();	 //current turnOwner Hand is off?
-
-		getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());
-
-		turnChange(); // turnOwner exchanged	
-		if (e.isDeckEmpty(this)) {  //check if both players have enought card in deck left for new turn
-			gameOver();  // if not, gameover(?)
-		}
-		e.giveMana(this); //give turnCount mana to the player in the beginning of new turn
-		e.toCoolDown(this); //switch avatars status for new turnOwner in the beginning of new turn
-		//getTurnOwner().getHand().setPlayingMode(true); //current turnOwner hand turn on
-	}
-	
-	
-	// YC add
-	public Tile locateMonster(Monster trackMonster) {
-		this.monsterLocation = this.getBoard().getTile(trackMonster.getPosition().getTilex(), trackMonster.getPosition().getTiley());
-		return monsterLocation;
-	}
-	
-	
-	public void setDeckForStart() {	
-		deckPlayerOne = new Deck();
-		deckPlayerOne.deckOne();
-		playerOne.setDeck(deckPlayerOne);
 		
-		deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
-		playerOne.setDeck(deckPlayerTwo);
-	
+		if (isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
+			gameOver();  // if not, gameover
+		} else {
+			getTurnOwner().getHand().drawCard(this.getTurnOwner().getDeck());  //if holds enough card, get card from deck
+		}
+		turnChange(); // turnOwner exchanged	
+		giveMana(); //give turnCount mana to the player in the beginning of new turn
+	//	e.toCoolDown(this); //switch avatars status for new turnOwner in the beginning of new turn
 	}
 	
-	public void setHandForStart() {
-		playerOne.getHand().initialHand(deckPlayerOne);
-		playerTwo.getHand().initialHand(deckPlayerTwo);
+	
+	//give turnCount mana to the player just in the beginning of new turn	
+	public void giveMana() {  
+			getTurnOwner().setMana(getTurnCount());  
 	}
+	
+
+	public void emptyMana() {
+		getTurnOwner().setMana(0);
+
+	}
+	
+	// check if players decks are are empty 
+	public boolean isDeckEmpty() {
+		ArrayList<Card> turnOwnerDeck = getTurnOwner().getDeck().getCardList();
+		int deckCardLeft = turnOwnerDeck.size();
+		if(deckCardLeft < 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	//cooldown monsters
+	public void toCoolDown() {
+		ArrayList<Monster> toCool = getBoard().friendlyUnitList(getTurnOwner());				
+		for(Monster m : toCool){
+				m.toggleCooldown();				
+			}
+		}
+	
+	/** methods to change GameState data when EndTurn**/
+	
 	
 	
 	/** Generalised method for finding if any monsters require their ability to be executed.
 	 * 	Called in relevant places
 	 ***/
-	public void checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
+	public boolean checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
 
+		boolean abilityFound = false; 
+		
 		// Loop over all tiles
 		for (Tile tile : this.getBoard().getAllTilesList()) {
 
 			// Container for containing all executable abilities
 			ArrayList<Ability> abilityContainer = new ArrayList<Ability>(2); 
 
-			// Loop over abilities and get executing ones
-			for (Ability ability : tile.getUnitOnTile().getMonsterAbility()) {
+			//Check if a unit is on the tile
+			if (tile.getUnitOnTile() != null) {
+				
+				// Check if the unit has abilities
+				if (tile.getUnitOnTile().getMonsterAbility() != null) {
+					
+					// Loop over abilities and get executing ones
+					for (Ability ability : tile.getUnitOnTile().getMonsterAbility()) {
 
-				if (ability.getCallID() == callID) {
-					abilityContainer.add(ability);
+						if (ability.getCallID() == callID) {
+							abilityContainer.add(ability);
+							abilityFound = true;
+						}
+					}
+
+					// Execute all contstruction abilities first
+					for (Ability ability : abilityContainer) {
+
+						if (ability.getCallID() == Call_IDs.construction) {
+							ability.execute(targetMonster, this); 
+							abilityContainer.remove(ability);		// Remove this ability to not execute twice
+						}
+					}
+
+					// Execute the rest 
+					for (Ability ability : abilityContainer) {
+						ability.execute(targetMonster, this);
+					}
 				}
+
 			}
 
-			// Execute all contstruction abilities first
-			for (Ability ability : abilityContainer) {
-
-				if (ability.getCallID() == Call_IDs.construction) {
-					ability.execute(targetMonster, this); 
-					abilityContainer.remove(ability);		// Remove this ability to not execute twice
-				}
-			}
-
-			// Execute the rest 
-			for (Ability ability : abilityContainer) {
-				ability.execute(targetMonster, this);
-			}
+		}
+		
+		return abilityFound; 
+	}
+	
+	
+	/** 
+	 * Method for obtaining the enemy player reference 
+	 */
+	public Player getEnemyPlayer() {
+		
+		// Check if the turn owner is instance of human player, if so return the computer player
+		if (this.getTurnOwner() instanceof HumanPlayer) {
+			return this.getPlayerTwo(); 
+		}
+		else {
+			return this.getPlayerOne(); 
 		}
 	}
+	
 			// To do:
 			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
 			// Move hand instantiation/set up from gamestate into Player constructor
 			// Move AbilityUnitLinkage call into GameState
+
+	public static void computerEnd() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

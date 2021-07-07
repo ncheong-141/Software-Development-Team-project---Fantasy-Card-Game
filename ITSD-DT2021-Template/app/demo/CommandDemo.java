@@ -99,7 +99,7 @@ public class CommandDemo {
 		}
 		
 		// Draw cards
-		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHandList());
+		//GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHandList());
 		
 		
 	}
@@ -296,62 +296,7 @@ public class CommandDemo {
 
 	public static void executeTileHighlightDemo (ActorRef out, GameState g) {
 
-		Board board = g.getBoard();
-
-		Tile tone = board.getTile(3,1);
-		Tile tTwo = board.getTile(4, 3);
-		Tile tThree = board.getTile(2, 4);
-		Tile tFour = board.getTile(4, 1);
-
-		// loadCard
-		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-
-		// drawUnit
-
-		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		fire_spitter.setPositionByTile(tone);
-		tone.addUnit(fire_spitter);
-		BasicCommands.drawUnit(out, fire_spitter, tone);
-
-		// drawUnit
-
-		Monster fire_spitterTwo = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		fire_spitterTwo.setPositionByTile(tTwo);
-		tTwo.addUnit(fire_spitterTwo);
-		BasicCommands.drawUnit(out, fire_spitterTwo, tTwo);
-
-
-		// drawUnit
-
-		Monster fire_spitterThree = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		fire_spitterThree.setPositionByTile(tThree);
-		tThree.addUnit(fire_spitterThree);
-		BasicCommands.drawUnit(out, fire_spitterThree, tThree);
-
-		Monster fire_spitterFour = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, (Player) g.getPlayerTwo(), Monster.class);
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		fire_spitterFour.setPositionByTile(tFour);
-		tFour.addUnit(fire_spitterFour);
-		BasicCommands.drawUnit(out, fire_spitterFour, tFour);
-
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-
-		//ArrayList <Tile> listMove = g.getGameBoard().unitMovableTiles(1, 2, 2);
-
-		/*
-		 * for (Tile t : listMove) { BasicCommands.drawTile(out, t, 1); } try
-		 * {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
-		 */
-		HashSet<Tile> list = g.getBoard().unitAttackableTiles(1, 2, 2,3);
-
-		for (Tile t : list) {
-			BasicCommands.drawTile(out, t, 2);
-		}
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		
 	}
 
 	public static void executeAbilityDemo (ActorRef out, GameState g) {

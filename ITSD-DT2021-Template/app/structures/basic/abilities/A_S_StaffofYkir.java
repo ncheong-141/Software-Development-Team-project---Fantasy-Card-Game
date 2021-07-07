@@ -32,10 +32,10 @@ public class A_S_StaffofYkir implements Ability {
 		
 		int additionalAttackValue = 2; 
 		
-		// Add two attack to avatar
+		// Add two attack to avatar (done in buff())
 		if (targetMonster instanceof Avatar) {
 			System.out.println("Avatar attack: " + targetMonster.getAttackValue());
-			targetMonster.setAttackValue(targetMonster.getAttackValue() + additionalAttackValue);
+			targetMonster.buffAttack(additionalAttackValue);
 			System.out.println("Avatar attack after: " + targetMonster.getAttackValue());
 
 			return true; 
