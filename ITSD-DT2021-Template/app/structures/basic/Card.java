@@ -28,6 +28,7 @@ public class Card implements Comparable<Card> {
 	
 	private String configFile;
 	private ArrayList<Ability> abilityList;
+	private Class<?> associatedClass;
 	
 	public Card() {};
 	
@@ -40,6 +41,7 @@ public class Card implements Comparable<Card> {
 		this.bigCard = bigCard;
 		this.configFile="";
 		this.abilityList=new ArrayList<Ability>();
+		this.associatedUnitClass = Card.class;
 	}
 	
 	
@@ -75,6 +77,7 @@ public class Card implements Comparable<Card> {
 	public int getCardAttack() {
 		return this.getBigCard().getAttack();
 	}
+	
 	
 	//helper method to show where card is playable
 	public boolean playableAnywhere() {
@@ -142,29 +145,24 @@ public class Card implements Comparable<Card> {
 	public void setBigCard(BigCard bigCard) {
 		this.bigCard = bigCard;
 	}
-
 	public void setConfigFile(String configFile) {
 		this.configFile = configFile;
 	}
-	
 	public String getConfigFile() {
 		return this.configFile;
 	}
-
 	public ArrayList<Ability> getAbilityList() {
 		return abilityList;
 	}
-
 	public void setAbilityList(ArrayList<Ability> abilityList) {
 		this.abilityList = abilityList;
 	}
-	
+	public Class<?> getAssociatedClass() {
+		return associatedUnitClass;
+	}
+	public void setAssociatedClass(Class<?> associatedUnitClass) {
+		this.associatedUnitClass = associatedUnitClass;
+	}
 }
 
 
-// To do:
-// Add modifiers to constructor attributes
-// targetEnemy needs to loop over Abilities ArrayList (not just check one)
-// Change from using Builder in hasAbility method to another check for ability
-// Add Ability ArrayList, link with UnitLinkage and sort out Builders and associated object construction methods
-// Add a classType indicator attribute (instead of the bigCard method check right now)
