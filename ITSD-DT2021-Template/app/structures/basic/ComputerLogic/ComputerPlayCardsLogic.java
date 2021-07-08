@@ -53,7 +53,17 @@ public class ComputerPlayCardsLogic {
 		//method returns playable cards from the player's hand based on the mana cost
 		private ArrayList <Card> playableCards(){
 			ArrayList<Card> cardList = new ArrayList<Card>();
-			for (Card c : this.hand.getHandList()) if (c.getManacost() <= player.getMana()) cardList.add(c);
+			
+			System.out.println("player tot mana: " + player.getMana());
+			for (Card c : this.hand.getHandList()) {
+				System.out.print(c.getManacost());
+				if (c.getManacost() <= player.getMana()) { 
+					System.out.println("adding card");
+					cardList.add(c);
+				
+				}
+			
+			}
 			return cardList;
 		}
 		

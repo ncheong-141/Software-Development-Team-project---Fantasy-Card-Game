@@ -50,7 +50,7 @@ public class GameState {
 	public GameState() {
 		
 		/* Set attributes */ 
-		turnCount = 0;
+		turnCount = 1;
 		playerDead = false;
 		
 		// Deck instantiations 
@@ -196,7 +196,7 @@ public class GameState {
 	/** methods to change GameState data when EndTurn**/
 	public void endTureStateChange() {  
 		
-		emptyMana(); //empty mana for player who ends the turn
+		//emptyMana(); //empty mana for player who ends the turn
 	//	e.toCoolDown(this); //switch avatars status for current turnOwner
 	    deselectAllEntities();
 		
@@ -213,7 +213,7 @@ public class GameState {
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
-			getTurnOwner().setMana(getTurnCount());  
+			getTurnOwner().setMana(getTurnCount()+1);  
 	}
 	
 	//empty mana for player who ends the turn

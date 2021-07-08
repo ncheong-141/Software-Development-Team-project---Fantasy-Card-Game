@@ -58,7 +58,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		playerCardSetUp(out, gameState, message);
 		//CommandDemo.executeTileHighlightDemo(out, g);
 		//CommandDemo.executeAbilityDemo(out, gameState);
-
+		
+		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
+		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth());
 	}
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
@@ -116,7 +118,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	
 	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
 		g.getPlayerOne().setMana(2);
-		g.getPlayerTwo().setMana(2);
+		g.getPlayerTwo().setMana(9);
 		
 		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
