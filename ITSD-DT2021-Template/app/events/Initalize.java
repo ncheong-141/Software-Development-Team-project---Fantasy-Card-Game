@@ -14,6 +14,7 @@ import structures.basic.Board;
 import structures.basic.Card;
 import structures.basic.ComputerPlayer;
 import structures.basic.HumanPlayer;
+import structures.basic.Player;
 import structures.basic.Tile;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import utils.BasicObjectBuilders;
@@ -44,23 +45,14 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		// Initialising ability to unit linkage data to reference whenever loading units. 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
 
-
-		//CommandDemo.executeDemoTester(out,gameState); // this executes the command demo, comment out this when implementing your solution
-		// CommandDemo.executeDemoUnits(out, gameState);
-		//CommandDemo.executeDemoUnitsNicholas(out, gameState); 
-		//CommandDemo.executeDemoBoard(out, gameState);
-		//CommandDemo.executeDemoDeckHand(out, gameState);
-		// CommandDemo.executeDemoSummon(out, gameState);
-		//CommandDemo.executeDemoBoard(out, g);
-		//CommandDemo.executeDemoDeckHand(out, gameState);
-		//CommandDemo.executeDemoSummon(out, gameState);
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
+
 		//CommandDemo.executeTileHighlightDemo(out, g);
 		//CommandDemo.executeAbilityDemo(out, gameState);
 		
 		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
-		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth());
+		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
 	}
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
@@ -117,8 +109,10 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	}
 	
 	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
+
 		g.getPlayerOne().setMana(2);
 		g.getPlayerTwo().setMana(9);
+
 		
 		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
@@ -134,14 +128,10 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		int i = 0;
 		
-		for (Card c : g.getPlayerOne().getHand().getHandList()) {
+		for (Card c : g.getTurnOwner().getHand().getHandList()) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
-		
-		
-
-
 	}
 
 }

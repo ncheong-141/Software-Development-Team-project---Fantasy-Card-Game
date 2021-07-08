@@ -1,10 +1,10 @@
 package structures.basic.abilities;
+
 import structures.GameState;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 
-public class A_S_Truestrike implements Ability {
-	
+public class A_U_SummonAnywhere implements Ability {
 	// Ability attributes 
 	private boolean enemyTarget; 
 	private Class<? extends Monster> targetType;
@@ -13,12 +13,12 @@ public class A_S_Truestrike implements Ability {
 	
 	
 	// Constructor
-	public A_S_Truestrike(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
+	public A_U_SummonAnywhere(boolean enemyTarget, Class<? extends Monster> targetType, EffectAnimation eAnimation) {
 		this.enemyTarget = enemyTarget;
 		this.targetType = targetType; 
 		this.eAnimation = eAnimation; 
 		
-		this.callID = Call_IDs.noTimeConstraint;
+		this.callID = Call_IDs.onCardClicked;
 	}
 	
 	
@@ -26,12 +26,16 @@ public class A_S_Truestrike implements Ability {
 	
 	// ABILITY IMPLEMENTATION
 	// ================================================================================
-	// Deal 2 damage to  an enemy Unit
+	// This Unit can be summoned anywhere on the board
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		// Reduce Monster HP by 2
-		targetMonster.defend(2);
+		// This ability is called when in the SummonMonsterState
 		
+		// Set the highlight tile container (used for ability specifics) in GameState to the tiles to be highlighted
+		gameState.setTileAdjustedRangeContainer(gameState.getBoard().allFreeTiles());
+		
+		// Display in CardClicked as has connection to front end
+
 		return true; 
 	}
 	// ================================================================================

@@ -43,6 +43,106 @@ public class CommandDemo {
 	 * anything happens.
 	 */
 
+	public static void executeDemoTester(ActorRef out, GameState gameState) {
+		
+		// Instantites players, deck, hand and board done in gameSate
+		
+		
+		// Set player HP, Mana
+		gameState.getPlayerOne().setHealth(8);
+		gameState.getPlayerOne().setMana(10);
+		
+		gameState.getPlayerTwo().setHealth(8);
+		gameState.getPlayerTwo().setMana(10);
+
+		
+		// Create Card objects to use
+		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
+		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
+		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
+
+
+		// Add them to the hand
+		
+		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
+		Monster[] fmArray = new Monster[5]; 
+		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerOne(), Monster.class);
+		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerOne(), Monster.class);
+		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerOne(), Monster.class);
+		fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerOne(), Monster.class);
+		fmArray[4] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerOne(), Monster.class);
+		
+		for (int i = 0; i < fmArray.length; i++) {
+			fmArray[i].setPositionByTile(gameState.getBoard().getTile(0, i));
+			gameState.getBoard().getTile(0, i).addUnit(fmArray[i]);
+			fmArray[i].setMovesLeft(2);
+			fmArray[i].setAttacksLeft(1);
+			fmArray[i].setCooldown(false);
+		}
+		 
+		
+		/** UI **/
+		
+		// Display states
+		GeneralCommandSets.updatePlayerStats(out, gameState);
+		
+		// Draw board
+		GeneralCommandSets.boardVisualReset(out, gameState);
+		
+		// Draw avatars
+		GeneralCommandSets.drawUnitWithStats(out, gameState.getHumanAvatar(), gameState.getBoard().getTile(1, 2));
+		GeneralCommandSets.drawUnitWithStats(out, gameState.getComputerAvatar(), gameState.getBoard().getTile(7, 2));
+		
+		// Draw units 
+		for (int i = 0; i < fmArray.length; i++) {
+			GeneralCommandSets.drawUnitWithStats(out,fmArray[i], fmArray[i].getPosition().getTile(gameState.getBoard()));
+		}
+		
+		// Draw cards
+		//GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getPlayerOne().getHand().getHandList());
+		
+		
+	}
+
+	public static void executeDemoUnits(ActorRef out, GameState gameState) {
+
+		// drawTile
+		Board gameBoard = new Board();
+
+		for (int i = 0; i<gameBoard.getGameBoard().length; i++) {
+			for (int k = 0; k<gameBoard.getGameBoard()[0].length; k++) {
+				BasicCommands.drawTile(out, gameBoard.getGameBoard()[i][k], 0);
+			}
+		}
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		// loadCard
+		Card cfire_spitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 1, Card.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		// drawUnit
+		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
+		Monster fire_spitter = (Monster) BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cfire_spitter, gameState.getTurnOwner(), Monster.class);
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+
+		fire_spitter.setPositionByTile(gameBoard.getTile(3,2));
+		fire_spitter.setOwner(gameState.getTurnOwner());
+		BasicCommands.drawUnit(out, fire_spitter, gameBoard.getTile(3,2));
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+
+		// Add unit to tile ON BOARD
+		BasicCommands.addPlayer1Notification(out, "Monster added to tile", 2);
+		gameState.getBoard().getTile(3, 2).addUnit(fire_spitter);
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
+
+		// Display unit stats
+		BasicCommands.addPlayer1Notification(out, "Displaying stats of monster", 2);
+		BasicCommands.setUnitAttack(out, fire_spitter, fire_spitter.getAttackValue());
+		BasicCommands.setUnitHealth(out, fire_spitter, fire_spitter.getHP());
+		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}	
+
+	}
+
 
 	public static void executeDemoUnitsNicholas(ActorRef out, GameState g) {
 

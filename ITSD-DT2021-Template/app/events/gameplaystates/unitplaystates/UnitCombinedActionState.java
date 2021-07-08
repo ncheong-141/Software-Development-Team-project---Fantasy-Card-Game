@@ -40,12 +40,16 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			for(Ability a : currentTile.getUnitOnTile().getMonsterAbility()) {
 				if(a instanceof A_U_RangedAttacker) {
 					
+					// Attack from current tile
+					destination = currentTile; 
+					
 					System.out.println("Selected unit is a ranged attacker, can attack without moving.");
 					IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
 					UnitAttackState.execute(context);
 					break;
 				}
 			}
+			return; 
 		}
 			
 		// CombinedAction state controls state flow

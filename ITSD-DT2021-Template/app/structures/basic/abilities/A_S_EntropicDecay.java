@@ -31,7 +31,7 @@ public class A_S_EntropicDecay implements Ability {
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
 		if (!(targetMonster instanceof Avatar)) {
-			targetMonster.setHP(0);
+			targetMonster.defend(targetMonster.getMaxHP());
 			return true; 
 		}
 		else {

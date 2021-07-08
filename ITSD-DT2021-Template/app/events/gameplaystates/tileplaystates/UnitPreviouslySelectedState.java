@@ -63,7 +63,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 //			if((Math.abs(currentTile.getTilex() - targetTile.getTilex()) <= mRange && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= mRange))) {
 //				
 //			}
-			if(Math.abs(currentTile.getTilex() - targetTile.getTilex()) <=1 && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= 1)) {
+			if(Math.abs(currentTile.getTilex() - targetTile.getTilex()) <= 1 && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= 1)) {
 				
 				// Attack
 				System.out.println("Creating AttackAction substate...");

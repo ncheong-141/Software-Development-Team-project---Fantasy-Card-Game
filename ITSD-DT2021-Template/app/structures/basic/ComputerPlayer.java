@@ -11,7 +11,6 @@ public class ComputerPlayer extends Player {
 	Board gameBoard;
 	boolean playedAllPossibleCards;
 	boolean madeAllPossibleMoves;	
-
 	
 	public ComputerPlayer() {
 		super(); 
@@ -105,7 +104,7 @@ public class ComputerPlayer extends Player {
 	// after all actions, ComputerPlayer call computerEndTurn() to ends the turn
 	// Removed @Override
 	public void endTurn() {
-		GameState.computerEnd();
+//		GameState.computerEnd();
 	}	
 	
 }

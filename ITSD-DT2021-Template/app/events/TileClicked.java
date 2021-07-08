@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import akka.actor.ActorRef;
 import commands.BasicCommands;
+import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.CardPreviouslySelectedState;
 import events.gameplaystates.tileplaystates.SingleSelectedState;
@@ -89,6 +90,10 @@ public class TileClicked implements EventProcessor{
 		 * based on what the user has currently clicked (a unit or empty tile) 
 		 */
 		gameplayContext.executeAndCreateUnitStates();
+		
+		
+		// Update stats after any action 
+		GeneralCommandSets.redrawAllUnitStats(out, gameState);
 		
 		
 	}
