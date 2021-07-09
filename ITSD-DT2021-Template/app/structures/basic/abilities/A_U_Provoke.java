@@ -105,11 +105,14 @@ public class A_U_Provoke implements Ability{
 		ArrayList<Tile> threatenedTiles = new ArrayList<Tile>(10); 
 		ArrayList<Tile> provokingMonsterTiles = new ArrayList<Tile>(2);
 		
+		// Check if there is a provoking monster in action range
 		for (Tile t : actionableTiles) {
 			
-			if (t.getUnitOnTile() != null) {	// If there is a Unit and is enemy
+			// If there is a Unit and is enemy
+			if (t.getUnitOnTile() != null) {	
 				
-				if (t.getUnitOnTile().getMonsterAbility() != null) { // If it has an ability
+				// If it has an ability
+				if (t.getUnitOnTile().getMonsterAbility() != null) { 
 					for (Ability ability : t.getUnitOnTile().getMonsterAbility() ) {
 						
 						if (ability instanceof A_U_Provoke) {
@@ -254,6 +257,11 @@ public class A_U_Provoke implements Ability{
 		
 		
 		/** Set gameState temp container to use for adjusting the attack/move range **/
+	
+		// Remove tile selected monster is on (only used for tile condition considerations)
+		displayTiles.removeIf(tile -> (tile == targetMonster.getPosition().getTile(gameState.getBoard())));
+		
+		// Set output
 		gameState.setTileAdjustedRangeContainer(displayTiles);
 		return true; 
 		

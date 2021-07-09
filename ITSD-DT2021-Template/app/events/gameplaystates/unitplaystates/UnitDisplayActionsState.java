@@ -42,36 +42,43 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		// Get the newly selected unit
 		Unit newlySelectedUnit = currentTile.getUnitOnTile();
 		
-		boolean outcome = false; 
+		boolean unitPlayable = false; 
 		
-		// Check for skills which can affect where unit can move 
-		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, (Monster) newlySelectedUnit)) {
+		// Check for skills which can affect where unit can move and if it was successful (i.e. tile container not empty)
+		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, (Monster) newlySelectedUnit) 
+				&& !context.getGameStateRef().getTileAdjustedRangeContainer().isEmpty()) {
 			 
 			System.out.println("Using Ability version of highlighting tiles.");
+
+			// Draw out only playable tiles due to external factors such as abilities
+			ArrayList<Tile> displayMoveableTiles = new ArrayList<Tile>(10); 
+			ArrayList<Tile> displayAttackableTiles = new ArrayList<Tile>(10);
 			
-		
-			if (!context.getGameStateRef().getTileAdjustedRangeContainer().isEmpty()) {
-				 // Draw out only playable tiles due to external factors such as abilities
-				 GeneralCommandSets.drawBoardTiles(context.out, context.getGameStateRef().getTileAdjustedRangeContainer(), 2);
-				 
-				 // Set boolean to control unit selected
-				 outcome = true;
-				 
-				 // Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
-				//  newlySelectedUnit.setProvoked(); 
+			for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
+				if (t.getUnitOnTile() != null) {
+					displayAttackableTiles.add(t);
+				}
+				else { 
+					displayMoveableTiles.add(t);
+				}
 			}
-			else {
-				outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
-			}
+			GeneralCommandSets.drawBoardTiles(context.out, displayMoveableTiles, 1);
+			GeneralCommandSets.drawBoardTiles(context.out, displayAttackableTiles, 2);
+
+			// Set boolean to control unit selected
+			unitPlayable = true;
+
+			// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
+			//  newlySelectedUnit.setProvoked(); 
 
 		}
 		else {
 			// Display unit selected actions
-			outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
+			unitPlayable = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
 		}
 
 		
-		if(outcome) {
+		if(unitPlayable) {
 			context.deselectAllAfterActionPerformed();
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
 		} else {
