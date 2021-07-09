@@ -68,7 +68,7 @@ public class GameState {
 		
 
 		/* two player mode (comment or uncomment */
-		twoPlayerMode(); 
+		//twoPlayerMode(); 
 		
 		if (twoPlayerMode != true) {
 			
@@ -105,23 +105,23 @@ public class GameState {
 		
 
 		// Chiara's Avatar fix
-//		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
-//		humanAvatar.avatarSetUp();
-//		humanAvatar.setOwner(playerOne);
-//		
-//		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
-//		computerAvatar.avatarSetUp();
-//		computerAvatar.setOwner(playerTwo);
-//		
-//		System.out.println("board: " + this.getBoard());
-//		System.out.println();
-//		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
-//		System.out.println();
-//		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
+		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
+		humanAvatar.avatarSetUp();
+		humanAvatar.setOwner(playerOne);
+		
+		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
+		computerAvatar.avatarSetUp();
+		computerAvatar.setOwner(playerTwo);
+		
+		System.out.println("board: " + this.getBoard());
+		System.out.println();
+		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
+		System.out.println();
+		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 
 		// Avatar instantiation
-		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
-		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
+		//humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
+		//computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
 
 	}
 

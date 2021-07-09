@@ -26,10 +26,10 @@ public class EndTurnClicked implements EventProcessor{
 		
 		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
 		gameState.endTurnStateChange(out);
-//		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
-//			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
-//			compTurn.processComputerActions(out, gameState);
-//		}
+		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
+			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
+			compTurn.processComputerActions(out, gameState);
+		}
 	}
 }
 		
