@@ -46,16 +46,24 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		
 		// Check for skills which can affect where unit can move 
 		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, (Monster) newlySelectedUnit)) {
-			 System.out.println("Using Ability version of highlighting tiles.");
 			 
-			 // Draw out only playable tiles due to external factors such as abilities
-			 GeneralCommandSets.drawBoardTiles(context.out, context.getGameStateRef().getTileAdjustedRangeContainer(), 2);
-			 
-			 // Clear the container after displaying
-			// context.getGameStateRef().getTileAdjustedRangeContainer().clear();
-			 
-			 // Set boolean to control unit selected
-			 outcome = true;
+			System.out.println("Using Ability version of highlighting tiles.");
+			
+		
+			if (!context.getGameStateRef().getTileAdjustedRangeContainer().isEmpty()) {
+				 // Draw out only playable tiles due to external factors such as abilities
+				 GeneralCommandSets.drawBoardTiles(context.out, context.getGameStateRef().getTileAdjustedRangeContainer(), 2);
+				 
+				 // Set boolean to control unit selected
+				 outcome = true;
+				 
+				 // Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
+				//  newlySelectedUnit.setProvoked(); 
+			}
+			else {
+				outcome = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
+			}
+
 		}
 		else {
 			// Display unit selected actions
