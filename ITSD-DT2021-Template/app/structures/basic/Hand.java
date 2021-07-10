@@ -14,7 +14,7 @@ public class Hand {
 	
 	public Hand() {//constructor for hand 
 		super();
-		this.curr = 0;
+		this.curr = 1;
 		this.handList = new ArrayList<Card>() ;
 		this.selectedCard=null;
 		this.selCarPos=-1;
@@ -51,17 +51,14 @@ public class Hand {
 		if (curr<6) {//checks that hand is not full
 			handList.add(drawn);
 		//increments current card count
-
+			deck.delCard(0);//removes card from deck
 			curr++;
+			setCurr(curr);//sets new no of cards in hand
+		}
+		else {//if hand is full discards drawn card
+			deck.delCard(0);//removes card from deck
+		}
 		
-			deck.delCard(0);//removes card from deck
-			setCurr(curr);//sets new no of cards in hand
-		}
-		else {//warns player if hand is full and discards drawn card
-			curr++;
-			deck.delCard(0);//removes card from deck
-			setCurr(curr);//sets new no of cards in hand
-		}
 	}
 	
 	public Card getCardFromHand(int i) {
@@ -69,7 +66,6 @@ public class Hand {
 	}
 	
 	public void removeCard(int i) {
-
 		handList.remove(i);
 		setCurr(getCurr()-1);
 
@@ -102,7 +98,3 @@ public class Hand {
 	}
 	
 }
-		
-	// To do:
-	// Update getter for Card ArrayList to a more transparent name
-			
