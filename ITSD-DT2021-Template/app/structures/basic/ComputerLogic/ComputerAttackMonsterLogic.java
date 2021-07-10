@@ -9,9 +9,7 @@ import structures.basic.*;
 import structures.basic.ComputerLogic.ComputerMoveMonsterLogic.MonsterTileOption;
 public class ComputerAttackMonsterLogic {
 	private Board gameBoard;
-	private static int killMod = 2;
-	private static int isAvatar = 2;
-	private static int hasSpecialAbility = 1;
+	
 	private ComputerPlayer player;
 	private ArrayList<Tile> attackerTiles; // all tiles holds all ComputerPlayer monster
 	private ArrayList<Tile> targetInRange;  //a list of attackable enemy for each attacker
@@ -26,10 +24,11 @@ public class ComputerAttackMonsterLogic {
 		ArrayList <ComputerInstruction> list = new ArrayList<ComputerInstruction>();
 		
 		ArrayList <Monster> monstersThatCanAttack = this.monstersThatCanAttack();
+		System.out.println("I have " + monstersThatCanAttack.size() + " that can attack");
 		
 		if (monstersThatCanAttack.isEmpty()) return list;
 		
-		MonsterTargetOption [] monstersAndTheirListOfTargets = this.getMonstersPossTargets(monstersThatCanAttack, gameBoard);
+		ArrayList<MonsterTargetOtpion> monstersAndTheirListOfTargets = this.getMonstersPossTargets(monstersThatCanAttack, gameBoard);
 		
 		list = this.matchMonsterAndTarget(monstersAndTheirListOfTargets);
 		
@@ -39,65 +38,84 @@ public class ComputerAttackMonsterLogic {
 	
 	private ArrayList<Monster> monstersThatCanAttack(){
 		ArrayList <Monster> list = gameBoard.friendlyUnitList(player);
-		list.removeIf(m->(m.getAttacksLeft() <=0 || m.getOnCooldown()));
+		//list.removeIf(m->(m.getAttacksLeft() <=0 || m.getOnCooldown()));
 		return list;		
 	}
 	
-	private MonsterTargetOption [] getMonstersPossTargets(ArrayList<Monster> monstersThatCanAttackList, Board b){
+	private ArrayList<MonsterTargetOtpion> getMonstersPossTargets(ArrayList<Monster> monstersThatCanAttackList, Board b){
 		
 		
 		if(monstersThatCanAttackList.isEmpty()) return null;
 		
-		MonsterTargetOption [] list = new MonsterTargetOption[monstersThatCanAttackList.size()-1];
+		System.out.println("=== calculating where my monsters can attack ====");
+		
+		ArrayList<MonsterTargetOtpion> listOne = new ArrayList<MonsterTargetOtpion>();
+		//MonsterTargetOtpion[] list = new MonsterTargetOtpion[monstersThatCanAttackList.size()];
 		
 		int i = 0;
 		for (Monster m : monstersThatCanAttackList) {
 			
-			MonsterTargetOption attackTargets = new MonsterTargetOption(m, this.gameBoard);
-			
-			if (attackTargets.getList().isEmpty()) continue;
-			
-			else {
-				list[i] = attackTargets;
-				i++;
-			}
-			
+			System.out.println("looking at possible targets for monster : " +m.getName());
+			MonsterTargetOtpion attackTargets = new MonsterTargetOtpion(m, this.gameBoard);
+	
+				listOne.add(attackTargets);
+		
 		}
 		
-		return list;
+		return listOne;
 	}
 	
-	private ArrayList<ComputerInstruction> matchMonsterAndTarget(MonsterTargetOption[] targOptsList){
+	private ArrayList<ComputerInstruction> matchMonsterAndTarget(ArrayList<MonsterTargetOtpion> targOptsList){
 		ArrayList<ComputerInstruction> list = new ArrayList<ComputerInstruction>();
 		
 		if (targOptsList == null) return list;
 		
-		Arrays.sort(targOptsList);
+		System.out.println("[line 79] size of targ opts list bf filter: " + targOptsList.size());
+		
+		targOptsList.removeIf(trg -> (trg.getScore() < 0 || trg == null));
+		
+		for (MonsterTargetOtpion mto : targOptsList) {
+			System.out.println(mto);
+		}
+		
+		
+		System.out.println("[line 83] size of targ opts list af filter: " + targOptsList.size());
+		
+		
+		Collections.sort(targOptsList);
+		
+		System.out.println("list after sorting");
+		
+		for (MonsterTargetOtpion mto : targOptsList) {
+			System.out.println(mto);
+		}
 		
 		HashSet <Tile> targets = new HashSet<Tile>();
 		
 		int k = 0;
-		for (int i = 0; i<targOptsList.length; i++) {
+		for (MonsterTargetOtpion mto : targOptsList) {
 			
-			Tile targTile = targOptsList[i].getList().get(k);
+			Tile targTile = mto.getList().get(k);
 			
 			if (!targets.contains(targTile)) {
-				ComputerInstruction inst = new ComputerInstruction (targOptsList[i].getM(), targTile);
+				ComputerInstruction inst = new ComputerInstruction (mto.getM(), targTile);
 				list.add(inst);
 				targets.add(targTile);
 				continue;
 			}
 			
 			else {
+				System.out.println("len of tile options for monster is " + targOptsList.size() );
+				if (mto.getList().size() < 2) continue;
 				do {
 					
 					k++;
-					targTile = targOptsList[i].getList().get(k);
+					targTile = mto.getList().get(k);
 					
-				}while(targets.contains(targTile) && k < targOptsList[i].getList().size());
+				}while(targets.contains(targTile) && k < mto.getList().size());
 				
 				if (!targets.contains(targTile)) {
-					ComputerInstruction inst = new ComputerInstruction (targOptsList[i].getM(), targTile);
+					ComputerInstruction inst = new ComputerInstruction (mto.getM(), targTile);
 					list.add(inst);
 					targets.add(targTile);
 				}
@@ -110,69 +128,36 @@ public class ComputerAttackMonsterLogic {
 		return list;
 	}
 	
-	public static void calcTileAttackScore(Monster m, Board b, Tile targetTile) {
-		//tile where monster is currently located
-		Tile currTile = b.getTile(m.getPosition().getTilex(), m.getPosition().getTiley());
-		Monster enemy = targetTile.getUnitOnTile();
-		
-		int score = 0;
-		
-		if (enemy instanceof Avatar) score += isAvatar;
-		if(enemy.getHP() <= m.getAttackValue()) score += killMod;
-		if(enemy.hasAbility()) score += hasSpecialAbility;
-		
-		targetTile.setScore(score);
-	}
-	
-	
-	static class MonsterTargetOption implements Comparable<MonsterTileOption> {
-		Monster m; 
-		Board b;
-		ArrayList<Tile> list;
-		int score;
-		MonsterTargetOption(Monster m, Board b){
-			this.m = m;
-			this.b =b;
-			list = b.unitAttackableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getAttackRange(), m.getMovesLeft());
-			if (!list.isEmpty()) {
-				this.checkValidTargets();
-				this.scoreTileList();
-				Collections.sort(list);
-				this.score = list.get(0).getScore();
-			}
-			
-		}
-		
-		private void checkValidTargets() {
-			list.removeIf(tile -> (tile.getUnitOnTile().getAttackValue() >= m.getHP()));
-		}
-		public void scoreTileList() {
-			for (Tile t : list) {
-				calcTileAttackScore(m, b, t);
-			}
-		}
-		
-		public Monster getM() {
-			return m;
-		}
-		
-		public ArrayList<Tile> getList(){
-			return this.list;
-		}
-		
-		public int getScore() {
-			return this.score;
-		}
-		
 
-		@Override
-		public int compareTo(MonsterTileOption o) {
-		//same approach as in move logic, trying to order from highest to lowest score
-			if (this.score > o.getScore()) return -1;
-			else if (this.score < o.getScore()) return 1;
-			else return 0;
-		}
-	}
+	
+	
+	/*
+	 * class MonsterTargetOption implements Comparable<MonsterTileOption> { Monster
+	 * m; Board b; ArrayList<Tile> list; int score; MonsterTargetOption(Monster m,
+	 * Board b){ this.m = m; this.b =b; list =
+	 * b.unitAttackableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(),
+	 * m.getAttackRange(), m.getMovesLeft()); if (!list.isEmpty()) {
+	 * this.checkValidTargets(); this.scoreTileList(); Collections.sort(list);
+	 * this.score = list.get(0).getScore(); }
+	 * 
+	 * }
+	 * 
+	 * private void checkValidTargets() { list.removeIf(tile ->
+	 * (tile.getUnitOnTile().getAttackValue() >= m.getHP())); } public void
+	 * scoreTileList() { for (Tile t : list) { calcTileAttackScore(m, b, t); } }
+	 * 
+	 * public Monster getM() { return m; }
+	 * 
+	 * public ArrayList<Tile> getList(){ return this.list; }
+	 * 
+	 * public int getScore() { return this.score; }
+	 * 
+	 * 
+	 * @Override public int compareTo(MonsterTileOption o) { //same approach as in
+	 * move logic, trying to order from highest to lowest score if (this.score >
+	 * o.getScore()) return -1; else if (this.score < o.getScore()) return 1; else
+	 * return 0; } }
+	 */
 	//////////////Yufen Attack Method/////
 
 	//if wrap all selecting target methods in another class, this is in ComputerPlayer or AI execution class?

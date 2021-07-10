@@ -36,7 +36,6 @@ public class UnitMoveActionState implements IUnitPlayStates {
 	public void execute(GameplayContext context) {
 		
 		System.out.println("In UnitMoveActionSubState.");
-		context.debugPrint();
 		
 		context.setLoadedUnit(currentTile.getUnitOnTile());
 		if(context.getLoadedUnit() == null) {	System.out.println("Error, current tile has no unit.");	}
@@ -63,9 +62,27 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		
 		// Get frequently used objects
 		Monster mSelected = context.getGameStateRef().getBoard().getUnitSelected();
-		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(mSelected.getPosition().getTilex(),mSelected.getPosition().getTiley(),mSelected.getMovesLeft());
-		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(mSelected.getPosition().getTilex(), mSelected.getPosition().getTiley(), mSelected.getAttackRange(), mSelected.getMovesLeft()));
-		actRange.addAll(mRange);
+		ArrayList <Tile> actRange; 
+		ArrayList <Tile> moveRange = new ArrayList<Tile>();
+		
+		// Account for movement impairing debuffs
+		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
+			
+			// Act range calculate by abilities etc (external factors)
+			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
+			
+			for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
+				if (t.getUnitOnTile() == null) {
+					moveRange.add(t);
+				}
+			}
+		}
+		else {
+			moveRange = context.getGameStateRef().getBoard().unitMovableTiles(currentTile.getTilex(), currentTile.getTiley(), currentTile.getUnitOnTile().getMovesLeft());
+			actRange = context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), currentTile.getUnitOnTile().getAttackRange(), currentTile.getUnitOnTile().getMovesLeft());
+			//actRange.addAll(moveRange);
+		}
+
 		
 		System.out.println("Movement target tile is x: " + targetTile.getTilex() + ", y: " + targetTile.getTiley());
 
@@ -73,7 +90,7 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		System.out.println("MovesLeft: " + mSelected.getMovesLeft());
 		System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
 		
-		if(mRange.contains(targetTile) && mSelected.move(targetTile)) {
+		if(moveRange.contains(targetTile) && mSelected.move(targetTile)) {
 			
 			System.out.println("MovesLeft: " + mSelected.getMovesLeft());
 			System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());

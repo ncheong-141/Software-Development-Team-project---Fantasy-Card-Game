@@ -29,8 +29,9 @@ public class A_U_SummonAnywhere implements Ability {
 	// This Unit can be summoned anywhere on the board
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		// This ability is called when in the SummonMonsterState
+		gameState.getTileAdjustedRangeContainer().clear();
 		
+		// This ability is called when in the SummonMonsterState
 		// Set the highlight tile container (used for ability specifics) in GameState to the tiles to be highlighted
 		gameState.setTileAdjustedRangeContainer(gameState.getBoard().allFreeTiles());
 		
