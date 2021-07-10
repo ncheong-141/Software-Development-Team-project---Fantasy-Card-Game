@@ -47,10 +47,6 @@ public class CardClicked implements EventProcessor{
 			gameState.getTurnOwner().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
 			gameState.getTurnOwner().getHand().setSelCarPos(handPosition);
 			
-			// Reset entity selection and board
-	        GeneralCommandSets.boardVisualReset(out, gameState);
-	        gameState.deselectAllEntities();
-
 
 		//checks that the clicked card is a monster card using its attack value
 			// Check if the card has an ability that affects before summoning
@@ -108,4 +104,4 @@ public class CardClicked implements EventProcessor{
 						}
 			}
 	}
-}
+}}
