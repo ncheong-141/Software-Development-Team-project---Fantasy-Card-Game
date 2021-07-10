@@ -38,19 +38,21 @@ public class ComputerMoveMonsterLogic {
 			}
 			
 			/**
+			 * 1.
 			 * @return method returns a list of monster that the player can move in the current turn
 			 * a monster can be moved iff it has moves left and if onCoolDown == false (monster has started on the board)
 			 */
 			private ArrayList <Monster> allMovableMonsters(){
-				ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitList(player);
-				
-				myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
+				ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitsWithAvatar(player);
+				System.out.println("num mosters I can move bf check: " + myMonsters.size());
+				//myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
+				System.out.println("after check: " + myMonsters.size());
 				
 				return myMonsters;
 			}
 			
 			/**
-			 * 
+			 * 2.
 			 * @param list of monster objects
 			 * @return an array of MonsterTileOption objects
 			 * each object in the array being return contains a monster and a list of tiles where that monster can move to
@@ -60,6 +62,7 @@ public class ComputerMoveMonsterLogic {
 				MonsterTileOption[] optionList = new MonsterTileOption[list.size()];
 				
 				for (int i = 0; i<optionList.length; i++) {
+					System.out.println("calculating tile options for monster: " + list.get(i).getName());
 					optionList[i] = new MonsterTileOption (list.get(i), this.gameBoard);
 				}
 				
@@ -67,7 +70,7 @@ public class ComputerMoveMonsterLogic {
 			}
 		
 			/**
-			 * 
+			 * 3.
 			 * @param optionList - list of MonsterTileOption objects
 			 * @return a list of ComputerInstruction objects each containing a monster and a target tile (where the monster will move to)
 			 */
@@ -136,7 +139,8 @@ public class ComputerMoveMonsterLogic {
 					}
 					//resetting value of k for next loop iteration
 					k=0;
-				}			
+				}	
+				
 				return compMoves;	
 			}
 			//=========================inner class===============================//
@@ -156,8 +160,12 @@ public class ComputerMoveMonsterLogic {
 				MonsterTileOption(Monster m, Board b){
 					this.m = m;
 					this.list = b.unitMovableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getMovesLeft());
+					System.out.println("number of movabale tiles (line 161) : " + list.size());
 					if(list != null && !(list.isEmpty())) {
-						for (Tile t : list) ComputerPlayer.calcTileMoveScore(m,b,t);
+						for (Tile t : list) {
+							ComputerPlayer.calcTileMoveScore(m,b,t);
+							System.out.println(" tile ( "+t.getTilex() + " - " + t.getTiley() + " ) score: " + t.getScore());
+						}
 						Collections.sort(list);
 						this.score = this.list.get(0).getScore();
 					}

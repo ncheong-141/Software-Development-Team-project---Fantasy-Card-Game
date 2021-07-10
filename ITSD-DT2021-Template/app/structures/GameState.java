@@ -61,14 +61,14 @@ public class GameState {
 	public GameState() {
 		
 		/* Set attributes */ 
-		turnCount = 0;
+		turnCount = 1;
 		playerDead = false;
 		
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
 		
 
 		/* two player mode (comment or uncomment */
-		twoPlayerMode(); 
+		//twoPlayerMode(); 
 		
 		if (twoPlayerMode != true) {
 			
@@ -105,23 +105,23 @@ public class GameState {
 		
 
 		// Chiara's Avatar fix
-//		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
-//		humanAvatar.avatarSetUp();
-//		humanAvatar.setOwner(playerOne);
-//		
-//		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
-//		computerAvatar.avatarSetUp();
-//		computerAvatar.setOwner(playerTwo);
-//		
-//		System.out.println("board: " + this.getBoard());
-//		System.out.println();
-//		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
-//		System.out.println();
-//		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
+		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
+		humanAvatar.avatarSetUp();
+		humanAvatar.setOwner(playerOne);
+		
+		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
+		computerAvatar.avatarSetUp();
+		computerAvatar.setOwner(playerTwo);
+		
+		System.out.println("board: " + this.getBoard());
+		System.out.println();
+		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
+		System.out.println();
+		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 
 		// Avatar instantiation
-		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
-		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
+		//humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
+		//computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
 
 	}
 
@@ -298,13 +298,14 @@ public class GameState {
 		tileAdjustedRangeContainer.clear(); 
 	}
 	
-	
-	/** Methods to change GameState data when EndTurn**/
+
+
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
-			// getTurnOwner().setMana(getTurnCount()); 
-		getTurnOwner().setMana(8); // Setting to 8 just for testing 
+
+			getTurnOwner().setMana(getTurnCount()+1);  
+
 	}
 	
 	//empty mana for player who ends the turn

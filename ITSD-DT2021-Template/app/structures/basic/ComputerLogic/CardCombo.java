@@ -50,6 +50,14 @@ public class CardCombo implements Comparable<CardCombo> {
 		return this.score;
 	}
 	
+	public String toString() {
+		String s ="";
+		for (Card c : cardCombo) {
+			s = s + " [ " + c.getCardname() + " ] ";
+		}
+		return s;
+	}
+	
 	private void setSpecialAbility() {
 		for (Card c : this.cardCombo) {
 			if (c.hasAbility()) {

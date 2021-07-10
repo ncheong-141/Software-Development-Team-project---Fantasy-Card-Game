@@ -3,13 +3,20 @@ package structures.basic.ComputerLogic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
+import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.Card;
 import structures.basic.ComputerPlayer;
 import structures.basic.Hand;
 import structures.basic.Monster;
+import structures.basic.Spell;
 import structures.basic.Tile;
+import structures.basic.abilities.Ability;
 
 public class ComputerPlayCardsLogic {
 	private Hand hand;
@@ -20,13 +27,12 @@ public class ComputerPlayCardsLogic {
 		this.player = p;
 		this.hand = p.getHand();
 		this.gameBoard = p.getGameBoard();
-		System.out.println("Cards in comp player's hand \n");
+		System.out.println("===========card logic method============== \nCards in comp player's hand \n");
 		for (Card c : this.hand.getHandList()) System.out.println(c.getCardname() + " manacost " + c.getManacost());
 	}
 	
 	
 	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(){
-		
 		
 		ArrayList<Card> cardList = this.playableCards();
 		System.out.println("in comp player card logic. playable cards list size: " + cardList.size());
@@ -35,8 +41,10 @@ public class ComputerPlayCardsLogic {
 		
 		CardCombo combinationToBePlayed = this.chooseCombo(possCombos);
 		
+		HashMap<Tile, Card> cardAndTargetCombo = this.matchCardToTile(combinationToBePlayed);
+		
 		//extracting the best card combination based on logic in chooseCombo method
-		ArrayList<ComputerInstruction> cardsToBePlayed = this.computeMoves(combinationToBePlayed); 
+		ArrayList<ComputerInstruction> cardsToBePlayed = this.computeMoves(cardAndTargetCombo); 
 		
 		//returning the choosen combination of cards 
 		return cardsToBePlayed;
@@ -53,11 +61,19 @@ public class ComputerPlayCardsLogic {
 		//method returns playable cards from the player's hand based on the mana cost
 		private ArrayList <Card> playableCards(){
 			ArrayList<Card> cardList = new ArrayList<Card>();
-			for (Card c : this.hand.getHandList()) if (c.getManacost() <= player.getMana()) cardList.add(c);
+			
+			System.out.println("player tot mana: " + player.getMana());
+			for (Card c : this.hand.getHandList()) {
+				//System.out.print(c.getManacost());
+				if (c.getManacost() <= player.getMana()) { 
+					System.out.println("adding card line 60");
+					cardList.add(c);
+				
+				}
+			
+			}
 			return cardList;
 		}
-		
-
 		
 		/**
 		 * @param list of card objects
@@ -66,35 +82,40 @@ public class ComputerPlayCardsLogic {
 		 */
 		
 		private ArrayList<CardCombo> cardCombos(ArrayList <Card> list){
-			
 			//method will return a list of combinations of cards
 			//a card combination (combo) is represented as a set
 			ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
-			
 			if (list.size() == 0) {
 				System.out.println("no playable cards at this time");
 				return comboList;
 			}
-			
 			//converting playablecards list into an array to an array for ease of indexing
-			Card [] playableCards = new Card [this.playableCards().size()-1];
+			Card [] playableCards = new Card [list.size()];
 			for (int i = 0; i<playableCards.length; i++) {
 				playableCards[i] = list.get(i);
-
 			}
-			
 			Arrays.sort(playableCards);
-
+			
+			System.out.println("=== here is the sorted array====");
+			
+			for (int i = 0; i<playableCards.length; i++) System.out.println(playableCards[i].getCardname());
 			//instantiating a combo object (as an array list of card objects)
 			CardCombo combo = new CardCombo();
 			
+			int manaLeft = player.getMana(); System.out.println( "mana left at the start : " + manaLeft);
+			
 			//iterating over the hand array
 			for (int k = 0; k<playableCards.length; k++) {
-				//adding the card at position kth in hand to a combo
-				combo.add(playableCards[k]);
+				System.out.println("==========Considering card " +k +"th  "+ playableCards[k].getCardname() + " =========="
+						+ "\n mana left: " + manaLeft);
 				
-				//creating variable to track how much mana the player has left after (hypothetically) playing card k
-				int manaLeft = player.getMana() - playableCards[k].getManacost();
+				if (playableCards[k].getManacost() <= manaLeft) {
+					System.out.println("adding card "+k+"th to current combo");
+					//adding the card at position kth in list to a combo
+					combo.add(playableCards[k]);
+					//creating variable to track how much mana the player has left after (hypothetically) playing card k
+					manaLeft -= playableCards[k].getManacost(); System.out.println("mana left after adding card: " + manaLeft);
+				}
 				
 				//if playing card k clears the player's mana
 				//or if the leftover mana is less than the mana cost of the least "expensive" card in the ordered array
@@ -106,14 +127,17 @@ public class ComputerPlayCardsLogic {
 					comboList.add(combo);
 					//reference combo is re-assigned a new ArrayList obj (empty)
 					combo = new CardCombo();
+					manaLeft = player.getMana();
 					//move on to k+1 th card in hand
+					System.out.println("finishing the combo, mana left reset :" + manaLeft);
 					continue;
 				}
 				
 				//if the leftover mana is bigger than the least expensive card in the array
 				//iterate over the array, starting from k+1th to check possible combos
-				else {
+				
 					for (int i = k+1; i<playableCards.length; i++) {
+						System.out.println("printing i: " +i + "printin mana left: " + manaLeft);
 						//if the next card's cost clears leftover mana
 						//add card to current combo, add combo to combo list
 						//reset combo and reset mana to player's mana - cost of card k
@@ -121,22 +145,27 @@ public class ComputerPlayCardsLogic {
 							combo.add(playableCards[i]);
 							comboList.add(combo);
 							combo = new CardCombo();
-							manaLeft = player.getMana() - playableCards[k].getManacost();
+							manaLeft -= playableCards[i].getManacost();
 						}
 						//if leftover mana is more than enough to add the next card to the current combo
 						//add card to combo, update leftover mana
 						else if (playableCards[i].getManacost()<manaLeft) {
 							combo.add(playableCards[i]);
+							
 							manaLeft -= playableCards[i].getManacost();
+							System.out.println("adding card " +i+"th at line 147. ManaLeft : " +manaLeft);
 							//if leftover mana is less than cheapest card no need to check rest of the array
-							if (manaLeft < playableCards[playableCards.length-1].getManacost())break;
+							if (manaLeft < playableCards[playableCards.length-1].getManacost()) {
+								System.out.println("breaking");
+								
+								break;
+							}
 						}
 						//if leftover mana is not enough for next card, move on to next card
-						else {
-							continue;
-						}
+						
+						continue;
 					}
-				}
+				
 			}
 			
 			comboList.removeIf(c -> !(this.playableCombo(c)));
@@ -213,6 +242,78 @@ public class ComputerPlayCardsLogic {
 				Collections.sort(possCombos);
 				return possCombos.get(possCombos.size()-1);			
 			}
+			
+			private HashMap <Tile, Card> matchCardToTile(CardCombo combo){
+				HashMap <Tile, Card> map = new HashMap<Tile, Card>();
+				
+				ArrayList<Tile> possTileList = this.gameBoard.allSummonableTiles(player);
+				
+				ArrayList<Card> cardList = new ArrayList<Card>(combo.getCardCombo());
+				ArrayList<Spell> spellList = new ArrayList<Spell>();
+				ArrayList<Card> monsterList = new ArrayList<Card>();
+			
+				
+				//handling monster card tile allocations
+				for (Card c : cardList) {
+					if (c.getClass() == Spell.class) spellList.add((Spell)c);
+					else monsterList.add(c);
+				}
+				
+				if (monsterList.size() <= possTileList.size()) {
+				
+					Iterator <Card> itCard = monsterList.iterator();
+					Iterator <Tile> itTile = possTileList.iterator();
+					
+					while (itCard.hasNext() && itTile.hasNext()) {
+						map.put(itTile.next(), itCard.next());
+					}
+					
+				}
+				
+				else {
+					Monster dummy = new Monster();
+					dummy.setOwner(player);
+					int i =0;
+					
+					do {
+						possTileList.get(i).addUnit(dummy);
+						possTileList = this.gameBoard.allSummonableTiles(player);
+						i++;
+					}while (monsterList.size() > possTileList.size() );	
+					
+				}
+				
+				//handling spell cards tile allocation
+			
+				for (Spell spell : spellList) {
+					Tile tilez = null;
+					ArrayList<Ability> abilityList = spell.getAbilityList();
+					Ability a = abilityList.get(0);
+					if (a.targetEnemy() && a.getTargetType() == Avatar.class ) {
+						tilez = this.gameBoard.enemyAvatarTile(player);
+						map.put(tilez,spell);
+					}
+					
+					else if (!a.targetEnemy() && a.getTargetType() == Avatar.class) {
+						tilez = this.gameBoard.ownAvatarTile(player);
+						map.put(tilez, spell);
+					}
+					
+					else if (a.getTargetType() != Avatar.class) {
+						if (a.targetEnemy()) {
+							tilez = this.gameBoard.enemyTile(player).get(0);
+							if (tilez != null) map.put(tilez, spell);
+						}
+						else {
+							tilez = this.gameBoard.friendlyTile(player).get(0);
+							if (tilez != null) map.put(tilez, spell);
+						}
+					}
+
+				}
+				
+				return map;
+			}
 		
 		/**
 		 * 
@@ -222,24 +323,15 @@ public class ComputerPlayCardsLogic {
 		 */
 		//methods returns list of cards that computer player wants to play
 		//as a list of ComputerMoves objs (Card + target tile)
-			private ArrayList<ComputerInstruction> computeMoves(CardCombo combo){
+			private ArrayList<ComputerInstruction> computeMoves(HashMap<Tile, Card> combo){
 				
 				ArrayList<ComputerInstruction> compInstructions = new ArrayList<ComputerInstruction>();
 				if (combo.isEmpty()) return compInstructions;
-				ArrayList <Tile> tiles = null;
-				Tile t = null;
-				int i = 0;
-				for (Card c : combo.getCardCombo()) {
-					if (c.playableAnywhere()) {
-						t = this.gameBoard.allFreeTiles().get(0); // will need to fine tune logic, for now this is hard-coded to pick first tile
-						compInstructions.add(new ComputerInstruction(c,t));
-					}
-					else {
-						tiles= this.gameBoard.allSummonableTiles(player);
-						t = tiles.get(i);
-						compInstructions.add(new ComputerInstruction(c,t));
-						
-					}
+		
+				Set<Tile> keySet = combo.keySet();
+				
+				for (Tile t : keySet) {
+					compInstructions.add(new ComputerInstruction (combo.get(t), t));
 				}
 				
 				return compInstructions;
