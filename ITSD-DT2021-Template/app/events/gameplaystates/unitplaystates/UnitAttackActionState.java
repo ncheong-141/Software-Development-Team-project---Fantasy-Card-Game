@@ -239,7 +239,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			
 		// Ranged
 		if(attacker.getAbAnimation() != null /*Could need an && for near attacks exempt*/) {
-			BasicCommands.playProjectileAnimation(context.out, arrows, 0, attacker.getPosition().getTile(context.getGameStateRef().getBoard()), receiver.getPosition().getTile(context.getGameStateRef().getBoard()));
+			BasicCommands.playProjectileAnimation(context.out, attacker.getAbAnimation(), 0, attacker.getPosition().getTile(context.getGameStateRef().getBoard()), receiver.getPosition().getTile(context.getGameStateRef().getBoard()));
 		}
 		// Executes for both ranged and non-ranged attacks
 		BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.attack);
