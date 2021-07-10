@@ -10,6 +10,7 @@ import events.gameplaystates.tileplaystates.ITilePlayStates;
 import structures.basic.Avatar;
 import structures.basic.EffectAnimation;
 import structures.basic.Monster;
+import structures.basic.Player;
 import structures.basic.Position;
 import structures.basic.Tile;
 import structures.basic.UnitAnimationType;
@@ -193,6 +194,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 					
 					// Play animation + sleep to let it happen
 					BasicCommands.playUnitAnimation(context.out, attacker, UnitAnimationType.death);
+					try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}	
+					BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
 					GeneralCommandSets.threadSleep();
 					
 					// Check for Avatar death/game end
@@ -208,7 +211,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				// Re-idle alive units
 				if(survived) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);	}
 				BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);
-				GeneralCommandSets.threadSleep();	
+				GeneralCommandSets.threadSleep();
+				
 				
 			}
 		}
@@ -269,11 +273,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		grave.removeUnit();
 		deadUnit.setPosition(new Position(-1,-1,-1,-1));	// might not need
 		
-		// Remove from front-end
-		BasicCommands.deleteUnit(context.out, deadUnit);
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		
 	}
+	
+	/***			Small checks			***/
 	
 	// Avatar death check --- method checks that the death of a unit is not an Avatar, calls gameOver if so
 	private boolean checkForAvatarDeath(Monster deadUnit, GameplayContext context) {
@@ -297,7 +299,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		return false;
 	}
 	
-	/***			Small checks			***/
+
 	
 	// Simple helper to check if a Monster is an Avatar
 	private boolean isAvatar(Monster m) {
@@ -322,13 +324,14 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	// 2) will trigger any present friendly Unit with a related ability
 	private boolean checkAvatarDamaged(Monster a, GameplayContext context) {
 		
-		// If friendly Avatar condition is not satisfied
-		if(!(isAvatar(a)) || !(a.getOwner() == context.getGameStateRef().getTurnOwner()) ) {	return false;	}
+		// If Avatar condition is not satisfied
+		if(!(isAvatar(a))) {	return false;	}
 		
 		// Check for friendly units with ability
 		else {
 			
 			ArrayList <Monster> friendlies = context.getGameStateRef().getBoard().friendlyUnitList(a.getOwner());
+			
 			// For each ally of Avatar a
 			for(Monster m : friendlies) {
 				if(m.hasAbility()) {
@@ -337,7 +340,14 @@ public class UnitAttackActionState implements IUnitPlayStates {
 						
 						// If ability is triggered by friendly Avatar damage
 						if(abi.getCallID() == Call_IDs.onFriendlyAvatarDamageTaken) {
+							// Change stats
 							abi.execute(m, context.getGameStateRef());
+							
+							System.out.println("After Avatar is damaged, my attack is: " + m.getAttackValue() + " and my health is " + m.getHP());
+							
+							// Play animation + update stats
+							BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), m.getPosition().getTile(context.getGameStateRef().getBoard()));
+							GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
 							return true;
 						}
 						
