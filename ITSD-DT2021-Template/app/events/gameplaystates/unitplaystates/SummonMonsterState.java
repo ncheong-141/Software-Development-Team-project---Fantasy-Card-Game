@@ -136,8 +136,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 		// Drawing summoned monster with stats on the board
 		GeneralCommandSets.drawUnitWithStats(out, summonedMonster, summonTile);
 		GeneralCommandSets.threadSleep();
-		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
-		GeneralCommandSets.threadSleep();
+//		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
+//		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
 //		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
