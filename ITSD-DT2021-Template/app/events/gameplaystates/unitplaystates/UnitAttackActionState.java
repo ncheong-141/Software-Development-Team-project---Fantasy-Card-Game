@@ -58,7 +58,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		/* cumulative attack + move range (since all movement takes place before this state).
 		/* For attacker: attackRange should reflect unit's attacks range (omit move range)
 		/* For defender: counterRange should reflect unit's attack range (omit move range)*/
-		
+		// This needs changing to an attack range method that does not include moveable tiles
 		attackerAttackRange  = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), 0));
 		defenderCounterRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), 0));
 		
@@ -143,6 +143,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			
 				/***	Death check	***/
 				if(!survived) {
+					// De-highlight attacker for game action clarity to user
+					BasicCommands.drawTile(context.out, currentTile, 0);
+					
 					// Play animation + sleep to let it happen
 					BasicCommands.playUnitAnimation(context.out, defender, UnitAnimationType.death);
 					try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}		
@@ -159,6 +162,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			}
 			
 			/***	>>>>> Counter-attack			***/
+				
 			else {
 				System.out.println("Counter-attack incoming...");
 				
@@ -184,9 +188,12 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				
 				/***	Death check	***/
 				if(!survived) {
+					// De-highlight attacker tile for game action clarity to user
+					BasicCommands.drawTile(context.out, targetTile, 0);
+					
 					// Play animation + sleep to let it happen
 					BasicCommands.playUnitAnimation(context.out, attacker, UnitAnimationType.death);
-					try {Thread.sleep(2500);} catch (InterruptedException e) {e.printStackTrace();}		
+					GeneralCommandSets.threadSleep();
 					
 					// Check for Avatar death/game end
 					if(checkForAvatarDeath(attacker, context)) {
@@ -312,15 +319,36 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	}
 	
 	// Check if a Monster that has received damage:
-	// 1) is an Avatar
+	// 1) is a friendly Avatar
 	// 2) will trigger any present friendly Unit with a related ability
-	private boolean checkAvatarDamaged(Monster m, GameplayContext context) {
+	private boolean checkAvatarDamaged(Monster a, GameplayContext context) {
 		
-		if(!(isAvatar(m))) {	return false;	}
+		// If friendly Avatar condition is not satisfied
+		if(!(isAvatar(a)) || !(a.getOwner() == context.getGameStateRef().getTurnOwner()) ) {	return false;	}
 		
-		// search board for unit with ability
+		// Check for friendly units with ability
+		else {
+			
+			ArrayList <Monster> friendlies = context.getGameStateRef().getBoard().friendlyUnitList(a.getOwner());
+			// For each ally of Avatar a
+			for(Monster m : friendlies) {
+				if(m.hasAbility()) {
+					// For each ability
+					for(Ability abi : m.getMonsterAbility()) {
+						
+						// If ability is triggered by friendly Avatar damage
+						if(abi.getClass() == A_U_BuffAttackIfAvatarTakesDamage.class) {
+							abi.execute(m, context.getGameStateRef());
+							return true;
+						}
+						
+					}
+				}
+			}
+			
+		}
 		
-		return true;
+		return false;
 		
 	}
 	
