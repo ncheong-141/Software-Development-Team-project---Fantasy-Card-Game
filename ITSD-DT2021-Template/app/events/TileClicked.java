@@ -53,6 +53,7 @@ public class TileClicked implements EventProcessor{
 		
 		// Stop user interacting with the UI when this is set
 		if (!gameState.canInteract) {
+			System.out.println("Cant interact.");
 			return;
 		}
 		

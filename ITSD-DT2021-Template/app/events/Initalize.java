@@ -177,7 +177,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		}
 
 		
-		attackMoveDemo(out,g,message);
+		//attackMoveDemo(out,g,message);
 	}
 	
 
