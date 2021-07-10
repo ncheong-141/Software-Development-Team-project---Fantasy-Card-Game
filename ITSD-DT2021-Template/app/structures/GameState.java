@@ -68,7 +68,7 @@ public class GameState {
 		
 
 		/* two player mode (comment or uncomment */
-		twoPlayerMode(); 
+		//twoPlayerMode(); 
 		
 		if (twoPlayerMode != true) {
 			
@@ -80,11 +80,14 @@ public class GameState {
 			deckPlayerTwo.deckTwo();
 					
 			// Instantiate players 								
-			playerOne = new HumanPlayer();
-			playerOne.setDeck(deckPlayerOne);
-
-			playerTwo = new ComputerPlayer();
-			playerTwo.setDeck(deckPlayerTwo);
+			playerOne = new HumanPlayer(deckPlayerOne);
+//			playerOne.setDeck(deckPlayerOne);
+			playerTwo = new ComputerPlayer(deckPlayerTwo);
+//			playerTwo.setDeck(deckPlayerTwo);
+			
+			// Instantiate avatars with Player owners
+			humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
+			computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
 			
 			// Set hands
 			Hand handPlayerOne = new Hand();
@@ -113,15 +116,15 @@ public class GameState {
 //		computerAvatar.avatarSetUp();
 //		computerAvatar.setOwner(playerTwo);
 //		
-//		System.out.println("board: " + this.getBoard());
-//		System.out.println();
-//		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
-//		System.out.println();
-//		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
+		System.out.println("board: " + this.getBoard());
+		System.out.println();
+		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
+		System.out.println();
+		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 
 		// Avatar instantiation
-		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
-		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
+//		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
+//		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
 
 	}
 
@@ -222,8 +225,8 @@ public class GameState {
 		twoPlayerMode = true; 
 		
 		// Instantite players 
-		playerOne = new HumanPlayer();
-		playerTwo= new HumanPlayer(); 
+//		playerOne = new HumanPlayer();
+//		playerTwo= new HumanPlayer(); 
 
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
