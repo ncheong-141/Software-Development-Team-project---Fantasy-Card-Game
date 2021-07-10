@@ -275,8 +275,9 @@ public class GameState {
 
 		// If there is a selected unit
 		if(this.getBoard().getUnitSelected() != null) {
-			this.getBoard().setUnitSelected(null);
 			this.getBoard().getUnitSelected().setProvoked(false);
+			this.getBoard().setUnitSelected(null);
+
 		}
 
 		// If there is a card selected in turn owner hand
