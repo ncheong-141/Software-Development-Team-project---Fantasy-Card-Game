@@ -48,7 +48,7 @@ public class ComputerPlayerTurn {
 				System.out.println("I want to play this card: " + cI.getCard().getCardname() + " on this tile: " + cI.getTargetTile());
 				System.out.println("-----------");
 			//card get class 
-			//controller.summonMonster(cI.getCard(), cI.getTargetTile());
+			controller.summonMonster(cI.getCard(), cI.getTargetTile());
 			 
 			}
 		
