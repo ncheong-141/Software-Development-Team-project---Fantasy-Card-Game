@@ -119,7 +119,8 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 				System.out.println("Moves left for windshrike dude: " +  m.getMovesLeft());
 				ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
 				ArrayList <Tile> aRange = new ArrayList <Tile> (g.getBoard().unitAttackableTiles(tilex, tiley, m.getAttackRange(), m.getMovesLeft()));
-				ArrayList <Tile> actRange = mRange;		actRange.addAll(aRange);
+				ArrayList <Tile> actRange = mRange;		
+				actRange.addAll(aRange);
 				
 				// Change GeneralCommandSets thing to account for multiple ranges later
 				for(Tile t : actRange) {
@@ -134,6 +135,8 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 						GeneralCommandSets.threadSleep();
 					}
 				}
+				
+				
 				System.out.println("Finished highlighting tiles.");
 				return true;
 					
