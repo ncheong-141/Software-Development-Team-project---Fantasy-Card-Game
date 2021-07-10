@@ -336,7 +336,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 					for(Ability abi : m.getMonsterAbility()) {
 						
 						// If ability is triggered by friendly Avatar damage
-						if(abi.getClass() == A_U_BuffAttackIfAvatarTakesDamage.class) {
+						if(abi.getCallID() == Call_IDs.onFriendlyAvatarDamageTaken) {
 							abi.execute(m, context.getGameStateRef());
 							return true;
 						}
