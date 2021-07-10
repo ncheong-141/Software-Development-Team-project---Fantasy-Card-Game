@@ -47,7 +47,7 @@ public class BasicObjectBuilders {
 	 * @return
 	 */
 	
-	// ObjectBuilder for Unit cards; mapper uses the cardConfig file to make the Card,
+	// ObjectBuilder for Monster Unit cards; mapper uses the cardConfig file to make the Card,
 	// and the resulting Card object stores the unitConfig file for later use in summoning
 	public static Card loadCard(String cardConfigFile, String unitConfig, int id, Class<? extends Card> classtype) {
 		try {
@@ -139,7 +139,7 @@ public class BasicObjectBuilders {
 		return null;
 	}
 	
-	// Alternative ObjectBuilder that uses the Monster constructor
+	// Alternative Unit ObjectBuilder that uses the Monster constructor
 	public static Monster loadMonsterUnit(String u_configFile, Card statsRef, Player p, Class<? extends Monster> classType) {
 
 		try {
@@ -159,12 +159,7 @@ public class BasicObjectBuilders {
 			System.out.println("mUnit has ID " + mUnit.getId());
 			
 			// Ability setting
-			if(mUnit.getMonsterAbility() == null) {	
-				mUnit.setAbility(new ArrayList <Ability> ());	
-			}
-			else {
-				mUnit.setAbility(statsRef.getAbilityList());
-			}
+			mUnit.setAbility(statsRef.getAbilityList());
 
 			return mUnit; 
 			
