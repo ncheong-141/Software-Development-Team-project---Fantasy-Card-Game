@@ -61,7 +61,7 @@ public class AbilityToUnitLinkage {
 		UnitAbility.put("Pyromancer", 			constructArrayListAbility(	new A_U_RangedAttacker(false, null, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
 		UnitAbility.put("Bloodshard Golem", 	constructArrayListAbility());
 		UnitAbility.put("Blaze Hound", 			constructArrayListAbility(	new A_U_PlayersDrawCardOnUnitSummon(false, null, null)));
-		UnitAbility.put("Windshrike", 			constructArrayListAbility(	new A_U_Flying(false, null, null),
+		UnitAbility.put("WindShrike", 			constructArrayListAbility(	new A_U_Flying(false, null, null),
 																			new A_U_DrawCardOnUnitDeath(false, null, null)));																
 		/* Hailstone Golem 		--- identical to Deck 1	*/
 		UnitAbility.put("Serpenti", 			constructArrayListAbility(	new A_U_DoubleAttacker(false, null, null)));	

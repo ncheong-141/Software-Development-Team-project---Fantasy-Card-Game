@@ -4,6 +4,8 @@ import structures.GameState;
 import structures.basic.Monster;
 import structures.basic.Tile;
 import structures.basic.Unit;
+import structures.basic.abilities.A_U_Provoke;
+import structures.basic.abilities.Ability;
 import structures.basic.abilities.Call_IDs;
 
 import java.util.ArrayList;
@@ -68,9 +70,14 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 			// Set boolean to control unit selected
 			unitPlayable = true;
 
-			// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
-			newlySelectedUnit.toggleProvoked();
-
+			// Apply flags due to external factors
+			for (Ability a : newlySelectedUnit.getMonsterAbility()) {
+		
+				// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
+				if (a instanceof A_U_Provoke) {
+					newlySelectedUnit.toggleProvoked();
+				}
+			}
 		}
 		else {
 			// Display unit selected actions
@@ -109,6 +116,7 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 
 				// Display movement + attack range tiles
 				// Get ranges
+				System.out.println("Moves left for windshrike dude: " +  m.getMovesLeft());
 				ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
 				ArrayList <Tile> aRange = new ArrayList <Tile> (g.getBoard().unitAttackableTiles(tilex, tiley, m.getAttackRange(), m.getMovesLeft()));
 				ArrayList <Tile> actRange = mRange;		actRange.addAll(aRange);
