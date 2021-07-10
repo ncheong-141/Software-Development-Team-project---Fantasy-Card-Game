@@ -43,7 +43,7 @@ public class ComputerMoveMonsterLogic {
 			private ArrayList <Monster> allMovableMonsters(Board gameBoard){
 				ArrayList <Monster> myMonsters = gameBoard.friendlyUnitsWithAvatar(player);
 				System.out.println("num mosters I can move bf check: " + myMonsters.size());
-				//myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
+				myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
 				System.out.println("after check: " + myMonsters.size());
 				
 				return myMonsters;

@@ -306,7 +306,7 @@ public class Board {
 	//5) unitMovableTiles - this method returns a list of all tiles a selected unit can move to
 	//within a given range based on the specified position
 	public ArrayList<Tile> unitMovableTiles (int xpos, int ypos, int moveRange ){
-		ArrayList <Tile> tileList = this.reachableTiles(xpos, ypos, moveRange);
+		ArrayList <Tile> tileList = this.moves(xpos, ypos, moveRange);
 		tileList.removeIf(t -> !(t.getFreeStatus()));
 
 		return tileList;
@@ -354,7 +354,7 @@ public class Board {
 
 		//get a list of all tiles that the unit can reach given their position and move range
 		//this includes both free and occupied tiles
-		reachTiles = this.reachableTiles(xpos, ypos, moveRange);
+		reachTiles = this.moves(xpos, ypos, moveRange);
 
 		
 

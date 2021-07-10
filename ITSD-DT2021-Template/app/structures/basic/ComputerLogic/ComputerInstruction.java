@@ -3,14 +3,13 @@ import structures.basic.*;
 
 public class ComputerInstruction {
 	protected Card card;
-	protected Tile targetTile, currTile;
+	protected Tile targetTile;
 	protected Monster actor;
 	
 	public ComputerInstruction(Card c, Tile t) {
 		this.card = c;
 		this.targetTile = t;
 		this.actor = null;
-		this.currTile = null;
 	}
 	
 	public ComputerInstruction(Monster m, Tile t) {
@@ -29,8 +28,5 @@ public class ComputerInstruction {
 	public Monster getActor() {
 		return actor;
 	}
-	
-	// To do:
-	// Change constructors to match AIUnitStateController method signatures
 	
 }

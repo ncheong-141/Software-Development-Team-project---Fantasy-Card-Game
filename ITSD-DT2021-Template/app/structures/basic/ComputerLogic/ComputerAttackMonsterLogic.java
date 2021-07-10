@@ -36,7 +36,7 @@ public class ComputerAttackMonsterLogic {
 	
 	private ArrayList<Monster> monstersThatCanAttack(Board gameBoard){
 		ArrayList <Monster> list = gameBoard.friendlyUnitList(player);
-		//list.removeIf(m->(m.getAttacksLeft() <=0 || m.getOnCooldown()));
+		list.removeIf(m->(m.getAttacksLeft() <=0 || m.getOnCooldown()));
 		return list;		
 	}
 	
