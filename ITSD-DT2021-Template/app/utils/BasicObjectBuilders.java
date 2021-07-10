@@ -55,10 +55,12 @@ public class BasicObjectBuilders {
 			card.setId(id);
 			card.setConfigFile(unitConfig);
 			
-			
+			// Set ability data to be held in card for reference from AI etc
 			if(AbilityToUnitLinkage.UnitAbility.containsKey(card.getCardname())) {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
 			}
+			
+			// Set associated class type 
 			if(card.getCardAttack()>=0) {
 				card.setAssociatedClass(Monster.class);
 			}else if(card.getCardAttack()<0) {
@@ -80,12 +82,12 @@ public class BasicObjectBuilders {
 			card.setId(id);
 			card.setConfigFile(cardConfigFile);
 			
-			System.out.println("Here!!    " + card.getCardname());
-			System.out.println(AbilityToUnitLinkage.UnitAbility);
+			// Set ability data to be held in card for reference from AI etc
 			if(AbilityToUnitLinkage.UnitAbility.containsKey(card.getCardname())) {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
 			}
 			
+			// Set associated class type 
 			if(card.getCardAttack()>=0) {
 				card.setAssociatedClass(Monster.class);
 			}else if(card.getCardAttack()<0) {
