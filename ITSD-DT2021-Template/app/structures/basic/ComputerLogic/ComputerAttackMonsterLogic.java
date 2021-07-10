@@ -105,14 +105,14 @@ public class ComputerAttackMonsterLogic {
 			}
 			
 			else {
-				System.out.println("len of tile options for monster is " + targOptsList.size() );
-				if (mto.getList().size() < 2) continue;
+				System.out.println("len of tile options for monster is " + mto.getList().size() );
+				if (mto.getList().size() <= k+1) continue;
 				do {
 					
 					k++;
 					targTile = mto.getList().get(k);
 					
-				}while(targets.contains(targTile) && k < mto.getList().size());
+				}while(targets.contains(targTile) && k+1 < mto.getList().size());
 				
 				if (!targets.contains(targTile)) {
 					ComputerInstruction inst = new ComputerInstruction (mto.getM(), targTile);

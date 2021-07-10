@@ -70,7 +70,7 @@ public class GameState {
 
 
 		/* two player mode (comment or uncomment */
-		twoPlayerMode(); 
+		//twoPlayerMode(); 
 		
 		if (twoPlayerMode != true) {
 			
@@ -296,8 +296,20 @@ public class GameState {
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
-
-			getTurnOwner().setMana(getTurnCount()+1);  
+	    //give turnCount mana to the player just in the beginning of new turn   
+	    
+	            if ( getTurnCount() >= 9) {                //if it is the 9th turn or more than 9, setMan to 9 for both players
+	                    getTurnOwner().setMana(9);
+	            }else {       
+	                if(getTurnOwner() == playerOne) {    //turncount +1 only when Human player start the new round of game
+	                    this.turnCount = getTurnCount()+1;
+	                    getTurnOwner().setMana(this.turnCount);
+	                }
+	                else {
+	                    getTurnOwner().setMana(this.turnCount);
+	                }
+	            }
+	   
 
 	}
 	
@@ -363,13 +375,7 @@ public class GameState {
 		deckPlayerTwo.deckTwo();
 		playerOne.setDeck(deckPlayerTwo);
 	
-	}
-	
-	public void computerEnd() {
-		
-	}
-	
-	
+	}	
 	
 	
 	/** Generalised method for finding if any monsters require their ability to be executed.
@@ -434,9 +440,24 @@ public class GameState {
 			// Move hand instantiation/set up from gamestate into Player constructor
 			// Move AbilityUnitLinkage call into GameState
 
-//	public static void computerEnd() {
-//		// TODO Auto-generated method stub
-//		
-//	}
+	public void computerEnd() {
+		
+		this.emptyMana(); 										// Empty mana for player who ends the turn
+		this.deselectAllEntities();								// Deselect all entities
+		
+
+		// Check if the deck is empty, if so then gameover
+		if (this.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
+			gameOver(); 
+		}
+		
+		this.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
+		this.turnChange(); 				// turnOwner exchanged	
+		this.giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
+		//gameState.toCoolDown(); 				// Switch avatars status for current turnOwner
+		this.setMonsterCooldown(false);
+	
+	
+	}
 	
 }

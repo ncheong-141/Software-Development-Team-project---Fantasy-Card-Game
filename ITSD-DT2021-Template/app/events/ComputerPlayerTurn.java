@@ -35,20 +35,25 @@ public class ComputerPlayerTurn {
 		System.out.println("=====================AI turn: computing cards=======================");
 		cardsToPlay = compPlayer.playCards();
 		
+		System.out.println("=====================AI turn: computing attacks=======================");
+		attacksToPerform = compPlayer.performAttacks();
+		
+		
+		System.out.println("=======================AI turn: computing moves=========================");
+		monstersToMove = compPlayer.moveMonsters();
+		
 		if (!cardsToPlay.isEmpty() && cardsToPlay != null) {
 			
 			for (ComputerInstruction cI : cardsToPlay) {
 				System.out.println("I want to play this card: " + cI.getCard().getCardname() + " on this tile: " + cI.getTargetTile());
 				System.out.println("-----------");
 			//card get class 
-			controller.summonMonster(cI.getCard(), cI.getTargetTile());
+			//controller.summonMonster(cI.getCard(), cI.getTargetTile());
 			 
 			}
 		
 		}
 		
-		System.out.println("=====================AI turn: computing attacks=======================");
-		attacksToPerform = compPlayer.performAttacks();
 		
 		if (attacksToPerform != null && !attacksToPerform.isEmpty()) {
 			System.out.println("Attacks: ");
@@ -62,10 +67,10 @@ public class ComputerPlayerTurn {
 			System.out.println("no attacks to perform");
 		}
 		
-		//need to double check method for attack in AI state controller
+		
 
 		
-		monstersToMove = compPlayer.moveMonsters();
+		
 		//check if empty
 		
 		if (!monstersToMove.isEmpty() && monstersToMove != null) {
@@ -74,10 +79,13 @@ public class ComputerPlayerTurn {
 				if (cI.getTargetTile() == null) System.out.println("tile is null");
 				System.out.println("move monster: " + cI.getActor().getName() + " to tile: " + cI.getTargetTile());
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
-			controller.unitMove(currTile, cI.getTargetTile());
+			//controller.unitMove(currTile, cI.getTargetTile());
 			}
 		}
 		else System.out.println("no moves to make");
+		
+		
+		g.computerEnd();
 		
 		
 

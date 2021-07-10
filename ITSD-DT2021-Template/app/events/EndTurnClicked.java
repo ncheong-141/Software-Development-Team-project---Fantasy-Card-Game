@@ -26,10 +26,10 @@ public class EndTurnClicked implements EventProcessor{
 		
 		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
 		endTurnStateChange(out, gameState);
-//		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
-//			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
-//			compTurn.processComputerActions(out, gameState);
-//		}
+		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
+			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
+			compTurn.processComputerActions(out, gameState);
+		}
 
 	}
 		
@@ -38,7 +38,7 @@ public class EndTurnClicked implements EventProcessor{
 
 		gameState.emptyMana(); 										// Empty mana for player who ends the turn
 		gameState.deselectAllEntities();								// Deselect all entities
-		GeneralCommandSets.boardVisualReset(out, gameState);  	// Visual rest
+		
 
 		// Check if the deck is empty, if so then gameover
 		if (gameState.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
@@ -55,11 +55,11 @@ public class EndTurnClicked implements EventProcessor{
 			GeneralCommandSets.threadSleepLong();
 		}
 
-		gameState.setMonsterCooldown(false);	// Hard set all monsters on turn enders turn to cooldown
+		gameState.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
 		gameState.turnChange(); 				// turnOwner exchanged	
 		gameState.giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
 		//gameState.toCoolDown(); 				// Switch avatars status for current turnOwner
-		gameState.setMonsterCooldown(true);
+		gameState.setMonsterCooldown(false);
 
 		// Debug mode
 		if (gameState.isTwoPlayerMode()) {

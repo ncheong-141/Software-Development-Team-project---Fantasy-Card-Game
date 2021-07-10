@@ -32,7 +32,7 @@ public class ComputerMoveMonsterLogic {
 				if(movableMonsters.isEmpty()) return new ArrayList<structures.basic.ComputerLogic.ComputerInstruction>();
 				
 				
-				MonsterTileOption [] listofMTO = this.getMonstersOptions(movableMonsters);
+				ArrayList<MonsterTileOption> listofMTO = this.getMonstersOptions(movableMonsters);
 				
 				return this.matchMonsterAndTile(listofMTO);
 			}
@@ -57,13 +57,13 @@ public class ComputerMoveMonsterLogic {
 			 * @return an array of MonsterTileOption objects
 			 * each object in the array being return contains a monster and a list of tiles where that monster can move to
 			 */
-			private MonsterTileOption[] getMonstersOptions(ArrayList<Monster> list){
+			private ArrayList<MonsterTileOption> getMonstersOptions(ArrayList<Monster> list){
 
-				MonsterTileOption[] optionList = new MonsterTileOption[list.size()];
+				ArrayList<MonsterTileOption> optionList = new ArrayList<MonsterTileOption>();
 				
-				for (int i = 0; i<optionList.length; i++) {
-					System.out.println("calculating tile options for monster: " + list.get(i).getName());
-					optionList[i] = new MonsterTileOption (list.get(i), this.gameBoard);
+				for (Monster m : list) {
+					System.out.println("calculating tile options for monster: " + m.getName());
+					optionList.add(new MonsterTileOption (m, this.gameBoard));   
 				}
 				
 				return optionList;
@@ -74,9 +74,10 @@ public class ComputerMoveMonsterLogic {
 			 * @param optionList - list of MonsterTileOption objects
 			 * @return a list of ComputerInstruction objects each containing a monster and a target tile (where the monster will move to)
 			 */
-			private ArrayList<ComputerInstruction> matchMonsterAndTile (MonsterTileOption[] optionList){
+			private ArrayList<ComputerInstruction> matchMonsterAndTile (ArrayList<MonsterTileOption> optionList){
 				//sorting array based on value of top tile 
-				Arrays.sort(optionList);
+				Collections.sort(optionList);
+				
 				
 				//method returns an array list of computer instruction objs
 				//each of those objs contains a monster to be moved and a target tiles
@@ -89,10 +90,12 @@ public class ComputerMoveMonsterLogic {
 				int k = 0;
 				
 				//for loop iterates over the list of (monster - list of tiles) objs (MLT) passed to the method
-				for (int i = 0; i<optionList.length; i++) {
+				for (MonsterTileOption mto: optionList) {
 					//for each MLT the top tile is retrieved (k=0)
 					//this is the tile with the highest score
-					Tile t = optionList[i].getList().get(k);
+					if (mto.getList().isEmpty() || mto.getList() == null) continue;
+					
+					Tile t = mto.getList().get(k);
 				
 					//boolean variable for testing purposes
 					boolean tileFound = false;
@@ -104,7 +107,7 @@ public class ComputerMoveMonsterLogic {
 					if (!(tileUsed.contains(t))){
 						//if the best tile has not been used already, a new instruction is created passing it the monster within the MLT obj at optionList[i]
 						//and the target tile t
-						inst = new ComputerInstruction(optionList[i].getM(), t);
+						inst = new ComputerInstruction(mto.getM(), t);
 						//adding the new instruction object to the list to be returned 
 						compMoves.add(inst);
 						//adding the target tile to the tile used set
@@ -114,15 +117,17 @@ public class ComputerMoveMonsterLogic {
 						continue;
 					}
 					else {
+						
+						if (mto.getList().size() < 2) continue;
 						//this part of the code is executed if the tileUsed set already contains target tile t
 						do {
 							//incrementing k
 							k++;
 							//to retrieve the new best tile within the MLT obj
-							t = optionList[i].getList().get(k);
+							t = mto.getList().get(k);
 							
 						//checking if the new tile t is in the set already and if there are still tiles to be tested within the MLT obj	
-						} while(tileUsed.contains(t)&& k<optionList[i].getList().size());
+						} while(tileUsed.contains(t)&& k<mto.getList().size());
 						
 						//once the above loop terminates
 						//this condition checks that the do-while loop terminated because a tile was found
@@ -130,7 +135,7 @@ public class ComputerMoveMonsterLogic {
 						if (!tileUsed.contains(t)) {
 							tileFound = true;
 							//creating a computer instruction with monster with MTL obj and current target tile
-							inst = new ComputerInstruction(optionList[i].getM() , t);
+							inst = new ComputerInstruction(mto.getM() , t);
 							//adding tile to used tile set
 							tileUsed.add(t);
 							//adding new computer instruction to list to be returned
