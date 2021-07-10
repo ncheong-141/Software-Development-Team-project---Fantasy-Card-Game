@@ -49,6 +49,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
 		
+		//boardPrintAllMethods(out, gameState);
+
+
 //		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
 //		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
 //		u_rPulv.toggleCooldown();
@@ -60,6 +63,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//CommandDemo.executeTileHighlightDemo(out, g);
 		//CommandDemo.executeAbilityDemo(out, gameState);
 		
+
 
 		Card windshrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_windshrike, StaticConfFiles.u_windshrike, 150, Card.class);		
 		Monster u_wind = BasicObjectBuilders.loadMonsterUnit(windshrike.getConfigFile(), windshrike, (Player) gameState.getPlayerTwo(), Monster.class);
@@ -170,6 +174,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
+		
+		//attackMoveDemo(out,g,message);
 	}
 	
 
@@ -271,10 +277,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		// Load enemy units
 		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) g.getPlayerTwo(), Monster.class);
 			u_rPulv.toggleCooldown();
-			
-			u_rPulv.setPositionByTile(g.getBoard().getTile(3, 1));
-			g.getBoard().getTile(3, 1).addUnit(u_rPulv);
-			GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (g.getBoard().getTile(3, 1)));
 		Monster u_fires = BasicObjectBuilders.loadMonsterUnit(fires.getConfigFile(), fires, (Player) g.getPlayerTwo(), Monster.class);
 			u_fires.toggleCooldown();
 		Monster u_azureL = BasicObjectBuilders.loadMonsterUnit(azureL.getConfigFile(), azureL, (Player) g.getPlayerTwo(), Monster.class);
@@ -306,6 +308,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		// Friendly units
 
+		u_como.setPositionByTile(g.getBoard().getTile(7, 3));
+		g.getBoard().getTile(7, 3).addUnit(u_como);
+		GeneralCommandSets.drawUnitWithStats(out, u_como, g.getBoard().getTile(7, 3));
 		monsToLink.add(u_como);
 
 		u_frazureL.setPositionByTile(g.getBoard().getTile(5, 2));
