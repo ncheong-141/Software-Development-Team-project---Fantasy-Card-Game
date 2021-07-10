@@ -35,7 +35,7 @@ public class A_U_Flying implements Ability {
 		int boardLength = gameState.getBoard().getBoardLength(); 
 		
 		// Set max moves to board length and width (gameState.getBoard().get....)
-
+		System.out.print("In windshrike ability setup");
 		targetMonster.setMovesMax(boardWidth*boardLength);
 
 		return true;
