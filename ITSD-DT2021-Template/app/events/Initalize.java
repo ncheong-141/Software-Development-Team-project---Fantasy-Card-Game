@@ -85,12 +85,14 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
 		
 		Board board = gameState.getBoard();
-		Tile a,b,c,d;
+		Tile a,b,c;
 		a = board.getTile(4, 1);
 		b = board.getTile(1, 4);
 		c = board.getTile(3, 3);
 		
-		
+		a.addUnit(fmArray[0]);
+		b.addUnit(fmArray[1]);
+		c.addUnit(fmArray[2]);
 		
 		GeneralCommandSets.drawUnitWithStats(out, fmArray[0], a);
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
