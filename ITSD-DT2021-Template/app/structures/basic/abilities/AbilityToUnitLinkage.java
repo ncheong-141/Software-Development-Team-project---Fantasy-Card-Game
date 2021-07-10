@@ -48,8 +48,7 @@ public class AbilityToUnitLinkage {
 		UnitAbility.put("Azure Herald", 		constructArrayListAbility(	new A_U_HealAvatarHPIfSummoned(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 		UnitAbility.put("Silverguard Knight", 	constructArrayListAbility(	new A_U_Provoke(true, Monster.class, null),
 																			new A_U_BuffAttackIfAvatarTakesDamage(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
-		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(	new A_U_DoubleAttacker(false, Monster.class, null), 
-																			new A_U_SummonAnywhere(false, null, null)));	
+		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(	new A_U_DoubleAttacker(false, Monster.class, null)));	
 		UnitAbility.put("Fire Spitter", 		constructArrayListAbility(	new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
 		UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility(	new A_U_SummonAnywhere(false, null, null), 
 																			new A_U_Provoke(true, Monster.class, null)));
