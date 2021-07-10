@@ -8,7 +8,6 @@ import structures.GameState;
 import structures.basic.*;
 import structures.basic.ComputerLogic.ComputerMoveMonsterLogic.MonsterTileOption;
 public class ComputerAttackMonsterLogic {
-	private Board gameBoard;
 	
 	private ComputerPlayer player;
 	private ArrayList<Tile> attackerTiles; // all tiles holds all ComputerPlayer monster
@@ -17,13 +16,12 @@ public class ComputerAttackMonsterLogic {
 
 	public ComputerAttackMonsterLogic(ComputerPlayer p) {
 		this.player = p;
-		this.gameBoard = p.getGameBoard();
 	}
 	
-	public ArrayList <ComputerInstruction> computerAttacks(){
+	public ArrayList <ComputerInstruction> computerAttacks(Board gameBoard){
 		ArrayList <ComputerInstruction> list = new ArrayList<ComputerInstruction>();
 		
-		ArrayList <Monster> monstersThatCanAttack = this.monstersThatCanAttack();
+		ArrayList <Monster> monstersThatCanAttack = this.monstersThatCanAttack(gameBoard);
 		System.out.println("I have " + monstersThatCanAttack.size() + " that can attack");
 		
 		if (monstersThatCanAttack.isEmpty()) return list;
@@ -36,7 +34,7 @@ public class ComputerAttackMonsterLogic {
 		
 	}
 	
-	private ArrayList<Monster> monstersThatCanAttack(){
+	private ArrayList<Monster> monstersThatCanAttack(Board gameBoard){
 		ArrayList <Monster> list = gameBoard.friendlyUnitList(player);
 		//list.removeIf(m->(m.getAttacksLeft() <=0 || m.getOnCooldown()));
 		return list;		
@@ -56,7 +54,7 @@ public class ComputerAttackMonsterLogic {
 		for (Monster m : monstersThatCanAttackList) {
 			
 			System.out.println("looking at possible targets for monster : " +m.getName());
-			MonsterTargetOtpion attackTargets = new MonsterTargetOtpion(m, this.gameBoard);
+			MonsterTargetOtpion attackTargets = new MonsterTargetOtpion(m, b);
 	
 				listOne.add(attackTargets);
 		
@@ -161,13 +159,13 @@ public class ComputerAttackMonsterLogic {
 	//////////////Yufen Attack Method/////
 
 	//if wrap all selecting target methods in another class, this is in ComputerPlayer or AI execution class?
-	public void smartAttack(){
+	public void smartAttack(Board gameBoard){
 		    
-		attackerTiles = findAttacker(); //return a list of monster that can perform attack in this turn
+		attackerTiles = findAttacker(gameBoard); //return a list of monster that can perform attack in this turn
 		
 		    //go through each monster to perform attack
 		for (Tile attacker:attackerTiles){    
-			targetInRange = getTargetTiles(attacker);
+			targetInRange = getTargetTiles(attacker, gameBoard);
 			if (selectAttackTarget(attacker) == null){  //if no good target, skip attack, check next monster
 				continue;
 			}else{    //if there is good target, perform attack 
@@ -302,7 +300,7 @@ public class ComputerAttackMonsterLogic {
 
 
 	//<helper>
-		public ArrayList<Tile> getTargetTiles(Tile t){
+		public ArrayList<Tile> getTargetTiles(Tile t, Board gameBoard){
 		    targetInRange = gameBoard.unitAttackableTiles(t.getXpos(),t.getYpos(), t.getUnitOnTile().getAttackRange(), t.getUnitOnTile().getMovesLeft());
 		    for (Tile rt : targetInRange) {
 		        if (rt.getUnitOnTile().getOwner() != player) {  //tiles don't belong to computer player are enemy's
@@ -313,14 +311,14 @@ public class ComputerAttackMonsterLogic {
 		}
 
 	//<helper>
-		public ArrayList<Tile> findAttacker(){  // find a list of tiles that hold monsters can perform attack
+		public ArrayList<Tile> findAttacker(Board gameBoard){  // find a list of tiles that hold monsters can perform attack
 		    attackerTiles = gameBoard.friendlyTile(player);
 		    
 		    for (Tile t : attackerTiles) {
 		        if (t.getUnitOnTile().getAttacksLeft() == 0 ) {  // if there is no attack time left, skip this monster in attack action
 		            attackerTiles.remove(t);
 		        }
-		        if ( getTargetTiles(t).size() == 0) {  // if there is no potential target in attackable range, skip this monster in attack action
+		        if ( getTargetTiles(t, gameBoard).size() == 0) {  // if there is no potential target in attackable range, skip this monster in attack action
 		            attackerTiles.remove(t);
 		        }
 		    }

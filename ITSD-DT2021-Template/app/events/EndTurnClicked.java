@@ -37,7 +37,7 @@ public class EndTurnClicked implements EventProcessor{
 	public void endTurnStateChange(ActorRef out, GameState gameState) {  
 		gameState.emptyMana(); 										// Empty mana for player who ends the turn
 		gameState.deselectAllEntities();								// Deselect all entities
-		GeneralCommandSets.boardVisualReset(out, gameState);  	// Visual rest
+		//GeneralCommandSets.boardVisualReset(out, gameState);  	// Visual rest
 
 		// Check if the deck is empty, if so then gameover
 		if (gameState.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand

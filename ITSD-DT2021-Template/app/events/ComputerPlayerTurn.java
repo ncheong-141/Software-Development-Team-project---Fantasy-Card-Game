@@ -17,8 +17,8 @@ public class ComputerPlayerTurn {
 	
 
 	public void processComputerActions(ActorRef out, GameState g) {
+		
 		ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
-		pl2.setGameBoard(g.getBoard());
 		ComputerPlayer compPlayer = pl2;
 		AIUnitStateController controller = new AIUnitStateController(out, g);
 		compPlayer.setMana(9);
@@ -33,14 +33,14 @@ public class ComputerPlayerTurn {
 		ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 		
 		System.out.println("=====================AI turn: computing cards=======================");
-		cardsToPlay = compPlayer.playCards();
+		cardsToPlay = compPlayer.playCards(g.getBoard());
 		
 		System.out.println("=====================AI turn: computing attacks=======================");
-		attacksToPerform = compPlayer.performAttacks();
+		attacksToPerform = compPlayer.performAttacks(g.getBoard());
 		
 		
 		System.out.println("=======================AI turn: computing moves=========================");
-		monstersToMove = compPlayer.moveMonsters();
+		monstersToMove = compPlayer.moveMonsters(g.getBoard());
 		
 		if (!cardsToPlay.isEmpty() && cardsToPlay != null) {
 			
