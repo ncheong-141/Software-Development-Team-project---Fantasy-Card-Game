@@ -118,7 +118,7 @@ public class ComputerMoveMonsterLogic {
 					}
 					else {
 						
-						if (mto.getList().size() < 2) continue;
+						if (mto.getList().size() <= k) continue;
 						//this part of the code is executed if the tileUsed set already contains target tile t
 						do {
 							//incrementing k
@@ -127,7 +127,7 @@ public class ComputerMoveMonsterLogic {
 							t = mto.getList().get(k);
 							
 						//checking if the new tile t is in the set already and if there are still tiles to be tested within the MLT obj	
-						} while(tileUsed.contains(t)&& k<mto.getList().size());
+						} while(tileUsed.contains(t)&& k<mto.getList().size()+1);
 						
 						//once the above loop terminates
 						//this condition checks that the do-while loop terminated because a tile was found
