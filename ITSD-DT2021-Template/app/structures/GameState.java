@@ -425,6 +425,10 @@ public class GameState {
 		return abilityFound; 
 	}
 	
+	public boolean useAdjustedMonsterActRange() {
+		return !this.getTileAdjustedRangeContainer().isEmpty();
+	}
+	
 	
 	/** 
 	 * Method for obtaining the enemy player reference 

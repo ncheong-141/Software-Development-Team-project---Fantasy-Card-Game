@@ -40,13 +40,13 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		System.out.println("In UnitDisplayActionsState.");
 
 		// Get the newly selected unit
-		Unit newlySelectedUnit = currentTile.getUnitOnTile();
+		Monster newlySelectedUnit = currentTile.getUnitOnTile();
 		
 		boolean unitPlayable = false; 
 		
 		// Check for skills which can affect where unit can move and if it was successful (i.e. tile container not empty)
-		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, (Monster) newlySelectedUnit) 
-				&& !context.getGameStateRef().getTileAdjustedRangeContainer().isEmpty()) {
+		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, newlySelectedUnit) 
+				&& context.getGameStateRef().useAdjustedMonsterActRange()) {
 			 
 			System.out.println("Using Ability version of highlighting tiles.");
 
@@ -69,7 +69,7 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 			unitPlayable = true;
 
 			// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
-			//  newlySelectedUnit.setProvoked(); 
+			newlySelectedUnit.toggleProvoked();
 
 		}
 		else {
