@@ -159,7 +159,8 @@ public class BasicObjectBuilders {
 			System.out.println("mUnit has ID " + mUnit.getId());
 			
 			// Ability setting
-			//mUnit.setAbility(statsRef.getAbilityList());
+			if(mUnit.getMonsterAbility() == null) {	mUnit.setAbility(new ArrayList <Ability> ());	}
+			mUnit.setAbility(statsRef.getAbilityList());
 
 			return mUnit; 
 			
