@@ -236,10 +236,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	// Playing attack animations/effects for attacker and receiver
 	// --- note order of input arguments is key to output
 	private void playAttackAnimations(Monster attacker, Monster receiver, GameplayContext context) {
-		
-		EffectAnimation arrows = checkRangedAttacker(attacker);			
+			
 		// Ranged
-		if(arrows != null) {
+		if(attacker.getAbAnimation() != null /*Could need an && for near attacks exempt*/) {
 			BasicCommands.playProjectileAnimation(context.out, arrows, 0, attacker.getPosition().getTile(context.getGameStateRef().getBoard()), receiver.getPosition().getTile(context.getGameStateRef().getBoard()));
 		}
 		// Executes for both ranged and non-ranged attacks
