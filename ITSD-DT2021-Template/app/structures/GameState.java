@@ -249,20 +249,20 @@ public class GameState {
 
 		
 		// Cards you want from deck 1 (max 5)
-		int[] cardIDList1 = {0,1,2};
+		int[] cardIDList1 = {6,7,8};
 		
 		for (int i = 0; i < cardIDList1.length; i++) {
-			this.getPlayerOne().getHand().getHandList().add(drawDeck1.get(i));
+			this.getPlayerOne().getHand().getHandList().add(drawDeck1.get(cardIDList1[i]));
 			playerOne.getDeck().delCard(cardIDList1[i]);
 		}
 		playerOne.getHand().setCurr(cardIDList1.length);
 
 		
 		// Cards you want to start with from deck 2 (max 5)
-		int[] cardIDList2 = {7,8,9};
+		int[] cardIDList2 = {6,7,8};
 
 		for (int i = 0; i < cardIDList2.length; i++) {
-			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(i));
+			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(cardIDList2[i]));
 			playerTwo.getDeck().delCard(cardIDList2[i]);
 		}
 		playerTwo.getHand().setCurr(cardIDList2.length);

@@ -168,6 +168,14 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				// Counter attack
 				survived = attacker.defend(defender.counter());
 				
+				/***	Switch attacker/defender highlights for user clarity	***/
+				// Initial attacker
+				BasicCommands.drawTile(context.out, currentTile, 2);
+				GeneralCommandSets.threadSleep();
+				// Initial defender
+				BasicCommands.drawTile(context.out, targetTile, 1);
+				GeneralCommandSets.threadSleep();
+				
 				/***	Play animations and set visuals		***/
 				playAttackAnimations(defender, attacker, context);
 				
@@ -178,7 +186,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				if(!survived) {
 					// Play animation + sleep to let it happen
 					BasicCommands.playUnitAnimation(context.out, attacker, UnitAnimationType.death);
-					try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}		
+					try {Thread.sleep(2500);} catch (InterruptedException e) {e.printStackTrace();}		
 					
 					// Check for Avatar death/game end
 					if(checkForAvatarDeath(attacker, context)) {
@@ -256,7 +264,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		deadUnit.setPosition(new Position(-1,-1,-1,-1));	// might not need
 		
 		// Remove from front-end
-		BasicCommands.deleteUnit(context.out, defender);
+		BasicCommands.deleteUnit(context.out, deadUnit);
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
 	}
