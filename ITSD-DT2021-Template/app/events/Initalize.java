@@ -57,19 +57,39 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
 		
 		
-		//STUFF FOR TESTING/////
+		//////STUFF FOR TESTING/////
 		// Create Card objects to use
-		//Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
-		//Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
-		//Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
+		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
+		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
+		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
 				
 		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
-		//Monster[] fmArray = new Monster[4]; 
-		//fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
-		//fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
-		//fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
-		//fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+		Monster[] fmArray = new Monster[4]; 
+		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
+		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
+		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+		fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
 		
+		
+		Board b = gameState.getBoard();
+		
+		Tile one = b.getTile(6,2);
+		Tile two = b.getTile(3, 2);
+		Tile three = b.getTile(3, 3);
+		Tile four = b.getTile(2, 1);
+		
+		one.addUnit(fmArray[0]);
+		two.addUnit(fmArray[1]);
+		three.addUnit(fmArray[2]);
+		four.addUnit(fmArray[3]);
+		
+		BasicCommands.drawUnit(out, fmArray[0], one);
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.drawUnit(out, fmArray[1], two);
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.drawUnit(out, fmArray[2], three);
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.drawUnit(out, fmArray[3], four);
 		
 				
 	}

@@ -41,8 +41,8 @@ public class ComputerPlayerTurn {
 				System.out.println("I want to play this card: " + cI.getCard().getCardname() + " on this tile: " + cI.getTargetTile());
 				System.out.println("-----------");
 			//card get class 
-			//controller.summonMonster(cI.getCard(), cI.getTargetTile());
-			//spell treated as a card 
+			controller.summonMonster(cI.getCard(), cI.getTargetTile());
+			 
 			}
 		
 		}
@@ -74,24 +74,12 @@ public class ComputerPlayerTurn {
 				if (cI.getTargetTile() == null) System.out.println("tile is null");
 				System.out.println("move monster: " + cI.getActor().getName() + " to tile: " + cI.getTargetTile());
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
-			//controller.unitMove(currTile, cI.getTargetTile());
+			controller.unitMove(currTile, cI.getTargetTile());
 			}
 		}
 		else System.out.println("no moves to make");
 		
 		
-		
-		//iterate over list and call method in controller
-		
-		//iterate
-		
-		//method to return list of monsters to perform an attack (+ move if relevant)
-		
-		
-		
-		
-		
-		
-		//iterate
+
 	}
 }

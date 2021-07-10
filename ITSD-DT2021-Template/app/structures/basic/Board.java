@@ -147,7 +147,7 @@ public class Board {
 		int xPos = t.getTilex();
 		int yPos = t.getTiley();
 
-		System.out.println(xPos + " calcRange " + yPos);
+		//System.out.println(xPos + " calcRange " + yPos);
 		for (int i = 0; i<rangeH.length; i++) {
 			if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
 			else {
@@ -330,7 +330,7 @@ public class Board {
 					// (abs(i -x) is the distance the current index is away from the monster position)
 					if ( (Math.abs(i - xpos) + Math.abs(j - ypos)) <=moveRange) {
 						reachTile.add(this.getTile(i, j));
-						System.out.println(this.getTile(i,j));
+						//System.out.println(this.getTile(i,j));
 					}
 				}
 			}  
@@ -361,7 +361,7 @@ public class Board {
 		//iterate over the list of tiles that can be reached 
 		//if the tile has an enemy unit it is added to the set (no duplicate values)
 		for (Tile t : reachTiles) {
-			System.out.println(t + " x ");
+			//System.out.println(t + " x ");
 			if (!(t.getFreeStatus()) && t.getUnitOnTile().getOwner()!=p) tileList.add(t);
 		}
 
@@ -373,7 +373,7 @@ public class Board {
 		//the attack range (with that tile as origin) is calculated as a set 
 		//the set is added to the set to returned (no duplicated values)
 		for(Tile t : reachTiles) {
-			System.out.println(t);
+			//System.out.println(t);
 			HashSet <Tile> attRange = calcAttackRange(t.getTilex(), t.getTiley(), attackRange, p);
 			tileList.addAll(attRange);
 
@@ -385,7 +385,7 @@ public class Board {
 	public HashSet<Tile> calcAttackRange(int xpos, int ypos, int attackRange, Player p){
 		HashSet<Tile> tileList = new HashSet<Tile>();
 
-		System.out.println(xpos + " --- " + ypos);
+		//System.out.println(xpos + " --- " + ypos);
 
 
 		for (int i = xpos - attackRange; i <= (xpos + attackRange); i++) {
@@ -399,12 +399,12 @@ public class Board {
 
 					if ((i==xpos || j==ypos) && this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
 						tileList.add(this.getTile(i, j));
-						System.out.println(this.getTile(i,j)+ " o ");
+						//System.out.println(this.getTile(i,j)+ " o ");
 					}
 
 					else if ((Math.abs(i-xpos) == Math.abs(j - ypos))&&this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
 						tileList.add(this.getTile(i, j));
-						System.out.println(this.getTile(i,j)+ " p ");
+						//System.out.println(this.getTile(i,j)+ " p ");
 					}
 				}
 			}
