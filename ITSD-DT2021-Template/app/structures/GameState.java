@@ -347,7 +347,7 @@ public class GameState {
 	}
 	
 	
-	// Cooldown monsters
+	// Cooldown monsters  ---Can be deleted?
 	public void toCoolDown() {
 		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());	
 		
@@ -395,9 +395,29 @@ public class GameState {
 	}
 	
 	public void computerEnd() {
-		
+
+		if (isDeckEmpty()) { 
+			gameOver(); 
+			return;
+		}
+			 
+		// If there are cards left in deck, get a card from deck (back end)
+		if(!isHumanCard()) {
+			getTurnOwner().getHand().drawCard(getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
+			endTurnStaticChange();
+		}	
 	}
+		
+	public void endTurnStaticChange() {
 	
+		emptyMana(); 										// Empty mana for player who ends the turn
+		deselectAllEntities();								// Deselect all entities
+		setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
+		turnChange(); 				// turnOwner exchanged	
+		giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
+		setMonsterCooldown(false);
+
+	}
 	
 	public boolean isHumanCard() {
 		if(getTurnOwner() == playerOne) {
