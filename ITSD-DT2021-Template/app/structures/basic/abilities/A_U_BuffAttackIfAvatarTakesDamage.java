@@ -30,7 +30,7 @@ public class A_U_BuffAttackIfAvatarTakesDamage  implements Ability {
 	// If your avatar is dealt damage, this unit gains +2 attack 
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		// Heal the Avatar 3 HP
+		// Buff the target monster's attack by 2
 		targetMonster.buffAttack(2);
 		return true; 
 	}

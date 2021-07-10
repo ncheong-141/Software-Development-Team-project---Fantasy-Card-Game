@@ -7,9 +7,11 @@ import commands.BasicCommands;
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
+import structures.basic.Avatar;
 import structures.basic.EffectAnimation;
 import structures.basic.HumanPlayer;
 import structures.basic.Monster;
+import structures.basic.Player;
 import structures.basic.Position;
 import structures.basic.Spell;
 import structures.basic.Tile;
@@ -76,8 +78,10 @@ public class CastSpellState implements IUnitPlayStates {
 		if (successfulFlag) {
 			
 			System.out.println("Sucessfully cast spell."); 
-					
-
+			
+			// Possible activations: buff if enemy spell cast, buff if Avatar takes damage
+			checkForBuffs(targetTile.getUnitOnTile(), context);
+			
 			/** Delete card from Hand + update visual **/
 			
 			// Index variables
@@ -89,8 +93,7 @@ public class CastSpellState implements IUnitPlayStates {
 			
 			/** Reset entity selection and board **/  
 			// Deselect after action finished
-			context.deselectAllAfterActionPerformed();
-			
+			context.deselectAllAfterActionPerformed();		
 			
 			// Only update Hand for Human player
 			if (context.getGameStateRef().getTurnOwner() instanceof HumanPlayer) {
@@ -104,14 +107,20 @@ public class CastSpellState implements IUnitPlayStates {
 			if (targetTile.getUnitOnTile().getHP() <= 0) {
 				
 				BasicCommands.playUnitAnimation(context.out, targetTile.getUnitOnTile(), UnitAnimationType.death);
-				GeneralCommandSets.threadSleepLong();
+				try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}	
 				BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
 				GeneralCommandSets.threadSleep();
 				
-				// Update back end data
-				unitDeath(context, targetTile);
-			}
+				// Check for Avatar death/game end
+				if(checkForAvatarDeath(targetTile.getUnitOnTile(), context)) {
+					return;
+				}
+				// Unit dies
+				else {
+					unitDeath(targetTile, context);
+				}	
 			
+			}
 		}
 		else {
 			System.out.println("Spell cast unsucessful, please select another Unit"); 
@@ -121,10 +130,113 @@ public class CastSpellState implements IUnitPlayStates {
 
 	}
 	
+	/**		Helper methods	**/
 	
+	
+	// Simple helper to check if a Monster is an Avatar
+	private boolean isAvatar(Monster m) {
+		if(m.getClass() == Avatar.class) {	return true;	}
+		return false;
+	}
+	
+
+	// Check for buffs due to: damage, spell cast
+	private void checkForBuffs(Monster m, GameplayContext context) {
+		
+		// Friendly Avatar damaged buff
+		checkAvatarDamaged(m, context);
+		
+		// Spell cast buff
+		checkEnemySpellCast(m, context);
+		
+	}
+	
+	
+	private void checkEnemySpellCast(Monster target, GameplayContext context) {
+		
+		// Get turnOwner's opposite
+		Player spellCheck = context.getGameStateRef().getEnemyPlayer();
+		ArrayList <Monster> friendlies = context.getGameStateRef().getBoard().friendlyUnitList(spellCheck);
+		
+		for(Monster f : friendlies) {
+			if(!(f.hasAbility())) {	continue;	}
+			for(Ability a : f.getMonsterAbility()) {
+				if(a.getCallID() == Call_IDs.onEnemySpellCast) {
+					a.execute(f,context.getGameStateRef());
+					
+					System.out.println("After casting a spell my HP is: " + f.getHP() + " and attack is " + f.getAttackValue());
+					
+					// Play animation + update stats
+					BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					GeneralCommandSets.drawUnitWithStats(context.out, f, f.getPosition().getTile(context.getGameStateRef().getBoard()));
+				}
+			}
+		}
+		
+	}
+	
+	private void checkAvatarDamaged(Monster a, GameplayContext context) {
+		
+		// If Avatar condition is not satisfied
+		if(!(isAvatar(a))) {	return;		}
+		
+		// Check for friendly units with ability
+		else {
+			
+			ArrayList <Monster> friendlies = context.getGameStateRef().getBoard().friendlyUnitList(a.getOwner());
+			
+			// For each ally of Avatar a
+			for(Monster m : friendlies) {
+				if(m.hasAbility()) {
+					// For each ability
+					for(Ability abi : m.getMonsterAbility()) {
+						
+						// If ability is triggered by friendly Avatar damage
+						if(abi.getCallID() == Call_IDs.onFriendlyAvatarDamageTaken) {
+							// Change stats
+							abi.execute(m, context.getGameStateRef());
+							
+							System.out.println("After Avatar is damaged, my attack is: " + m.getAttackValue() + " and my health is " + m.getHP());
+								
+								// Play animation + update stats
+								BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), m.getPosition().getTile(context.getGameStateRef().getBoard()));
+								GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
+							}
+							
+						}
+					}
+				}
+				
+			}
+			
+	}
+	
+
+	
+	// Avatar death check --- method checks that the death of a unit is not an Avatar, calls gameOver if so
+	private boolean checkForAvatarDeath(Monster deadUnit, GameplayContext context) {
+		
+		if(isAvatar(deadUnit)) {
+			
+			// Player notification
+			String endgameMessage = "";
+			if(context.getGameStateRef().getPlayerOne() == deadUnit.getOwner()) {
+				endgameMessage += "You lose!";
+			} else {
+				endgameMessage += "You win!";
+			}
+			BasicCommands.addPlayer1Notification(context.out,endgameMessage, 2);
+			
+			// Game ends
+			context.getGameStateRef().gameOver();
+			return true;
+			
+		}
+		return false;
+	}
 	
 	// Unit death method to update location data and delete a Unit from Board
-	private void unitDeath(GameplayContext context, Tile grave) {
+	private void unitDeath(Tile grave, GameplayContext context) {
 		
 		Monster deadUnit = grave.getUnitOnTile();
 		
@@ -141,5 +253,4 @@ public class CastSpellState implements IUnitPlayStates {
 		deadUnit.setPosition(new Position(-1,-1,-1,-1));
 		
 	}
-
 }
