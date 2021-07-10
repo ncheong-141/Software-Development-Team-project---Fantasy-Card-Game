@@ -14,10 +14,10 @@ public class Spell extends Card {
 	
 	
 	/* Sub class attributes */
-	String spellName; 
-	String abilityDescription; 
-	Ability spellAbility; 
-	Class<? extends Monster> targetMonster; 
+	private String spellName; 
+	private String abilityDescription; 
+	private Ability spellAbility; 
+	private Class<? extends Monster> targetMonster; 
 	
 	
 	/* Constructor */
@@ -39,13 +39,8 @@ public class Spell extends Card {
 		return spellAbility; 
 	}
 	
-	public void setAbility(String name, Ability ability, String description) {
+	public void setAbility(String name, Ability ability) {
 		this.spellName 			= name; 
 		this.spellAbility 		= ability;
-		this.abilityDescription = description;
 	}
-	
-	// To do:
-	// Add attribute modifiers
-	
 }

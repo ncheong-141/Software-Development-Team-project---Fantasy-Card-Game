@@ -52,7 +52,7 @@ public class CastSpellState implements IUnitPlayStates {
 		GeneralCommandSets.threadSleep();
 
 		// Set ability to Spell
-		spellToCast.setAbility("Truestrike",AbilityToUnitLinkage.UnitAbility.get(context.getLoadedCard().getCardname()).get(0), "Description");
+		spellToCast.setAbility("Truestrike",AbilityToUnitLinkage.UnitAbility.get(context.getLoadedCard().getCardname()).get(0));
 		
 		/* Cast the Spell on the Unit on tile selected */
 		

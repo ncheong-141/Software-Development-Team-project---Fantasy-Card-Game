@@ -31,6 +31,9 @@ public class Monster extends Unit{
 	protected Player		owner;					// Player who owns the unit
 	protected boolean		onCooldown;				// Tracks when the unit is capable of actions, where true = able
 	
+	// Debuffs
+	protected boolean		provoked;				// Flag to tell if monster should use a altered act range
+	
 	
 	/* Constructor(s) */
 	
@@ -51,6 +54,8 @@ public class Monster extends Unit{
 		this.onCooldown = true;			// Unit is summoned on cooldown
 		
 		this.abilities = null;			// Abilities set in ObjectBuilder for safe object construction
+		
+		this.provoked = false;
 		
 	}
 	
@@ -271,5 +276,32 @@ public class Monster extends Unit{
 		abilities = abs;
 		// Call construction abilities?
 	}
+
+	public void toggleProvoked() {
+		
+		if (provoked) {
+			this.provoked = false;
+		}
+		else {
+			this.provoked = true;
+		}
+	}
 	
+	public void setProvoked(boolean value) {
+		provoked = value;
+	}
+	
+	public boolean hasActionRangeImpaired() {
+
+		// Switch vairable
+		boolean impariedActionRangeFlag = false; 
+		
+		// List of potential debuffs (debuffs would likely be objects if there was more than 1)
+		if (provoked) {
+			impariedActionRangeFlag = true; 
+		}
+		
+		return impariedActionRangeFlag;
+	}
+
 }

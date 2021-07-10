@@ -58,10 +58,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		/* cumulative attack + move range (since all movement takes place before this state).
 		/* For attacker: attackRange should reflect unit's attacks range (omit move range)
 		/* For defender: counterRange should reflect unit's attack range (omit move range)*/
-		ArrayList <Tile> temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), 0));
-		attackerAttackRange = temp;
-		temp = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), 0));
-		defenderCounterRange = temp;
+		
+		attackerAttackRange  = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), 0));
+		defenderCounterRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), 0));
+		
 		
 		// Checks;
 		// Tile not in attack range
@@ -95,10 +95,17 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	private void unitAttack(GameplayContext context) {
 				
-		// Gather action range
-		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
-		ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getMovesLeft());
-		actRange.addAll(mRange);
+		// Gather action range for board visual
+		ArrayList <Tile> actRange;
+		
+		// Use adjust action range based on movement impaired effects
+		if (attacker.hasActionRangeImpaired()) {
+			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
+		}		
+		else {
+			actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
+		}
+
 		
 		// Stores interaction outcomes
 		boolean survived;		
@@ -107,7 +114,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		
 		System.out.println(attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 		if(attacker.attack()) {
-			System.out.println("Attack successful. " + attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
+				System.out.println("Attack successful. " + attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 			
 			// Update defender
 			survived = defender.defend(attacker.getAttackValue());
@@ -203,7 +210,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	// Checks the user's selected Tile is within the attack range of the selected unit
 	private boolean tileInAttackRange() {
-		if(attackerAttackRange.contains(targetTile)) return true;
+		if(attackerAttackRange.contains(targetTile)) 
+			return true;
 		return false;
 	}
 	
@@ -283,7 +291,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		return false;
 	}
 	
-	// Check for Ranged Attacker ability and return EffectAnimation if true
+	// Return EffectAnimation if true
 	private EffectAnimation checkRangedAttacker(Monster attacker) {
 		if(attacker.hasAbility()) {
 			for (Ability a : attacker.getMonsterAbility()) {

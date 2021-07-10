@@ -54,11 +54,13 @@ public class BasicObjectBuilders {
 			Card card = mapper.readValue(new File(cardConfigFile), classtype);
 			card.setId(id);
 			card.setConfigFile(unitConfig);
+			
+			// Set ability data to be held in card for reference from AI etc
 			if(AbilityToUnitLinkage.UnitAbility.containsKey(card.getCardname())) {
-				for(Ability a: AbilityToUnitLinkage.UnitAbility.get(card.getCardname())) {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
-				}
 			}
+			
+			// Set associated class type 
 			if(card.getCardAttack()>=0) {
 				card.setAssociatedClass(Monster.class);
 			}else if(card.getCardAttack()<0) {
@@ -79,11 +81,13 @@ public class BasicObjectBuilders {
 			Card card = mapper.readValue(new File(cardConfigFile), classtype);
 			card.setId(id);
 			card.setConfigFile(cardConfigFile);
+			
+			// Set ability data to be held in card for reference from AI etc
 			if(AbilityToUnitLinkage.UnitAbility.containsKey(card.getCardname())) {
-				for(Ability a: AbilityToUnitLinkage.UnitAbility.get(card.getCardname())) {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
-				}
 			}
+			
+			// Set associated class type 
 			if(card.getCardAttack()>=0) {
 				card.setAssociatedClass(Monster.class);
 			}else if(card.getCardAttack()<0) {

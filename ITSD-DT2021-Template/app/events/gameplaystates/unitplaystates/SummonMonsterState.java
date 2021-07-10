@@ -45,8 +45,16 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 		
-		// Build summonRange for checks
-		summonRange = context.getGameStateRef().getBoard().allSummonableTiles(context.getGameStateRef().getTurnOwner());
+		/** Build summon range **/
+		// Use adjusted range is monster has special skill on summoe
+		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
+			
+			// Abilities with adjusted act range populate this container with adjusted range
+			summonRange = context.getGameStateRef().getTileAdjustedRangeContainer();
+		}
+		else {
+			summonRange = context.getGameStateRef().getBoard().allSummonableTiles(context.getGameStateRef().getTurnOwner());
+		}
 		
 		// Target tile within summon range && sufficient player mana check
 		if(tileInSummonRange() && sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard())) {
@@ -136,8 +144,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 		// Drawing summoned monster with stats on the board
 		GeneralCommandSets.drawUnitWithStats(out, summonedMonster, summonTile);
 		GeneralCommandSets.threadSleep();
-		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
-		GeneralCommandSets.threadSleep();
+//		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
+//		GeneralCommandSets.threadSleep();
 		
 		// Set monster statistics
 //		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
