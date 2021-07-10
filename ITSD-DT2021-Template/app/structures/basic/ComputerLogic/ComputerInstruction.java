@@ -29,4 +29,9 @@ public class ComputerInstruction {
 		return actor;
 	}
 	
+	
+	public String toString() {
+		if (this.card == null) return "monster: " + actor.getName() + "at tile: (" + actor.getPosition().getTilex() + " - " + actor.getPosition().getTiley() + ") to tile " + targetTile;
+		else return "play card " + this.card.getCardname() + " on tile " + this.targetTile;
+	}
 }

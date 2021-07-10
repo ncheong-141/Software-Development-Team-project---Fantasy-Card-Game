@@ -38,9 +38,9 @@ public class ComputerPlayerTurn {
 		if (!cardsToPlay.isEmpty() && cardsToPlay != null) {
 			
 			for (ComputerInstruction cI : cardsToPlay) {
+				System.out.println(cI);
 				if (cI.getCard() == null || cI.getTargetTile() == null) continue;
-				System.out.println("I want to play this card: " + cI.getCard().getCardname() + " on this tile: " + cI.getTargetTile());
-				System.out.println("-----------");
+				
 			//card get class 
 			controller.summonMonster(cI.getCard(), cI.getTargetTile());
 			 
@@ -54,11 +54,11 @@ public class ComputerPlayerTurn {
 		if (attacksToPerform != null && !attacksToPerform.isEmpty()) {
 			System.out.println("Attacks: ");
 			for (ComputerInstruction cI : attacksToPerform) {
+				System.out.println(cI);
 				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
-				System.out.println(cI.getActor().getName()+ " attacks to tile ( " + cI.getTargetTile().getTilex() + " "
-						+ cI.getTargetTile().getTiley()+ " )");
+				
 				Tile currTile = g.getBoard().getTile(cI.getActor().getPosition().getTilex(), cI.getActor().getPosition().getTilex());
-				controller.unitAttack(currTile, cI.getTargetTile());
+				//controller.unitAttack(currTile, cI.getTargetTile());
 			}
 		}
 		
@@ -74,10 +74,11 @@ public class ComputerPlayerTurn {
 		
 		if (!monstersToMove.isEmpty() && monstersToMove != null) {
 			for (ComputerInstruction cI : monstersToMove) {
+				System.out.println(cI);
 				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
-				System.out.println("move monster: " + cI.getActor().getName() + " to tile: " + cI.getTargetTile());
+				
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
-			controller.unitMove(currTile, cI.getTargetTile());
+			//controller.unitMove(currTile, cI.getTargetTile());
 			}
 		}
 		else System.out.println("no moves to make");

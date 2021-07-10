@@ -62,7 +62,7 @@ public class ComputerPlayer extends Player {
 		//get all tiles that this monster could attack from its current tile (with enemies on them)
 		HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
 		
-		System.out.println(wBAttackable.size() + "  " + currAttackable.size());
+		//System.out.println(wBAttackable.size() + "  " + currAttackable.size());
 		
 		
 		if (wBAttackable.size() > currAttackable.size()) targetTile.setScore(Tile.getBringsEnemyInRange());

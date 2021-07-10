@@ -42,9 +42,9 @@ public class ComputerMoveMonsterLogic {
 			 */
 			private ArrayList <Monster> allMovableMonsters(Board gameBoard){
 				ArrayList <Monster> myMonsters = gameBoard.friendlyUnitsWithAvatar(player);
-				System.out.println("num mosters I can move bf check: " + myMonsters.size());
+				//System.out.println("num mosters I can move bf check: " + myMonsters.size());
 				myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
-				System.out.println("after check: " + myMonsters.size());
+				//System.out.println("after check: " + myMonsters.size());
 				
 				return myMonsters;
 			}
@@ -60,7 +60,7 @@ public class ComputerMoveMonsterLogic {
 				ArrayList<MonsterTileOption> optionList = new ArrayList<MonsterTileOption>();
 				
 				for (Monster m : list) {
-					System.out.println("calculating tile options for monster: " + m.getName());
+					//System.out.println("calculating tile options for monster: " + m.getName());
 					optionList.add(new MonsterTileOption (m, gameBoard));   
 				}
 				
@@ -163,11 +163,11 @@ public class ComputerMoveMonsterLogic {
 				MonsterTileOption(Monster m, Board b){
 					this.m = m;
 					this.list = b.unitMovableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getMovesLeft());
-					System.out.println("number of movabale tiles (line 161) : " + list.size());
+					//System.out.println("number of movabale tiles (line 161) : " + list.size());
 					if(list != null && !(list.isEmpty())) {
 						for (Tile t : list) {
 							ComputerPlayer.calcTileMoveScore(m,b,t);
-							System.out.println(" tile ( "+t.getTilex() + " - " + t.getTiley() + " ) score: " + t.getScore());
+							//System.out.println(" tile ( "+t.getTilex() + " - " + t.getTiley() + " ) score: " + t.getScore());
 						}
 						Collections.sort(list);
 						this.score = this.list.get(0).getScore();

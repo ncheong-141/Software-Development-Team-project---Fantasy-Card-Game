@@ -33,7 +33,7 @@ public class ComputerPlayCardsLogic {
 	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(Board gameBoard){
 		
 		ArrayList<Card> cardList = this.playableCards();
-		System.out.println("in comp player card logic. playable cards list size: " + cardList.size());
+		//System.out.println("in comp player card logic. playable cards list size: " + cardList.size());
 		//getting the list of possible card combinations
 		ArrayList <CardCombo> possCombos = this.cardCombos(cardList, gameBoard);
 		
@@ -60,11 +60,11 @@ public class ComputerPlayCardsLogic {
 		private ArrayList <Card> playableCards(){
 			ArrayList<Card> cardList = new ArrayList<Card>();
 			
-			System.out.println("player tot mana: " + player.getMana());
+			//System.out.println("player tot mana: " + player.getMana());
 			for (Card c : this.hand.getHandList()) {
 				//System.out.print(c.getManacost());
 				if (c.getManacost() <= player.getMana()) { 
-					System.out.println("adding card line 60");
+					//System.out.println("adding card line 60");
 					cardList.add(c);
 				
 				}
@@ -84,7 +84,7 @@ public class ComputerPlayCardsLogic {
 			//a card combination (combo) is represented as a set
 			ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
 			if (list.size() == 0) {
-				System.out.println("no playable cards at this time");
+				//System.out.println("no playable cards at this time");
 				return comboList;
 			}
 			//converting playablecards list into an array to an array for ease of indexing
@@ -94,25 +94,25 @@ public class ComputerPlayCardsLogic {
 			}
 			Arrays.sort(playableCards);
 			
-			System.out.println("=== here is the sorted array====");
+			//System.out.println("=== here is the sorted array====");
 			
-			for (int i = 0; i<playableCards.length; i++) System.out.println(playableCards[i].getCardname());
+			//for (int i = 0; i<playableCards.length; i++) System.out.println(playableCards[i].getCardname());
 			//instantiating a combo object (as an array list of card objects)
 			CardCombo combo = new CardCombo();
 			
-			int manaLeft = player.getMana(); System.out.println( "mana left at the start : " + manaLeft);
+			int manaLeft = player.getMana(); //System.out.println( "mana left at the start : " + manaLeft);
 			
 			//iterating over the hand array
 			for (int k = 0; k<playableCards.length; k++) {
-				System.out.println("==========Considering card " +k +"th  "+ playableCards[k].getCardname() + " =========="
-						+ "\n mana left: " + manaLeft);
+				//System.out.println("==========Considering card " +k +"th  "+ playableCards[k].getCardname() + " =========="
+					//+ "\n mana left: " + manaLeft);
 				
 				if (playableCards[k].getManacost() <= manaLeft) {
-					System.out.println("adding card "+k+"th to current combo");
+					//System.out.println("adding card "+k+"th to current combo");
 					//adding the card at position kth in list to a combo
 					combo.add(playableCards[k]);
 					//creating variable to track how much mana the player has left after (hypothetically) playing card k
-					manaLeft -= playableCards[k].getManacost(); System.out.println("mana left after adding card: " + manaLeft);
+					manaLeft -= playableCards[k].getManacost(); //System.out.println("mana left after adding card: " + manaLeft);
 				}
 				
 				//if playing card k clears the player's mana
@@ -127,7 +127,7 @@ public class ComputerPlayCardsLogic {
 					combo = new CardCombo();
 					manaLeft = player.getMana();
 					//move on to k+1 th card in hand
-					System.out.println("finishing the combo, mana left reset :" + manaLeft);
+					//System.out.println("finishing the combo, mana left reset :" + manaLeft);
 					continue;
 				}
 				
@@ -135,7 +135,7 @@ public class ComputerPlayCardsLogic {
 				//iterate over the array, starting from k+1th to check possible combos
 				
 					for (int i = k+1; i<playableCards.length; i++) {
-						System.out.println("printing i: " +i + "printin mana left: " + manaLeft);
+						//System.out.println("printing i: " +i + "printin mana left: " + manaLeft);
 						//if the next card's cost clears leftover mana
 						//add card to current combo, add combo to combo list
 						//reset combo and reset mana to player's mana - cost of card k
@@ -151,10 +151,10 @@ public class ComputerPlayCardsLogic {
 							combo.add(playableCards[i]);
 							
 							manaLeft -= playableCards[i].getManacost();
-							System.out.println("adding card " +i+"th at line 147. ManaLeft : " +manaLeft);
+							//System.out.println("adding card " +i+"th at line 147. ManaLeft : " +manaLeft);
 							//if leftover mana is less than cheapest card no need to check rest of the array
 							if (manaLeft < playableCards[playableCards.length-1].getManacost()) {
-								System.out.println("breaking");
+								//System.out.println("breaking");
 								
 								break;
 							}

@@ -22,7 +22,7 @@ public class MonsterTargetOtpion implements Comparable <MonsterTargetOtpion> {
 		list = b.unitAttackableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getAttackRange(), m.getMovesLeft());
 		
 		if (list == null || list.isEmpty() || list.size() == 0) {
-			System.out.println("no available attackable tiles for this monster " + m.getName());
+			//System.out.println("no available attackable tiles for this monster " + m.getName());
 			this.score = -1;
 		}
 		
@@ -30,12 +30,12 @@ public class MonsterTargetOtpion implements Comparable <MonsterTargetOtpion> {
 			this.checkValidTargets();
 			this.scoreTileList(b);
 			if (list.size() == 0) {
-				System.out.println("no available attackable tiles for this monster " + m.getName());
+				//System.out.println("no available attackable tiles for this monster " + m.getName());
 				this.score = -1;
 			}
 			else{Collections.sort(list);
 				this.score = list.get(0).getScore();
-				System.out.println("this monster top scoring tile is: " + list.get(0) + "with score: " + list.get(0).getScore() + " [in MTO constr line 29]");
+				//System.out.println("this monster top scoring tile is: " + list.get(0) + "with score: " + list.get(0).getScore() + " [in MTO constr line 29]");
 			}
 			
 		}
@@ -46,11 +46,11 @@ public class MonsterTargetOtpion implements Comparable <MonsterTargetOtpion> {
 		list.removeIf(tile -> (tile.getUnitOnTile().getAttackValue() >= m.getHP()));
 	}
 	public void scoreTileList(Board b) {
-		System.out.println("this monster can attack those tiles:");
+		//System.out.println("this monster can attack those tiles:");
 		for (Tile t : list) {
 			calcTileAttackScore(m, b, t);
 			
-			System.out.println("tile: " + t + " with score: " + t.getScore());
+			//System.out.println("tile: " + t + " with score: " + t.getScore());
 			
 		}
 	}
