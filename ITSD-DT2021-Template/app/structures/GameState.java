@@ -12,6 +12,7 @@ import structures.basic.Monster;
 import structures.basic.Player;
 import structures.basic.Tile;
 import structures.basic.abilities.Ability;
+import structures.basic.abilities.AbilityToUnitLinkage;
 import structures.basic.abilities.Call_IDs;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
@@ -48,9 +49,7 @@ public class GameState {
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
-	
-	// Need to remove
-	EndTurnClicked e; 
+	 
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
@@ -66,9 +65,12 @@ public class GameState {
 		
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
 		
+		// Initialising ability to unit linkage data to reference whenever loading units. 
+		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
+
 
 		/* two player mode (comment or uncomment */
-		//twoPlayerMode(); 
+		twoPlayerMode(); 
 		
 		if (twoPlayerMode != true) {
 			
@@ -224,8 +226,8 @@ public class GameState {
 		twoPlayerMode = true; 
 		
 		// Instantite players 
-//		playerOne = new HumanPlayer();
-//		playerTwo= new HumanPlayer(); 
+		playerOne = new HumanPlayer();
+		playerTwo= new HumanPlayer(); 
 
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
