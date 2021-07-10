@@ -48,9 +48,7 @@ public class GameState {
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
-	
-	// Need to remove
-	EndTurnClicked e; 
+	 
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
@@ -68,7 +66,7 @@ public class GameState {
 		
 
 		/* two player mode (comment or uncomment */
-		//twoPlayerMode(); 
+		twoPlayerMode(); 
 		
 		if (twoPlayerMode != true) {
 			
