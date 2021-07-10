@@ -29,9 +29,7 @@ public class Monster extends Unit{
 	
 	// Gameplay info
 	protected Player		owner;					// Player who owns the unit
-	protected boolean		onCooldown;				// Tracks when the unit is capable of actions, where true = able
-	
-	// Debuffs
+	protected boolean		onCooldown;				// Tracks when the unit is capable of actions, where true == able
 	protected boolean		provoked;				// Flag to tell if monster should use a altered act range
 	
 	
@@ -262,7 +260,7 @@ public class Monster extends Unit{
 	}
 	
 	public boolean hasAbility() {
-		if(abilities != null) {
+		if(this.abilities != null) {
 			return true;
 		}
 		return false;
@@ -278,13 +276,7 @@ public class Monster extends Unit{
 	}
 
 	public void toggleProvoked() {
-		
-		if (provoked) {
-			this.provoked = false;
-		}
-		else {
-			this.provoked = true;
-		}
+		this.provoked = !provoked;
 	}
 	
 	public void setProvoked(boolean value) {

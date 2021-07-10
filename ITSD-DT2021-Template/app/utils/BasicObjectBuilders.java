@@ -159,10 +159,8 @@ public class BasicObjectBuilders {
 			System.out.println("mUnit has ID " + mUnit.getId());
 			
 			// Ability setting
-			if(AbilityToUnitLinkage.UnitAbility.containsKey(mUnit.getName())) {
-//				if(mUnit.getAbility() == null) {	mUnit.setAbility(new ArrayList <Ability> ());	}
-				mUnit.setAbility(AbilityToUnitLinkage.UnitAbility.get(mUnit.getName()));
-			}	
+			if(mUnit.getMonsterAbility() == null) {	mUnit.setAbility(new ArrayList <Ability> ());	}
+			mUnit.setAbility(statsRef.getAbilityList());
 			
 			return mUnit; 
 			
@@ -214,6 +212,7 @@ public class BasicObjectBuilders {
 				unit.setName("Human Avatar");
 			} else {
 				unit.setName("AI Avatar");
+				unit.setCooldown(true);
 			}
 			
 			return unit;
