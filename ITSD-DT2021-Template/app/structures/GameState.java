@@ -259,7 +259,7 @@ public class GameState {
 
 		
 		// Cards you want to start with from deck 2 (max 5)
-		int[] cardIDList2 = {7,8,9};
+		int[] cardIDList2 = {0,1,2};
 
 		for (int i = 0; i < cardIDList2.length; i++) {
 			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(i));

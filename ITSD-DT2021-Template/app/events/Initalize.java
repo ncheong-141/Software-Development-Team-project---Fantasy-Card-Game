@@ -45,24 +45,30 @@ public class Initalize implements EventProcessor{
 public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 
-		// Initialising ability to unit linkage data to reference whenever loading units. 
-		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
 
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
 		
-		//boardPrintAllMethods(out, gameState);
-
-		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
-		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
-		u_rPulv.toggleCooldown();
-		
-		u_rPulv.setPositionByTile(gameState.getBoard().getTile(3, 1));
-		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
-		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
+//		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
+//		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
+//		u_rPulv.toggleCooldown();
+//		
+//		u_rPulv.setPositionByTile(gameState.getBoard().getTile(3, 1));
+//		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
+//		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
 
 		//CommandDemo.executeTileHighlightDemo(out, g);
 		//CommandDemo.executeAbilityDemo(out, gameState);
+		
+
+		Card windshrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_windshrike, StaticConfFiles.u_windshrike, 150, Card.class);		
+		Monster u_wind = BasicObjectBuilders.loadMonsterUnit(windshrike.getConfigFile(), windshrike, (Player) gameState.getPlayerTwo(), Monster.class);
+		u_wind.toggleCooldown();
+
+		u_wind.setPositionByTile(gameState.getBoard().getTile(3, 1));
+		gameState.getBoard().getTile(3, 1).addUnit(u_wind);
+		GeneralCommandSets.drawUnitWithStats(out, u_wind, (gameState.getBoard().getTile(3, 1)));
+
 		
 		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
 		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
@@ -80,6 +86,8 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
 		//fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
 		//fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+		
+		
 		
 		
 				
