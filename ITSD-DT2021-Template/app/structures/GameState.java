@@ -80,7 +80,6 @@ public class GameState {
 			// Instantiate players 								
 			playerOne = new HumanPlayer();
 			playerOne.setDeck(deckPlayerOne);
-
 			playerTwo = new ComputerPlayer();
 			playerTwo.setDeck(deckPlayerTwo);
 			
@@ -101,25 +100,16 @@ public class GameState {
 		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
 		gameBoard = new Board();
 		
+		// Avatar instantiation
+		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
+		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
 
-		// Chiara's Avatar fix
-		humanAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.humanAvatar, 0, Avatar.class);
-		humanAvatar.avatarSetUp();
-		humanAvatar.setOwner(playerOne);
-		
-		computerAvatar = (Avatar) BasicObjectBuilders.loadUnit(StaticConfFiles.aiAvatar, 1, Avatar.class);
-		computerAvatar.avatarSetUp();
-		computerAvatar.setOwner(playerTwo);
-		
 		System.out.println("board: " + this.getBoard());
 		System.out.println();
 		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
 		System.out.println();
 		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 
-		// Avatar instantiation
-		//humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
-		//computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
 
 	}
 
@@ -232,8 +222,8 @@ public class GameState {
 		twoPlayerMode = true; 
 		
 		// Instantite players 
-		playerOne = new HumanPlayer();
-		playerTwo= new HumanPlayer(); 
+//		playerOne = new HumanPlayer();
+//		playerTwo= new HumanPlayer(); 
 
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
@@ -283,8 +273,9 @@ public class GameState {
 
 		// If there is a selected unit
 		if(this.getBoard().getUnitSelected() != null) {
-			this.getBoard().setUnitSelected(null);
 			this.getBoard().getUnitSelected().setProvoked(false);
+			this.getBoard().setUnitSelected(null);
+
 		}
 
 		// If there is a card selected in turn owner hand
