@@ -44,16 +44,16 @@ public class AbilityToUnitLinkage {
 	/* Hailstone Golem */	UnitAbility.put("Hailstone Golem", 		constructArrayListAbility());
 	/* Pureblade Enforcer */UnitAbility.put("Pureblade Enforcer", 	constructArrayListAbility(new A_U_BuffAttackHPIfEnemySpellCast(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 	/* Azure Herald */		UnitAbility.put("Azure Herald", 		constructArrayListAbility(new A_U_HealAvatarHPIfSummoned(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
-	/* Silverguard Knight */UnitAbility.put("Silverguard Knight", 	constructArrayListAbility(/*new A_U_Provoke(),*/
+	/* Silverguard Knight */UnitAbility.put("Silverguard Knight", 	constructArrayListAbility(new A_U_Provoke(true, Monster.class, null),
 																	new A_U_BuffAttackIfAvatarTakesDamage(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 	/* Azurite Lion */		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(new A_U_DoubleAttacker(false, Monster.class, null)));	
 	/* Fire Spitter */		UnitAbility.put("Fire Spitter", 		constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
-	/* Ironcliff Guardian */UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility((new A_U_SummonAnywhere(false, Monster.class, null)))/*, 
-																	(new A_U_Provoke())*/);
+	/* Ironcliff Guardian */UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility(new A_U_SummonAnywhere(false, Monster.class, null), new A_U_Provoke(true, Monster.class, null)));
+	
 			System.out.println("Deck 1 done");
 		/***	Deck 2		***/
 	/* Planar Scout */		UnitAbility.put("Planar Scout", 		constructArrayListAbility(new A_U_SummonAnywhere(false, Monster.class, null)));
-	/* Rock Pulveriser */	UnitAbility.put("Rock Pulveriser",		constructArrayListAbility(/*new A_U_Provoke()*/));
+	/* Rock Pulveriser */	UnitAbility.put("Rock Pulveriser",		constructArrayListAbility(new A_U_Provoke(true, Monster.class, null)));
 	/* Pyromancer */		UnitAbility.put("Pyromancer", 			constructArrayListAbility(new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
 	/* Bloodshard Golem */	UnitAbility.put("Bloodshard Golem", 	constructArrayListAbility());
 	/* Blaze Hound */		UnitAbility.put("Blaze Hound", 			constructArrayListAbility(new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class, null)));

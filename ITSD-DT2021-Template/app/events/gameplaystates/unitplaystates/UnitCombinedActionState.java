@@ -33,7 +33,6 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 	public void execute(GameplayContext context) {
 	
 		System.out.println("In UnitCombinedActionSubState.");
-		context.debugPrint();
 		
 		// Check for selected unit abilities that do not require adjacency for attack
 		if(currentTile.getUnitOnTile().getMonsterAbility() != null) {
@@ -49,7 +48,6 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 					break;
 				}
 			}
-			return; 
 		}
 			
 		// CombinedAction state controls state flow
@@ -63,7 +61,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		
 		// Find and set a tile destination for selected unit movement
 		unitDestinationSet(context); 
-
+		
 		// Execute selected unit movement
 		IUnitPlayStates unitMoveState = new UnitMoveActionState(currentTile, destination);	
 		System.out.println("Calling MoveAction from CombinedAction...");
@@ -93,55 +91,87 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 
 	}
 
-	private void unitDestinationSet(GameplayContext context) {
+	private boolean unitDestinationSet(GameplayContext context) {
 				
 		// Retrieve frequently used data
-		Tile currentLocation = context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
+		Tile currentLocation = currentTile;
+		// context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
 		
 		// Selected unit's ranges
-		ArrayList <Tile> moveRange = context.getGameStateRef().getBoard().unitMovableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getMovesLeft());
-		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getAttackRange(), currentLocation.getUnitOnTile().getMovesLeft()));
-		actRange.addAll(moveRange);
+		ArrayList <Tile> actRange; 
+		ArrayList <Tile> moveRange = new ArrayList<Tile>();
 		
+		// Account for movement impairing debuffs
+		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
+			
+			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
+			
+			for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
+				if (t.getUnitOnTile() == null) {
+					moveRange.add(t);
+				}
+			}
+		}
+		else {
+			moveRange = context.getGameStateRef().getBoard().unitMovableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getMovesLeft());
+			actRange = context.getGameStateRef().getBoard().unitAttackableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getAttackRange(), currentLocation.getUnitOnTile().getMovesLeft());
+			//actRange.addAll(moveRange);
+		}
+
 		// Check enemy is in attack range (enemies are retrieved only in attack range of total actRange)
 		if(!(actRange.contains(enemyTarget))) {	
 			System.out.println("Enemy is not in range.");
-			// deselect here?
-			return;
+			return false;
 		}
 		
 		/***	Find and set destination tile relative to enemy target	***/
 		// Establish tiles adjacent to enemy that are within movement range
 		
-		// Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
+		 // Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
 		// Get a movement range from enemy's position (encompasses attack range) -- needs to just be an adjacent Board method
-		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
-		ArrayList <Tile> options = new ArrayList <Tile> ();
-		for(Tile t : temp) {
-			// If tile is adjacent to enemy
-			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) <= 1) && (Math.abs(enemyTarget.getTiley() - t.getTiley()) <= 1)) {
-				// && If adjacent tile is in selected unit's movement range
-				if(moveRange.contains(t)) {
-					options.add(t);
-					System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
+//		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
+//		ArrayList <Tile> options;
+//		for(Tile t : temp) {
+//			// If tile is adjacent to enemy
+//			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) <= 1) && (Math.abs(enemyTarget.getTiley() - t.getTiley()) <= 1)) {
+//				// && If adjacent tile is in selected unit's movement range
+//				if(moveRange.contains(t)) {
+//					options.add(t);
+//					System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
+//				}
+//			}
+//		}
+
+		// Establish tiles adjacent to enemy that are within movement range
+		ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
+		
+		// Select a destination tile from options - prefer cardinal (NESW) direction over diagonal
+		// Check for cardinal and remove redundant tiles
+		for(Tile t : options) {
+			
+			// Check if there is a unit on any of the tiles 
+			if (t.getUnitOnTile() != null) {
+				options.remove(t); 
+			}
+			else {
+				// If total index difference of option and enemy is 1, tile is in cardinal direction relative to enemy
+				if((Math.abs(enemyTarget.getTilex() - t.getTilex()) + (Math.abs(enemyTarget.getTiley() - t.getTiley()))) == 1) {
+					destination = t;
+					break;
 				}
 			}
 		}
 		
-		// Select a destination tile from options - prefer cardinal (NESW) direction over diagonal
-		// Check for cardinal
-		for(Tile t : options) {
-			// If total index difference of option and enemy is 1, tile is in cardinal direction relative to enemy
-			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) + (Math.abs(enemyTarget.getTiley() - t.getTiley()))) == 1) {
-				destination = t;
-				break;
-			}
-		}
-		// Otherwise, choose first option available
-		if(destination == null) {
-			destination = options.get(0);
-		}
 		
+		// Otherwise, choose first option available and check if there is an option
+		if(destination == null && options.size() > 0) {
+			destination = options.get(0);
+			return true;
+		}
+		else {
+			System.out.println("No possible destination during unit combined state.");
+			return false;
+		}
 	}
 	
 }

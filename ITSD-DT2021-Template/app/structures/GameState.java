@@ -258,7 +258,7 @@ public class GameState {
 
 		
 		// Cards you want to start with from deck 2 (max 5)
-		int[] cardIDList2 = {0,1,2};
+		int[] cardIDList2 = {7,8,9};
 
 		for (int i = 0; i < cardIDList2.length; i++) {
 			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(i));
@@ -410,12 +410,14 @@ public class GameState {
 						if (ability.getCallID() == Call_IDs.construction) {
 							ability.execute(targetMonster, this); 
 							abilityContainer.remove(ability);		// Remove this ability to not execute twice
+							System.out.println("Executing ability:" + ability);
 						}
 					}
 
 					// Execute the rest 
 					for (Ability ability : abilityContainer) {
 						ability.execute(targetMonster, this);
+						System.out.println("Executing ability:" + ability);
 					}
 				}
 
@@ -424,6 +426,10 @@ public class GameState {
 		}
 		
 		return abilityFound; 
+	}
+	
+	public boolean useAdjustedMonsterActRange() {
+		return !this.getTileAdjustedRangeContainer().isEmpty();
 	}
 	
 	
