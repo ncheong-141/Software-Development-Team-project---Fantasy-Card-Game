@@ -28,10 +28,11 @@ public class Monster extends Unit{
 	protected int 			attackRange;			// integer range of tiles (in all directions) for attacks
 	
 	// Gameplay info
-	protected Player		owner;					// Player who owns the unit
-	protected boolean		onCooldown;				// Tracks when the unit is capable of actions, where true == able
-	protected boolean		provoked;				// Flag to tell if monster should use a altered act range
-	
+	protected Player			owner;				// Player who owns the unit
+	protected boolean			onCooldown;			// Tracks when the unit is capable of actions, where true == able
+	protected boolean			provoked;			// Flag to tell if monster should use a altered act range
+	protected EffectAnimation	abAnimation;		// EffectAnimation reference for abilities requiring effects that 
+													// are not utilised during execution (e.g. Ranged attacks)
 	
 	/* Constructor(s) */
 	
@@ -49,11 +50,11 @@ public class Monster extends Unit{
 		this.attacksMax = 1;			//
 		this.attackRange = 1;			//
 		
+		this.abilities = null;	
+		
 		this.onCooldown = true;			// Unit is summoned on cooldown
-		
-		this.abilities = null;			// Abilities set in ObjectBuilder for safe object construction
-		
 		this.provoked = false;
+
 		
 	}
 	
@@ -114,7 +115,6 @@ public class Monster extends Unit{
 	// Counter-attack
 	// Logic-related method name for retrieving attackValue of unit, called after surviving an attack.
 	// Counter is not related to attack actions available.
-	// Application-relevant name for retrieving attackValue.
 	public int counter() {
 		return attackValue;
 	}
@@ -272,9 +272,19 @@ public class Monster extends Unit{
 	
 	public void setAbility(ArrayList <Ability> abs) {
 		abilities = abs;
-		// Call construction abilities?
 	}
 
+	public EffectAnimation getAbAnimation() {
+		if(this.abAnimation != null) {
+			return this.abAnimation;
+		}
+		return null;
+	}
+	
+	public void setAbAnimation(EffectAnimation e) {
+		this.abAnimation = e;
+	}
+	
 	public void toggleProvoked() {
 		this.provoked = !provoked;
 	}
