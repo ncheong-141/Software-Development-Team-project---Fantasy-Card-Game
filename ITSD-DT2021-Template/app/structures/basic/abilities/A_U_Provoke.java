@@ -112,7 +112,7 @@ public class A_U_Provoke implements Ability{
 			if (t.getUnitOnTile() != null) {	
 				
 				// If it has an ability
-				if (t.getUnitOnTile().getMonsterAbility() != null) { 
+				if (t.getUnitOnTile().getMonsterAbility() != null && (t.getUnitOnTile().getOwner() == gameState.getEnemyPlayer())) { 
 					for (Ability ability : t.getUnitOnTile().getMonsterAbility() ) {
 						
 						if (ability instanceof A_U_Provoke) {
