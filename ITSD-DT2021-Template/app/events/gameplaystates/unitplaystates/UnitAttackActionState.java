@@ -157,7 +157,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 					}
 					// Unit dies
 					else {
+						BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
 						unitDeath(context, targetTile);
+						GeneralCommandSets.threadSleep();
 					}	
 
 			}
@@ -206,8 +208,8 @@ public class UnitAttackActionState implements IUnitPlayStates {
 						}
 						// Unit dies
 						else {
+							BasicCommands.deleteUnit(context.out, currentTile.getUnitOnTile());
 							unitDeath(context, currentTile);
-							BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
 							GeneralCommandSets.threadSleep();
 						}	
 					}
@@ -234,10 +236,12 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	// Checks the user's selected Tile is within the attack range of the selected unit
 	private boolean tileInRange(Monster m) {
 		if(m == attacker) {
-			if(attackerAttackRange.contains(targetTile)) {	return true;	}
+			if(attackerAttackRange.contains(targetTile)) {	
+				return true;	}
 			return false;
 		} else {
-			if(defenderCounterRange.contains(currentTile)) {	return true;	}
+			if(defenderCounterRange.contains(currentTile)) {	
+				return true;	}
 			return false;
 		}
 

@@ -115,7 +115,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		else {
 			moveRange = context.getGameStateRef().getBoard().unitMovableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getMovesLeft());
 			actRange = context.getGameStateRef().getBoard().unitAttackableTiles(currentLocation.getTilex(), currentLocation.getTiley(), currentLocation.getUnitOnTile().getAttackRange(), currentLocation.getUnitOnTile().getMovesLeft());
-			//actRange.addAll(moveRange);
+			actRange.addAll(moveRange);
 		}
 
 		// Check enemy is in attack range (enemies are retrieved only in attack range of total actRange)
@@ -129,21 +129,21 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		
 		 // Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
 		// Get a movement range from enemy's position (encompasses attack range) -- needs to just be an adjacent Board method
-//		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
-//		ArrayList <Tile> options;
-//		for(Tile t : temp) {
-//			// If tile is adjacent to enemy
-//			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) <= 1) && (Math.abs(enemyTarget.getTiley() - t.getTiley()) <= 1)) {
-//				// && If adjacent tile is in selected unit's movement range
-//				if(moveRange.contains(t)) {
-//					options.add(t);
-//					System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
-//				}
-//			}
-//		}
+		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
+		ArrayList <Tile> options = new ArrayList<Tile>(); 
+		for(Tile t : temp) {
+			// If tile is adjacent to enemy
+			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) <= 1) && (Math.abs(enemyTarget.getTiley() - t.getTiley()) <= 1)) {
+				// && If adjacent tile is in selected unit's movement range
+				if(moveRange.contains(t)) {
+					options.add(t);
+					System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
+				}
+			}
+		}
 
 		// Establish tiles adjacent to enemy that are within movement range
-		ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
+		// ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
 		
 		// Select a destination tile from options - prefer cardinal (NESW) direction over diagonal
 		// Check for cardinal and remove redundant tiles
