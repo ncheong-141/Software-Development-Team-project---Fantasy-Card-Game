@@ -24,6 +24,8 @@ public class ComputerPlayerTurn {
 		compPlayer.setMana(9);
 		compPlayer.setHPBenchMark(10);
 		
+		g.getComputerAvatar().setMovesLeft(2);
+		
 		ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 		
 		System.out.println("=====================AI turn: computing cards=======================");
