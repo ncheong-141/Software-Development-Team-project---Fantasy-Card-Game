@@ -28,6 +28,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	private ArrayList <Tile>	attackerAttackRange;
 	private ArrayList <Tile>	defenderCounterRange;
+	GameplayContext				context; 
 	
 	/*** State constructor ***/
 	/* 
@@ -88,10 +89,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			
 			System.out.println("Enemy is not in attack range.");
 		}
-		
-
-
 	}
+	
+
 	
 	private void unitAttack(GameplayContext context) {
 				

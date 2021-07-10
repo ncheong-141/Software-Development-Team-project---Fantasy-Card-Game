@@ -44,6 +44,7 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		unitMove(context); 
 		
 		// Loop until moveStopped trigger
+		context.getGameStateRef().canInteract = false; 
 		
 		/***	Condition here for combined substate executing, which requires selection is maintained	***/
 		if(!(context.getCombinedActive())) {
@@ -114,7 +115,6 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			// Move animation
 			BasicCommands.playUnitAnimation(context.out, mSelected, UnitAnimationType.move);
 			GeneralCommandSets.threadSleep();
-
 		}
 		// Destination is not in movement range/unit cannot move
 		else {	
@@ -123,3 +123,6 @@ public class UnitMoveActionState implements IUnitPlayStates {
 	}
 	
 }
+
+
+
