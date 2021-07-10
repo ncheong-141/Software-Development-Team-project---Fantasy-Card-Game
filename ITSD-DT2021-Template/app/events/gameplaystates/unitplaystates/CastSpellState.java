@@ -175,7 +175,6 @@ public class CastSpellState implements IUnitPlayStates {
 		
 	}
 	
-	// Check if a 
 	private void checkAvatarDamaged(Monster a, GameplayContext context) {
 		
 		// If Avatar condition is not satisfied
