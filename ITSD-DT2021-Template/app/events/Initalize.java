@@ -49,11 +49,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
 		
-<<<<<<< HEAD
 		//boardPrintAllMethods(out, gameState);
 
-=======
->>>>>>> 2befdbb261558a175b6e58f241ce0ffe19d1c557
+
 //		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
 //		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
 //		u_rPulv.toggleCooldown();
@@ -65,10 +63,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		//CommandDemo.executeTileHighlightDemo(out, g);
 		//CommandDemo.executeAbilityDemo(out, gameState);
 		
-<<<<<<< HEAD
-//		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
-//		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
-=======
+
 
 		Card windshrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_windshrike, StaticConfFiles.u_windshrike, 150, Card.class);		
 		Monster u_wind = BasicObjectBuilders.loadMonsterUnit(windshrike.getConfigFile(), windshrike, (Player) gameState.getPlayerTwo(), Monster.class);
@@ -81,7 +76,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
 		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
->>>>>>> 2befdbb261558a175b6e58f241ce0ffe19d1c557
 		
 		
 		//STUFF FOR TESTING/////
@@ -181,7 +175,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 			i++;
 		}
 		
-		attackMoveDemo(out,g,message);
+		//attackMoveDemo(out,g,message);
 	}
 	
 
