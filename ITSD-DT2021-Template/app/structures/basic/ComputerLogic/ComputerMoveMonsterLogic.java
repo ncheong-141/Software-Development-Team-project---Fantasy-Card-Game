@@ -62,6 +62,7 @@ public class ComputerMoveMonsterLogic {
 				MonsterTileOption[] optionList = new MonsterTileOption[list.size()];
 				
 				for (int i = 0; i<optionList.length; i++) {
+					System.out.println("calculating tile options for monster: " + list.get(i).getName());
 					optionList[i] = new MonsterTileOption (list.get(i), this.gameBoard);
 				}
 				
@@ -138,7 +139,8 @@ public class ComputerMoveMonsterLogic {
 					}
 					//resetting value of k for next loop iteration
 					k=0;
-				}			
+				}	
+				
 				return compMoves;	
 			}
 			//=========================inner class===============================//

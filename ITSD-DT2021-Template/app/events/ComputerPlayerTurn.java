@@ -24,7 +24,11 @@ public class ComputerPlayerTurn {
 		compPlayer.setMana(9);
 		compPlayer.setHPBenchMark(10);
 		
+		
 		g.getComputerAvatar().setMovesLeft(2);
+		g.getComputerAvatar().setName("bob");
+		
+		
 		
 		ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 		
@@ -66,6 +70,8 @@ public class ComputerPlayerTurn {
 		
 		if (!monstersToMove.isEmpty() && monstersToMove != null) {
 			for (ComputerInstruction cI : monstersToMove) {
+				if (cI.getActor() == null) System.out.println("monster is null");
+				if (cI.getTargetTile() == null) System.out.println("tile is null");
 				System.out.println("move monster: " + cI.getActor().getName() + " to tile: " + cI.getTargetTile());
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
 			//controller.unitMove(currTile, cI.getTargetTile());

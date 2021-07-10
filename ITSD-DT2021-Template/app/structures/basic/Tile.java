@@ -191,6 +191,8 @@ public class Tile implements Comparable<Tile>{
 	}
 	
 	
-	// To do:
-	// Consider moving calcTile method
+	
+	public String toString() {
+		return "tile: " + this.tilex + " - " + this.tiley;
+	}
 }
