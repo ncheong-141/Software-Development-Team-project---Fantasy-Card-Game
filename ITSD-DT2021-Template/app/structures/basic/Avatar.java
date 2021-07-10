@@ -9,7 +9,8 @@ package structures.basic;
 
 public class Avatar extends Monster {
 	public Avatar() {
-		
+		super();
+		this.avatarSetUp();
 	}
 	
 

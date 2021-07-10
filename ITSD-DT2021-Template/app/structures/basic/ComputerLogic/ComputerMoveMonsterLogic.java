@@ -13,11 +13,9 @@ import structures.basic.Tile;
 
 public class ComputerMoveMonsterLogic {
 	private ComputerPlayer player;
-	private Board gameBoard;
 	
 	public ComputerMoveMonsterLogic(ComputerPlayer p) {
 		this.player = p;
-		this.gameBoard = p.getGameBoard();
 	}
 	
 	//====================MOVING OF UNITS ON BOARD METHOD=======================//
@@ -27,12 +25,12 @@ public class ComputerMoveMonsterLogic {
 			 * @return returns a list of ComputerInstruction object
 			 * each object contains a monster (currently on the board) and a destination tile
 			 */
-			public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> movesUnits(){
-				ArrayList<Monster> movableMonsters = this.allMovableMonsters();
+			public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> movesUnits(Board gameBoard){
+				ArrayList<Monster> movableMonsters = this.allMovableMonsters(gameBoard);
 				if(movableMonsters.isEmpty()) return new ArrayList<structures.basic.ComputerLogic.ComputerInstruction>();
 				
 				
-				ArrayList<MonsterTileOption> listofMTO = this.getMonstersOptions(movableMonsters);
+				ArrayList<MonsterTileOption> listofMTO = this.getMonstersOptions(movableMonsters, gameBoard);
 				
 				return this.matchMonsterAndTile(listofMTO);
 			}
@@ -42,8 +40,8 @@ public class ComputerMoveMonsterLogic {
 			 * @return method returns a list of monster that the player can move in the current turn
 			 * a monster can be moved iff it has moves left and if onCoolDown == false (monster has started on the board)
 			 */
-			private ArrayList <Monster> allMovableMonsters(){
-				ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitsWithAvatar(player);
+			private ArrayList <Monster> allMovableMonsters(Board gameBoard){
+				ArrayList <Monster> myMonsters = gameBoard.friendlyUnitsWithAvatar(player);
 				System.out.println("num mosters I can move bf check: " + myMonsters.size());
 				//myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
 				System.out.println("after check: " + myMonsters.size());
@@ -57,13 +55,13 @@ public class ComputerMoveMonsterLogic {
 			 * @return an array of MonsterTileOption objects
 			 * each object in the array being return contains a monster and a list of tiles where that monster can move to
 			 */
-			private ArrayList<MonsterTileOption> getMonstersOptions(ArrayList<Monster> list){
+			private ArrayList<MonsterTileOption> getMonstersOptions(ArrayList<Monster> list, Board gameBoard){
 
 				ArrayList<MonsterTileOption> optionList = new ArrayList<MonsterTileOption>();
 				
 				for (Monster m : list) {
 					System.out.println("calculating tile options for monster: " + m.getName());
-					optionList.add(new MonsterTileOption (m, this.gameBoard));   
+					optionList.add(new MonsterTileOption (m, gameBoard));   
 				}
 				
 				return optionList;

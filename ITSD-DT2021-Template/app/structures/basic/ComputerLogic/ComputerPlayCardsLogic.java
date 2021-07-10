@@ -20,28 +20,26 @@ import structures.basic.abilities.Ability;
 
 public class ComputerPlayCardsLogic {
 	private Hand hand;
-	private Board gameBoard;
 	private ComputerPlayer player;
 	
 	public ComputerPlayCardsLogic(ComputerPlayer p) {
 		this.player = p;
 		this.hand = p.getHand();
-		this.gameBoard = p.getGameBoard();
 		System.out.println("===========card logic method============== \nCards in comp player's hand \n");
 		for (Card c : this.hand.getHandList()) System.out.println(c.getCardname() + " manacost " + c.getManacost());
 	}
 	
 	
-	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(){
+	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(Board gameBoard){
 		
 		ArrayList<Card> cardList = this.playableCards();
 		System.out.println("in comp player card logic. playable cards list size: " + cardList.size());
 		//getting the list of possible card combinations
-		ArrayList <CardCombo> possCombos = this.cardCombos(cardList);
+		ArrayList <CardCombo> possCombos = this.cardCombos(cardList, gameBoard);
 		
 		CardCombo combinationToBePlayed = this.chooseCombo(possCombos);
 		
-		HashMap<Tile, Card> cardAndTargetCombo = this.matchCardToTile(combinationToBePlayed);
+		HashMap<Tile, Card> cardAndTargetCombo = this.matchCardToTile(combinationToBePlayed, gameBoard);
 		
 		//extracting the best card combination based on logic in chooseCombo method
 		ArrayList<ComputerInstruction> cardsToBePlayed = this.computeMoves(cardAndTargetCombo); 
@@ -81,7 +79,7 @@ public class ComputerPlayCardsLogic {
 		 * card permutation algorithm provided at the bottom of this class
 		 */
 		
-		private ArrayList<CardCombo> cardCombos(ArrayList <Card> list){
+		private ArrayList<CardCombo> cardCombos(ArrayList <Card> list, Board gameBoard){
 			//method will return a list of combinations of cards
 			//a card combination (combo) is represented as a set
 			ArrayList<CardCombo> comboList = new ArrayList<CardCombo>();
@@ -168,7 +166,7 @@ public class ComputerPlayCardsLogic {
 				
 			}
 			
-			comboList.removeIf(c -> !(this.playableCombo(c)));
+			comboList.removeIf(c -> !(this.playableCombo(c, gameBoard)));
 			
 			return comboList;
 		}
@@ -180,10 +178,10 @@ public class ComputerPlayCardsLogic {
 		 * @return method returns true if and only if every card in the combination could be summoned on the current board
 		 */
 	
-		private boolean playableCombo(CardCombo combo) {
+		private boolean playableCombo(CardCombo combo, Board gameBoard) {
 			//number of playable tiles available to computer player
 			//number of tiles adj to a friendly unit
-			int tilesAvailable = this.gameBoard.allSummonableTiles(player).size();
+			int tilesAvailable = gameBoard.allSummonableTiles(player).size();
 			int tilesNeeded = 0;
 			
 			if (tilesAvailable <=0 || combo.getCardCombo().isEmpty()) return false;
@@ -206,14 +204,14 @@ public class ComputerPlayCardsLogic {
 				int i =0;
 				//while the diff remains negative AND there are still tiles to test in summonable tiles
 				//loops places dummy monster on tile and recalculates delta
-				while (delta < 0 && i<this.gameBoard.allSummonableTiles(player).size()) {
-					this.gameBoard.allSummonableTiles(player).get(i).addUnit(dummy);
-					delta = this.gameBoard.allSummonableTiles(player).size() - tilesNeeded;
+				while (delta < 0 && i< gameBoard.allSummonableTiles(player).size()) {
+					gameBoard.allSummonableTiles(player).get(i).addUnit(dummy);
+					delta = gameBoard.allSummonableTiles(player).size() - tilesNeeded;
 					i++;
 				}
 				//remove dummy unit from board 
 				if (dummy.getPosition() != null) {
-					Tile t = this.gameBoard.getTile(dummy.getPosition().getTilex(), dummy.getPosition().getTiley());
+					Tile t = gameBoard.getTile(dummy.getPosition().getTilex(), dummy.getPosition().getTiley());
 					t.removeUnit();
 				}
 				//end of else condition, re-check delta to see if simulated placing of friendly units made combination payable
@@ -243,10 +241,10 @@ public class ComputerPlayCardsLogic {
 				return possCombos.get(possCombos.size()-1);			
 			}
 			
-			private HashMap <Tile, Card> matchCardToTile(CardCombo combo){
+			private HashMap <Tile, Card> matchCardToTile(CardCombo combo, Board gameBoard){
 				HashMap <Tile, Card> map = new HashMap<Tile, Card>();
 				
-				ArrayList<Tile> possTileList = this.gameBoard.allSummonableTiles(player);
+				ArrayList<Tile> possTileList = gameBoard.allSummonableTiles(player);
 				
 				ArrayList<Card> cardList = new ArrayList<Card>(combo.getCardCombo());
 				ArrayList<Spell> spellList = new ArrayList<Spell>();
@@ -277,7 +275,7 @@ public class ComputerPlayCardsLogic {
 					
 					do {
 						possTileList.get(i).addUnit(dummy);
-						possTileList = this.gameBoard.allSummonableTiles(player);
+						possTileList = gameBoard.allSummonableTiles(player);
 						i++;
 					}while (monsterList.size() > possTileList.size() );	
 					
@@ -290,22 +288,22 @@ public class ComputerPlayCardsLogic {
 					ArrayList<Ability> abilityList = spell.getAbilityList();
 					Ability a = abilityList.get(0);
 					if (a.targetEnemy() && a.getTargetType() == Avatar.class ) {
-						tilez = this.gameBoard.enemyAvatarTile(player);
+						tilez = gameBoard.enemyAvatarTile(player);
 						map.put(tilez,spell);
 					}
 					
 					else if (!a.targetEnemy() && a.getTargetType() == Avatar.class) {
-						tilez = this.gameBoard.ownAvatarTile(player);
+						tilez = gameBoard.ownAvatarTile(player);
 						map.put(tilez, spell);
 					}
 					
 					else if (a.getTargetType() != Avatar.class) {
 						if (a.targetEnemy()) {
-							tilez = this.gameBoard.enemyTile(player).get(0);
+							tilez = gameBoard.enemyTile(player).get(0);
 							if (tilez != null) map.put(tilez, spell);
 						}
 						else {
-							tilez = this.gameBoard.friendlyTile(player).get(0);
+							tilez = gameBoard.friendlyTile(player).get(0);
 							if (tilez != null) map.put(tilez, spell);
 						}
 					}

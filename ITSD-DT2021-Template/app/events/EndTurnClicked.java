@@ -35,33 +35,31 @@ public class EndTurnClicked implements EventProcessor{
 		
 
 	public void endTurnStateChange(ActorRef out, GameState gameState) {  
-
 		gameState.emptyMana(); 										// Empty mana for player who ends the turn
 		gameState.deselectAllEntities();								// Deselect all entities
-		
+		//GeneralCommandSets.boardVisualReset(out, gameState);  	// Visual rest
 
 		// Check if the deck is empty, if so then gameover
 		if (gameState.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
 			gameState.gameOver(); 
 		} else {
 
-			// If holds enough card, get card from deck
+			// If there are cards left in deck, get a card from deck (back end)
 			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());  
-
-			// Draw the card on last index
-			Card card = gameState.getTurnOwner().getDeck().getCardList().get(0);
-			int handPos = (gameState.getTurnOwner().getHand().getHandList().size())-1;
-			BasicCommands.drawCard(out, card, handPos, 0);
-			GeneralCommandSets.threadSleepLong();
+			
+			//if it is human player getting a new card, re-display all card in hand after drawing 
+			if(gameState.getTurnOwner() == gameState.getPlayerOne()) {
+				Card card = gameState.getTurnOwner().getDeck().getCardList().get(0);
+				int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
+				GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, gameState.getTurnOwner().getHand().getHandList()); //refresh hand ,show with one card added	
+			}	
 		}
-
 
 		gameState.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
 		gameState.turnChange(); 				// turnOwner exchanged	
 		gameState.giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
 		//gameState.toCoolDown(); 				// Switch avatars status for current turnOwner
 		gameState.setMonsterCooldown(false);
-
 
 		// Debug mode
 		if (gameState.isTwoPlayerMode()) {
@@ -72,4 +70,6 @@ public class EndTurnClicked implements EventProcessor{
 		}	
 	}
 
+		
 }
+

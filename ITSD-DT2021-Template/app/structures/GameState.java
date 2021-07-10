@@ -46,7 +46,6 @@ public class GameState {
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
-	 
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
@@ -74,7 +73,6 @@ public class GameState {
 	 *		useAdjustedMonsterRange()
 	 *		computerEnd()
 	 */
-	
 
 	/** Constructor **/
 	public GameState() {
@@ -227,9 +225,6 @@ public class GameState {
 	}
 
 
-	
-	
-	
 	/** Two player mode methods (used for debugging) **/
 
 	public boolean isTwoPlayerMode() {
@@ -469,6 +464,14 @@ public class GameState {
 		// Check if the deck is empty, if so then gameover
 		if (this.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
 			gameOver(); 
+		} else {
+			// If holds enough card, get card from deck
+			this.turnOwner.getHand().drawCard(this.turnOwner.getDeck());  
+
+			// Draw the card on last index
+			Card card = this.turnOwner.getDeck().getCardList().get(0);
+			int handPos = this.turnOwner.getHand().getHandList().size()-1;
+			GeneralCommandSets.threadSleepLong();
 		}
 		
 		this.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown

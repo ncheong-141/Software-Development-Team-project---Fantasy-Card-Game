@@ -8,7 +8,6 @@ public class ComputerPlayer extends Player {
 
 	private int hPBenchMark;
 
-	Board gameBoard;
 	boolean playedAllPossibleCards;
 	boolean madeAllPossibleMoves;	
 	
@@ -25,13 +24,7 @@ public class ComputerPlayer extends Player {
 	public String toString() {
 		return "Player Two";
 	}
-	public void setGameBoard(Board b) {
-		this.gameBoard = b;
-	}
-	
-	public Board getGameBoard() {
-		return this.gameBoard;
-	}
+
 	
 	public int getHPBenchMark() {
 		
@@ -42,20 +35,20 @@ public class ComputerPlayer extends Player {
 		this.hPBenchMark = hp;
 	}
 	
-	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(){
+	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> playCards(Board gameBoard){
 		ComputerPlayCardsLogic play = new ComputerPlayCardsLogic(this);
 		
-		return play.playCards();
+		return play.playCards(gameBoard);
 	}
 	
-	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> moveMonsters(){
+	public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> moveMonsters(Board gameBoard){
 		ComputerMoveMonsterLogic move = new ComputerMoveMonsterLogic(this);
-		return move.movesUnits();
+		return move.movesUnits(gameBoard);
 	}
 	
-	public ArrayList <structures.basic.ComputerLogic.ComputerInstruction> performAttacks(){
+	public ArrayList <structures.basic.ComputerLogic.ComputerInstruction> performAttacks(Board gameBoard){
 		ComputerAttackMonsterLogic attack = new ComputerAttackMonsterLogic (this);
-		return attack.computerAttacks();
+		return attack.computerAttacks(gameBoard);
 	}
 	
 	//leaving this method here to be used by both play cards and move logic

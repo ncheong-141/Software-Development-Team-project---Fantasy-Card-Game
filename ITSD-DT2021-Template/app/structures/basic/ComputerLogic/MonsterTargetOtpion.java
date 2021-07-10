@@ -10,7 +10,7 @@ import structures.basic.Tile;
 
 public class MonsterTargetOtpion implements Comparable <MonsterTargetOtpion> {
 	Monster m; 
-	Board b;
+
 	ArrayList<Tile> list;
 	int score;
 	private static int killMod = 2;
@@ -19,19 +19,25 @@ public class MonsterTargetOtpion implements Comparable <MonsterTargetOtpion> {
 	
 	public MonsterTargetOtpion(Monster m, Board b){
 		this.m = m;
-		this.b =b;
 		list = b.unitAttackableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getAttackRange(), m.getMovesLeft());
-		if (list != null && !list.isEmpty()) {
-			this.checkValidTargets();
-			this.scoreTileList();
-			Collections.sort(list);
-			this.score = list.get(0).getScore();
-			System.out.println("this monster top scoring tile is: " + list.get(0) + "with score: " + list.get(0).getScore() + " [in MTO constr line 29]");
-		}
 		
-		else if (list == null || list.isEmpty()) {
+		if (list == null || list.isEmpty() || list.size() == 0) {
 			System.out.println("no available attackable tiles for this monster " + m.getName());
 			this.score = -1;
+		}
+		
+		else {
+			this.checkValidTargets();
+			this.scoreTileList(b);
+			if (list.size() == 0) {
+				System.out.println("no available attackable tiles for this monster " + m.getName());
+				this.score = -1;
+			}
+			else{Collections.sort(list);
+				this.score = list.get(0).getScore();
+				System.out.println("this monster top scoring tile is: " + list.get(0) + "with score: " + list.get(0).getScore() + " [in MTO constr line 29]");
+			}
+			
 		}
 		
 	}
@@ -39,7 +45,7 @@ public class MonsterTargetOtpion implements Comparable <MonsterTargetOtpion> {
 	private void checkValidTargets() {
 		list.removeIf(tile -> (tile.getUnitOnTile().getAttackValue() >= m.getHP()));
 	}
-	public void scoreTileList() {
+	public void scoreTileList(Board b) {
 		System.out.println("this monster can attack those tiles:");
 		for (Tile t : list) {
 			calcTileAttackScore(m, b, t);
