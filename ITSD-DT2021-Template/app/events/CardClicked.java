@@ -34,9 +34,18 @@ public class CardClicked implements EventProcessor{
 
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
-		 // Reset entity selection and board
+		 
+		
+		// Reset entity selection and board
         GeneralCommandSets.boardVisualReset(out, gameState);
         gameState.deselectAllEntities();
+		
+		// Stop user interacting with the UI when this is set
+		if (!gameState.canInteract) {
+			System.out.println("Cant interact.");
+			return;
+		}
+
 		
 		int handPosition = message.get("position").asInt();//gets position in hand of clicked card
 		

@@ -50,6 +50,12 @@ public class TileClicked implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
+		
+		// Stop user interacting with the UI when this is set
+		if (!gameState.canInteract) {
+			return;
+		}
+		
 		// Selected Tile coordinates
 		int tilex = message.get("tilex").asInt();
 		int tiley = message.get("tiley").asInt();

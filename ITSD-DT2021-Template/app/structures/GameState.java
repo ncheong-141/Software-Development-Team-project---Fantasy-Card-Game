@@ -44,7 +44,9 @@ public class GameState {
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
-
+	
+	public boolean			unitMoving; 
+	public boolean 			canInteract;
 
 	
 	private Deck deckPlayerOne;
@@ -58,7 +60,7 @@ public class GameState {
 
 	/** Constructor **/
 	public GameState() {
-		
+				
 		/* Set attributes */ 
 		turnCount = 1;
 		playerDead = false;
@@ -115,6 +117,8 @@ public class GameState {
 		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 
 
+		canInteract = true; 
+		
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/

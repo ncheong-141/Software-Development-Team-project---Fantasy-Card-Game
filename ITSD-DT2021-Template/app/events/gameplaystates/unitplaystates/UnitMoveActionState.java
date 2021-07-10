@@ -108,12 +108,13 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			mSelected.setPositionByTile(targetTile);
 			
 			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
-			// Move animation
-			BasicCommands.playUnitAnimation(context.out, mSelected, UnitAnimationType.move);
-			GeneralCommandSets.threadSleep();
 			// Initiate move
 			BasicCommands.moveUnitToTile(context.out, mSelected, targetTile);
 			GeneralCommandSets.threadSleep();	
+			// Move animation
+			BasicCommands.playUnitAnimation(context.out, mSelected, UnitAnimationType.move);
+			GeneralCommandSets.threadSleep();
+
 		}
 		// Destination is not in movement range/unit cannot move
 		else {	

@@ -24,6 +24,11 @@ public class EndTurnClicked implements EventProcessor{
 	@Override
 	public void processEvent (ActorRef out, GameState gameState, JsonNode message){
 		
+		// Stop user interacting with the UI when this is set
+		if (!gameState.canInteract) {
+			return;
+		}
+		
 		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
 		endTurnStateChange(out, gameState);
 //		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
