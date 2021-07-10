@@ -287,6 +287,10 @@ public class Monster extends Unit{
 		}
 	}
 	
+	public void setProvoked(boolean value) {
+		provoked = value;
+	}
+	
 	public boolean hasActionRangeImpaired() {
 
 		// Switch vairable

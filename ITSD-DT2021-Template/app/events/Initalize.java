@@ -60,7 +60,29 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		u_rPulv.setPositionByTile(gameState.getBoard().getTile(3, 1));
 		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
 		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
+
+		//CommandDemo.executeTileHighlightDemo(out, g);
+		//CommandDemo.executeAbilityDemo(out, gameState);
 		
+		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
+		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
+		
+		
+		//STUFF FOR TESTING/////
+		// Create Card objects to use
+		//Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
+		//Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
+		//Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
+				
+		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
+		//Monster[] fmArray = new Monster[4]; 
+		//fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
+		//fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
+		//fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+		//fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+		
+		
+				
 	}
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
@@ -117,8 +139,10 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	}
 	
 	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
-		g.getPlayerOne().setMana(10);
-		g.getPlayerTwo().setMana(10);
+
+		g.getPlayerOne().setMana(2);
+		g.getPlayerTwo().setMana(9);
+
 		
 		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}

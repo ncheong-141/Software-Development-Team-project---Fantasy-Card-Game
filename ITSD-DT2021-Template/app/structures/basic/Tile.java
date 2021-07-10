@@ -133,6 +133,7 @@ public class Tile implements Comparable<Tile>{
 		else {
 			this.unitOnTile = m;
 			this.free = false;
+
 			m.setPositionByTile(this);
 			
 			return true;			
@@ -142,6 +143,7 @@ public class Tile implements Comparable<Tile>{
 	public boolean removeUnit () {
 		if (this.free || this.unitOnTile==null) return false;
 		else {
+			this.unitOnTile.setPosition(null);
 			this.free = true;
 			this.unitOnTile = null;
 			return true;
@@ -189,6 +191,8 @@ public class Tile implements Comparable<Tile>{
 	}
 	
 	
-	// To do:
-	// Consider moving calcTile method
+	
+	public String toString() {
+		return "tile: " + this.tilex + " - " + this.tiley;
+	}
 }
