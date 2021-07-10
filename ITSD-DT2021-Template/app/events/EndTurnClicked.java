@@ -55,11 +55,11 @@ public class EndTurnClicked implements EventProcessor{
 			GeneralCommandSets.threadSleepLong();
 		}
 
-		gameState.setMonsterCooldown(false);	// Hard set all monsters on turn enders turn to cooldown
+		gameState.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
 		gameState.turnChange(); 				// turnOwner exchanged	
 		gameState.giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
 		//gameState.toCoolDown(); 				// Switch avatars status for current turnOwner
-		gameState.setMonsterCooldown(true);
+		gameState.setMonsterCooldown(false);
 
 		// Debug mode
 		if (gameState.isTwoPlayerMode()) {

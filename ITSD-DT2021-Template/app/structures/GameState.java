@@ -296,9 +296,13 @@ public class GameState {
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
-
-			getTurnOwner().setMana(getTurnCount()+1);  
-
+			if (getTurnOwner() == playerOne) {
+				this.turnCount = getTurnCount()+1;
+				getTurnOwner().setMana(this.turnCount);
+			}
+			else {
+				getTurnOwner().setMana(this.turnCount);
+			}  
 	}
 	
 	//empty mana for player who ends the turn
