@@ -43,17 +43,36 @@ public class GameState {
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
-
-
-
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
-	 
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
-
+	
+	/*
+	 * GameState methods:
+	 * 		GameState()
+	 * 		getTurnCount()	/ setTurnCount()
+	 * 		isPlayerDead()	/ setPlayerDead()
+	 * 		getPlayerOne()	/ getPlayerTwo()
+	 * 		getTurnOwner()	/ setTurnOwner()	/ turnChange()
+	 * 		getEnemyPlayer() / 	 setPlayers()
+	 * 		getHumanAvatar() / getComputerAvatar()
+	 * 		gameOver()
+	 * 		getBoard()
+	 * 		getTileAdjustedContainer()	/ setTileAdjustedContainer()
+	 * 		isTwoPlayerMode() / setTwoPlayerMode() / twoPlayerMode()
+	 * 		deselectAllEntities()
+	 * 		giveMana() / emptyMana()
+	 * 		isDeckEmpty()
+	 * 		toCoolDown()
+	 * 		setMonsterCooldown()
+	 * 		setDeckForStart()
+	 *		checkMonsterAbilityActivation()
+	 *		useAdjustedMonsterRange()
+	 *		computerEnd()
+	 */
 
 
 	/** Constructor **/
@@ -207,9 +226,6 @@ public class GameState {
 	}
 
 
-	
-	
-	
 	/** Two player mode methods (used for debugging) **/
 
 	public boolean isTwoPlayerMode() {
@@ -449,6 +465,14 @@ public class GameState {
 		// Check if the deck is empty, if so then gameover
 		if (this.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
 			gameOver(); 
+		} else {
+			// If holds enough card, get card from deck
+			this.turnOwner.getHand().drawCard(this.turnOwner.getDeck());  
+
+			// Draw the card on last index
+			Card card = this.turnOwner.getDeck().getCardList().get(0);
+			int handPos = this.turnOwner.getHand().getHandList().size()-1;
+			GeneralCommandSets.threadSleepLong();
 		}
 		
 		this.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
