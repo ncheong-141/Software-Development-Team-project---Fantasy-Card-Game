@@ -296,13 +296,17 @@ public class GameState {
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
-			if (getTurnOwner() == playerOne) {
-				this.turnCount = getTurnCount()+1;
-				getTurnOwner().setMana(this.turnCount);
+			if ( getTurnCount() >= 9) {				//if it is the 9th turn or more than 9, setMan to 9 for both players
+					getTurnOwner().setMana(9);
+			}else {		
+				if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
+					this.turnCount = getTurnCount()+1;
+					getTurnOwner().setMana(this.turnCount);
+				}
+				else {
+					getTurnOwner().setMana(this.turnCount);
+				}  
 			}
-			else {
-				getTurnOwner().setMana(this.turnCount);
-			}  
 	}
 	
 	//empty mana for player who ends the turn
@@ -371,6 +375,16 @@ public class GameState {
 	
 	public void computerEnd() {
 		
+	}
+	
+	
+	public boolean isHumanCard() {
+		if(getTurnOwner() == playerOne) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	
