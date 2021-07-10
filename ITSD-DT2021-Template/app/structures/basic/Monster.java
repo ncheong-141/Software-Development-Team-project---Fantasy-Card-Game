@@ -239,7 +239,7 @@ public class Monster extends Unit{
 	// temporary for testing
 	public void setCooldown(boolean b) {
 		this.onCooldown = b;
-		this.actionSet();
+		this.actionSet();	// don't really want to use a hard setter
 	}
 	
 	// Switches cooldown status and dependent variables
