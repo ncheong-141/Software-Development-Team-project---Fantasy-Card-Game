@@ -61,12 +61,9 @@ public class BasicObjectBuilders {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
 			}
 			
-			// Set associated class type 
-			if(card.getCardAttack()>=0) {
-				card.setAssociatedClass(Monster.class);
-			}else if(card.getCardAttack()<0) {
-				card.setAssociatedClass(Spell.class);
-			}
+			// Set associated class type -- Monster only for this Builder
+			card.setAssociatedClass(Monster.class);
+
 			return card;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,12 +85,9 @@ public class BasicObjectBuilders {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
 			}
 			
-			// Set associated class type 
-			if(card.getCardAttack()>=0) {
-				card.setAssociatedClass(Monster.class);
-			}else if(card.getCardAttack()<0) {
-				card.setAssociatedClass(Spell.class);
-			}
+			// Set associated class type - Spell only for this Builder
+			card.setAssociatedClass(Spell.class);
+			
 			return card;
 		} catch (Exception e) {
 			e.printStackTrace();
