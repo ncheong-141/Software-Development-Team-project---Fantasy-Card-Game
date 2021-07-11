@@ -43,9 +43,6 @@ public class GameState {
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
-
-
-
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
@@ -54,7 +51,30 @@ public class GameState {
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
 
-
+	/*
+	 * GameState methods:
+	 * 		GameState()
+	 * 		getTurnCount()	/ setTurnCount()
+	 * 		isPlayerDead()	/ setPlayerDead()
+	 * 		getPlayerOne()	/ getPlayerTwo()
+	 * 		getTurnOwner()	/ setTurnOwner()	/ turnChange()
+	 * 		getEnemyPlayer() / 	 setPlayers()
+	 * 		getHumanAvatar() / getComputerAvatar()
+	 * 		gameOver()
+	 * 		getBoard()
+	 * 		getTileAdjustedContainer()	/ setTileAdjustedContainer()
+	 * 		isTwoPlayerMode() / setTwoPlayerMode() / twoPlayerMode()
+	 * 		deselectAllEntities()
+	 * 		giveMana() / emptyMana()
+	 * 		isDeckEmpty()
+	 * 		toCoolDown()
+	 * 		setMonsterCooldown()
+	 * 		setDeckForStart()
+	 *		checkMonsterAbilityActivation()
+	 *		useAdjustedMonsterRange()
+	 *		computerEnd()
+	 */
+	
 
 	/** Constructor **/
 	public GameState() {
@@ -70,7 +90,7 @@ public class GameState {
 
 
 		/* two player mode (comment or uncomment */
-		twoPlayerMode(); 
+		//twoPlayerMode(); 
 		
 		if (twoPlayerMode != true) {
 			
@@ -249,20 +269,20 @@ public class GameState {
 
 		
 		// Cards you want from deck 1 (max 5)
-		int[] cardIDList1 = {0,1,2};
+		int[] cardIDList1 = {6,7,8};
 		
 		for (int i = 0; i < cardIDList1.length; i++) {
-			this.getPlayerOne().getHand().getHandList().add(drawDeck1.get(i));
+			this.getPlayerOne().getHand().getHandList().add(drawDeck1.get(cardIDList1[i]));
 			playerOne.getDeck().delCard(cardIDList1[i]);
 		}
 		playerOne.getHand().setCurr(cardIDList1.length);
 
 		
 		// Cards you want to start with from deck 2 (max 5)
-		int[] cardIDList2 = {7,8,9};
+		int[] cardIDList2 = {6,7,8};
 
 		for (int i = 0; i < cardIDList2.length; i++) {
-			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(i));
+			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(cardIDList2[i]));
 			playerTwo.getDeck().delCard(cardIDList2[i]);
 		}
 		playerTwo.getHand().setCurr(cardIDList2.length);
@@ -297,8 +317,17 @@ public class GameState {
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
 
-			getTurnOwner().setMana(getTurnCount()+1);  
-
+			if ( getTurnCount() >= 9) {				//if it is the 9th turn or more than 9, setMan to 9 for both players
+					getTurnOwner().setMana(9);
+			}else {		
+				if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
+					this.turnCount = getTurnCount()+1;
+					getTurnOwner().setMana(this.turnCount);
+				}
+				else {
+					getTurnOwner().setMana(this.turnCount);
+				}  
+			}
 	}
 	
 	//empty mana for player who ends the turn
@@ -318,7 +347,7 @@ public class GameState {
 	}
 	
 	
-	// Cooldown monsters
+	// Cooldown monsters  ---Can be deleted?
 	public void toCoolDown() {
 		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());	
 		
@@ -366,12 +395,40 @@ public class GameState {
 	}
 	
 	public void computerEnd() {
+
+		if (isDeckEmpty()) { 
+			gameOver(); 
+			return;
+		}
+			 
+		// If there are cards left in deck, get a card from deck (back end)
+		if(!isHumanCard()) {
+			getTurnOwner().getHand().drawCard(getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
+			endTurnStaticChange();
+		}	
+	}
 		
+	public void endTurnStaticChange() {
+	
+		emptyMana(); 										// Empty mana for player who ends the turn
+		deselectAllEntities();								// Deselect all entities
+		setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
+		turnChange(); 				// turnOwner exchanged	
+		giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
+		setMonsterCooldown(false);
+
 	}
 	
+	public boolean isHumanCard() {
+		if(getTurnOwner() == playerOne) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	
-	
-	
+		
 	/** Generalised method for finding if any monsters require their ability to be executed.
 	 * 	Called in relevant places
 	 ***/
@@ -434,9 +491,6 @@ public class GameState {
 			// Move hand instantiation/set up from gamestate into Player constructor
 			// Move AbilityUnitLinkage call into GameState
 
-//	public static void computerEnd() {
-//		// TODO Auto-generated method stub
-//		
-//	}
+
 	
 }

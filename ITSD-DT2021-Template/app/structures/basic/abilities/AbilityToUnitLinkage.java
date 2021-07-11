@@ -48,8 +48,7 @@ public class AbilityToUnitLinkage {
 		UnitAbility.put("Azure Herald", 		constructArrayListAbility(	new A_U_HealAvatarHPIfSummoned(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 		UnitAbility.put("Silverguard Knight", 	constructArrayListAbility(	new A_U_Provoke(true, Monster.class, null),
 																			new A_U_BuffAttackIfAvatarTakesDamage(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
-		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(	new A_U_DoubleAttacker(false, Monster.class, null), 
-																			new A_U_SummonAnywhere(false, null, null)));	
+		UnitAbility.put("Azurite Lion", 		constructArrayListAbility(	new A_U_DoubleAttacker(false, Monster.class, null)));	
 		UnitAbility.put("Fire Spitter", 		constructArrayListAbility(	new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
 		UnitAbility.put("Ironcliff Guardian", 	constructArrayListAbility(	new A_U_SummonAnywhere(false, null, null), 
 																			new A_U_Provoke(true, Monster.class, null)));
@@ -58,13 +57,13 @@ public class AbilityToUnitLinkage {
 		/***	Deck 2		***/
 		UnitAbility.put("Planar Scout", 		constructArrayListAbility(	new A_U_SummonAnywhere(false, null, null)));
 		UnitAbility.put("Rock Pulveriser",		constructArrayListAbility(	new A_U_Provoke(true, Monster.class, null)));
-		UnitAbility.put("Pyromancer", 			constructArrayListAbility(	new A_U_RangedAttacker(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
+		UnitAbility.put("Pyromancer", 			constructArrayListAbility(	new A_U_RangedAttacker(false, null, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles)))));	
 		UnitAbility.put("Bloodshard Golem", 	constructArrayListAbility());
-		UnitAbility.put("Blaze Hound", 			constructArrayListAbility(	new A_U_PlayersDrawCardOnUnitSummon(false, Monster.class, null)));
-		UnitAbility.put("Windshrike", 			constructArrayListAbility(	new A_U_Flying(false, Monster.class, null),
-																			new A_U_DrawCardOnUnitDeath(false, Monster.class, null)));																
+		UnitAbility.put("Blaze Hound", 			constructArrayListAbility(	new A_U_PlayersDrawCardOnUnitSummon(false, null, null)));
+		UnitAbility.put("WindShrike", 			constructArrayListAbility(	new A_U_Flying(false, null, null),
+																			new A_U_DrawCardOnUnitDeath(false, null, null)));																
 		/* Hailstone Golem 		--- identical to Deck 1	*/
-		UnitAbility.put("Serpenti", 			constructArrayListAbility(	new A_U_DoubleAttacker(false, Monster.class, null)));	
+		UnitAbility.put("Serpenti", 			constructArrayListAbility(	new A_U_DoubleAttacker(false, null, null)));	
 	
 	
 	}

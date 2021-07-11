@@ -45,6 +45,8 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 		
+		// Check if monster has any on construction abilities 
+		
 		/** Build summon range **/
 		// Use adjusted range is monster has special skill on summoe
 		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
@@ -144,19 +146,15 @@ public class SummonMonsterState implements IUnitPlayStates {
 		// Drawing summoned monster with stats on the board
 		GeneralCommandSets.drawUnitWithStats(out, summonedMonster, summonTile);
 		GeneralCommandSets.threadSleep();
-//		BasicCommands.playUnitAnimation(out, summonedMonster, UnitAnimationType.idle);
-//		GeneralCommandSets.threadSleep();
-		
-		// Set monster statistics
-//		BasicCommands.setUnitHealth(out, summonedMonster, summonedMonster.getHP());
-//		GeneralCommandSets.threadSleep();
-//		BasicCommands.setUnitAttack(out, summonedMonster, summonedMonster.getAttackValue());
-//		GeneralCommandSets.threadSleep();
 		
 		// Check for on-summon triggers
-			// Trigger abilities that permanently change the new object
-			
+		// Trigger abilities that permanently change the new object	
+		
+		
 		if(summonedMonster.getMonsterAbility() != null) {
+			
+			System.out.println("Monster ability of monster: " + summonedMonster.getName() + ":  " + summonedMonster.getMonsterAbility());
+
 			for(Ability a : summonedMonster.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.construction) {
 					a.execute(summonedMonster, gameState);
@@ -170,11 +168,6 @@ public class SummonMonsterState implements IUnitPlayStates {
 					
 					// Target logic
 					if (a.getTargetType() == Avatar.class) {
-						
-						/**
-						 * 
-						 * NOTE HARD CODED IN HUMAN AND COMPUTER AVATAR RIGHT NOW
-						 */
 						
 						if (a.targetEnemy() == false) {									
 							a.execute(gameState.getHumanAvatar(), gameState);					
@@ -192,13 +185,9 @@ public class SummonMonsterState implements IUnitPlayStates {
 							// Not acting on enemy monsters atm? 
 						}		
 					}
-					
 				}
 			}
-		}
-		
-
-		
+		}	
 	}
 	
 	/*	Helper methods	*/
