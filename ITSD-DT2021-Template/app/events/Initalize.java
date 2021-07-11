@@ -57,61 +57,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
-
-//		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
-//		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
-//		u_rPulv.toggleCooldown();
-//		
-//		u_rPulv.setPositionByTile(gameState.getBoard().getTile(3, 1));
-//		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
-//		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
-
-		
-
-
-//		Card windshrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_windshrike, StaticConfFiles.u_windshrike, 150, Card.class);		
-//		Monster u_wind = BasicObjectBuilders.loadMonsterUnit(windshrike.getConfigFile(), windshrike, (Player) gameState.getPlayerTwo(), Monster.class);
-//		u_wind.toggleCooldown();
-//
-//		u_wind.setPositionByTile(gameState.getBoard().getTile(3, 1));
-//		gameState.getBoard().getTile(3, 1).addUnit(u_wind);
-//		GeneralCommandSets.drawUnitWithStats(out, u_wind, (gameState.getBoard().getTile(3, 1)));
-
-//		
-//		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
-//		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
-//		
-
-		
-		//////STUFF FOR TESTING/////
-		// Create Card objects to use
-
-		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
-		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
-		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
-				
-		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
-		Monster[] fmArray = new Monster[4]; 
-		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
-		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
-		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
-		//fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
-		
-		Board board = gameState.getBoard();
-		Tile a,b,c;
-		a = board.getTile(4, 1);
-		b = board.getTile(1, 4);
-		c = board.getTile(3, 3);
-		
-		a.addUnit(fmArray[0]);
-		b.addUnit(fmArray[1]);
-		c.addUnit(fmArray[2]);
-		
-		GeneralCommandSets.drawUnitWithStats(out, fmArray[0], a);
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		GeneralCommandSets.drawUnitWithStats(out, fmArray[1], b);
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		GeneralCommandSets.drawUnitWithStats(out, fmArray[2], c);
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();
@@ -136,15 +81,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		Avatar humanAvatar = g.getHumanAvatar();
 		Avatar computerAvatar = g.getComputerAvatar();
-		
-		
-		
-		
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		humanAvatar.setAttackValue(2);
-		computerAvatar.setAttackValue(2);
-		
 		
 		//display avatars on board
 
@@ -196,169 +133,75 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 			i++;
 		}
 
-		
-		//attackMoveDemo(out,g,message);
 	}
 	
 
 
 
 	private static void boardPrintAllMethods(ActorRef out, GameState gameState) {
-		
-		
-		Board board = gameState.getBoard();
-		
-		for (int i = 0; i<board.getGameBoard().length; i++) {
-			for (int k = 0; k<board.getGameBoard()[0].length; k++) {
-				BasicCommands.drawTile(out, board.getGameBoard()[i][k], 0);
-			}
-			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		}
-		
-		
-		Tile currentTile = gameState.getBoard().getTile(5, 3);
-		
-		Card como = BasicObjectBuilders.loadCard(StaticConfFiles.c_comodo_charger, StaticConfFiles.u_comodo_charger, 154, Card.class);
-		Monster u_como = BasicObjectBuilders.loadMonsterUnit(como.getConfigFile(), como, (Player) gameState.getPlayerOne(), Monster.class);
-		
-		u_como.toggleCooldown();
-		currentTile.addUnit(u_como);
-		u_como.setPositionByTile(currentTile);
-		
-		
-		BasicCommands.addPlayer1Notification(out, "All free tiles", 4);
-		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().allFreeTiles(), 2);
-		GeneralCommandSets.threadSleepOverride(4000);
-		GeneralCommandSets.boardVisualReset(out, gameState);
-		
-		BasicCommands.addPlayer1Notification(out, "adjTiles", 4);
-		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().adjTiles(currentTile) , 2);
-		GeneralCommandSets.threadSleepOverride(4000);
-		GeneralCommandSets.boardVisualReset(out, gameState);
-
-		
-		BasicCommands.addPlayer1Notification(out, "cardinally adjacent", 4);
-		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().cardinallyAdjTiles(currentTile) , 2);
-		GeneralCommandSets.threadSleepOverride(4000);
-		GeneralCommandSets.boardVisualReset(out, gameState);
-
-		
-		BasicCommands.addPlayer1Notification(out, "Actionable tiles", 4);
-		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitAllActionableTiles(5, 3, u_como.getAttackRange(), u_como.getMovesLeft()) , 2);
-		GeneralCommandSets.threadSleepOverride(4000);
-		GeneralCommandSets.boardVisualReset(out, gameState);
-
-		
-		BasicCommands.addPlayer1Notification(out, "Attackable tiles", 4);
-		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitAttackableTiles(5, 3, u_como.getAttackRange(), u_como.getMovesLeft()) , 2);
-		GeneralCommandSets.threadSleepOverride(4000);
-		GeneralCommandSets.boardVisualReset(out, gameState);
-
-		
-		BasicCommands.addPlayer1Notification(out, "Moveable tiles", 4);
-		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitMovableTiles(5, 3, u_como.getMovesLeft()), 2);
-		GeneralCommandSets.threadSleepOverride(4000);
-		GeneralCommandSets.boardVisualReset(out, gameState);
-		
-		BasicCommands.addPlayer1Notification(out, "Reachable tiles", 4);
-		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().reachableTiles(5, 3, u_como.getMovesLeft()), 2);
-		GeneralCommandSets.threadSleepOverride(4000);
-		GeneralCommandSets.boardVisualReset(out, gameState);
-				
+//		
+//		
+//		Board board = gameState.getBoard();
+//		
+//		for (int i = 0; i<board.getGameBoard().length; i++) {
+//			for (int k = 0; k<board.getGameBoard()[0].length; k++) {
+//				BasicCommands.drawTile(out, board.getGameBoard()[i][k], 0);
+//			}
+//			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+//		}
+//		
+//		
+//		Tile currentTile = gameState.getBoard().getTile(5, 3);
+//		
+//		Card como = BasicObjectBuilders.loadCard(StaticConfFiles.c_comodo_charger, StaticConfFiles.u_comodo_charger, 154, Card.class);
+//		Monster u_como = BasicObjectBuilders.loadMonsterUnit(como.getConfigFile(), como, (Player) gameState.getPlayerOne(), Monster.class);
+//		
+//		u_como.toggleCooldown();
+//		currentTile.addUnit(u_como);
+//		u_como.setPositionByTile(currentTile);
+//		
+//		
+//		BasicCommands.addPlayer1Notification(out, "All free tiles", 4);
+//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().allFreeTiles(), 2);
+//		GeneralCommandSets.threadSleepOverride(4000);
+//		GeneralCommandSets.boardVisualReset(out, gameState);
+//		
+//		BasicCommands.addPlayer1Notification(out, "adjTiles", 4);
+//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().adjTiles(currentTile) , 2);
+//		GeneralCommandSets.threadSleepOverride(4000);
+//		GeneralCommandSets.boardVisualReset(out, gameState);
+//
+//		
+//		BasicCommands.addPlayer1Notification(out, "cardinally adjacent", 4);
+//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().cardinallyAdjTiles(currentTile) , 2);
+//		GeneralCommandSets.threadSleepOverride(4000);
+//		GeneralCommandSets.boardVisualReset(out, gameState);
+//
+//		
+//		BasicCommands.addPlayer1Notification(out, "Actionable tiles", 4);
+//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitAllActionableTiles(5, 3, u_como.getAttackRange(), u_como.getMovesLeft()) , 2);
+//		GeneralCommandSets.threadSleepOverride(4000);
+//		GeneralCommandSets.boardVisualReset(out, gameState);
+//
+//		
+//		BasicCommands.addPlayer1Notification(out, "Attackable tiles", 4);
+//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitAttackableTiles(5, 3, u_como.getAttackRange(), u_como.getMovesLeft()) , 2);
+//		GeneralCommandSets.threadSleepOverride(4000);
+//		GeneralCommandSets.boardVisualReset(out, gameState);
+//
+//		
+//		BasicCommands.addPlayer1Notification(out, "Moveable tiles", 4);
+//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitMovableTiles(5, 3, u_como.getMovesLeft()), 2);
+//		GeneralCommandSets.threadSleepOverride(4000);
+//		GeneralCommandSets.boardVisualReset(out, gameState);
+//		
+//		BasicCommands.addPlayer1Notification(out, "Reachable tiles", 4);
+//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().reachableTiles(5, 3, u_como.getMovesLeft()), 2);
+//		GeneralCommandSets.threadSleepOverride(4000);
+//		GeneralCommandSets.boardVisualReset(out, gameState);
+//				
 	}
-	
-	
-	private static void attackMoveDemo(ActorRef out, GameState g, JsonNode message) {
-		
-		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
-		
-		ArrayList <Monster> monsToLink = new ArrayList <Monster> ();
-		
-		// Load some enemy cards
-		Card blood = BasicObjectBuilders.loadCard(StaticConfFiles.c_bloodshard_golem, StaticConfFiles.u_bloodshard_golem, 148, Card.class);
-		Card planSco = BasicObjectBuilders.loadCard(StaticConfFiles.c_planar_scout, StaticConfFiles.u_planar_scout, 149, Card.class);
-		// Flying/Draw card on death
-		Card windshrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_windshrike, StaticConfFiles.u_windshrike, 150, Card.class);
-		// Provoke
-		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
-		// Ranged
-		Card fires = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, StaticConfFiles.u_fire_spitter, 152, Card.class);
-		// Double attack
-		Card azureL = BasicObjectBuilders.loadCard(StaticConfFiles.c_azurite_lion, StaticConfFiles.u_azurite_lion, 153, Card.class);
-		
-		// Load some friendly cards
-		Card como = BasicObjectBuilders.loadCard(StaticConfFiles.c_comodo_charger, StaticConfFiles.u_comodo_charger, 154, Card.class);
-		Card hail = BasicObjectBuilders.loadCard(StaticConfFiles.c_hailstone_golem, StaticConfFiles.u_hailstone_golem, 155, Card.class);
-		// Buff - ^attack when Av takes damage
-		Card silverg = BasicObjectBuilders.loadCard(StaticConfFiles.c_silverguard_knight,StaticConfFiles.u_silverguard_knight, 156, Card.class);
-		// Double attack
-		Card frazureL = BasicObjectBuilders.loadCard(StaticConfFiles.c_azurite_lion, StaticConfFiles.u_azurite_lion, 157, Card.class);
-		// Ranged attack
-		Card frfires = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, StaticConfFiles.u_fire_spitter, 158, Card.class);
-		
-		// Load enemy units
-		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) g.getPlayerTwo(), Monster.class);
-			u_rPulv.toggleCooldown();
-			
-			u_rPulv.setPositionByTile(g.getBoard().getTile(3, 1));
-			g.getBoard().getTile(3, 1).addUnit(u_rPulv);
-			GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (g.getBoard().getTile(3, 1)));
-		Monster u_fires = BasicObjectBuilders.loadMonsterUnit(fires.getConfigFile(), fires, (Player) g.getPlayerTwo(), Monster.class);
-			u_fires.toggleCooldown();
-		Monster u_azureL = BasicObjectBuilders.loadMonsterUnit(azureL.getConfigFile(), azureL, (Player) g.getPlayerTwo(), Monster.class);
-			u_azureL.toggleCooldown();
-		
-		// Load friendly units
-		Monster u_como = BasicObjectBuilders.loadMonsterUnit(como.getConfigFile(), como, (Player) g.getPlayerOne(), Monster.class);
-			u_como.toggleCooldown();
-		Monster u_frazureL = BasicObjectBuilders.loadMonsterUnit(frazureL.getConfigFile(), frazureL, (Player) g.getPlayerOne(), Monster.class); 
-			u_frazureL.toggleCooldown();
-		Monster u_frfires = BasicObjectBuilders.loadMonsterUnit(frfires.getConfigFile(), frfires, (Player) g.getPlayerOne(), Monster.class);
-			u_frfires.toggleCooldown();
-		
-		// Enemy units
-		u_rPulv.setPositionByTile(g.getBoard().getTile(3, 1));
-		g.getBoard().getTile(3, 1).addUnit(u_rPulv);
-		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (g.getBoard().getTile(3, 1)));
-		monsToLink.add(u_rPulv);
-		
-		u_fires.setPositionByTile(g.getBoard().getTile(3, 3));
-		g.getBoard().getTile(3, 3).addUnit(u_fires);
-		GeneralCommandSets.drawUnitWithStats(out, u_fires, (g.getBoard().getTile(3, 3)));
-		monsToLink.add(u_fires);
-		
-		u_azureL.setPositionByTile(g.getBoard().getTile(6, 1));
-		g.getBoard().getTile(6, 1).addUnit(u_azureL);
-		GeneralCommandSets.drawUnitWithStats(out, u_azureL, (g.getBoard().getTile(6, 1)));
-		monsToLink.add(u_azureL);
-		
-		// Friendly units
 
-		monsToLink.add(u_como);
-
-		u_frazureL.setPositionByTile(g.getBoard().getTile(5, 2));
-		g.getBoard().getTile(5, 2).addUnit(u_frazureL);
-		GeneralCommandSets.drawUnitWithStats(out, u_frazureL, g.getBoard().getTile(5, 2));
-		monsToLink.add(u_frazureL);
-					
-		u_frfires.setPositionByTile(g.getBoard().getTile(5, 4));
-		g.getBoard().getTile(5, 4).addUnit(u_frfires);
-		GeneralCommandSets.drawUnitWithStats(out, u_frfires, g.getBoard().getTile(5, 4));
-		monsToLink.add(u_frfires);
-		u_frfires.setMovesLeft(10);
-		
-		/***		Ability linkage since this usually happens after summon	***/
-		
-		for(Monster m : monsToLink) {
-			if(m.getMonsterAbility() == null) { continue;	}
-			for(Ability a : m.getMonsterAbility()) {
-				if(a.getCallID() == Call_IDs.construction) {
-					a.execute(m, g);
-				}
-			}
-		}
-		
-	}
 }
 
 
