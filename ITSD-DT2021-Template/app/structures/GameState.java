@@ -44,7 +44,7 @@ public class GameState {
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
-	private boolean 		canInteract;
+	private boolean 		locked;
 	private boolean			unitMovingFlag; 
 
 	
@@ -89,7 +89,7 @@ public class GameState {
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
 		
 		// Flags
-		canInteract = true; 
+		locked = true; 
 		unitMovingFlag = false; 
 		
 		// Initialising ability to unit linkage data to reference whenever loading units. 
@@ -237,19 +237,19 @@ public class GameState {
 	/** User interaction control methods **/
 	public void userinteractionLock() {
 		System.out.println("User Interaction locked.");
-		canInteract = false;
+		locked = true;
 	}
 	
 	public void userinteractionUnlock() {
 		System.out.println("User Interaction unlocked.");
-		canInteract = true; 
+		locked = false; 
 	}
 	
 	public boolean userinteractionLocked() {
-		if (!canInteract) {
+		if (locked) {
 			System.out.println("User Interaction is currently locked during action.");
 		}
-		return !canInteract;
+		return locked;
 	}
 	
 	
