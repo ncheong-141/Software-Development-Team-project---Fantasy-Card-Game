@@ -41,10 +41,12 @@ public class ComputerPlayerTurn {
 			for (ComputerInstruction cI : cardsToPlay) {
 				System.out.println(cI);
 				
-				  if (cI.getCard() == null || cI.getTargetTile() == null) continue; else { if
-				  (cI.getCard().getAssociatedClass() == Spell.class) controller.spellCast(cI.getCard(),
-				  cI.getTargetTile()); else { controller.summonMonster(cI.getCard(),
-				  cI.getTargetTile());
+				  if (cI.getCard() == null || cI.getTargetTile() == null) continue; 
+				  else { 
+					  System.out.println("get class: " + cI.getCard().getClass().getName());
+					  System.out.println("get associated class: " + cI.getCard().getAssociatedClass().getName());
+					  if  (cI.getCard().getAssociatedClass() == Spell.class) controller.spellCast(cI.getCard(), cI.getTargetTile()); 
+					  else { controller.summonMonster(cI.getCard(), cI.getTargetTile());
 				  try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();} } }
 				 
 
