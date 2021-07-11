@@ -264,6 +264,25 @@ public class A_U_Provoke implements Ability{
 		
 		System.out.println("MovesLeft provke: " + targetMonster.getMovesLeft());
 		
+		
+		// Account for ranged attackers not being provoked if not adjacent (if adjacent then the code terminates earlier (at TM tile section)
+		if (targetMonster.hasAbility()) {
+			for (Ability a : targetMonster.getMonsterAbility()) {
+				
+				if(a instanceof A_U_RangedAttacker) {
+					
+					displayTiles.addAll(gameState.getBoard().enemyTile(gameState.getTurnOwner()));
+					
+					if (gameState.getTurnOwner() == gameState.getPlayerOne()) {
+						displayTiles.add(gameState.getComputerAvatar().getPosition().getTile(gameState.getBoard()));
+					}
+					else {
+						displayTiles.add(gameState.getHumanAvatar().getPosition().getTile(gameState.getBoard()));
+					}
+				}
+			}
+		}
+		
 		// Set output
 		gameState.setTileAdjustedRangeContainer(displayTiles);
 		return true; 

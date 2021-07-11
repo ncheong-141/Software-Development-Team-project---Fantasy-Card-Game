@@ -22,7 +22,7 @@ import akka.actor.ActorRef;
 
 public class GeneralCommandSets {
 	
-	private static final int threadSleepTime = 10; 
+	private static final int threadSleepTime = 30; 
 	private static final int threadSleepTimeLong = 100; 
 	private static final int bufferSize = 16; 
 	
