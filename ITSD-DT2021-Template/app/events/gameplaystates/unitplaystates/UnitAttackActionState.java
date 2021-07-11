@@ -104,10 +104,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
 		}		
 		else {
-			ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(),attacker.getMovesLeft());
-			ArrayList <Tile> aRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
-			actRange = aRange;
-			actRange.addAll(mRange);
+			actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
 		}
 
 		
@@ -172,7 +169,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				else {
 					
 					// Check for attacker destination and reachable by defender (ranged/adjacent)
-					if(!(tileInRange(defender)) || checkRangedAttacker(defender) == null) {	
+					if((checkRangedAttacker(defender) == null) && !(tileInRange(defender))) {	
 						System.out.println("Defender cannot counter attack.");
 						return;	
 					}
@@ -239,12 +236,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	// Checks the user's selected Tile is within the attack range of the selected unit
 	private boolean tileInRange(Monster m) {
 		if(m == attacker) {
-			if(attackerAttackRange.contains(targetTile)) {	
-				return true;	}
+			if(attackerAttackRange.contains(targetTile)) {	return true;	}
 			return false;
 		} else {
-			if(defenderCounterRange.contains(currentTile)) {	
-				return true;	}
+			if(defenderCounterRange.contains(currentTile)) {	return true;	}
 			return false;
 		}
 

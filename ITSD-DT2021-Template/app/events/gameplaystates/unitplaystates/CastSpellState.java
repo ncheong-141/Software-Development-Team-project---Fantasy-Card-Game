@@ -108,8 +108,7 @@ public class CastSpellState implements IUnitPlayStates {
 				
 				BasicCommands.playUnitAnimation(context.out, targetTile.getUnitOnTile(), UnitAnimationType.death);
 				try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}	
-				BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
-				GeneralCommandSets.threadSleep();
+
 				
 				// Check for Avatar death/game end
 				if(checkForAvatarDeath(targetTile.getUnitOnTile(), context)) {
@@ -117,7 +116,9 @@ public class CastSpellState implements IUnitPlayStates {
 				}
 				// Unit dies
 				else {
+					BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
 					unitDeath(targetTile, context);
+					GeneralCommandSets.threadSleep();
 				}	
 			
 			}
