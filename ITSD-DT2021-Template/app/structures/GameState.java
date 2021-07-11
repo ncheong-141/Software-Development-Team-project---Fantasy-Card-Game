@@ -377,7 +377,9 @@ public class GameState {
 		
 		// Set cooldowns
 		for(Monster m : toCool){
+			if(m.getOnCooldown() != value) {
 				m.setCooldown(value);	
+			}
 		}
 	}
 	
