@@ -67,6 +67,13 @@ public class CastSpellState implements IUnitPlayStates {
 			
 			// Cast spell and return a flag to indicate if worked
 			successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+		
+		}
+		
+		// Apply changes to gamestate if successful cast	
+		if (successfulFlag) {
+			
+			System.out.println("Sucessfully cast spell."); 
 			
 			// Play effect animation associated with ability (if present)
 			if (spellToCast.getAbility().getEffectAnimation() != null) {
@@ -74,12 +81,6 @@ public class CastSpellState implements IUnitPlayStates {
 				BasicCommands.playEffectAnimation(context.out, spellToCast.getAbility().getEffectAnimation(), targetTile);
 				GeneralCommandSets.threadSleep();
 			}
-		}
-		
-		// Apply changes to gamestate if successful cast	
-		if (successfulFlag) {
-			
-			System.out.println("Sucessfully cast spell."); 
 			
 			// Possible activations: buff if enemy spell cast, buff if Avatar takes damage
 			checkForBuffs(targetTile.getUnitOnTile(), context);
@@ -92,7 +93,9 @@ public class CastSpellState implements IUnitPlayStates {
 
 			// Remove card
 			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
-			
+			BasicCommands.deleteUnit(context.out,targetTile.getUnitOnTile());
+			GeneralCommandSets.drawUnitWithStats(context.out, targetTile.getUnitOnTile(), targetTile.getUnitOnTile().getPosition().getTile(context.getGameStateRef().getBoard()));
+
 			/** Reset entity selection and board **/  
 			// Deselect after action finished
 			context.deselectAllAfterActionPerformed();		
