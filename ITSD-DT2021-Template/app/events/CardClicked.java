@@ -45,7 +45,7 @@ public class CardClicked implements EventProcessor{
 		gameState.userinteractionLock();
 		/**===========================**/
 		
-		commands.GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getTurnOwner().getHand().getCurr(), gameState.getTurnOwner().getHand().getHandList());
+		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getTurnOwner().getHand().getCurr(), gameState.getTurnOwner().getHand().getHandList());
 		
 		// Reset entity selection and board
         GeneralCommandSets.boardVisualReset(out, gameState);

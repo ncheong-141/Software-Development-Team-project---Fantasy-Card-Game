@@ -60,7 +60,10 @@ public class TileClicked implements EventProcessor{
 		/**===========================**/
 		gameState.userinteractionLock();
 		/**===========================**/
-		
+
+		// Reset hand visual
+		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getTurnOwner().getHand().getCurr(), gameState.getTurnOwner().getHand().getHandList());
+
 		
 		// Selected Tile coordinates
 		int tilex = message.get("tilex").asInt();

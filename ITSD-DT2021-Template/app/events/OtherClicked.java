@@ -42,6 +42,8 @@ public class OtherClicked implements EventProcessor{
 		/* Entity deselection and board reset */
 		gameState.deselectAllEntities();
 		GeneralCommandSets.boardVisualReset(out, gameState);
+		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getTurnOwner().getHand().getCurr(), gameState.getTurnOwner().getHand().getHandList());
+
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();
