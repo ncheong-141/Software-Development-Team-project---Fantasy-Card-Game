@@ -63,7 +63,7 @@ public class CardClicked implements EventProcessor{
 						
 						System.out.println(a);
 						// Draw the respective tiles (any ability like this will only affect tiles really unless its like, "if you have this card in your had then get 2 HP per turn but that would be weird"/
-						GeneralCommandSets.drawBoardTiles(out, gameState.getTileAdjustedRangeContainer(), 2);
+						GeneralCommandSets.drawBoardTiles(out, gameState.getTileAdjustedRangeContainer(), 1);
 						outputted = true; 
 						break; 
 					}
@@ -73,7 +73,7 @@ public class CardClicked implements EventProcessor{
 			if (!outputted) {
 				// Else, draw the summonable tiles as normal
 				ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getTurnOwner());	
-				GeneralCommandSets.drawBoardTiles(out, display, 2);	
+				GeneralCommandSets.drawBoardTiles(out, display, 1);	
 			}
 			
 
@@ -84,23 +84,23 @@ public class CardClicked implements EventProcessor{
 			if(AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==true){
 					ArrayList<Tile> display= gameState.getBoard().enemyTile(gameState.getTurnOwner());
-					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+					GeneralCommandSets.drawBoardTiles(out, display, 1);	
 			}//for spell which targets enemy avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
 				&& clickedCard.targetEnemy()==true){
 					Tile display= gameState.getBoard().enemyAvatarTile(gameState.getTurnOwner(), gameState);
-							BasicCommands.drawTile(out,display,2);
+							BasicCommands.drawTile(out,display,1);
 			}//for spell targeting friendly unit
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==false){
 					ArrayList<Tile> display= gameState.getBoard().friendlyTile(gameState.getTurnOwner());
-					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+					GeneralCommandSets.drawBoardTiles(out, display, 1);	
 
 			}//for spell targeting friendly avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
 				&& clickedCard.targetEnemy()==false){
 						Tile display= gameState.getBoard().ownAvatarTile(gameState.getTurnOwner());
-						BasicCommands.drawTile(out,display,2);						
+						BasicCommands.drawTile(out,display,1);						
 						}
 			}
 	}
