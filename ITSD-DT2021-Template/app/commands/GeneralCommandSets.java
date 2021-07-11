@@ -22,7 +22,7 @@ import akka.actor.ActorRef;
 
 public class GeneralCommandSets {
 	
-	private static final int threadSleepTime = 50; 
+	private static final int threadSleepTime = 10; 
 	private static final int threadSleepTimeLong = 100; 
 	private static final int bufferSize = 16; 
 	
@@ -180,8 +180,8 @@ public class GeneralCommandSets {
 		// Delete/hide all cards in the UI
 		for (int i = 0; i < oldHandSize; i++) {
 			BasicCommands.deleteCard(out, i);
+			GeneralCommandSets.threadSleep(); 
 		}
-		GeneralCommandSets.threadSleep(); 
 
 		 
 		// Show all the cards in the UI in new positions 

@@ -44,10 +44,8 @@ public class GameState {
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
-	
-	public boolean			unitMoving; 
-	public boolean 			canInteract;
-
+	private boolean 		canInteract;
+	private boolean			unitMovingFlag; 
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
@@ -64,8 +62,13 @@ public class GameState {
 		/* Set attributes */ 
 		turnCount = 1;
 		playerDead = false;
+
 		
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
+		
+		// Flags
+		canInteract = true; 
+		unitMovingFlag = false; 
 		
 		// Initialising ability to unit linkage data to reference whenever loading units. 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
@@ -116,8 +119,6 @@ public class GameState {
 		System.out.println();
 		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 
-
-		canInteract = true; 
 		
 	}
 
@@ -211,6 +212,34 @@ public class GameState {
 	}
 
 
+	/** User interaction control methods **/
+	public void userinteractionLock() {
+		System.out.println("User Interaction locked.");
+		canInteract = false;
+	}
+	
+	public void userinteractionUnlock() {
+		System.out.println("User Interaction unlocked.");
+		canInteract = true; 
+	}
+	
+	public boolean userinteractionLocked() {
+		if (!canInteract) {
+			System.out.println("User Interaction is currently locked during action.");
+		}
+		return !canInteract;
+	}
+	
+	
+	/** Unit moving flag * 
+	 */
+	public boolean getUnitMovingFlag() {
+		return unitMovingFlag;
+	}
+	
+	public void setUnitMovingFlag(boolean flag) {
+		unitMovingFlag = flag; 
+	}
 	
 	
 	

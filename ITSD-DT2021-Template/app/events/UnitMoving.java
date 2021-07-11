@@ -23,12 +23,14 @@ public class UnitMoving implements EventProcessor{
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		int unitid = message.get("id").asInt();
-		
-		gameState.canInteract = false;
-		/*
-		 * Needs to deactivate card and unit player actions.
-		 */
-		
+
+		// Lock UI and set user moving flag to true 
+		// (done also in Unit states since this sometimes doesnt execute fast enoguh)
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+
+		gameState.setUnitMovingFlag(true);
 	}
 
 }

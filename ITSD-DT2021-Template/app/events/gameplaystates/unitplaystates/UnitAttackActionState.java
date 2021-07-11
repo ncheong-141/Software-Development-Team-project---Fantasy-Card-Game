@@ -48,6 +48,11 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	public void execute(GameplayContext context) {
 		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+		
+		
 		System.out.println("In UnitAttackActionSubState.");
 		context.debugPrint();
 		
@@ -68,10 +73,14 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				attackerAttackRange = context.getGameStateRef().getTileAdjustedRangeContainer();
 			}
 			
+			// Execute the attack
 			unitAttack(context);
 
 			/***	Condition here for combined substate executing, which requires selection is maintained	***/
 			if(!(context.getCombinedActive())) {
+				
+				// Update stats after any action 
+				GeneralCommandSets.redrawAllUnitStats(context.out, context.getGameStateRef());
 				
 				/** Reset entity selection and board **/  
 				// Deselect after action finished *if* not in the middle of move-attack action
@@ -79,8 +88,12 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			
 				//  Reset board visual (highlighted tiles)
 				GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
-			}	
-			
+				
+				// Only unlock if not in combined state
+				/**===========================================**/
+				context.getGameStateRef().userinteractionUnlock();
+				/**===========================================**/
+			}		
 		} 
 		
 		else {
@@ -202,14 +215,11 @@ public class UnitAttackActionState implements IUnitPlayStates {
 							unitDeath(context, currentTile);
 							GeneralCommandSets.threadSleep();
 						}	
-					}
-					
+					}	
 					// Re-idle alive units
 					if(survived) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);	}
 					BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);
-					GeneralCommandSets.threadSleep();
-					
-					
+					GeneralCommandSets.threadSleep();	
 				}
 		}
 			

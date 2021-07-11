@@ -40,6 +40,11 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 	public void execute(GameplayContext context) {
 		
 		System.out.println("In UnitDisplayActionsState.");
+		
+		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
 
 		// Get the newly selected unit
 		Monster newlySelectedUnit = currentTile.getUnitOnTile();
@@ -84,14 +89,16 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 			unitPlayable = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
 		}
 
-		
+		// If the selected unit is playable
 		if(unitPlayable) {
-			context.deselectAllAfterActionPerformed();
+			//context.deselectAllAfterActionPerformed();
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
-		} else {
-			return;
-		}
-
+		} 
+		
+		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionUnlock();
+		/**===========================================**/
 	}
 	
 	

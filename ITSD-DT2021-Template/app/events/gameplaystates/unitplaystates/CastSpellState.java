@@ -41,6 +41,10 @@ public class CastSpellState implements IUnitPlayStates {
 	
 	public void execute(GameplayContext context) {
 		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+		
 		System.out.println("In CastSpellSubState.");
 
 		// Create spell from the Card in context
@@ -51,10 +55,8 @@ public class CastSpellState implements IUnitPlayStates {
 		Spell spellToCast = (Spell) BasicObjectBuilders.loadCard( context.getLoadedCard().getConfigFile(), context.getLoadedCard().getId(), Spell.class); 
 
 		
-		GeneralCommandSets.threadSleep();
-
 		// Set ability to Spell
-		spellToCast.setAbility("Truestrike",AbilityToUnitLinkage.UnitAbility.get(context.getLoadedCard().getCardname()).get(0));
+		spellToCast.setAbility(context.getLoadedCard().getCardname() ,AbilityToUnitLinkage.UnitAbility.get(context.getLoadedCard().getCardname()).get(0));
 		
 		/* Cast the Spell on the Unit on tile selected */
 		
@@ -65,6 +67,13 @@ public class CastSpellState implements IUnitPlayStates {
 			
 			// Cast spell and return a flag to indicate if worked
 			successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+		
+		}
+		
+		// Apply changes to gamestate if successful cast	
+		if (successfulFlag) {
+			
+			System.out.println("Sucessfully cast spell."); 
 			
 			// Play effect animation associated with ability (if present)
 			if (spellToCast.getAbility().getEffectAnimation() != null) {
@@ -72,12 +81,6 @@ public class CastSpellState implements IUnitPlayStates {
 				BasicCommands.playEffectAnimation(context.out, spellToCast.getAbility().getEffectAnimation(), targetTile);
 				GeneralCommandSets.threadSleep();
 			}
-		}
-		
-		// Apply changes to gamestate if successful cast	
-		if (successfulFlag) {
-			
-			System.out.println("Sucessfully cast spell."); 
 			
 			// Possible activations: buff if enemy spell cast, buff if Avatar takes damage
 			checkForBuffs(targetTile.getUnitOnTile(), context);
@@ -90,7 +93,9 @@ public class CastSpellState implements IUnitPlayStates {
 
 			// Remove card
 			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
-			
+			BasicCommands.deleteUnit(context.out,targetTile.getUnitOnTile());
+			GeneralCommandSets.drawUnitWithStats(context.out, targetTile.getUnitOnTile(), targetTile.getUnitOnTile().getPosition().getTile(context.getGameStateRef().getBoard()));
+
 			/** Reset entity selection and board **/  
 			// Deselect after action finished
 			context.deselectAllAfterActionPerformed();		
@@ -127,13 +132,15 @@ public class CastSpellState implements IUnitPlayStates {
 			System.out.println("Spell cast unsucessful, please select another Unit"); 
 		}
 		
-		
-
+		// Short thread sleep before unlock to allow UI to update
+		//.threadSleepOverride(150);
+		/**===========================================**/
+		context.getGameStateRef().userinteractionUnlock();
+		/**===========================================**/
 	}
 	
+	
 	/**		Helper methods	**/
-	
-	
 	// Simple helper to check if a Monster is an Avatar
 	private boolean isAvatar(Monster m) {
 		if(m.getClass() == Avatar.class) {	return true;	}
@@ -168,7 +175,9 @@ public class CastSpellState implements IUnitPlayStates {
 					System.out.println("After casting a spell my HP is: " + f.getHP() + " and attack is " + f.getAttackValue());
 					
 					// Play animation + update stats
-					BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					if (a.getEffectAnimation() != null) {
+						BasicCommands.playEffectAnimation(context.out, a.getEffectAnimation(), f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					}
 					BasicCommands.playUnitAnimation(context.out, f, UnitAnimationType.channel);
 					GeneralCommandSets.threadSleep();
 					GeneralCommandSets.drawUnitWithStats(context.out, f, f.getPosition().getTile(context.getGameStateRef().getBoard()));

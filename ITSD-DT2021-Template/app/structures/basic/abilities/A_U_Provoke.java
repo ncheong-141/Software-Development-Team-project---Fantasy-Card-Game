@@ -259,7 +259,10 @@ public class A_U_Provoke implements Ability{
 		/** Set gameState temp container to use for adjusting the attack/move range **/
 	
 		// Remove tile selected monster is on (only used for tile condition considerations)
-		displayTiles.removeIf(tile -> (tile == targetMonster.getPosition().getTile(gameState.getBoard())));
+//		displayTiles.removeIf(tile -> (tile == targetMonster.getPosition().getTile(gameState.getBoard())));
+		displayTiles.remove(targetMonster.getPosition().getTile(gameState.getBoard()));
+		
+		System.out.println("MovesLeft provke: " + targetMonster.getMovesLeft());
 		
 		// Set output
 		gameState.setTileAdjustedRangeContainer(displayTiles);

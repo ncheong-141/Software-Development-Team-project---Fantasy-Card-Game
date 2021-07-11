@@ -30,6 +30,8 @@ public interface Ability {
 	// Effect animation for front end display
 	public EffectAnimation getEffectAnimation();
 	
+
+	
 	// To do:
 	// Add getName method for ability getting (when integrating Ability objects with Card)
 }

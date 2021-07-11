@@ -44,6 +44,10 @@ public class Initalize implements EventProcessor{
 	@Override
 public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+
 
 		// Initialising ability to unit linkage data to reference whenever loading units. 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
@@ -94,8 +98,12 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 //		fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
 //		
 //		
+		//boardPrintAllMethods(out, gameState);
 		
-				
+		
+		/**===========================**/
+		gameState.userinteractionUnlock();
+		/**===========================**/			
 	}
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
