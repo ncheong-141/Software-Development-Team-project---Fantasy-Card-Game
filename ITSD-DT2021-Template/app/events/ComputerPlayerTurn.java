@@ -42,7 +42,7 @@ public class ComputerPlayerTurn {
 				if (cI.getCard() == null || cI.getTargetTile() == null) continue;
 				
 			//card get class 
-			controller.summonMonster(cI.getCard(), cI.getTargetTile());
+			//controller.summonMonster(cI.getCard(), cI.getTargetTile());
 			 
 			}
 		
@@ -58,7 +58,7 @@ public class ComputerPlayerTurn {
 				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
 				
 				Tile currTile = g.getBoard().getTile(cI.getActor().getPosition().getTilex(), cI.getActor().getPosition().getTiley());
-				controller.unitAttack(currTile, cI.getTargetTile());
+				//controller.unitAttack(currTile, cI.getTargetTile());
 			}
 		}
 		
@@ -78,7 +78,7 @@ public class ComputerPlayerTurn {
 				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
 				
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
-			controller.unitMove(currTile, cI.getTargetTile());
+			//controller.unitMove(currTile, cI.getTargetTile());
 			}
 		}
 		else System.out.println("no moves to make");
