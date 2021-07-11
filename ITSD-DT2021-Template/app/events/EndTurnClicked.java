@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import akka.actor.ActorRef;
 import structures.GameState;
 import commands.*;
-
 /**
  * Indicates that the user has clicked an object on the game canvas, in this case
  * the end-turn button.
@@ -43,6 +42,10 @@ public class EndTurnClicked implements EventProcessor{
 			gameState.endTurnStaticChange();
 		}	
 		
+		if(gameState.getTurnOwner() == gameState.getPlayerTwo()) {
+			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
+			compTurn.processComputerActions(out, gameState);
+		}
 //		// Debug mode
 //		if (gameState.isTwoPlayerMode()) {
 //			// redraw hand to humanplayer
