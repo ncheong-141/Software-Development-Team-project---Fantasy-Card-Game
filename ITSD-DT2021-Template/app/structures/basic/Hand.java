@@ -66,8 +66,11 @@ public class Hand {
 	}
 	
 	public void removeCard(int i) {
-		handList.remove(i);
-		setCurr(getCurr()-1);
+		if (i>=0) {
+			handList.remove(i);
+			setCurr(getCurr()-1);
+		}
+		
 
 	}
 	

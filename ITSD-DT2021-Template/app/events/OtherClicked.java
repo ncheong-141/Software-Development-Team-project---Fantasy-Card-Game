@@ -17,7 +17,7 @@ import structures.basic.Tile;
  * somewhere that is not on a card tile or the end-turn button.
  * 
  * { 
- *   messageType = “otherClicked”
+
  * }
  * 
  * @author Dr. Richard McCreadie

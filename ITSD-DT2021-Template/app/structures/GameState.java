@@ -19,7 +19,7 @@ import utils.StaticConfFiles;
 
 import java.util.ArrayList;
 
-import akka.actor.ActorRef;
+
 import commands.*;
 
 
@@ -46,7 +46,6 @@ public class GameState {
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
-	 
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
@@ -74,7 +73,6 @@ public class GameState {
 	 *		useAdjustedMonsterRange()
 	 *		computerEnd()
 	 */
-	
 
 	/** Constructor **/
 	public GameState() {
@@ -227,9 +225,6 @@ public class GameState {
 	}
 
 
-	
-	
-	
 	/** Two player mode methods (used for debugging) **/
 
 	public boolean isTwoPlayerMode() {
@@ -377,7 +372,9 @@ public class GameState {
 		
 		// Set cooldowns
 		for(Monster m : toCool){
-				m.setCooldown(value);	
+			if(m.getOnCooldown() != value) {
+				m.toggleCooldown();	
+			}
 		}
 	}
 	
@@ -393,6 +390,7 @@ public class GameState {
 		playerOne.setDeck(deckPlayerTwo);
 	
 	}
+
 	
 	public void computerEnd() {
 
@@ -419,6 +417,7 @@ public class GameState {
 
 	}
 	
+
 	public boolean isHumanCard() {
 		if(getTurnOwner() == playerOne) {
 			return true;
@@ -481,16 +480,33 @@ public class GameState {
 		return abilityFound; 
 	}
 	
-	public boolean useAdjustedMonsterActRange() {
-		return !this.getTileAdjustedRangeContainer().isEmpty();
-	}
 	
 
-			// To do:
-			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
-			// Move hand instantiation/set up from gamestate into Player constructor
-			// Move AbilityUnitLinkage call into GameState
+
+	/*
+	 * // Check if the deck is empty, if so then gameover if (this.isDeckEmpty()) {
+	 * //check if current player has enough card in deck left to be added into hand
+	 * gameOver(); } else { // If holds enough card, get card from deck
+	 * this.turnOwner.getHand().drawCard(this.turnOwner.getDeck());
+	 * 
+	 * // Draw the card on last index Card card =
+	 * this.turnOwner.getDeck().getCardList().get(0); int handPos =
+	 * this.turnOwner.getHand().getHandList().size()-1;
+	 * GeneralCommandSets.threadSleepLong(); }
+	 * 
+	 * this.setMonsterCooldown(true); // Hard set all monsters on turn enders turn
+	 * to cooldown this.turnChange(); // turnOwner exchanged this.giveMana(); //
+	 * Give turnCount mana to the player in the beginning of new turn
+	 * //gameState.toCoolDown(); // Switch avatars status for current turnOwner
+	 * this.setMonsterCooldown(false);
+	 * 
+	 * 
+	 * }
+	 */
 
 
-	
+
+	 public boolean useAdjustedMonsterActRange() { return
+	 !this.getTileAdjustedRangeContainer().isEmpty(); }
+
 }
