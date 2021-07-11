@@ -25,9 +25,14 @@ public class UnitStopped implements EventProcessor{
 		
 		int unitid = message.get("id").asInt();
 		
-		/*
-		 * Needs to reactivate card and unit player actions.
-		 */
+		// Unlock UI when unit stops moving
+		/**===========================**/
+		gameState.userinteractionUnlock();
+		/**===========================**/
+		
+		// Set unit moving to false (this signals UnitCombined state)
+		gameState.setUnitMovingFlag(false);
+		System.out.println("User moving flag set to false");
 	}
 
 }

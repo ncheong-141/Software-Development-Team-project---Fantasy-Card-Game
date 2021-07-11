@@ -34,9 +34,21 @@ public class CardClicked implements EventProcessor{
 
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
-		 // Reset entity selection and board
+		 
+		// Check if locked, dont not execute anything if so
+		if (gameState.userinteractionLocked()) {
+			return;
+		}
+		
+		// Lock user interaction during action
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+		
+		// Reset entity selection and board
         GeneralCommandSets.boardVisualReset(out, gameState);
         gameState.deselectAllEntities();
+
 		
 		int handPosition = message.get("position").asInt();//gets position in hand of clicked card
 		
@@ -103,5 +115,9 @@ public class CardClicked implements EventProcessor{
 						BasicCommands.drawTile(out,display,2);						
 						}
 			}
+		
+		/**===========================**/
+		gameState.userinteractionUnlock();
+		/**===========================**/
 	}
 }

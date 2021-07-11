@@ -28,11 +28,25 @@ public class OtherClicked implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
+		// Check if locked, dont not execute anything if so
+		if (gameState.userinteractionLocked()) {
+			return;
+		}
 		
+		// Lock user interaction during action
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+
 
 		/* Entity deselection and board reset */
 		gameState.deselectAllEntities();
 		GeneralCommandSets.boardVisualReset(out, gameState);
+		
+		/**===========================**/
+		gameState.userinteractionUnlock();
+		/**===========================**/
+		
 	}
 
 }

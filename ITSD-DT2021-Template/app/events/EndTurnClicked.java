@@ -24,6 +24,17 @@ public class EndTurnClicked implements EventProcessor{
 	@Override
 	public void processEvent (ActorRef out, GameState gameState, JsonNode message){
 		
+		// Check if locked, dont not execute anything if so
+		if (gameState.userinteractionLocked()) {
+			return;
+		}
+		
+		// Lock user interaction during action
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+		
+		
 		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
 		endTurnStateChange(out, gameState);
 		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
@@ -31,6 +42,10 @@ public class EndTurnClicked implements EventProcessor{
 			compTurn.processComputerActions(out, gameState);
 		}
 
+		
+		/**===========================**/
+		gameState.userinteractionUnlock();
+		/**===========================**/
 	}
 		
 

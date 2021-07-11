@@ -44,6 +44,10 @@ public class Initalize implements EventProcessor{
 	@Override
 public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+
 
 		// Initialising ability to unit linkage data to reference whenever loading units. 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
@@ -53,37 +57,53 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		//boardPrintAllMethods(out, gameState);
 
-		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
-		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
-		u_rPulv.toggleCooldown();
-		
-		u_rPulv.setPositionByTile(gameState.getBoard().getTile(3, 1));
-		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
-		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
+//		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
+//		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
+//		u_rPulv.toggleCooldown();
+//		
+//		u_rPulv.setPositionByTile(gameState.getBoard().getTile(3, 1));
+//		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
+//		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
 
 		//CommandDemo.executeTileHighlightDemo(out, g);
 		//CommandDemo.executeAbilityDemo(out, gameState);
 		
-		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
-		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
-		
+
+
+//		Card windshrike = BasicObjectBuilders.loadCard(StaticConfFiles.c_windshrike, StaticConfFiles.u_windshrike, 150, Card.class);		
+//		Monster u_wind = BasicObjectBuilders.loadMonsterUnit(windshrike.getConfigFile(), windshrike, (Player) gameState.getPlayerTwo(), Monster.class);
+//		u_wind.toggleCooldown();
+//
+//		u_wind.setPositionByTile(gameState.getBoard().getTile(3, 1));
+//		gameState.getBoard().getTile(3, 1).addUnit(u_wind);
+//		GeneralCommandSets.drawUnitWithStats(out, u_wind, (gameState.getBoard().getTile(3, 1)));
+
+//		
+//		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
+//		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 
+//		
+
 		
 		//////STUFF FOR TESTING/////
 		// Create Card objects to use
-		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
-		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
-		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
-				
-		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
-		Monster[] fmArray = new Monster[4]; 
-		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
-		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
-		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
-		fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+//		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
+//		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
+//		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
+//				
+//		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
+//		Monster[] fmArray = new Monster[4]; 
+//		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
+//		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
+//		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+//		fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+//		
+//		
+		//boardPrintAllMethods(out, gameState);
 		
 		
-		
-				
+		/**===========================**/
+		gameState.userinteractionUnlock();
+		/**===========================**/			
 	}
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
@@ -163,6 +183,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
+
+		
+		//attackMoveDemo(out,g,message);
 	}
 	
 
@@ -310,6 +333,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		g.getBoard().getTile(5, 4).addUnit(u_frfires);
 		GeneralCommandSets.drawUnitWithStats(out, u_frfires, g.getBoard().getTile(5, 4));
 		monsToLink.add(u_frfires);
+		u_frfires.setMovesLeft(10);
 		
 		/***		Ability linkage since this usually happens after summon	***/
 		
