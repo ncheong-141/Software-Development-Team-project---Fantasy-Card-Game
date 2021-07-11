@@ -66,33 +66,31 @@ public class SummonMonsterState implements IUnitPlayStates {
 		// Target tile within summon range && sufficient player mana check
 		if(tileInSummonRange() && sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard())) {
 			
+			
+			// Execute summon method
+			summonMonster(context, context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
+					
+			// Update board counter for num Monsters
+			context.getGameStateRef().getBoard().updateUnitCount(1);
+
+
 			/** Delete card from Hand + update visual **/
 			
 			// Index variables
 			int cardIndexInHand = context.getGameStateRef().getTurnOwner().getHand().getSelCarPos(); 
 			int oldHandSize =  context.getGameStateRef().getTurnOwner().getHand().getHandList().size(); 	// How many UI cards to delete
-			
-			
-			// Only update Hand for Human player
-			if (context.getGameStateRef().getTurnOwner() instanceof HumanPlayer) {
-				GeneralCommandSets.drawCardsInHand(context.out, context.getGameStateRef(), oldHandSize, context.getGameStateRef().getTurnOwner().getHand().getHandList());
-			}		
-			
-			// Execute summon method
-			summonMonster(context, context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
-			
-			// Remove card from game data
+
+			// Remove card
 			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
-
 			
-			// Update board counter for num Monsters
-			context.getGameStateRef().getBoard().updateUnitCount(1);
-
-
 			/** Reset entity selection and board **/  
 			// Deselect after action finished
 			context.deselectAllAfterActionPerformed();
 			
+			// Only update Hand for Human player
+			if (context.getGameStateRef().getTurnOwner() instanceof HumanPlayer) {
+				GeneralCommandSets.drawCardsInHand(context.out, context.getGameStateRef(), oldHandSize, context.getGameStateRef().getTurnOwner().getHand().getHandList());
+			}
 		
 			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
@@ -233,8 +231,9 @@ public class SummonMonsterState implements IUnitPlayStates {
 		}
 	}
 	
-	/*	Helper methods	*/
 	
+	
+	/*	Helper methods	*/
 	// Returns true if the clicked targetTile is within a Player's summon range
 	private boolean tileInSummonRange() {
 		if(summonRange.contains(targetTile)) {	return true;	}
