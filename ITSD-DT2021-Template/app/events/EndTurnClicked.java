@@ -26,22 +26,17 @@ public class EndTurnClicked implements EventProcessor{
 		
 		//GeneralCommandSets.boardVisualReset(out, gameState);  //visual
 		endTurnStateChange(out, gameState);
-		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
-			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
-			compTurn.processComputerActions(out, gameState);
-		}
-
 	}
 		
+	private void endTurnStateChange(ActorRef out, GameState gameState) {  
 
-	public void endTurnStateChange(ActorRef out, GameState gameState) {  
 		gameState.emptyMana(); 										// Empty mana for player who ends the turn
 		gameState.deselectAllEntities();								// Deselect all entities
-		//GeneralCommandSets.boardVisualReset(out, gameState);  	// Visual rest
+		GeneralCommandSets.boardVisualReset(out, gameState);  	// Visual rest
 
 		// Check if the deck is empty, if so then gameover
 		if (gameState.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
-			GameState.gameOver(); 
+			gameState.gameOver(); 
 		} else {
 
 			// If there are cards left in deck, get a card from deck (back end)
@@ -67,9 +62,37 @@ public class EndTurnClicked implements EventProcessor{
 			int oldCardListSize = gameState.getEnemyPlayer().getHand().getHandList().size(); 
 
 			GeneralCommandSets.drawCardsInHand(out, gameState, oldCardListSize, gameState.getTurnOwner().getHand().getHandList());
-		}	
-	}
+		}
 
-		
+		// //check if current player has enough card in deck left to be added into hand
+		if (gameState.isDeckEmpty()) { 
+			gameState.gameOver(); 
+			return;
+		}
+			 
+		// If there are cards left in deck, get a card from deck (back end)
+		if(gameState.isHumanCard()) {
+			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
+			showNewCard(out,gameState);
+			gameState.endTurnStaticChange();
+
+		}	
+	}	
+//		// Debug mode
+//		if (gameState.isTwoPlayerMode()) {
+//			// redraw hand to humanplayer
+//			int oldCardListSize = gameState.getEnemyPlayer().getHand().getHandList().size(); 
+//
+//			GeneralCommandSets.drawCardsInHand(out, gameState, oldCardListSize, gameState.getTurnOwner().getHand().getHandList());
+//		}	
+
+
+	//display all cards after new one added
+	private void showNewCard(ActorRef out, GameState gameState) {
+		ArrayList<Card> card = gameState.getTurnOwner().getDeck().getCardList();
+		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
+		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
+	}
 }
+
 
