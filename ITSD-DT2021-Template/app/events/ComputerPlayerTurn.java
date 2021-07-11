@@ -57,7 +57,7 @@ public class ComputerPlayerTurn {
 				System.out.println(cI);
 				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
 				
-				Tile currTile = g.getBoard().getTile(cI.getActor().getPosition().getTilex(), cI.getActor().getPosition().getTilex());
+				Tile currTile = g.getBoard().getTile(cI.getActor().getPosition().getTilex(), cI.getActor().getPosition().getTiley());
 				//controller.unitAttack(currTile, cI.getTargetTile());
 			}
 		}

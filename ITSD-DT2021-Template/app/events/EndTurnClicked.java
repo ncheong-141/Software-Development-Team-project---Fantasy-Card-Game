@@ -41,7 +41,7 @@ public class EndTurnClicked implements EventProcessor{
 
 		// Check if the deck is empty, if so then gameover
 		if (gameState.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
-			gameState.gameOver(); 
+			GameState.gameOver(); 
 		} else {
 
 			// If there are cards left in deck, get a card from deck (back end)

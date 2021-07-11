@@ -1,6 +1,14 @@
 package structures.basic.ComputerLogic;
 import structures.basic.*;
 
+/**
+ * 
+ * @author Chiara Pascucci and Yufen Chen
+ * This class represent an instruction that the computer player can generate
+ * each object contains data on the card to be played + tile where the card needs to be played exclusive-OR
+ * data on the Monster that needs to move OR perform an attack and the target tile 
+ */
+
 public class ComputerInstruction {
 	protected Card card;
 	protected Tile targetTile;

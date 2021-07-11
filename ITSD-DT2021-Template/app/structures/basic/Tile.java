@@ -29,12 +29,9 @@ public class Tile implements Comparable<Tile>{
 	int tilex;
 	int tiley;
 	
-	private static  int inRangeScore = - 1;
-	
-	private static  int bringsEnemyInRange = 2; 
-	// Added attribute
+	//attributes added//
 	boolean free;
-	Monster unitOnTile; 	// Storing a unit in the tile to reference when a tile is clicked
+	Monster unitOnTile; 	
 	int score;
 
 	public Tile() {}
@@ -122,10 +119,10 @@ public class Tile implements Comparable<Tile>{
 		this.score = d;
 	}
 	
-	//added method to be able to add and remove any unit to/ from a tile
+	
 	//the method takes in a Monster type object (which could be a Monster or Avatar)
-	//both methods check that the tile is actually free when adding a moster
-	//and there there is a monster to be removed when trying to remove a monster
+	//both methods check that the tile is actually free when adding a monster
+	//and if there is a monster to be removed when trying to remove a monster
 	public boolean addUnit (Monster m) {
 		if (!(this.free) || !(this.unitOnTile==null)) {
 			return false;
@@ -150,15 +147,23 @@ public class Tile implements Comparable<Tile>{
 		}
 	}
 	
-
-
-	public static int getInRangeScore() {
-		return inRangeScore;
+	@Override
+	public int compareTo(Tile o) {
+		if (this.getScore() > o.getScore()) return 1;
+		else if (this.getScore() < o.getScore()) return -1;
+		return 0;
 	}
 
-	public static int getBringsEnemyInRange() {
-		return bringsEnemyInRange;
+	public int getScore() {
+		return score;
 	}
+	
+	
+	public String toString() {
+		return "tile: " + this.tilex + " - " + this.tiley;
+	}
+
+
 
 	/**
 	 * Loads a tile from a configuration file
@@ -179,20 +184,5 @@ public class Tile implements Comparable<Tile>{
 		
 	}
 
-	@Override
-	public int compareTo(Tile o) {
-		if (this.getScore() > o.getScore()) return 1;
-		else if (this.getScore() < o.getScore()) return -1;
-		return 0;
-	}
 
-	public int getScore() {
-		return score;
-	}
-	
-	
-	
-	public String toString() {
-		return "tile: " + this.tilex + " - " + this.tiley;
-	}
 }

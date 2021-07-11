@@ -53,8 +53,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
-		
-		//boardPrintAllMethods(out, gameState);
 
 		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
 		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
@@ -64,8 +62,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
 		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
 
-		//CommandDemo.executeTileHighlightDemo(out, g);
-		//CommandDemo.executeAbilityDemo(out, gameState);
 		
 		System.out.println("Game set up:  \nplayer one stats: mana " + gameState.getPlayerOne().getMana() +" health: " + gameState.getPlayerOne().getHealth());
 		System.out.println("Game set up:  \nplayer two stats: mana " + gameState.getPlayerTwo().getMana() +" health: " + gameState.getPlayerTwo().getHealth()); 

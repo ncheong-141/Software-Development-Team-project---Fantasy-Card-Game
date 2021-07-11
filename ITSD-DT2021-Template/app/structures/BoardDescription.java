@@ -28,7 +28,7 @@ public class BoardDescription {
 //enemyAvatarTile (Player p, GameState g) --> returns tile where enemy avatar is located
 
 //monsterMovableTiles(int xPos, int yPos, int range) --> returns list of all FREE tiles within range of the specific position
-									//only works with range 0, 1, 0r 2 at the moment
+							
 
 //attackableAdjTiles(int xPos, int yPos) --> return list of all adjacent tiles to specified position that contain an enemy unit
 

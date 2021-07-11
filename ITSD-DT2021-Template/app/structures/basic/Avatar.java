@@ -1,20 +1,22 @@
 package structures.basic;
 
-
-//=============================Class description =============================//
-//this represent the avatar that both the human player and computer player will use to play the game
-//this class stores a reference to the board where the avatar are placed (at specific positions)
-//this class stores a reference to the owner of the avatar, human or computer player
-//==========================================================================//
+/**
+ * 
+ * @author Chiara Pascucci
+ *	this class represent the avatar that both the human player and computer player will use to play the game
+	this class stores a reference to the board where the avatar are placed (at specific positions)
+	this class stores a reference to the owner of the avatar, human or computer player
+ */
 
 public class Avatar extends Monster {
+	
+	//constructor
 	public Avatar() {
 		super();
 		this.avatarSetUp();
 	}
-	
 
-
+	//setting up all stats for avatar
 	public void avatarSetUp() {
 		this.HP = 20;
 		this.maxHP = 20;
@@ -24,14 +26,10 @@ public class Avatar extends Monster {
 		this.attacksMax = 1;		
 		this.attackRange = 1;		
 		this.onCooldown = false;
-		//this.setOwner(p);
 	}
 	
-	//when the owner is set for an avatar, this method also takes care of assigning the avatar to the relevant 
-	//starting position, which is based on the type of owner
 	public void setOwner(Player p) {
 		this.owner = p;
-		//this.HP = p.getHealth();
 	}
 
 	
@@ -46,11 +44,5 @@ public class Avatar extends Monster {
 			return true;
 		}
 	}
-	
-	
-
-	// To do: 
-	// Override defend method to adjust Player health as well
-	// Delete setPositionByPlayer (+ call in setOwner), and implement manually in Initalize
 	
 }

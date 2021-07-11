@@ -9,11 +9,15 @@ import commands.BasicCommands;
 import structures.GameState;
 import utils.BasicObjectBuilders;
 
-//=============================Class description =============================//
-// this class builds the board that the player will play on
-// this class stores a 2D array of Tile objects that represent the board
-// this class contains methods to access different tiles on the board
-//==========================================================================//
+/**
+ * 
+ * @author Chiara Pascucci
+ * 	this class builds the board that the player will play on
+ 	this class stores a 2D array of Tile objects that represent the board
+	this class contains methods to access different tiles on the board
+ *
+ */
+
 
 public class Board {
 
@@ -306,7 +310,7 @@ public class Board {
 	//5) unitMovableTiles - this method returns a list of all tiles a selected unit can move to
 	//within a given range based on the specified position
 	public ArrayList<Tile> unitMovableTiles (int xpos, int ypos, int moveRange ){
-		ArrayList <Tile> tileList = this.moves(xpos, ypos, moveRange);
+		ArrayList <Tile> tileList = this.reachableTiles(xpos, ypos, moveRange);
 		tileList.removeIf(t -> !(t.getFreeStatus()));
 
 		return tileList;
@@ -354,9 +358,7 @@ public class Board {
 
 		//get a list of all tiles that the unit can reach given their position and move range
 		//this includes both free and occupied tiles
-		reachTiles = this.moves(xpos, ypos, moveRange);
-
-		
+		reachTiles = this.reachableTiles(xpos, ypos, moveRange);
 
 		//iterate over the list of tiles that can be reached 
 		//if the tile has an enemy unit it is added to the set (no duplicate values)
@@ -376,7 +378,6 @@ public class Board {
 			//System.out.println(t);
 			HashSet <Tile> attRange = calcAttackRange(t.getTilex(), t.getTiley(), attackRange, p);
 			tileList.addAll(attRange);
-
 		}	
 		ArrayList<Tile> list = new ArrayList<Tile>(tileList);
 		return list;	
@@ -385,30 +386,25 @@ public class Board {
 	public HashSet<Tile> calcAttackRange(int xpos, int ypos, int attackRange, Player p){
 		HashSet<Tile> tileList = new HashSet<Tile>();
 
-		//System.out.println(xpos + " --- " + ypos);
-
-
 		for (int i = xpos - attackRange; i <= (xpos + attackRange); i++) {
 
 			for (int j = ypos - attackRange; j <= (ypos + attackRange); j++) {
 
+				// A direct cardinal = a tile where prospective x || y == xpos || ypos
+				// A direct diagonal = a tile where prospective x == y 
+				
 				// Check if indices are within limits of the board
 				if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 
-
 					// System.out.println("i,j: " + i + "," + j);
 
-					if ((i==xpos || j==ypos) && this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
-						tileList.add(this.getTile(i, j));
-						//System.out.println(this.getTile(i,j)+ " o ");
+					 // This gets all tiles in a square around the centre Monster, up to a width-length of the attack range
+				    if(this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
+						 tileList.add(this.getTile(i, j));
 					}
-
-					else if ((Math.abs(i-xpos) == Math.abs(j - ypos))&&this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
-						tileList.add(this.getTile(i, j));
-						//System.out.println(this.getTile(i,j)+ " p ");
-					}
+					
 				}
 			}
-		}	
+		}
 		return tileList;
 	}
 	//===============accessors methods==========================//

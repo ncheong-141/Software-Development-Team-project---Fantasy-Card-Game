@@ -1,23 +1,31 @@
 package structures.basic.ComputerLogic;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-
-import structures.GameState;
 import structures.basic.*;
-import structures.basic.ComputerLogic.ComputerMoveMonsterLogic.MonsterTileOption;
+
+/**
+ * 
+ * @author Chiara Pascucci and Yufen Chen
+ * This class holds the logic that the computer player uses to decide what attacks to perfom
+ * this class is instantiated within computer player which calls its public method
+ * the private methods in the class are used to compute the best attacks to perform, those are then returned to computer player
+ *
+ */
 public class ComputerAttackMonsterLogic {
 	
 	private ComputerPlayer player;
-	private ArrayList<Tile> attackerTiles; // all tiles holds all ComputerPlayer monster
-	private ArrayList<Tile> targetInRange;  //a list of attackable enemy for each attacker
-	private Tile target; //attack target
 
 	public ComputerAttackMonsterLogic(ComputerPlayer p) {
 		this.player = p;
 	}
 	
+	/**
+	 * 
+	 * @param gameBoard
+	 * @return list of computer instruction objects representing the attacks that the computer player wants to perform
+	 * method uses the private methods in this class in sequence to compute best attack moves
+	 */
 	public ArrayList <ComputerInstruction> computerAttacks(Board gameBoard){
 		ArrayList <ComputerInstruction> list = new ArrayList<ComputerInstruction>();
 		
@@ -34,23 +42,33 @@ public class ComputerAttackMonsterLogic {
 		
 	}
 	
+	/**
+	 * 1.
+	 * @param gameBoard
+	 * @return list of all monsters that belong to the specified player and that can attack during current turn
+	 */
 	private ArrayList<Monster> monstersThatCanAttack(Board gameBoard){
 		ArrayList <Monster> list = gameBoard.friendlyUnitList(player);
 		list.removeIf(m->(m.getAttacksLeft() <=0 || m.getOnCooldown()));
 		return list;		
 	}
 	
+	/**
+	 * 2.
+	 * @param monstersThatCanAttackList (list of all monsters that can attack)
+	 * @param b (Board object)
+	 * @return list of MonsterTargetOption objects (each object contains a monster that can attack and a list of possible targets for that monster)
+	 * 
+	 */
 	private ArrayList<MonsterTargetOtpion> getMonstersPossTargets(ArrayList<Monster> monstersThatCanAttackList, Board b){
-		
-		
+
 		if(monstersThatCanAttackList.isEmpty()) return null;
 		
 		//System.out.println("=== calculating where my monsters can attack ====");
 		
 		ArrayList<MonsterTargetOtpion> listOne = new ArrayList<MonsterTargetOtpion>();
 		//MonsterTargetOtpion[] list = new MonsterTargetOtpion[monstersThatCanAttackList.size()];
-		
-		int i = 0;
+
 		for (Monster m : monstersThatCanAttackList) {
 			
 			//System.out.println("looking at possible targets for monster : " +m.getName());
@@ -63,6 +81,13 @@ public class ComputerAttackMonsterLogic {
 		return listOne;
 	}
 	
+	/**
+	 * 3.
+	 * @param targOptsList (list of MonsterTargetOption objects)
+	 * @return list of computer instructions that should be executed. 
+	 * Each ComputerInstruction object will contain a monster reference (monster to perform the attack)
+	 * and a tile reference containing the target
+	 */
 	private ArrayList<ComputerInstruction> matchMonsterAndTarget(ArrayList<MonsterTargetOtpion> targOptsList){
 		ArrayList<ComputerInstruction> list = new ArrayList<ComputerInstruction>();
 		
@@ -71,23 +96,11 @@ public class ComputerAttackMonsterLogic {
 		//System.out.println("[line 79] size of targ opts list bf filter: " + targOptsList.size());
 		
 		targOptsList.removeIf(trg -> (trg.getScore() < 0 || trg == null));
-		
-		for (MonsterTargetOtpion mto : targOptsList) {
-			//System.out.println(mto);
-		}
-		
-		
+
 		//System.out.println("[line 83] size of targ opts list af filter: " + targOptsList.size());
 		
-		
 		Collections.sort(targOptsList);
-		
-		//System.out.println("list after sorting");
-		
-		for (MonsterTargetOtpion mto : targOptsList) {
-			//System.out.println(mto);
-		}
-		
+
 		HashSet <Tile> targets = new HashSet<Tile>();
 		
 		int k = 0;
