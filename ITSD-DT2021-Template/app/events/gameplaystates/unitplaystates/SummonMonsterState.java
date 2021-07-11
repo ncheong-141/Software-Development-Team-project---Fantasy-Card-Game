@@ -194,10 +194,14 @@ public class SummonMonsterState implements IUnitPlayStates {
 						// Buff abilities
 						if(a instanceof A_U_HealAvatarHPIfSummoned) {
 							BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.channel);
+							GeneralCommandSets.threadSleepOverride(100);
 							BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), context.getGameStateRef().getHumanAvatar().getPosition().getTile(context.getGameStateRef().getBoard()));
-							try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}	
+							GeneralCommandSets.threadSleep();
+							BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.idle);
+							// try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}	
+							
+							// Execute ability
 							a.execute(context.getGameStateRef().getHumanAvatar(), context.getGameStateRef());
-							GeneralCommandSets.drawUnitWithStats(context.out, summonedMonster, targetTile);
 						}
 
 					}
