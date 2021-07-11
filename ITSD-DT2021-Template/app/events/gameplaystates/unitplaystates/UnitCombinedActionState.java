@@ -27,6 +27,8 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		this.currentTile = currentTile; 
 		this.destination = null;
 		this.enemyTarget = targetTile; 
+		
+		System.out.println(targetTile);
 	}
 	
 	
@@ -45,7 +47,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 					System.out.println("Selected unit is a ranged attacker, can attack without moving.");
 					IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
 					UnitAttackState.execute(context);
-					break;
+					return;
 				}
 			}
 		}

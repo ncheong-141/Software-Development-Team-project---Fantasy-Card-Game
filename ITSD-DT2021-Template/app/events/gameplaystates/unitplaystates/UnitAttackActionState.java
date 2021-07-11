@@ -104,7 +104,10 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
 		}		
 		else {
-			actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
+			ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(),attacker.getMovesLeft());
+			ArrayList <Tile> aRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
+			actRange = aRange;
+			actRange.addAll(mRange);
 		}
 
 		
