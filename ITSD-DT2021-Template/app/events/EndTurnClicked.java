@@ -81,6 +81,8 @@ public class EndTurnClicked implements EventProcessor{
 			gameState.endTurnStaticChange();
 
 		}	
+		
+
 	}	
 // Debug mode
 //		if (gameState.isTwoPlayerMode()) {
