@@ -84,12 +84,12 @@ public class CardClicked implements EventProcessor{
 			if(AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==true){
 					ArrayList<Tile> display= gameState.getBoard().enemyTile(gameState.getTurnOwner());
-					GeneralCommandSets.drawBoardTiles(out, display, 1);	
+					GeneralCommandSets.drawBoardTiles(out, display, 2);	
 			}//for spell which targets enemy avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
 				&& clickedCard.targetEnemy()==true){
 					Tile display= gameState.getBoard().enemyAvatarTile(gameState.getTurnOwner(), gameState);
-							BasicCommands.drawTile(out,display,1);
+							BasicCommands.drawTile(out,display,2);
 			}//for spell targeting friendly unit
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==false){
