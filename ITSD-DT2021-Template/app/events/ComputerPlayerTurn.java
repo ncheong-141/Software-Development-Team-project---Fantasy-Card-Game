@@ -14,6 +14,14 @@ import structures.basic.Player;
 import structures.basic.Spell;
 import structures.basic.Tile;
 
+/**
+ * 
+ * @author Chiara Pascucci and Yufen Chen
+ * this class receives the instructions that the computer player wants to perform
+ * and uses the AI Unit State Controller class to update the UI to display those actions
+ *
+ */
+
 public class ComputerPlayerTurn {
 
 	// Attribute
@@ -51,16 +59,15 @@ public class ComputerPlayerTurn {
 			ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
 			ComputerPlayer compPlayer = pl2;
 			AIUnitStateController controller = new AIUnitStateController(out, g);
-			compPlayer.setMana(9);
 			compPlayer.setHPBenchMark(10);
 
-			g.getComputerAvatar().setMovesLeft(2);
+			
 			g.getComputerAvatar().setName("bob");
 
 
 			ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 
-			System.out.println("=====================AI turn: computing cards=======================");
+			
 			cardsToPlay = compPlayer.playCards(g.getBoard());
 
 			if (!cardsToPlay.isEmpty() && cardsToPlay != null) {
@@ -85,7 +92,7 @@ public class ComputerPlayerTurn {
 				// Wait between action types
 				waitForActionsToComplete();
 
-				System.out.println("=====================AI turn: computing attacks=======================");
+				
 				attacksToPerform = compPlayer.performAttacks(g.getBoard());
 
 				if (attacksToPerform != null && !attacksToPerform.isEmpty()) {
@@ -110,14 +117,13 @@ public class ComputerPlayerTurn {
 				// Wait between action types
 				waitForActionsToComplete();
 
-				System.out.println("=======================AI turn: computing moves=========================");
 				monstersToMove = compPlayer.moveMonsters(g.getBoard());
 
 				//check if empty
 
 				if (!monstersToMove.isEmpty() && monstersToMove != null) {
 					for (ComputerInstruction cI : monstersToMove) {
-						System.out.println(cI);
+						
 						if (cI.getActor() == null || cI.getTargetTile() == null) continue;
 
 						Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
@@ -136,8 +142,6 @@ public class ComputerPlayerTurn {
 			}
 
 		}
-
-
 
 		/** Helper methods **/
 		public void waitForActionsToComplete() {
