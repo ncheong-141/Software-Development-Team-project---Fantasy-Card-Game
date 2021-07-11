@@ -124,6 +124,7 @@ public class GameState {
 			Hand handPlayerTwo = new Hand();
 			playerTwo.setHand(handPlayerTwo);
 			handPlayerTwo.initialHand(deckPlayerTwo);
+			
 		}
 
 		
@@ -190,7 +191,6 @@ public class GameState {
 			turnOwner = playerOne;
 		}
 
-		turnCount++;
 	}
 	
 	public Player getEnemyPlayer() {
@@ -360,17 +360,15 @@ public class GameState {
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
 
-			if ( getTurnCount() >= 9) {				//if it is the 9th turn or more than 9, setMan to 9 for both players
-					getTurnOwner().setMana(9);
-			}else {		
-				if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
-					this.turnCount = getTurnCount()+1;
-					getTurnOwner().setMana(this.turnCount);
-				}
-				else {
-					getTurnOwner().setMana(this.turnCount);
-				}  
-			}
+		if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
+			this.turnCount +=1;
+			playerOne.addMana(this.turnCount);
+			System.out.println("player 1 mana is " + playerOne.getMana());
+		}
+		else {
+			playerTwo.addMana(this.turnCount);
+			System.out.println("player 2 mana is " + playerTwo.getMana());
+		}  
 	}
 	
 	//empty mana for player who ends the turn
