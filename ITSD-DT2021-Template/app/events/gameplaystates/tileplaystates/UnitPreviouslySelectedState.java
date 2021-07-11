@@ -12,20 +12,28 @@ import events.gameplaystates.unitplaystates.UnitDisplayActionsState;
 import events.gameplaystates.unitplaystates.UnitMoveActionState;
 import structures.basic.*;
 
+/**
+ * UnitPreviouslySelectedState:
+ * This state is for when a unit is previously selected and the user
+ * requires this info be used when doing their enxt action such as click to
+ * attack another unit
+ */
 public class UnitPreviouslySelectedState implements ITilePlayStates {
 
-	// State attributes
+	/** State attributes**/
 	IUnitPlayStates unitState;		// Unit Play state to be executed
 	Tile currentTile; 				// Current tile (Unit position)
 	Tile targetTile; 				// Target tile (Unit target) 
 
-	// State constructor 
+	/** State constructor **/ 
 	public UnitPreviouslySelectedState() {	
 		unitState = null;
 		currentTile = null; 
 		targetTile = null; 
 	}
 	
+	
+	/** State method **/
 	public void execute(GameplayContext context) {
 			
 		/* Selected units can:
@@ -46,6 +54,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		int currentX = context.getLoadedUnit().getPosition().getTilex(); 
 		int currentY = context.getLoadedUnit().getPosition().getTiley(); 
 		
+		// Set current and target tiles for refence
 		currentTile = context.getGameStateRef().getBoard().getTile(currentX, currentY);
 		targetTile = context.getClickedTile();
 		
@@ -54,15 +63,8 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 		switch (context.getTileFlag().toLowerCase()) {
 		
 		case("enemy unit"): {		
+			
 			/*** Check distance from UnitSelected ***/
-			
-			// Near --- enemy unit tile has total tile index difference of <=1 on either Board dimension, which does not require the unit to move before attack
-			// Change to Board adjacentEnemies.contains(targetTile) method
-			
-//			int mRange = currentTile.getUnitOnTile().getAttackRange();
-//			if((Math.abs(currentTile.getTilex() - targetTile.getTilex()) <= mRange && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= mRange))) {
-//				
-//			}
 			if(Math.abs(currentTile.getTilex() - targetTile.getTilex()) <= currentTile.getUnitOnTile().getAttackRange() && (Math.abs(currentTile.getTiley() - targetTile.getTiley()) <= currentTile.getUnitOnTile().getAttackRange())) {
 				
 				// Attack
@@ -70,23 +72,21 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				unitState = new UnitAttackActionState(currentTile, targetTile);
 				break;
 			} 
-			
-			// Far --- enemy unit is outside a non-movement range
 			else {
 				
-				// Move & Attack
+				// Move & Attack in a combined state as unit is out of range
 				System.out.println("Creating CombinedAction substate...");
 				unitState = new UnitCombinedActionState(currentTile, targetTile);
 				break;
 			}
 			
-		}
-		
+		}	
 		case("friendly unit"): {
 			
 			// Selected unit has been clicked, de-select it
 			if (targetTile == currentTile) {
 				
+				// Unit cast as monster for reference
 				Monster selectedUnit = (Monster) context.getLoadedUnit();
 				
 				// Update unit's occupied tile visual
@@ -94,19 +94,14 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				GeneralCommandSets.threadSleep();
 				
 				// Update unit's action range tile visual
-				ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), selectedUnit.getAttackRange(), selectedUnit.getMovesLeft()));
-				ArrayList <Tile> mRange = context.getGameStateRef().getBoard().unitMovableTiles(currentTile.getTilex(),currentTile.getTiley(),selectedUnit.getMovesLeft());
-				actRange.addAll(mRange);
-				GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
-				GeneralCommandSets.threadSleepLong();
-				System.out.println("Finished de-highlighting tiles.");
-				
+				GeneralCommandSets.drawUnitDeselect(context.out, context.getGameStateRef(), selectedUnit);
+
 				// Update selected reference (last)
-				//System.out.println("Monster selected: " + context.getGameStateRef().getBoard().getUnitSelected().isSelected());
 				System.out.println("Deselected monster on Tile " + selectedUnit.getPosition().getTilex() + "," + selectedUnit.getPosition().getTiley());
-				context.deselectAllAfterActionPerformed();
-				break;
 				
+				// Deselct all after an action performed (hard deselectes Units and Cards
+				context.deselectAllAfterActionPerformed();
+				break;	
 			} 
 			
 			// Clicked other friendly unit, switch selection
@@ -123,19 +118,15 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				// Pass target tile (occupied by new unit) to DisplayActions state to complete
 				unitState = new UnitDisplayActionsState(targetTile);	
 				break;
-				
 			}
-			
 		}
 		
 		case("empty"): {
 			
-			// Move
+			// Move action to the empty tile
 			unitState = new UnitMoveActionState(currentTile, targetTile);
 			break;
-
 		}
-		
 		}
 		
 		/*** Execute Unit state***/
