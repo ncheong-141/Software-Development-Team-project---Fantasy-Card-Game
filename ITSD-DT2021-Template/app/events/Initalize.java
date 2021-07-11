@@ -106,7 +106,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		a.addUnit(fmArray[0]);
 		b.addUnit(fmArray[1]);
 		c.addUnit(fmArray[2]);
->>>>>>> 95bab379c3b9903d6fe10362822dc590b0552e3c
 		
 		GeneralCommandSets.drawUnitWithStats(out, fmArray[0], a);
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
