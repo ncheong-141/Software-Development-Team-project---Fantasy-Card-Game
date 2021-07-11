@@ -174,65 +174,75 @@ public class SummonMonsterState implements IUnitPlayStates {
 	
 	// Abilities activated directly after object construction to permanently modify the Unit
 	private void checkForConstruction(Monster summonedMonster, GameplayContext context) {
-		for(Ability a : summonedMonster.getMonsterAbility()) {
-			if(a.getCallID() == Call_IDs.construction) {
-				a.execute(summonedMonster, context.getGameStateRef());
+		
+		if (summonedMonster.getMonsterAbility() != null ) {
+			for(Ability a : summonedMonster.getMonsterAbility()) {
+				if(a.getCallID() == Call_IDs.construction) {
+					a.execute(summonedMonster, context.getGameStateRef());
+				}
 			}
 		}
 	}
 	
 	// Abilities activated by the act of summoning in the game logic
 	private void checkForSummon(Monster summonedMonster, GameplayContext context) {
-		for(Ability a : summonedMonster.getMonsterAbility()) {
-			if(a.getCallID() == Call_IDs.onSummon) {
-				System.out.println("Ability:" + a);
-				
-				// Target logic
-				if (a.getTargetType() == Avatar.class) {
+		
+		if (summonedMonster.getMonsterAbility() != null ) {
+		
+			for(Ability a : summonedMonster.getMonsterAbility()) {
+				if(a.getCallID() == Call_IDs.onSummon) {
+					System.out.println("Ability:" + a);
 					
-					if (a.targetEnemy() == false) {						
-						// Buff abilities
-						if(a instanceof A_U_HealAvatarHPIfSummoned) {
-							BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.channel);
-							GeneralCommandSets.threadSleepOverride(100);
-							BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), context.getGameStateRef().getHumanAvatar().getPosition().getTile(context.getGameStateRef().getBoard()));
-							GeneralCommandSets.threadSleep();
-							BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.idle);
-							// try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}	
-							
-							// Execute ability
-							a.execute(context.getGameStateRef().getHumanAvatar(), context.getGameStateRef());
-						}
-
-					}
-					else {
-						a.execute(context.getGameStateRef().getComputerAvatar(), context.getGameStateRef());
-					}
-				}
-				else if (a.getTargetType() == Monster.class) {
+					// Target logic
+					if (a.getTargetType() == Avatar.class) {
 						
-					if (a.targetEnemy() == false) {
-						// Assume can only target itself or avatars
-						a.execute(summonedMonster, context.getGameStateRef());
-					} else {
-						// Not acting on enemy monsters atm? 
-					}		
-				} else {
-					
-					// Draw cards on summon
-					a.execute(null, context.getGameStateRef());
-					
-					// Redraw hand for Player
-					int i = 0;	
-					for(Card c : context.getGameStateRef().getTurnOwner().getHand().getHandList()) { // get list of cards from Hand from Player
-						BasicCommands.drawCard(context.out, c, i, 0);
-						i++;
-						GeneralCommandSets.threadSleep(); 
+						// Avatar reference
+						Avatar targetAvatar; 
+						
+						// Set avatar target based on ability taget
+						if (a.targetEnemy() == false) {						
+							targetAvatar = context.getGameStateRef().getHumanAvatar(); 
+						}
+						else {
+							targetAvatar = context.getGameStateRef().getComputerAvatar();
+						}
+						
+						// Execute and play animations
+						BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.channel);
+						GeneralCommandSets.threadSleepOverride(100);
+						if (a.getEffectAnimation() != null) {
+							BasicCommands.playEffectAnimation(context.out, a.getEffectAnimation(), context.getGameStateRef().getHumanAvatar().getPosition().getTile(context.getGameStateRef().getBoard()));
+							GeneralCommandSets.threadSleep();
+						}
+						BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.idle);
+
+						// Execute ability
+						a.execute(targetAvatar, context.getGameStateRef());
 					}
-					
+					else if (a.getTargetType() == Monster.class) {
+							
+						// Monster reference
+						Monster targetMonster; 
+						
+						if (a.targetEnemy() == false) {
+							// Assume can only target itself atm but allies can be implemented when abilities of that kind are added
+							targetMonster = summonedMonster;
+						} else {
+							// Not acting on enemy monsters atm, would need to obtain ref from board
+							targetMonster = summonedMonster; // Placeholder
+						}		
+						a.execute(targetMonster, context.getGameStateRef());
+
+					} else {
+						
+						//Other abilities: Draw cards on summon currently present in the game
+						a.execute(null, context.getGameStateRef());
+						
+						// Draw card reprint happens soon after 
+					}
 				}
 			}
-		}
+		}	
 	}
 	
 	

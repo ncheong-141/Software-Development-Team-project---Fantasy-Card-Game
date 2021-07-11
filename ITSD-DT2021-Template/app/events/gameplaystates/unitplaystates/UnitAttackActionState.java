@@ -215,14 +215,11 @@ public class UnitAttackActionState implements IUnitPlayStates {
 							unitDeath(context, currentTile);
 							GeneralCommandSets.threadSleep();
 						}	
-					}
-					
+					}	
 					// Re-idle alive units
 					if(survived) {	BasicCommands.playUnitAnimation(context.out,attacker,UnitAnimationType.idle);	}
 					BasicCommands.playUnitAnimation(context.out,defender,UnitAnimationType.idle);
-					GeneralCommandSets.threadSleep();
-					
-					
+					GeneralCommandSets.threadSleep();	
 				}
 		}
 			
