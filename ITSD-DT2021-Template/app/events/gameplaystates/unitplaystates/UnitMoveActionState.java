@@ -41,6 +41,7 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		if(context.getLoadedUnit() == null) {	System.out.println("Error, current tile has no unit.");	}
 		
 		// Perform unit move function
+		System.out.println("Target tile is:" + targetTile);
 		unitMove(context); 
 		
 		// Loop until moveStopped trigger

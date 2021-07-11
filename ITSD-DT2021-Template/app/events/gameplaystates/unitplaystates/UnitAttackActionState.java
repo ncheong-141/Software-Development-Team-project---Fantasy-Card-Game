@@ -55,20 +55,18 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		attacker = (Monster) context.getLoadedUnit();
 		defender = targetTile.getUnitOnTile();
 		
-		/* Gather ranges
-		/* Build attacker/defender attackRanges for checks --- formula should only reflect attackRange in this state, not
-		/* cumulative attack + move range (since all movement takes place before this state).
-		/* For attacker: attackRange should reflect unit's attacks range (omit move range)
-		/* For defender: counterRange should reflect unit's attack range (omit move range)*/
-		// This needs changing to an attack range method that does not include moveable tiles
+		// Build attacker/defender attackRanges for checks (omitting movement range which has been completed previously)
 		attackerAttackRange  = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), 0));
 		defenderCounterRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), 0));
 		
 		
-		// Checks;
-		// Tile not in attack range
-		// Adjacent enemies with Provoke
+		// Check target is in attack range for attacker
 		if(tileInRange(attacker)) {
+			
+			// Use adjust action range based on movement impaired effects
+			if (attacker.hasActionRangeImpaired()) {
+				attackerAttackRange = context.getGameStateRef().getTileAdjustedRangeContainer();
+			}
 			
 			unitAttack(context);
 
@@ -86,8 +84,6 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		} 
 		
 		else {
-			// Other verbose check messages to be added
-			
 			System.out.println("Enemy is not in attack range.");
 		}
 	}
@@ -96,17 +92,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	private void unitAttack(GameplayContext context) {
 				
-		// Gather action range for board visual
-		ArrayList <Tile> actRange;
-		
-		// Use adjust action range based on movement impaired effects
-		if (attacker.hasActionRangeImpaired()) {
-			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
-		}		
-		else {
-			actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
-		}
-
+		// Build generic actionRange for dehighlight reference
+		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
+		actRange.addAll(context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getMovesLeft()));
 		
 		// Stores interaction outcomes
 		boolean survived;		
@@ -115,20 +103,22 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		
 		System.out.println(attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 		if(attacker.attack()) {
-				System.out.println("Attack successful. " + attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
+			System.out.println("Attack successful. " + attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 			
 			// Update defender
 			survived = defender.defend(attacker.getAttackValue());
 			System.out.println("Defender has " + defender.getHP() + " HP");
 			
-			/***	Re-draw range tiles (leave attacker/defender highlighted for user)	***/
+			/***	Re-draw previously highlighted range tiles (leave attacker/defender highlighted for user)	***/
 			for (Tile t : actRange) {
 				// Defender
 				if(t == targetTile) {
 					continue;
+				} else {
+					BasicCommands.drawTile(context.out, t, 0);
+					GeneralCommandSets.threadSleep();
 				}
-				BasicCommands.drawTile(context.out, t, 0);
-				GeneralCommandSets.threadSleep();
+
 			}
 			
 			/***	Play animations and set visuals		***/
@@ -351,7 +341,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 							System.out.println("After Avatar is damaged, my attack is: " + m.getAttackValue() + " and my health is " + m.getHP());
 							
 							// Play animation + update stats
+							BasicCommands.playUnitAnimation(context.out, m, UnitAnimationType.channel);
 							BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), m.getPosition().getTile(context.getGameStateRef().getBoard()));
+							GeneralCommandSets.threadSleep();
 							GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
 						}
 						

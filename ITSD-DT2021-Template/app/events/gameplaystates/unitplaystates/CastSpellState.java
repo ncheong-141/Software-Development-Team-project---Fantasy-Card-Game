@@ -169,6 +169,8 @@ public class CastSpellState implements IUnitPlayStates {
 					
 					// Play animation + update stats
 					BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					BasicCommands.playUnitAnimation(context.out, f, UnitAnimationType.channel);
+					GeneralCommandSets.threadSleep();
 					GeneralCommandSets.drawUnitWithStats(context.out, f, f.getPosition().getTile(context.getGameStateRef().getBoard()));
 				}
 			}
@@ -200,9 +202,11 @@ public class CastSpellState implements IUnitPlayStates {
 							
 							System.out.println("After Avatar is damaged, my attack is: " + m.getAttackValue() + " and my health is " + m.getHP());
 								
-								// Play animation + update stats
-								BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), m.getPosition().getTile(context.getGameStateRef().getBoard()));
-								GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
+							// Play animation + update stats
+							BasicCommands.playUnitAnimation(context.out, m, UnitAnimationType.channel);
+							BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), m.getPosition().getTile(context.getGameStateRef().getBoard()));
+							GeneralCommandSets.threadSleep();
+							GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
 							}
 							
 						}
@@ -245,8 +249,10 @@ public class CastSpellState implements IUnitPlayStates {
 		// Check for onDeath ability
 		if(deadUnit.hasAbility()) {
 			for(Ability a : deadUnit.getMonsterAbility()) {
-				if(a.getCallID() == Call_IDs.onDeath) {	a.execute(deadUnit,context.getGameStateRef()); 
-				break;}
+				if(a.getCallID() == Call_IDs.onDeath) {	
+					a.execute(deadUnit,context.getGameStateRef()); 
+					break;
+				}
 			}
 		}
 		

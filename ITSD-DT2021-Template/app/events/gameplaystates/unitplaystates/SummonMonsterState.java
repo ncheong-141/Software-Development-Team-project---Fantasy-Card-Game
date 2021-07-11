@@ -60,7 +60,7 @@ public class SummonMonsterState implements IUnitPlayStates {
 		if(tileInSummonRange() && sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard())) {
 			
 			// Execute summon method
-			summonMonster(context.getGameStateRef(), context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
+			summonMonster(context, context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
 			
 			// Update board counter for num Monsters
 			context.getGameStateRef().getBoard().updateUnitCount(1);
@@ -106,17 +106,17 @@ public class SummonMonsterState implements IUnitPlayStates {
 	}
 
 	
-	public void summonMonster(GameState gameState, ActorRef out, String u_configFile, Card statsRef, Tile summonTile) {
+	public void summonMonster(GameplayContext context, ActorRef out, String u_configFile, Card statsRef, Tile summonTile) {
 		
 		// Mana cost
 		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);
-		gameState.getTurnOwner().loseMana(statsRef.getManacost());
+		context.getGameStateRef().getTurnOwner().loseMana(statsRef.getManacost());
 		
-		if(gameState.getTurnOwner() == gameState.getPlayerOne()) {
-			BasicCommands.setPlayer1Mana(out, gameState.getTurnOwner());
+		if(context.getGameStateRef().getTurnOwner() == context.getGameStateRef().getPlayerOne()) {
+			BasicCommands.setPlayer1Mana(out, context.getGameStateRef().getTurnOwner());
 			GeneralCommandSets.threadSleep();
 		} else {
-			BasicCommands.setPlayer2Mana(out, gameState.getTurnOwner());
+			BasicCommands.setPlayer2Mana(out, context.getGameStateRef().getTurnOwner());
 			GeneralCommandSets.threadSleep();
 		}
 		
@@ -124,9 +124,9 @@ public class SummonMonsterState implements IUnitPlayStates {
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		
 		// Need some code about retrieving StaticConfFiles matching card from Deck here
-		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(u_configFile,statsRef,gameState.getTurnOwner(),Monster.class);		
-		summonedMonster.setPositionByTile(gameState.getBoard().getTile(summonTile.getTilex(),summonTile.getTiley()));
-		summonedMonster.setOwner(gameState.getTurnOwner());
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(u_configFile,statsRef,context.getGameStateRef().getTurnOwner(),Monster.class);		
+		summonedMonster.setPositionByTile(context.getGameStateRef().getBoard().getTile(summonTile.getTilex(),summonTile.getTiley()));
+		summonedMonster.setOwner(context.getGameStateRef().getTurnOwner());
 		GeneralCommandSets.threadSleep(); 
 		
 		// Add unit to tile ON BOARD
@@ -143,34 +143,33 @@ public class SummonMonsterState implements IUnitPlayStates {
 		GeneralCommandSets.threadSleep();
 		
 		// Check for on-summon triggers: permanent changes to Monster statistics, abilities activated by summoning
-		checkForSummonTriggers(summonedMonster, gameState);
+		checkForSummonTriggers(summonedMonster, context);
 		
 	}
 	
 	
 	
 	// Checking for triggered abilities: construction-related, summon-method related
-	private void checkForSummonTriggers(Monster summonedMonster, GameState gameState) {
+	private void checkForSummonTriggers(Monster summonedMonster, GameplayContext context) {
 		
-		if(summonedMonster.getMonsterAbility() != null) {	
-			//System.out.println("Monster ability of monster: " + summonedMonster.getName() + ":  " + summonedMonster.getMonsterAbility());
-			checkForConstruction(summonedMonster, gameState);
-			checkForSummon(summonedMonster, gameState);	
+		if(summonedMonster.hasAbility()) {	
+			checkForConstruction(summonedMonster, context);
+			checkForSummon(summonedMonster, context);	
 		}	
 		
 	}
 	
 	// Abilities activated directly after object construction to permanently modify the Unit
-	private void checkForConstruction(Monster summonedMonster, GameState gameState) {
+	private void checkForConstruction(Monster summonedMonster, GameplayContext context) {
 		for(Ability a : summonedMonster.getMonsterAbility()) {
 			if(a.getCallID() == Call_IDs.construction) {
-				a.execute(summonedMonster, gameState);
+				a.execute(summonedMonster, context.getGameStateRef());
 			}
 		}
 	}
 	
 	// Abilities activated by the act of summoning in the game logic
-	private void checkForSummon(Monster summonedMonster, GameState gameState) {
+	private void checkForSummon(Monster summonedMonster, GameplayContext context) {
 		for(Ability a : summonedMonster.getMonsterAbility()) {
 			if(a.getCallID() == Call_IDs.onSummon) {
 				System.out.println("Ability:" + a);
@@ -178,21 +177,42 @@ public class SummonMonsterState implements IUnitPlayStates {
 				// Target logic
 				if (a.getTargetType() == Avatar.class) {
 					
-					if (a.targetEnemy() == false) {									
-						a.execute(gameState.getHumanAvatar(), gameState);					
+					if (a.targetEnemy() == false) {						
+						// Buff abilities
+						if(a instanceof A_U_HealAvatarHPIfSummoned) {
+							BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.channel);
+							BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), context.getGameStateRef().getHumanAvatar().getPosition().getTile(context.getGameStateRef().getBoard()));
+							try {Thread.sleep(1300);} catch (InterruptedException e) {e.printStackTrace();}	
+							a.execute(context.getGameStateRef().getHumanAvatar(), context.getGameStateRef());
+							GeneralCommandSets.drawUnitWithStats(context.out, summonedMonster, targetTile);
+						}
+
 					}
 					else {
-						a.execute(gameState.getComputerAvatar(), gameState);
+						a.execute(context.getGameStateRef().getComputerAvatar(), context.getGameStateRef());
 					}
 				}
 				else if (a.getTargetType() == Monster.class) {
 						
 					if (a.targetEnemy() == false) {
 						// Assume can only target itself or avatars
-						a.execute(summonedMonster, gameState);
+						a.execute(summonedMonster, context.getGameStateRef());
 					} else {
 						// Not acting on enemy monsters atm? 
 					}		
+				} else {
+					
+					// Draw cards on summon
+					a.execute(null, context.getGameStateRef());
+					
+					// Redraw hand for Player
+					int i = 0;	
+					for(Card c : context.getGameStateRef().getTurnOwner().getHand().getHandList()) { // get list of cards from Hand from Player
+						BasicCommands.drawCard(context.out, c, i, 0);
+						i++;
+						GeneralCommandSets.threadSleep(); 
+					}
+					
 				}
 			}
 		}
