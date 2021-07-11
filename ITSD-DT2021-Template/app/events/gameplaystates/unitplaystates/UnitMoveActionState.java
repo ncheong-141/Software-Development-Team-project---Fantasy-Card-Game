@@ -44,9 +44,6 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		System.out.println("Target tile is:" + targetTile);
 		unitMove(context); 
 		
-		// Loop until moveStopped trigger
-		context.getGameStateRef().canInteract = false; 
-		
 		/***	Condition here for combined substate executing, which requires selection is maintained	***/
 		if(!(context.getCombinedActive())) {
 		
@@ -82,7 +79,7 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		else {
 			moveRange = context.getGameStateRef().getBoard().unitMovableTiles(currentTile.getTilex(), currentTile.getTiley(), currentTile.getUnitOnTile().getMovesLeft());
 			actRange = context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), currentTile.getUnitOnTile().getAttackRange(), currentTile.getUnitOnTile().getMovesLeft());
-			//actRange.addAll(moveRange);
+			actRange.addAll(moveRange);
 		}
 
 		
@@ -108,6 +105,9 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			currentTile.removeUnit();
 			targetTile.addUnit(mSelected);
 			mSelected.setPositionByTile(targetTile);
+			
+			// Loop until moveStopped trigger
+			context.getGameStateRef().canInteract = false; 
 			
 			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
 			// Initiate move
