@@ -111,8 +111,10 @@ public class GameState {
 			// Instantiate players 								
 			playerOne = new HumanPlayer();
 			playerOne.setDeck(deckPlayerOne);
+			deckPlayerOne.shuffleDeck();
 			playerTwo = new ComputerPlayer();
 			playerTwo.setDeck(deckPlayerTwo);
+			deckPlayerTwo.shuffleDeck();
 			
 			// Set hands
 			Hand handPlayerOne = new Hand();
@@ -287,11 +289,15 @@ public class GameState {
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
-		deckPlayerOne.shuffleDeck();
+		System.out.println(deckPlayerOne.getCardList().get(0));
+//		deckPlayerOne.shuffleDeck();
+		System.out.println(deckPlayerOne.getCardList().get(0));
 		
 		Deck deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
-		deckPlayerTwo.shuffleDeck();
+		System.out.println(deckPlayerTwo.getCardList().get(0));
+//		deckPlayerTwo.shuffleDeck();
+		System.out.println(deckPlayerTwo.getCardList().get(0));
 				
 		playerOne.setDeck(deckPlayerOne);
 		playerTwo.setDeck(deckPlayerTwo);
