@@ -50,6 +50,21 @@ public class TileClicked implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
+
+		// Check if locked, dont not execute anything if so
+		if (gameState.userinteractionLocked()) {
+			return;
+		}
+		
+		// Lock user interaction during action
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+
+		// Reset hand visual
+		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getTurnOwner().getHand().getCurr(), gameState.getTurnOwner().getHand().getHandList());
+
+		
 		// Selected Tile coordinates
 		int tilex = message.get("tilex").asInt();
 		int tiley = message.get("tiley").asInt();
@@ -89,13 +104,11 @@ public class TileClicked implements EventProcessor{
 		 * E.g. CardSelectedState deals with the previous user input of a Card click and generates a new Unit state 
 		 * based on what the user has currently clicked (a unit or empty tile) 
 		 */
-		gameplayContext.executeAndCreateUnitStates();
+		gameplayContext.executeAndCreateUnitStates();	
 		
-		
-		// Update stats after any action 
-		GeneralCommandSets.redrawAllUnitStats(out, gameState);
-		
-		
+		/**===========================**/
+		gameState.userinteractionUnlock();
+		/**===========================**/
 	}
 
 	

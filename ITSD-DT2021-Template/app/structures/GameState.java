@@ -19,7 +19,7 @@ import utils.StaticConfFiles;
 
 import java.util.ArrayList;
 
-import akka.actor.ActorRef;
+
 import commands.*;
 
 
@@ -43,10 +43,13 @@ public class GameState {
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
 	
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
+
+	private boolean 		locked;
+	private boolean			unitMovingFlag; 
+
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
-	 
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
@@ -74,16 +77,20 @@ public class GameState {
 	 *		useAdjustedMonsterRange()
 	 *		computerEnd()
 	 */
-	
 
 	/** Constructor **/
 	public GameState() {
-		
+				
 		/* Set attributes */ 
 		turnCount = 1;
 		playerDead = false;
+
 		
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
+		
+		// Flags
+		locked = true; 
+		unitMovingFlag = false; 
 		
 		// Initialising ability to unit linkage data to reference whenever loading units. 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
@@ -134,7 +141,7 @@ public class GameState {
 		System.out.println();
 		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
 
-
+		
 	}
 
 	/** GameState methods: Getters and setters + some helper methods**/
@@ -227,9 +234,37 @@ public class GameState {
 	}
 
 
+	/** User interaction control methods **/
+	public void userinteractionLock() {
+		System.out.println("User Interaction locked.");
+		locked = true;
+	}
+	
+	public void userinteractionUnlock() {
+		System.out.println("User Interaction unlocked.");
+		locked = false; 
+	}
+	
+	public boolean userinteractionLocked() {
+		if (locked) {
+			System.out.println("User Interaction is currently locked during action.");
+		}
+		return locked;
+	}
 	
 	
+	/** Unit moving flag * 
+	 */
+	public boolean getUnitMovingFlag() {
+		return unitMovingFlag;
+	}
 	
+	public void setUnitMovingFlag(boolean flag) {
+		unitMovingFlag = flag; 
+	}
+	
+	
+
 	/** Two player mode methods (used for debugging) **/
 
 	public boolean isTwoPlayerMode() {
@@ -252,9 +287,11 @@ public class GameState {
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
+		deckPlayerOne.shuffleDeck();
 		
 		Deck deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
+		deckPlayerTwo.shuffleDeck();
 				
 		playerOne.setDeck(deckPlayerOne);
 		playerTwo.setDeck(deckPlayerTwo);
@@ -395,6 +432,7 @@ public class GameState {
 		playerOne.setDeck(deckPlayerTwo);
 	
 	}
+
 	
 	public void computerEnd() {
 
@@ -421,6 +459,7 @@ public class GameState {
 
 	}
 	
+
 	public boolean isHumanCard() {
 		if(getTurnOwner() == playerOne) {
 			return true;
@@ -483,16 +522,33 @@ public class GameState {
 		return abilityFound; 
 	}
 	
-	public boolean useAdjustedMonsterActRange() {
-		return !this.getTileAdjustedRangeContainer().isEmpty();
-	}
 	
 
-			// To do:
-			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
-			// Move hand instantiation/set up from gamestate into Player constructor
-			// Move AbilityUnitLinkage call into GameState
+
+	/*
+	 * // Check if the deck is empty, if so then gameover if (this.isDeckEmpty()) {
+	 * //check if current player has enough card in deck left to be added into hand
+	 * gameOver(); } else { // If holds enough card, get card from deck
+	 * this.turnOwner.getHand().drawCard(this.turnOwner.getDeck());
+	 * 
+	 * // Draw the card on last index Card card =
+	 * this.turnOwner.getDeck().getCardList().get(0); int handPos =
+	 * this.turnOwner.getHand().getHandList().size()-1;
+	 * GeneralCommandSets.threadSleepLong(); }
+	 * 
+	 * this.setMonsterCooldown(true); // Hard set all monsters on turn enders turn
+	 * to cooldown this.turnChange(); // turnOwner exchanged this.giveMana(); //
+	 * Give turnCount mana to the player in the beginning of new turn
+	 * //gameState.toCoolDown(); // Switch avatars status for current turnOwner
+	 * this.setMonsterCooldown(false);
+	 * 
+	 * 
+	 * }
+	 */
 
 
-	
+
+	 public boolean useAdjustedMonsterActRange() { return
+	 !this.getTileAdjustedRangeContainer().isEmpty(); }
+
 }

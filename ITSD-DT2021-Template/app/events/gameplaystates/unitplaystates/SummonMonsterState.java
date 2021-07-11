@@ -45,7 +45,12 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 		
-		// Check if monster has any on construction abilities 
+
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+
+		
 		
 		/** Build summon range **/
 		// Use adjusted range is monster has special skill on summoe
@@ -61,11 +66,13 @@ public class SummonMonsterState implements IUnitPlayStates {
 		// Target tile within summon range && sufficient player mana check
 		if(tileInSummonRange() && sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard())) {
 			
-			// Execute summon method
-			summonMonster(context.getGameStateRef(), context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
 			
+			// Execute summon method
+			summonMonster(context, context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
+					
 			// Update board counter for num Monsters
 			context.getGameStateRef().getBoard().updateUnitCount(1);
+
 
 			/** Delete card from Hand + update visual **/
 			
@@ -80,18 +87,14 @@ public class SummonMonsterState implements IUnitPlayStates {
 			// Deselect after action finished
 			context.deselectAllAfterActionPerformed();
 			
-			// Update UI 
-			// BasicCommands.deleteCard(context.out, cardIndexInHand);
-			
 			// Only update Hand for Human player
 			if (context.getGameStateRef().getTurnOwner() instanceof HumanPlayer) {
 				GeneralCommandSets.drawCardsInHand(context.out, context.getGameStateRef(), oldHandSize, context.getGameStateRef().getTurnOwner().getHand().getHandList());
 			}
 		
-			//  Reset board visual (highlighted tiles)
+			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
-			
-		} 
+		}
 		
 		else {
 		// Verbose console messages for debugging, simplify for submission
@@ -107,21 +110,26 @@ public class SummonMonsterState implements IUnitPlayStates {
 			}
 			
 		}
-
+		
+		// Short thread sleep before unlock to allow UI to update
+		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionUnlock();
+		/**===========================================**/
 	}
 
 	
-	public void summonMonster(GameState gameState, ActorRef out, String u_configFile, Card statsRef, Tile summonTile) {
+	public void summonMonster(GameplayContext context, ActorRef out, String u_configFile, Card statsRef, Tile summonTile) {
 		
 		// Mana cost
 		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);
-		gameState.getTurnOwner().loseMana(statsRef.getManacost());
+		context.getGameStateRef().getTurnOwner().loseMana(statsRef.getManacost());
 		
-		if(gameState.getTurnOwner() == gameState.getPlayerOne()) {
-			BasicCommands.setPlayer1Mana(out, gameState.getTurnOwner());
+		if(context.getGameStateRef().getTurnOwner() == context.getGameStateRef().getPlayerOne()) {
+			BasicCommands.setPlayer1Mana(out, context.getGameStateRef().getTurnOwner());
 			GeneralCommandSets.threadSleep();
 		} else {
-			BasicCommands.setPlayer2Mana(out, gameState.getTurnOwner());
+			BasicCommands.setPlayer2Mana(out, context.getGameStateRef().getTurnOwner());
 			GeneralCommandSets.threadSleep();
 		}
 		
@@ -129,9 +137,9 @@ public class SummonMonsterState implements IUnitPlayStates {
 		BasicCommands.addPlayer1Notification(out, "drawUnit", 2);
 		
 		// Need some code about retrieving StaticConfFiles matching card from Deck here
-		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(u_configFile,statsRef,gameState.getTurnOwner(),Monster.class);		
-		summonedMonster.setPositionByTile(gameState.getBoard().getTile(summonTile.getTilex(),summonTile.getTiley()));
-		summonedMonster.setOwner(gameState.getTurnOwner());
+		Monster summonedMonster = (Monster) BasicObjectBuilders.loadMonsterUnit(u_configFile,statsRef,context.getGameStateRef().getTurnOwner(),Monster.class);		
+		summonedMonster.setPositionByTile(context.getGameStateRef().getBoard().getTile(summonTile.getTilex(),summonTile.getTiley()));
+		summonedMonster.setOwner(context.getGameStateRef().getTurnOwner());
 		GeneralCommandSets.threadSleep(); 
 		
 		// Add unit to tile ON BOARD
@@ -147,21 +155,40 @@ public class SummonMonsterState implements IUnitPlayStates {
 		GeneralCommandSets.drawUnitWithStats(out, summonedMonster, summonTile);
 		GeneralCommandSets.threadSleep();
 		
-		// Check for on-summon triggers
-		// Trigger abilities that permanently change the new object	
+		// Check for on-summon triggers: permanent changes to Monster statistics, abilities activated by summoning
+		checkForSummonTriggers(summonedMonster, context);
 		
+	}
+	
+	
+	
+	// Checking for triggered abilities: construction-related, summon-method related
+	private void checkForSummonTriggers(Monster summonedMonster, GameplayContext context) {
 		
-		if(summonedMonster.getMonsterAbility() != null) {
-			
-			System.out.println("Monster ability of monster: " + summonedMonster.getName() + ":  " + summonedMonster.getMonsterAbility());
-
+		if(summonedMonster.hasAbility()) {	
+			checkForConstruction(summonedMonster, context);
+			checkForSummon(summonedMonster, context);	
+		}	
+		
+	}
+	
+	// Abilities activated directly after object construction to permanently modify the Unit
+	private void checkForConstruction(Monster summonedMonster, GameplayContext context) {
+		
+		if (summonedMonster.getMonsterAbility() != null ) {
 			for(Ability a : summonedMonster.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.construction) {
-					a.execute(summonedMonster, gameState);
+					a.execute(summonedMonster, context.getGameStateRef());
 				}
 			}
+		}
+	}
 	
-			// Trigger abilities that happen at the game logic point of a new summon
+	// Abilities activated by the act of summoning in the game logic
+	private void checkForSummon(Monster summonedMonster, GameplayContext context) {
+		
+		if (summonedMonster.getMonsterAbility() != null ) {
+		
 			for(Ability a : summonedMonster.getMonsterAbility()) {
 				if(a.getCallID() == Call_IDs.onSummon) {
 					System.out.println("Ability:" + a);
@@ -169,29 +196,58 @@ public class SummonMonsterState implements IUnitPlayStates {
 					// Target logic
 					if (a.getTargetType() == Avatar.class) {
 						
-						if (a.targetEnemy() == false) {									
-							a.execute(gameState.getHumanAvatar(), gameState);					
+						// Avatar reference
+						Avatar targetAvatar; 
+						
+						// Set avatar target based on ability taget
+						if (a.targetEnemy() == false) {						
+							targetAvatar = context.getGameStateRef().getHumanAvatar(); 
 						}
 						else {
-							a.execute(gameState.getComputerAvatar(), gameState);
+							targetAvatar = context.getGameStateRef().getComputerAvatar();
 						}
+						
+						// Execute and play animations
+						BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.channel);
+						GeneralCommandSets.threadSleepOverride(100);
+						if (a.getEffectAnimation() != null) {
+							BasicCommands.playEffectAnimation(context.out, a.getEffectAnimation(), context.getGameStateRef().getHumanAvatar().getPosition().getTile(context.getGameStateRef().getBoard()));
+							GeneralCommandSets.threadSleep();
+						}
+						BasicCommands.playUnitAnimation(context.out, summonedMonster, UnitAnimationType.idle);
+
+						// Execute ability
+						a.execute(targetAvatar, context.getGameStateRef());
 					}
 					else if (a.getTargetType() == Monster.class) {
 							
+						// Monster reference
+						Monster targetMonster; 
+						
 						if (a.targetEnemy() == false) {
-							// Assume can only target itself or avatars
-							a.execute(summonedMonster, gameState);
+							// Assume can only target itself atm but allies can be implemented when abilities of that kind are added
+							targetMonster = summonedMonster;
 						} else {
-							// Not acting on enemy monsters atm? 
+							// Not acting on enemy monsters atm, would need to obtain ref from board
+							targetMonster = summonedMonster; // Placeholder
 						}		
+						a.execute(targetMonster, context.getGameStateRef());
+
+					} else {
+						
+						//Other abilities: Draw cards on summon currently present in the game
+						a.execute(null, context.getGameStateRef());
+						
+						// Draw card reprint happens soon after 
 					}
 				}
 			}
 		}	
 	}
 	
-	/*	Helper methods	*/
 	
+	
+	/*	Helper methods	*/
 	// Returns true if the clicked targetTile is within a Player's summon range
 	private boolean tileInSummonRange() {
 		if(summonRange.contains(targetTile)) {	return true;	}

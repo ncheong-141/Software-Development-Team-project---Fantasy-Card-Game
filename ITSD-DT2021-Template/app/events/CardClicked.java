@@ -34,9 +34,23 @@ public class CardClicked implements EventProcessor{
 
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
-		 // Reset entity selection and board
+
+		// Check if locked, dont not execute anything if so
+		if (gameState.userinteractionLocked()) {
+			return;
+		}
+		
+		// Lock user interaction during action
+		/**===========================**/
+		gameState.userinteractionLock();
+		/**===========================**/
+		
+		GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getTurnOwner().getHand().getCurr(), gameState.getTurnOwner().getHand().getHandList());
+		
+		// Reset entity selection and board
         GeneralCommandSets.boardVisualReset(out, gameState);
         gameState.deselectAllEntities();
+
 		
 		int handPosition = message.get("position").asInt();//gets position in hand of clicked card
 		
@@ -46,6 +60,7 @@ public class CardClicked implements EventProcessor{
 		//tells the game state that a card in hand is to be played
 			gameState.getTurnOwner().getHand().setSelectedCard(gameState.getTurnOwner().getHand().getCardFromHand(handPosition));
 			gameState.getTurnOwner().getHand().setSelCarPos(handPosition);
+			BasicCommands.drawCard(out, gameState.getTurnOwner().getHand().getSelectedCard(), gameState.getTurnOwner().getHand().getSelCarPos(), 1);
 			
 
 		//checks that the clicked card is a monster card using its attack value
@@ -53,7 +68,8 @@ public class CardClicked implements EventProcessor{
 
 			// Boolean switch to check if the ability is applicable 
 			boolean outputted = false; 
-
+			if(gameState.getTurnOwner().getMana() - clickedCard.getManacost() >= 0) {//checks card playable with present mana
+			if(clickedCard.getAssociatedClass()==Monster.class){//checks if card is related to a monster
 			if(clickedCard.hasAbility()) {			
 				for(Ability a: clickedCard.getAbilityList()) {
 
@@ -63,7 +79,7 @@ public class CardClicked implements EventProcessor{
 						
 						System.out.println(a);
 						// Draw the respective tiles (any ability like this will only affect tiles really unless its like, "if you have this card in your had then get 2 HP per turn but that would be weird"/
-						GeneralCommandSets.drawBoardTiles(out, gameState.getTileAdjustedRangeContainer(), 2);
+						GeneralCommandSets.drawBoardTiles(out, gameState.getTileAdjustedRangeContainer(), 1);
 						outputted = true; 
 						break; 
 					}
@@ -73,12 +89,12 @@ public class CardClicked implements EventProcessor{
 			if (!outputted) {
 				// Else, draw the summonable tiles as normal
 				ArrayList<Tile> display= gameState.getBoard().allSummonableTiles(gameState.getTurnOwner());	
-				GeneralCommandSets.drawBoardTiles(out, display, 2);	
+				GeneralCommandSets.drawBoardTiles(out, display, 1);	
 			}
-			
+			}
 
 		//a loop which checks that a card is a spell, then displays playable tiles depending on spell target
-		if (clickedCard.getBigCard().getAttack() < 0) {
+		if (clickedCard.getAssociatedClass()==Spell.class) {
 
 			//for spell targeting enemy units
 			if(AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
@@ -94,14 +110,21 @@ public class CardClicked implements EventProcessor{
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class
 				&& clickedCard.targetEnemy()==false){
 					ArrayList<Tile> display= gameState.getBoard().friendlyTile(gameState.getTurnOwner());
-					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+					GeneralCommandSets.drawBoardTiles(out, display, 1);	
 
 			}//for spell targeting friendly avatar
 			else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Avatar.class
 				&& clickedCard.targetEnemy()==false){
 						Tile display= gameState.getBoard().ownAvatarTile(gameState.getTurnOwner());
-						BasicCommands.drawTile(out,display,2);						
+						BasicCommands.drawTile(out,display,1);						
 						}
 			}
+		
+
+	}
+			
+			/**===========================**/
+			gameState.userinteractionUnlock();
+			/**===========================**/
 	}
 }

@@ -17,8 +17,8 @@ public class ComputerPlayerTurn {
 	
 
 	public void processComputerActions(ActorRef out, GameState g) {
+		
 		ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
-		pl2.setGameBoard(g.getBoard());
 		ComputerPlayer compPlayer = pl2;
 		AIUnitStateController controller = new AIUnitStateController(out, g);
 		compPlayer.setMana(9);
@@ -33,33 +33,32 @@ public class ComputerPlayerTurn {
 		ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 		
 		System.out.println("=====================AI turn: computing cards=======================");
-		cardsToPlay = compPlayer.playCards();
-		
-		System.out.println("=====================AI turn: computing attacks=======================");
-		attacksToPerform = compPlayer.performAttacks();
-		
-		
-		System.out.println("=======================AI turn: computing moves=========================");
-		monstersToMove = compPlayer.moveMonsters();
+		cardsToPlay = compPlayer.playCards(g.getBoard());
 		
 		if (!cardsToPlay.isEmpty() && cardsToPlay != null) {
 			
 			for (ComputerInstruction cI : cardsToPlay) {
-				System.out.println("I want to play this card: " + cI.getCard().getCardname() + " on this tile: " + cI.getTargetTile());
-				System.out.println("-----------");
+				System.out.println(cI);
+				if (cI.getCard() == null || cI.getTargetTile() == null) continue;
+				
 			//card get class 
-			//controller.summonMonster(cI.getCard(), cI.getTargetTile());
+			controller.summonMonster(cI.getCard(), cI.getTargetTile());
 			 
 			}
 		
 		}
 		
+		System.out.println("=====================AI turn: computing attacks=======================");
+		attacksToPerform = compPlayer.performAttacks(g.getBoard());
 		
 		if (attacksToPerform != null && !attacksToPerform.isEmpty()) {
 			System.out.println("Attacks: ");
 			for (ComputerInstruction cI : attacksToPerform) {
-				System.out.println(cI.getActor().getName()+ " attacks to tile ( " + cI.getTargetTile().getTilex() + " "
-						+ cI.getTargetTile().getTiley()+ " )");
+				System.out.println(cI);
+				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
+				
+				Tile currTile = g.getBoard().getTile(cI.getActor().getPosition().getTilex(), cI.getActor().getPosition().getTiley());
+				controller.unitAttack(currTile, cI.getTargetTile());
 			}
 		}
 		
@@ -68,18 +67,18 @@ public class ComputerPlayerTurn {
 		}
 		
 		
+		System.out.println("=======================AI turn: computing moves=========================");
+		monstersToMove = compPlayer.moveMonsters(g.getBoard());
 
-		
-		
 		//check if empty
 		
 		if (!monstersToMove.isEmpty() && monstersToMove != null) {
 			for (ComputerInstruction cI : monstersToMove) {
-				if (cI.getActor() == null) System.out.println("monster is null");
-				if (cI.getTargetTile() == null) System.out.println("tile is null");
-				System.out.println("move monster: " + cI.getActor().getName() + " to tile: " + cI.getTargetTile());
+				System.out.println(cI);
+				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
+				
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
-			//controller.unitMove(currTile, cI.getTargetTile());
+			controller.unitMove(currTile, cI.getTargetTile());
 			}
 		}
 		else System.out.println("no moves to make");

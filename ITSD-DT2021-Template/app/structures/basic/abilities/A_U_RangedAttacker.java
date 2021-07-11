@@ -36,7 +36,7 @@ public class A_U_RangedAttacker implements Ability {
 			int boardLength = gameState.getBoard().getBoardLength(); 
 			
 			// Set attack range to this (so can hit from corner to opposite corner)
-			targetMonster.setAttackRange(boardWidth + boardLength);
+			targetMonster.setAttackRange(boardWidth * boardLength);
 			return true; 
 		}
 		// ================================================================================

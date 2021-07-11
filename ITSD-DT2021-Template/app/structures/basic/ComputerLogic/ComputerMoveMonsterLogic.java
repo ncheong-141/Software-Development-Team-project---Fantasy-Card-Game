@@ -1,7 +1,6 @@
 package structures.basic.ComputerLogic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -10,29 +9,36 @@ import structures.basic.ComputerPlayer;
 import structures.basic.Monster;
 import structures.basic.Tile;
 
+/**
+ * 
+ * @author Chiara Pascucci and Yufen Chen
+ * This class handles the logic for choosing which units to move to which tiles
+ * It gets instantiated in ComputerPlayer
+ *
+ */
+
 
 public class ComputerMoveMonsterLogic {
 	private ComputerPlayer player;
-	private Board gameBoard;
 	
 	public ComputerMoveMonsterLogic(ComputerPlayer p) {
 		this.player = p;
-		this.gameBoard = p.getGameBoard();
 	}
 	
-	//====================MOVING OF UNITS ON BOARD METHOD=======================//
+			//====================MOVING OF UNITS ON BOARD METHODS=======================//
 	
 			/**
 			 * public method used in ComputerPlayer
 			 * @return returns a list of ComputerInstruction object
 			 * each object contains a monster (currently on the board) and a destination tile
+			 * this method calls the private methods in this class in the order provided
 			 */
-			public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> movesUnits(){
-				ArrayList<Monster> movableMonsters = this.allMovableMonsters();
+			public ArrayList<structures.basic.ComputerLogic.ComputerInstruction> movesUnits(Board gameBoard){
+				ArrayList<Monster> movableMonsters = this.allMovableMonsters(gameBoard);
 				if(movableMonsters.isEmpty()) return new ArrayList<structures.basic.ComputerLogic.ComputerInstruction>();
 				
 				
-				ArrayList<MonsterTileOption> listofMTO = this.getMonstersOptions(movableMonsters);
+				ArrayList<MonsterTileOption> listofMTO = this.getMonstersOptions(movableMonsters, gameBoard);
 				
 				return this.matchMonsterAndTile(listofMTO);
 			}
@@ -42,11 +48,11 @@ public class ComputerMoveMonsterLogic {
 			 * @return method returns a list of monster that the player can move in the current turn
 			 * a monster can be moved iff it has moves left and if onCoolDown == false (monster has started on the board)
 			 */
-			private ArrayList <Monster> allMovableMonsters(){
-				ArrayList <Monster> myMonsters = this.gameBoard.friendlyUnitsWithAvatar(player);
-				System.out.println("num mosters I can move bf check: " + myMonsters.size());
-				//myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
-				System.out.println("after check: " + myMonsters.size());
+			private ArrayList <Monster> allMovableMonsters(Board gameBoard){
+				ArrayList <Monster> myMonsters = gameBoard.friendlyUnitsWithAvatar(player);
+				//System.out.println("num mosters I can move bf check: " + myMonsters.size());
+				myMonsters.removeIf(m -> (m.getMovesLeft()<=0 || m.getOnCooldown()));
+				//System.out.println("after check: " + myMonsters.size());
 				
 				return myMonsters;
 			}
@@ -57,13 +63,13 @@ public class ComputerMoveMonsterLogic {
 			 * @return an array of MonsterTileOption objects
 			 * each object in the array being return contains a monster and a list of tiles where that monster can move to
 			 */
-			private ArrayList<MonsterTileOption> getMonstersOptions(ArrayList<Monster> list){
+			private ArrayList<MonsterTileOption> getMonstersOptions(ArrayList<Monster> list, Board gameBoard){
 
 				ArrayList<MonsterTileOption> optionList = new ArrayList<MonsterTileOption>();
 				
 				for (Monster m : list) {
-					System.out.println("calculating tile options for monster: " + m.getName());
-					optionList.add(new MonsterTileOption (m, this.gameBoard));   
+					//System.out.println("calculating tile options for monster: " + m.getName());
+					optionList.add(new MonsterTileOption (m, gameBoard));   
 				}
 				
 				return optionList;
@@ -151,25 +157,29 @@ public class ComputerMoveMonsterLogic {
 			//=========================inner class===============================//
 			
 			/**
-			 * this inner class represent a pairing of a monster belonging to comp player
+			 * 	this inner class represent a pairing of a monster belonging to comp player
 				and a list of tiles that the given monster can move to
 				each object has a score that is equal to the score of the first tile in the list
 				the list is ordered based on tile score (tile implements comparable)
 			 * 
 			 */
 			
+			
+			
 			static class MonsterTileOption implements Comparable<MonsterTileOption> {
 				Monster m; 
 				ArrayList<Tile> list;
 				double score;
+				private static  int inRangeScore = - 1;
+				private static  int bringsEnemyInRange = 2; 
 				MonsterTileOption(Monster m, Board b){
 					this.m = m;
 					this.list = b.unitMovableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getMovesLeft());
-					System.out.println("number of movabale tiles (line 161) : " + list.size());
+					//System.out.println("number of movabale tiles (line 161) : " + list.size());
 					if(list != null && !(list.isEmpty())) {
 						for (Tile t : list) {
-							ComputerPlayer.calcTileMoveScore(m,b,t);
-							System.out.println(" tile ( "+t.getTilex() + " - " + t.getTiley() + " ) score: " + t.getScore());
+							this.calcTileMoveScore(m,b,t);
+							//System.out.println(" tile ( "+t.getTilex() + " - " + t.getTiley() + " ) score: " + t.getScore());
 						}
 						Collections.sort(list);
 						this.score = this.list.get(0).getScore();
@@ -194,10 +204,52 @@ public class ComputerMoveMonsterLogic {
 				@Override
 				public int compareTo(MonsterTileOption o) {
 				
-					//NOTE: if want to order in desc order - hope this works
 					if (this.score > o.getScore()) return -1;
 					else if (this.score < o.getScore()) return 1;
 					else return 0;
 				}
+				
+				
+				//logic for scoring tiles from movement perspective 
+				private void calcTileMoveScore(Monster m, Board b, Tile targetTile) {
+					//tile where monster is currently located
+					Tile currTile = b.getTile(m.getPosition().getTilex(), m.getPosition().getTiley());
+
+					//calculate which enemy tiles are in range from the would be (WB) tile
+					HashSet <Tile> wBAttackable = b.calcAttackRange(targetTile.getTilex(), targetTile.getTiley(), m.getAttackRange(), m.getOwner());
+				
+					//get all tiles that this monster could attack from its current tile (with enemies on them)
+					HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
+				
+					//System.out.println(wBAttackable.size() + "  " + currAttackable.size());
+
+					if (wBAttackable.size() > currAttackable.size()) targetTile.setScore(bringsEnemyInRange);
+				
+					//all tiles on the board with an enemy unit on it
+					ArrayList <Tile> enemyTilesOnBoard = b.enemyTile(m.getOwner());
+				
+					int currAttackableByEnemy = 0;
+					int wBAttackableByEnemy = 0;
+				
+					for (Tile t : enemyTilesOnBoard) {
+						Monster mnstr = t.getUnitOnTile();
+						int x = t.getTilex();
+						int y = t.getTiley();
+
+						ArrayList<Tile> tilesEnemyCanAttack = b.unitAttackableTiles(x, y, mnstr.getAttackRange(), mnstr.getMovesLeft());
+					
+						if (tilesEnemyCanAttack.contains(targetTile)) wBAttackableByEnemy++;
+						if (tilesEnemyCanAttack.contains(currTile)) currAttackableByEnemy ++;
+					}
+
+					if (wBAttackableByEnemy > currAttackableByEnemy) targetTile.setScore(inRangeScore);
+			
+				}
+				
+				
+				
 			}
+			
+			
+			
 }
