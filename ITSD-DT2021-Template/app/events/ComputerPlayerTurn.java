@@ -42,7 +42,7 @@ public class ComputerPlayerTurn {
 				System.out.println(cI);
 				
 				  if (cI.getCard() == null || cI.getTargetTile() == null) continue; else { if
-				  (cI.getCard().getClass() == Spell.class) controller.spellCast(cI.getCard(),
+				  (cI.getCard().getAssociatedClass() == Spell.class) controller.spellCast(cI.getCard(),
 				  cI.getTargetTile()); else { controller.summonMonster(cI.getCard(),
 				  cI.getTargetTile());
 				  try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();} } }
