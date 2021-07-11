@@ -73,13 +73,21 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		ArrayList <Tile> actRange; 
 		ArrayList <Tile> moveRange = new ArrayList<Tile>();
 		
+		for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
+			
+			System.out.println(t.getTilex() + "," + t.getTiley());
+			
+		}
 		// Account for movement impairing debuffs
 		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
 			
+			System.out.print("Here");
 			// Act range calculate by abilities etc (external factors)
 			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
 			
 			for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
+				
+				System.out.println(t.getTilex() + "," + t.getTiley());
 				if (t.getUnitOnTile() == null) {
 					moveRange.add(t);
 				}

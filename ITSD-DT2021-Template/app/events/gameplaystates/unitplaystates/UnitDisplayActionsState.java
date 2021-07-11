@@ -89,9 +89,9 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 			unitPlayable = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
 		}
 
-		
+		// If the selected unit is playable
 		if(unitPlayable) {
-			context.deselectAllAfterActionPerformed();
+			//context.deselectAllAfterActionPerformed();
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
 		} 
 		
