@@ -1,11 +1,7 @@
 package structures.basic;
-import akka.actor.ActorRef;
-import commands.BasicCommands;
-import structures.basic.Card;
-import java.util.ArrayList;
-
 
 import structures.GameState;
+
 /**
  * A basic representation of of the Player. A player
  * has health and mana.
@@ -26,12 +22,8 @@ public class Player {
 	public Player() {
 		this.health = 20;
 		this.mana = 0;
-		/*
-		 * this.deck = new Deck(); this.hand = new Hand(); this.hand.initialHand(deck);
-		 */
 	}
-	
-	
+
 	//add Mana and check maximum	
 	public void addMana(int addMana) {
 		int newMana = mana + addMana;
@@ -67,7 +59,7 @@ public class Player {
 		}
 	}
 	
-// add to assist Avatar class
+	// add to assist Avatar class
 	public void changeHealth(int delta) {
 		this.health += delta;
 		if (this.health > 20) this.health = 20;
@@ -76,10 +68,7 @@ public class Player {
 			GameState.gameOver();
 		}
 	}
-		
-	
 
-	
 	public int getHealth() {
 		return health;
 	}
@@ -114,10 +103,6 @@ public class Player {
 		this.hand = h;
 	}
 
-
 }
-		
-		// To do:
-		// Move setting of deck and instantiation of it from the gameState into the Player constructor
-		// Move hand instantiation/set up from gamestate into Player constructor
+
 

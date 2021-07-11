@@ -1,14 +1,23 @@
 package structures.basic.ComputerLogic;
 import structures.basic.*; 
-import java.util.ArrayList;
 import java.util.HashSet;
+
+/**
+ * 
+ * @author Chiara Pascucci and Yufen Chen
+ * this class represent a combination of playable cards
+ * each combination holds a set of card objects 
+ * each combination has a score
+ * the combination's score is set to either a defence score (where cards that impact the player are scored higher)
+ * or to an attack score (where cards that impact the enemy are score higher)
+ * the computer player can choose whether to calculate a defence or attack score based on its state
+ *
+ */
 
 public class CardCombo implements Comparable<CardCombo> {
 	
 	private HashSet <Card> cardCombo;
 	
-	//class variables holding information on the specific combination obj
-	//based on cards contained in cardCombo list
 	
 	//integer representing magnitude of card combo impact on enemy
 	//for example if combination is one spell card (attacking enemy) and one monster
@@ -23,11 +32,11 @@ public class CardCombo implements Comparable<CardCombo> {
 	private boolean specialSkill;
 	
 	//weight given to the parameters above will vary depending on player's "stance"
-	//for example with low player's health a combination with a higher defense impact will be given a higher score
+	//for example with low player's health a combination with a higher defence impact will be given a higher score
 	
 	//overall score given to the specific card combination
 	//score is calculated within this class and retrieved by Computer Player to make decisions
-	protected int Attackscore, DefenseScore, score;
+	protected int score;
 	
 	
 	public CardCombo() {
@@ -107,7 +116,6 @@ public class CardCombo implements Comparable<CardCombo> {
 			totManaCost += c.getManacost();
 		}
 		 return totManaCost;
-	
 	}
 
 	

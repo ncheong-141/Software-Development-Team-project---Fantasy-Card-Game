@@ -1,16 +1,23 @@
 package structures.basic.ComputerLogic;
 import structures.basic.*;
 
+/**
+ * 
+ * @author Chiara Pascucci and Yufen Chen
+ * This class represent an instruction that the computer player can generate
+ * each object contains data on the card to be played + tile where the card needs to be played exclusive-OR
+ * data on the Monster that needs to move OR perform an attack and the target tile 
+ */
+
 public class ComputerInstruction {
 	protected Card card;
-	protected Tile targetTile, currTile;
+	protected Tile targetTile;
 	protected Monster actor;
 	
 	public ComputerInstruction(Card c, Tile t) {
 		this.card = c;
 		this.targetTile = t;
 		this.actor = null;
-		this.currTile = null;
 	}
 	
 	public ComputerInstruction(Monster m, Tile t) {
@@ -30,7 +37,9 @@ public class ComputerInstruction {
 		return actor;
 	}
 	
-	// To do:
-	// Change constructors to match AIUnitStateController method signatures
 	
+	public String toString() {
+		if (this.card == null) return "monster: " + actor.getName() + "at tile: (" + actor.getPosition().getTilex() + " - " + actor.getPosition().getTiley() + ") to tile " + targetTile;
+		else return "play card " + this.card.getCardname() + " on tile " + this.targetTile;
+	}
 }

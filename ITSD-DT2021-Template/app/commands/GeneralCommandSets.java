@@ -177,12 +177,19 @@ public class GeneralCommandSets {
 	// Show entire Hand 
 	public static void drawCardsInHand(ActorRef out, GameState gameState, int oldHandSize, ArrayList<Card> cardsInHand) {
 
+
 		// Delete/hide all cards in the UI
 		for (int i = 0; i < oldHandSize; i++) {
 			BasicCommands.deleteCard(out, i);
 			GeneralCommandSets.threadSleep(); 
 		}
 
+//		if(gameState.isTwoPlayerMode() ) {// Delete/hide all cards in the UI
+//			for (int i = 0; i < oldHandSize; i++) {
+//				BasicCommands.deleteCard(out, i);
+//			}
+//			GeneralCommandSets.threadSleep(); 
+//		}
 		 
 		// Show all the cards in the UI in new positions 
 		int i = 0;	

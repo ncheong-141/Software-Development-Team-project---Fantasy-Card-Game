@@ -1,6 +1,9 @@
 package events;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -54,8 +57,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
-		
-		//boardPrintAllMethods(out, gameState);
 
 //		Card rPulv = BasicObjectBuilders.loadCard(StaticConfFiles.c_rock_pulveriser, StaticConfFiles.u_rock_pulveriser, 151, Card.class);
 //		Monster u_rPulv = BasicObjectBuilders.loadMonsterUnit(rPulv.getConfigFile(), rPulv, (Player) gameState.getPlayerOne(), Monster.class);
@@ -65,8 +66,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 //		gameState.getBoard().getTile(3, 1).addUnit(u_rPulv);
 //		GeneralCommandSets.drawUnitWithStats(out, u_rPulv, (gameState.getBoard().getTile(3, 1)));
 
-		//CommandDemo.executeTileHighlightDemo(out, g);
-		//CommandDemo.executeAbilityDemo(out, gameState);
 		
 
 
@@ -86,20 +85,34 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		//////STUFF FOR TESTING/////
 		// Create Card objects to use
-//		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
-//		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
-//		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
-//				
-//		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
-//		Monster[] fmArray = new Monster[4]; 
-//		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
-//		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
-//		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
-//		fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
-//		
-//		
-		//boardPrintAllMethods(out, gameState);
+
+		Card cBlazeHound = BasicObjectBuilders.loadCard(StaticConfFiles.c_blaze_hound, 2, Card.class);
+		Card cFireSpitter = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 3, Card.class);
+		Card cFireSpitter2 = BasicObjectBuilders.loadCard(StaticConfFiles.c_fire_spitter, 4, Card.class);
+				
+		// Create Friendly Unit objects to use (sets HP, name, ability, onwer already) 
+		Monster[] fmArray = new Monster[4]; 
+		fmArray[0] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter, gameState.getPlayerTwo(), Monster.class);
+		fmArray[1] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_fire_spitter, cFireSpitter2, gameState.getPlayerTwo(), Monster.class);
+		fmArray[2] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
+		//fmArray[3] = BasicObjectBuilders.loadMonsterUnit(StaticConfFiles.u_blaze_hound, cBlazeHound, gameState.getPlayerTwo(), Monster.class);
 		
+		Board board = gameState.getBoard();
+		Tile a,b,c;
+		a = board.getTile(4, 1);
+		b = board.getTile(1, 4);
+		c = board.getTile(3, 3);
+		
+		a.addUnit(fmArray[0]);
+		b.addUnit(fmArray[1]);
+		c.addUnit(fmArray[2]);
+>>>>>>> 95bab379c3b9903d6fe10362822dc590b0552e3c
+		
+		GeneralCommandSets.drawUnitWithStats(out, fmArray[0], a);
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.drawUnitWithStats(out, fmArray[1], b);
+		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.drawUnitWithStats(out, fmArray[2], c);
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();

@@ -19,7 +19,7 @@ import utils.StaticConfFiles;
 
 import java.util.ArrayList;
 
-import akka.actor.ActorRef;
+
 import commands.*;
 
 
@@ -50,7 +50,6 @@ public class GameState {
 	
 	private Deck deckPlayerOne;
 	private Deck deckPlayerTwo;
-	 
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
@@ -78,7 +77,6 @@ public class GameState {
 	 *		useAdjustedMonsterRange()
 	 *		computerEnd()
 	 */
-	
 
 	/** Constructor **/
 	public GameState() {
@@ -266,7 +264,7 @@ public class GameState {
 	}
 	
 	
-	
+
 	/** Two player mode methods (used for debugging) **/
 
 	public boolean isTwoPlayerMode() {
@@ -353,21 +351,18 @@ public class GameState {
 	
 	//give turnCount mana to the player just in the beginning of new turn	
 	public void giveMana() {  
-	    //give turnCount mana to the player just in the beginning of new turn   
-	    
-	            if ( getTurnCount() >= 9) {                //if it is the 9th turn or more than 9, setMan to 9 for both players
-	                    getTurnOwner().setMana(9);
-	            }else {       
-	                if(getTurnOwner() == playerOne) {    //turncount +1 only when Human player start the new round of game
-	                    this.turnCount = getTurnCount()+1;
-	                    getTurnOwner().setMana(this.turnCount);
-	                }
-	                else {
-	                    getTurnOwner().setMana(this.turnCount);
-	                }
-	            }
-	   
 
+			if ( getTurnCount() >= 9) {				//if it is the 9th turn or more than 9, setMan to 9 for both players
+					getTurnOwner().setMana(9);
+			}else {		
+				if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
+					this.turnCount = getTurnCount()+1;
+					getTurnOwner().setMana(this.turnCount);
+				}
+				else {
+					getTurnOwner().setMana(this.turnCount);
+				}  
+			}
 	}
 	
 	//empty mana for player who ends the turn
@@ -387,7 +382,7 @@ public class GameState {
 	}
 	
 	
-	// Cooldown monsters
+	// Cooldown monsters  ---Can be deleted?
 	public void toCoolDown() {
 		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());	
 		
@@ -417,7 +412,9 @@ public class GameState {
 		
 		// Set cooldowns
 		for(Monster m : toCool){
-				m.setCooldown(value);	
+			if(m.getOnCooldown() != value) {
+				m.toggleCooldown();	
+			}
 		}
 	}
 	
@@ -432,9 +429,45 @@ public class GameState {
 		deckPlayerTwo.deckTwo();
 		playerOne.setDeck(deckPlayerTwo);
 	
-	}	
+	}
+
 	
+	public void computerEnd() {
+
+		if (isDeckEmpty()) { 
+			gameOver(); 
+			return;
+		}
+			 
+		// If there are cards left in deck, get a card from deck (back end)
+		if(!isHumanCard()) {
+			getTurnOwner().getHand().drawCard(getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
+			endTurnStaticChange();
+		}	
+	}
+		
+	public void endTurnStaticChange() {
 	
+		emptyMana(); 										// Empty mana for player who ends the turn
+		deselectAllEntities();								// Deselect all entities
+		setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
+		turnChange(); 				// turnOwner exchanged	
+		giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
+		setMonsterCooldown(false);
+
+	}
+	
+
+	public boolean isHumanCard() {
+		if(getTurnOwner() == playerOne) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+		
 	/** Generalised method for finding if any monsters require their ability to be executed.
 	 * 	Called in relevant places
 	 ***/
@@ -487,34 +520,33 @@ public class GameState {
 		return abilityFound; 
 	}
 	
-	public boolean useAdjustedMonsterActRange() {
-		return !this.getTileAdjustedRangeContainer().isEmpty();
-	}
 	
 
-			// To do:
-			// Move deck player-setting and instantiation into the (separate Human/Computer-) Player constructor
-			// Move hand instantiation/set up from gamestate into Player constructor
-			// Move AbilityUnitLinkage call into GameState
 
-	public void computerEnd() {
-		
-		this.emptyMana(); 										// Empty mana for player who ends the turn
-		this.deselectAllEntities();								// Deselect all entities
-		
+	/*
+	 * // Check if the deck is empty, if so then gameover if (this.isDeckEmpty()) {
+	 * //check if current player has enough card in deck left to be added into hand
+	 * gameOver(); } else { // If holds enough card, get card from deck
+	 * this.turnOwner.getHand().drawCard(this.turnOwner.getDeck());
+	 * 
+	 * // Draw the card on last index Card card =
+	 * this.turnOwner.getDeck().getCardList().get(0); int handPos =
+	 * this.turnOwner.getHand().getHandList().size()-1;
+	 * GeneralCommandSets.threadSleepLong(); }
+	 * 
+	 * this.setMonsterCooldown(true); // Hard set all monsters on turn enders turn
+	 * to cooldown this.turnChange(); // turnOwner exchanged this.giveMana(); //
+	 * Give turnCount mana to the player in the beginning of new turn
+	 * //gameState.toCoolDown(); // Switch avatars status for current turnOwner
+	 * this.setMonsterCooldown(false);
+	 * 
+	 * 
+	 * }
+	 */
 
-		// Check if the deck is empty, if so then gameover
-		if (this.isDeckEmpty()) {  //check if current player has enough card in deck left to be added into hand
-			gameOver(); 
-		}
-		
-		this.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
-		this.turnChange(); 				// turnOwner exchanged	
-		this.giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
-		//gameState.toCoolDown(); 				// Switch avatars status for current turnOwner
-		this.setMonsterCooldown(false);
-	
-	
-	}
-	
+
+
+	 public boolean useAdjustedMonsterActRange() { return
+	 !this.getTileAdjustedRangeContainer().isEmpty(); }
+
 }
