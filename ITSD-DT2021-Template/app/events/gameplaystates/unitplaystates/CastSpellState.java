@@ -41,6 +41,10 @@ public class CastSpellState implements IUnitPlayStates {
 	
 	public void execute(GameplayContext context) {
 		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+		
 		System.out.println("In CastSpellSubState.");
 
 		// Create spell from the Card in context
@@ -51,10 +55,8 @@ public class CastSpellState implements IUnitPlayStates {
 		Spell spellToCast = (Spell) BasicObjectBuilders.loadCard( context.getLoadedCard().getConfigFile(), context.getLoadedCard().getId(), Spell.class); 
 
 		
-		GeneralCommandSets.threadSleep();
-
 		// Set ability to Spell
-		spellToCast.setAbility("Truestrike",AbilityToUnitLinkage.UnitAbility.get(context.getLoadedCard().getCardname()).get(0));
+		spellToCast.setAbility(context.getLoadedCard().getCardname() ,AbilityToUnitLinkage.UnitAbility.get(context.getLoadedCard().getCardname()).get(0));
 		
 		/* Cast the Spell on the Unit on tile selected */
 		
@@ -127,13 +129,15 @@ public class CastSpellState implements IUnitPlayStates {
 			System.out.println("Spell cast unsucessful, please select another Unit"); 
 		}
 		
-		
-
+		// Short thread sleep before unlock to allow UI to update
+		//.threadSleepOverride(150);
+		/**===========================================**/
+		context.getGameStateRef().userinteractionUnlock();
+		/**===========================================**/
 	}
 	
+	
 	/**		Helper methods	**/
-	
-	
 	// Simple helper to check if a Monster is an Avatar
 	private boolean isAvatar(Monster m) {
 		if(m.getClass() == Avatar.class) {	return true;	}

@@ -45,6 +45,13 @@ public class SummonMonsterState implements IUnitPlayStates {
 		
 		System.out.println("In SummonMonsterSubState.");
 		
+
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+
+		
+		
 		/** Build summon range **/
 		// Use adjusted range is monster has special skill on summoe
 		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
@@ -79,14 +86,13 @@ public class SummonMonsterState implements IUnitPlayStates {
 			context.deselectAllAfterActionPerformed();
 			
 			// Only update Hand for Human player
-			if (context.getGameStateRef().getTurnOwner() == context.getGameStateRef().getPlayerOne()) {
+			if (context.getGameStateRef().getTurnOwner() instanceof HumanPlayer) {
 				GeneralCommandSets.drawCardsInHand(context.out, context.getGameStateRef(), oldHandSize, context.getGameStateRef().getTurnOwner().getHand().getHandList());
 			}
 		
 			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
-			
-		} 
+		}
 		
 		else {
 		// Verbose console messages for debugging, simplify for submission
@@ -102,7 +108,12 @@ public class SummonMonsterState implements IUnitPlayStates {
 			}
 			
 		}
-
+		
+		// Short thread sleep before unlock to allow UI to update
+		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionUnlock();
+		/**===========================================**/
 	}
 
 	

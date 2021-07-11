@@ -37,6 +37,10 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 	
 		System.out.println("In UnitCombinedActionSubState.");
 		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+		
 		// Check for selected unit abilities that do not require adjacency for attack
 		if(currentTile.getUnitOnTile().getMonsterAbility() != null) {
 			for(Ability a : currentTile.getUnitOnTile().getMonsterAbility()) {
@@ -70,6 +74,10 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		// Cant ask main thread to wait either since it will block front end signals and need Unit stopped
 		Thread thread = new Thread(new ExecuteUnitStatesOnDifferentThread(context));
 		thread.start();
+		
+		/**=============================================**/
+		// No unlock as this is done by UnitStopped class
+		/**=============================================**/
 	}
 
 
@@ -90,7 +98,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			unitMoveState.execute(context);
 			
 			// Wait for the Front end to give back a message (unit stopped)
-			while (!context.getGameStateRef().canInteract) {
+			while (!context.getGameStateRef().getUnitMovingFlag()) {
 				GeneralCommandSets.threadSleep();		
 			} 
 

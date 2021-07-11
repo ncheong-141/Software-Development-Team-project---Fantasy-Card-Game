@@ -37,6 +37,11 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		
 		System.out.println("In UnitMoveActionSubState.");
 		
+
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+		
 		context.setLoadedUnit(currentTile.getUnitOnTile());
 		if(context.getLoadedUnit() == null) {	System.out.println("Error, current tile has no unit.");	}
 		
@@ -51,6 +56,10 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			context.deselectAllAfterActionPerformed();
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+			
+			/**===========================================**/
+			context.getGameStateRef().userinteractionUnlock();
+			/**===========================================**/
 		}
 	}
 
@@ -107,7 +116,7 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			mSelected.setPositionByTile(targetTile);
 			
 			// Loop until moveStopped trigger
-			context.getGameStateRef().canInteract = false; 
+			context.getGameStateRef().setUnitMovingFlag(true);
 			
 			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
 			// Initiate move

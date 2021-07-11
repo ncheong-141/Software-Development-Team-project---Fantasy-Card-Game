@@ -48,6 +48,11 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	
 	public void execute(GameplayContext context) {
 		
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+		
+		
 		System.out.println("In UnitAttackActionSubState.");
 		context.debugPrint();
 		
@@ -68,6 +73,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 				attackerAttackRange = context.getGameStateRef().getTileAdjustedRangeContainer();
 			}
 			
+			// Execute the attack
 			unitAttack(context);
 
 			/***	Condition here for combined substate executing, which requires selection is maintained	***/
@@ -82,8 +88,12 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			
 				//  Reset board visual (highlighted tiles)
 				GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
-			}	
-			
+				
+				// Only unlock if not in combined state
+				/**===========================================**/
+				context.getGameStateRef().userinteractionUnlock();
+				/**===========================================**/
+			}		
 		} 
 		
 		else {
