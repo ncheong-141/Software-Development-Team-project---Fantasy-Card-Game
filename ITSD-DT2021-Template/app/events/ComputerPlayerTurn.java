@@ -42,12 +42,12 @@ public class ComputerPlayerTurn {
 				System.out.println(cI);
 				
 				  if (cI.getCard() == null || cI.getTargetTile() == null) continue; 
-				  else { 
-					  System.out.println("get class: " + cI.getCard().getClass().getName());
-					  System.out.println("get associated class: " + cI.getCard().getAssociatedClass().getName());
-					  if  (cI.getCard().getAssociatedClass() == Spell.class) controller.spellCast(cI.getCard(), cI.getTargetTile()); 
-					  else { controller.summonMonster(cI.getCard(), cI.getTargetTile());
-				  try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();} } }
+//				  else { 
+//					  System.out.println("get class: " + cI.getCard().getClass().getName());
+//					  System.out.println("get associated class: " + cI.getCard().getAssociatedClass().getName());
+//					  if  (cI.getCard().getAssociatedClass() == Spell.class) controller.spellCast(cI.getCard(), cI.getTargetTile()); 
+//					  else { controller.summonMonster(cI.getCard(), cI.getTargetTile());
+//				  try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();} } }
 				 
 
 			}
@@ -64,7 +64,7 @@ public class ComputerPlayerTurn {
 				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
 				
 				Tile currTile = g.getBoard().getTile(cI.getActor().getPosition().getTilex(), cI.getActor().getPosition().getTiley());
-				controller.unitAttack(currTile, cI.getTargetTile());
+				//controller.unitAttack(currTile, cI.getTargetTile());
 				try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 			}
 		}
@@ -85,7 +85,7 @@ public class ComputerPlayerTurn {
 				if (cI.getActor() == null || cI.getTargetTile() == null) continue;
 				
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
-			controller.unitMove(currTile, cI.getTargetTile());
+			//controller.unitMove(currTile, cI.getTargetTile());
 			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 			}
 		}

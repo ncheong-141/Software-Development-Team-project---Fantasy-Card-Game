@@ -24,7 +24,7 @@ public class Board {
 	//class variables
 	private Tile [][] gameBoard;
 	//since the board for this version of the game is set to given constant values
-	//the board lenght on the X and Y axis is represented by constant integer values
+	//the board length on the X and Y axis is represented by constant integer values
 	private final int Y;
 	private final int X;
 	//storing references to the tile where the human and computer avatar will start for ease of access
@@ -153,7 +153,7 @@ public class Board {
 
 		//System.out.println(xPos + " calcRange " + yPos);
 		for (int i = 0; i<rangeH.length; i++) {
-			if (xPos + rangeW[i] <0 || xPos + rangeW[i] > 8 || yPos + rangeH[i]<0 || yPos + rangeH[i] > 4) continue;
+			if (xPos + rangeW[i] <0 || xPos + rangeW[i] > X-1 || yPos + rangeH[i]<0 || yPos + rangeH[i] > Y-1) continue;
 			else {
 				
 					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
@@ -241,7 +241,7 @@ public class Board {
 		return tileRange;
 	}
 
-	//method returns all adijecent enemy tiles for a given position
+	//method returns all adjacent enemy tiles for a given position
 	public ArrayList <Tile> adjEnemyTiles(int xPos, int yPos, Player p){
 		ArrayList<Tile> tileRange = this.adjTiles(this.getTile(xPos, yPos));
 		tileRange.removeIf(tile -> (tile.getFreeStatus()||tile.getUnitOnTile().getOwner()==p));
@@ -257,7 +257,7 @@ public class Board {
 	 * 	
 	 */
 	
-	public ArrayList<Tile> moves(int xpos, int ypos, int moves){
+	public ArrayList<Tile> moves(int xpos, int ypos, int moves, Player p){
 		HashSet <Tile> tileList = new HashSet<Tile>();
 		
 		boolean[][][] visited = new boolean[this.Y][this.X][1];
@@ -273,15 +273,18 @@ public class Board {
 		while(! queue.isEmpty()) {
 			State current = queue.poll();
 			if (current.moves == 0) {
+				System.out.println("added tile: " + current.t + "to reach tiles, moves left " + current.moves);
 				tileList.add(current.t);
 				continue;
 			}
 			
 			else {
 				ArrayList<Tile> reachTiles = this.adjTiles(current.t);
-				reachTiles.removeIf(tile ->!(tile.getFreeStatus()));
+				reachTiles.removeIf(tile ->(tile.getFreeStatus()==false && tile.getUnitOnTile().getOwner()!=p));
 				for (Tile t : reachTiles) {
 					if (visited[t.getTiley()][t.getTilex()][0] != true) {
+						tileList.add(current.t);
+						System.out.println("added tile: " + current.t + "to reach tiles, moves left " + current.moves); 
 						State nextState = new State(t, current.moves-1);
 						queue.add(nextState);
 						visited[t.getTiley()][t.getTilex()][0] = true;
@@ -305,12 +308,16 @@ public class Board {
 			this.xpos = t.getTilex();
 			this.ypos = t.getTiley();
 		}
+		
+		public String toString() {
+			return "I'm on tile: "+ t +" with " + moves + " left";
+		}
 	}
 
 	//5) unitMovableTiles - this method returns a list of all tiles a selected unit can move to
 	//within a given range based on the specified position
 	public ArrayList<Tile> unitMovableTiles (int xpos, int ypos, int moveRange ){
-		ArrayList <Tile> tileList = this.moves(xpos, ypos, moveRange);
+		ArrayList <Tile> tileList = this.reachableTiles(xpos, ypos, moveRange);
 		tileList.removeIf(t -> !(t.getFreeStatus()));
 
 		return tileList;
@@ -358,7 +365,7 @@ public class Board {
 
 		//get a list of all tiles that the unit can reach given their position and move range
 		//this includes both free and occupied tiles
-		reachTiles = this.moves(xpos, ypos, moveRange);
+		reachTiles = this.reachableTiles(xpos, ypos, moveRange);
 
 		//iterate over the list of tiles that can be reached 
 		//if the tile has an enemy unit it is added to the set (no duplicate values)
@@ -390,8 +397,6 @@ public class Board {
 
 			for (int j = ypos - attackRange; j <= (ypos + attackRange); j++) {
 
-				// A direct cardinal = a tile where prospective x || y == xpos || ypos
-				// A direct diagonal = a tile where prospective x == y 
 				
 				// Check if indices are within limits of the board
 				if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 

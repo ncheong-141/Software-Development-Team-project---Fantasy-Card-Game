@@ -256,10 +256,11 @@ public class ComputerMoveMonsterLogic {
 					}
 					int score = deltaOne + deltaTwo;
 					
-					if ((m.getOwner().getHealth() <= ((ComputerPlayer) m.getOwner()).getHPBenchMark()|| m.getClass() == Avatar.class) && (currTile.getTilex() - targetTile.getTilex())>0){ {
+					if ((m.getOwner().getHealth() <= ((ComputerPlayer) m.getOwner()).getHPBenchMark()|| m instanceof Avatar ) 
+							&& (currTile.getTilex() - targetTile.getTilex())>0){ 
 						score--;
-					}
-						
+			
+					
 					}
 					
 					targetTile.setScore(score);

@@ -57,6 +57,10 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
+
+		ArrayList<Tile> test = gameState.getBoard().moves(1, 2, 2, gameState.getPlayerOne());
+		
+		for (Tile t : test ) System.out.println(t);
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();
