@@ -38,8 +38,8 @@ public class EndTurnClicked implements EventProcessor{
 		endTurnStateChange(out, gameState);
 		
 		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
-			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
-			compTurn.processComputerActions(out, gameState);
+			ComputerPlayerTurn compTurn = new ComputerPlayerTurn(out, gameState);
+			compTurn.processComputerActions();
 		}
 
 		
