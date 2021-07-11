@@ -37,13 +37,17 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		
 		System.out.println("In UnitMoveActionSubState.");
 		
+
+		/**===========================================**/
+		context.getGameStateRef().userinteractionLock();
+		/**===========================================**/
+		
 		context.setLoadedUnit(currentTile.getUnitOnTile());
 		if(context.getLoadedUnit() == null) {	System.out.println("Error, current tile has no unit.");	}
 		
 		// Perform unit move function
+		System.out.println("Target tile is:" + targetTile);
 		unitMove(context); 
-		
-		// Loop until moveStopped trigger
 		
 		/***	Condition here for combined substate executing, which requires selection is maintained	***/
 		if(!(context.getCombinedActive())) {
@@ -52,6 +56,10 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			context.deselectAllAfterActionPerformed();
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+			
+			/**===========================================**/
+			context.getGameStateRef().userinteractionUnlock();
+			/**===========================================**/
 		}
 	}
 
@@ -68,19 +76,25 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		// Account for movement impairing debuffs
 		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
 			
+			System.out.print("Here");
+			
 			// Act range calculate by abilities etc (external factors)
 			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
 			
 			for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
+				
+				System.out.println(t.getTilex() + "," + t.getTiley());
 				if (t.getUnitOnTile() == null) {
-					moveRange.add(t);
+					if (t != currentTile) {
+						moveRange.add(t);
+					}
 				}
 			}
 		}
 		else {
 			moveRange = context.getGameStateRef().getBoard().unitMovableTiles(currentTile.getTilex(), currentTile.getTiley(), currentTile.getUnitOnTile().getMovesLeft());
 			actRange = context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), currentTile.getUnitOnTile().getAttackRange(), currentTile.getUnitOnTile().getMovesLeft());
-			//actRange.addAll(moveRange);
+			actRange.addAll(moveRange);
 		}
 
 		
@@ -90,30 +104,37 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		System.out.println("MovesLeft: " + mSelected.getMovesLeft());
 		System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
 		
-		if(moveRange.contains(targetTile) && mSelected.move(targetTile)) {
-			
-			System.out.println("MovesLeft: " + mSelected.getMovesLeft());
-			System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
-			
-			// Deselect movement range --- implement specific visual path display later
-			GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
-			GeneralCommandSets.threadSleep();
-			// Redraw selected tile visual
-			BasicCommands.drawTile(context.out, currentTile, 0);
-			GeneralCommandSets.threadSleep();GeneralCommandSets.threadSleep();
 
-			// Update Tiles and Unit
-			currentTile.removeUnit();
-			targetTile.addUnit(mSelected);
-			mSelected.setPositionByTile(targetTile);
+		System.out.println("moveRange.contains(targetTile): " +  moveRange.contains(targetTile));
+		if((!moveRange.isEmpty()) && moveRange.contains(targetTile)) {
 			
-			// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
-			// Move animation
-			BasicCommands.playUnitAnimation(context.out, mSelected, UnitAnimationType.move);
-			GeneralCommandSets.threadSleep();
-			// Initiate move
-			BasicCommands.moveUnitToTile(context.out, mSelected, targetTile);
-			GeneralCommandSets.threadSleep();	
+			if (mSelected.move(targetTile)) {
+				System.out.println("MovesLeft: " + mSelected.getMovesLeft());
+				System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
+				
+				// Deselect movement range --- implement specific visual path display later
+				GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
+				GeneralCommandSets.threadSleep();
+				// Redraw selected tile visual
+				BasicCommands.drawTile(context.out, currentTile, 0);
+				GeneralCommandSets.threadSleep();GeneralCommandSets.threadSleep();
+
+				// Update Tiles and Unit
+				currentTile.removeUnit();
+				targetTile.addUnit(mSelected);
+				mSelected.setPositionByTile(targetTile);
+				
+				// Loop until moveStopped trigger
+				context.getGameStateRef().setUnitMovingFlag(true);
+				
+				// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
+				// Initiate move
+				BasicCommands.moveUnitToTile(context.out, mSelected, targetTile);
+				GeneralCommandSets.threadSleep();	
+				// Move animation
+				BasicCommands.playUnitAnimation(context.out, mSelected, UnitAnimationType.move);
+				GeneralCommandSets.threadSleep();
+			}
 		}
 		// Destination is not in movement range/unit cannot move
 		else {	
@@ -122,3 +143,6 @@ public class UnitMoveActionState implements IUnitPlayStates {
 	}
 	
 }
+
+
+

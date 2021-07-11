@@ -91,6 +91,15 @@ public class AIUnitStateController {
 	// Summon Monster
 	public void summonMonster(Card monsterToSummon, Tile targetTile) {
 		
+		// Select card in Hand for update purposes later
+		for(int i = 0; i < context.getGameStateRef().getTurnOwner().getHand().getHandList().size(); i++) {
+			if(context.getGameStateRef().getTurnOwner().getHand().getCardFromHand(i).getId() == monsterToSummon.getId()) {
+				context.getGameStateRef().getTurnOwner().getHand().setSelectedCard(monsterToSummon);
+				context.getGameStateRef().getTurnOwner().getHand().setSelCarPos(i);
+			}
+			if(i == 6 && context.getGameStateRef().getTurnOwner().getHand().getSelectedCard() == null) {	System.out.println("Selected card not set in AI Controller");	}
+		}
+		
 		// Load relevant data into gameplay context for use in Unit state
 		context.setLoadedCard(monsterToSummon);
 		
@@ -114,6 +123,15 @@ public class AIUnitStateController {
 	
 	// Cast Spell 
 	public void spellCast(Card spellToCast, Tile targetTile) {
+		
+		// Select card in Hand for update purposes later
+		for(int i = 0; i < context.getGameStateRef().getTurnOwner().getHand().getHandList().size(); i++) {
+			if(context.getGameStateRef().getTurnOwner().getHand().getCardFromHand(i).getId() == spellToCast.getId()) {
+				context.getGameStateRef().getTurnOwner().getHand().setSelectedCard(spellToCast);
+				context.getGameStateRef().getTurnOwner().getHand().setSelCarPos(i);
+			}
+			if(i == 6 && context.getGameStateRef().getTurnOwner().getHand().getSelectedCard() == null) {	System.out.println("Selected card not set in AI Controller");	}
+		}
 		
 		// Load relevant data into gameplay context for use in Unit state
 		context.setLoadedCard(spellToCast);

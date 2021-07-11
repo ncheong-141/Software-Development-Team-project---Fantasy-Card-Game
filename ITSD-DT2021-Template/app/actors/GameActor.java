@@ -107,7 +107,19 @@ public class GameActor extends AbstractActor {
 			// Unknown event type received
 			System.err.println("GameActor: Recieved unknown event type "+messageType);
 		} else {
-			processor.processEvent(out, gameState, message); // process the event
+			
+			if (gameState.userinteractionLocked()) {
+				// Dont execute CardClicked if the UI is locked as this breaks the game
+				if (processor instanceof CardClicked) {
+				}	
+				else {
+					processor.processEvent(out, gameState, message); // process the event
+				}
+			}
+			else {
+				processor.processEvent(out, gameState, message); // process the event
+			}
+	
 		}
 	}
 	

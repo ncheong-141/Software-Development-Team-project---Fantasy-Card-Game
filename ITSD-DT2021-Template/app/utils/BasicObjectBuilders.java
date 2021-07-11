@@ -17,6 +17,7 @@ import structures.basic.Player;
 import structures.basic.Spell;
 import structures.basic.Tile;
 import structures.basic.Unit;
+import structures.basic.abilities.A_U_RangedAttacker;
 import structures.basic.abilities.Ability;
 import structures.basic.abilities.AbilityToUnitLinkage;
 import structures.basic.abilities.Call_IDs;
@@ -161,6 +162,15 @@ public class BasicObjectBuilders {
 			// Ability setting
 			if(mUnit.getMonsterAbility() == null) {	mUnit.setAbility(new ArrayList <Ability> ());	}
 			mUnit.setAbility(statsRef.getAbilityList());
+			
+			// Check for abilities requiring EffectAnimation to be stored
+			if(mUnit.hasAbility()) {
+				for(Ability a : mUnit.getMonsterAbility()) {
+					if(a.getClass() == A_U_RangedAttacker.class) {
+						mUnit.setAbAnimation(BasicObjectBuilders.loadEffect(StaticConfFiles.f1_projectiles));
+					}
+				}
+			}
 
 			return mUnit; 
 			
