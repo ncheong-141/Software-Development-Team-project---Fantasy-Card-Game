@@ -49,7 +49,7 @@ public class GameState {
 
 	
 	private Deck deckPlayerOne;
-	private Deck deckPlayerTwo;
+	private Deck deckPlayerTwo;	
 	
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
