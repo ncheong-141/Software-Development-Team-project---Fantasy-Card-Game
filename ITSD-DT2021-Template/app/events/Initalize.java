@@ -57,10 +57,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
-
-		ArrayList<Tile> test = gameState.getBoard().moves(1, 2, 2, gameState.getPlayerOne());
-		
-		for (Tile t : test ) System.out.println(t);
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();
@@ -69,9 +65,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	
 	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
 
-		//ArrayList<Tile> boardTiles = g.getBoard().getAllTilesList();
 		
-		//GeneralCommandSets.drawBoardTiles(out, boardTiles, 0);
 		Board board = g.getBoard();
 		
 		for (int i = 0; i<board.getGameBoard().length; i++) {
@@ -87,13 +81,14 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		Avatar computerAvatar = g.getComputerAvatar();
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		//display avatars on board
-
+	
+		//setting avatars' starting position
 		Tile tOne = g.getBoard().getTile(1, 2);
 		Tile tTwo = g.getBoard().getTile(7, 2);
 		humanAvatar.setPositionByTile(tOne);
 		computerAvatar.setPositionByTile(tTwo);
 
+		//drawing avatarts on the board
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		tOne.addUnit(humanAvatar);
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
@@ -108,14 +103,13 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}	
 		
-		//g.getPlayerTwo().setGameBoard(g.getBoard());
-		//try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}	
 	}
 	
 	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
-
+		
+		//setting players statistics
 		g.getPlayerOne().setMana(2);
-		g.getPlayerTwo().setMana(9);
+		g.getPlayerTwo().setMana(2);
 
 		
 		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
@@ -132,6 +126,7 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
 		int i = 0;
 		
+		//showing human player's hand
 		for (Card c : g.getTurnOwner().getHand().getHandList()) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;

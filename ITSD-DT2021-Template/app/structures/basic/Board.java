@@ -27,10 +27,6 @@ public class Board {
 	//the board length on the X and Y axis is represented by constant integer values
 	private final int Y;
 	private final int X;
-	//storing references to the tile where the human and computer avatar will start for ease of access
-	//note: still to be implemented, not a fundamental feature
-	private Tile humanStart;
-	private Tile computerStart;
 	
 	private int numUnitsOnBoard;
 	private final int boardCapacity;
@@ -61,15 +57,6 @@ public class Board {
 	
 	public int getBoardLength() {
 		return this.Y;
-	}
-
-
-	public Tile getHumanStart() {
-		return humanStart;
-	}
-
-	public Tile getComputerStart() {
-		return computerStart;
 	}
 
 	//getter method to access the 2D array of Tiles
@@ -115,15 +102,13 @@ public class Board {
 	}
 
 
-	//=====================PLAYABLE TILES METHODS==================//
+	//=====================PLAYABLE TILES METHODS SECTION==================//
 
-	//methods showing where player can summon monster/cast spell
+	/**
+	 * @param Player objects
+	 * @return it returns a list of tiles where a given Player can summon a standard unit
+	 */
 
-	//1) This method returns a list of all tiles where a standard unit can be summoned 
-
-	//this method can be called from elsewhere in the program
-	//it returns a list of tiles where a given Player can summon a unit
-	//Players clicks on a card >> this method is called >> all adjacent tiles to all player's units on the board are returned
 	public ArrayList<Tile> allSummonableTiles(Player p){
 		ArrayList <Tile> tileList = new ArrayList<Tile>();
 		for (int i = 0; i <gameBoard.length; i++) {
@@ -136,9 +121,13 @@ public class Board {
 		return tileList;
 	}
 
-	//helper method to allSummonableTiles
-	//for any given tile it returns a list of tile in range
-	//the range here is based on game specifications (any tile adjacent to a friendly unit)
+	/**
+	 * @param Tile Object
+	 * @return helper method to allSummonableTiles
+		for any given tile it returns a list of tile in range
+		the range here is based on game specifications (any free tile adjacent to a friendly unit)
+	 */
+	
 	ArrayList<Tile> calcRange(Tile t){
 		ArrayList<Tile> tileRange = this.adjTiles(t);
 		tileRange.removeIf(tile -> !(tile.getFreeStatus()));
@@ -146,18 +135,22 @@ public class Board {
 		
 	}
 	
+	/**
+	 * @param Tile object
+	 * @return a list of tiles adjacent to the given tile
+	 * all tiles are returned regardless of free status
+	 */
 	public ArrayList<Tile> adjTiles(Tile t){
 		ArrayList<Tile> tileRange = new ArrayList<Tile>();
 		int xPos = t.getTilex();
 		int yPos = t.getTiley();
 
-		//System.out.println(xPos + " calcRange " + yPos);
+
 		for (int i = 0; i<rangeH.length; i++) {
 			if (xPos + rangeW[i] <0 || xPos + rangeW[i] > X-1 || yPos + rangeH[i]<0 || yPos + rangeH[i] > Y-1) continue;
 			else {
 				
 					Tile posTile = this.getTile(xPos+rangeW[i], yPos+rangeH[i]);
-					//System.out.println(posTile.getTilex() + "  " + posTile.getTiley());
 					tileRange.add(posTile);	
 				
 			}
@@ -166,7 +159,10 @@ public class Board {
 	}
 
 
-	//2A)Method returns all tiles where a ENEMY unit is present (excl. avatar)
+	/**
+	 * @param Player p
+	 * @return Method returns all tiles where a ENEMY unit is present (excl. avatar)
+	 */
 	public ArrayList<Tile> enemyTile(Player p){
 		ArrayList<Tile> tileRange = new ArrayList<Tile>();
 		for (int i = 0; i <gameBoard.length; i++) {
@@ -179,7 +175,10 @@ public class Board {
 		return tileRange;
 	}
 
-	//2B)Method returns all tiles where a FRIENDLY unit is present (excl. avatar)
+	/**
+	 * @param Player p
+	 * @return Method returns all tiles where a FRIENDLY unit is present (excl. avatar)
+	 */
 	public ArrayList<Tile> friendlyTile(Player p) {	
 		ArrayList<Tile> tileRange = new ArrayList<Tile>();
 		for (int i = 0; i <gameBoard.length; i++) {
@@ -193,6 +192,10 @@ public class Board {
 	}
 
 
+	/**
+	 * @param player p
+	 * @return method return player's avatar position as a tile
+	 */
 	//3)Method returns player's avatar tile position 
 	public Tile ownAvatarTile (Player p) {
 		Tile avatarTile = null;
@@ -207,6 +210,10 @@ public class Board {
 		return avatarTile;
 	}
 
+	/**
+	 * @param Player p
+	 * @return method returns enemy's avatar position as a tile
+	 */
 	public Tile enemyAvatarTile (Player p) {
 		Tile avatarTile = null;
 		for (int i = 0; i <gameBoard.length; i++) {
@@ -220,7 +227,10 @@ public class Board {
 		return avatarTile;
 	}
 
-	//4) Method return enemy avatar's tile position 
+	/**
+	 * @param Player p and GameState
+	 * @return method returns enemy's avatar position as a tile
+	 */
 	public Tile enemyAvatarTile (Player p, GameState g) { 
 		if (p instanceof HumanPlayer) { 
 			int x = g.getComputerAvatar().getPosition().getTilex(); int y =
@@ -228,7 +238,11 @@ public class Board {
 	else { int x = g.getHumanAvatar().getPosition().getTilex(); int y =
 			g.getHumanAvatar().getPosition().getTiley(); return this.getTile(x, y); } }
 	
-	//all friendly tiles, including avatar
+	
+	/**
+	 * @param Player p 
+	 * @return method returns all friendly units, including avatar
+	 */
 	public ArrayList<Monster> friendlyUnitsWithAvatar(Player p) {	
 		ArrayList<Monster> tileRange = new ArrayList<Monster>();
 		for (int i = 0; i <gameBoard.length; i++) {
@@ -241,7 +255,12 @@ public class Board {
 		return tileRange;
 	}
 
-	//method returns all adjacent enemy tiles for a given position
+	/**
+	 * @param xPos
+	 * @param yPos
+	 * @param Player p
+	 * @return list of tiles adjacent to specified position that contain an enemy unit
+	 */
 	public ArrayList <Tile> adjEnemyTiles(int xPos, int yPos, Player p){
 		ArrayList<Tile> tileRange = this.adjTiles(this.getTile(xPos, yPos));
 		tileRange.removeIf(tile -> (tile.getFreeStatus()||tile.getUnitOnTile().getOwner()==p));
@@ -255,6 +274,7 @@ public class Board {
 	 * 
 	 * trying to create method that does not allow for moving through enemies
 	 * 	
+	 * NOT WORKING DELETE IF NOT USED
 	 */
 	
 	public ArrayList<Tile> moves(int xpos, int ypos, int moves, Player p){
@@ -273,21 +293,23 @@ public class Board {
 		while(! queue.isEmpty()) {
 			State current = queue.poll();
 			if (current.moves == 0) {
-				System.out.println("added tile: " + current.t + "to reach tiles, moves left " + current.moves);
-				tileList.add(current.t);
+				
+				//tileList.add(current.t);
 				continue;
 			}
 			
 			else {
 				ArrayList<Tile> reachTiles = this.adjTiles(current.t);
 				reachTiles.removeIf(tile ->(tile.getFreeStatus()==false && tile.getUnitOnTile().getOwner()!=p));
+				tileList.add(current.t);
+				System.out.println("added tile: " + current.t + "to reach tiles, moves left " + current.moves); 
+				visited[current.t.getTiley()][current.t.getTilex()][0] = true;
 				for (Tile t : reachTiles) {
 					if (visited[t.getTiley()][t.getTilex()][0] != true) {
-						tileList.add(current.t);
-						System.out.println("added tile: " + current.t + "to reach tiles, moves left " + current.moves); 
+		
 						State nextState = new State(t, current.moves-1);
 						queue.add(nextState);
-						visited[t.getTiley()][t.getTilex()][0] = true;
+						
 					}	
 				}
 			}
@@ -298,6 +320,7 @@ public class Board {
 	}
 	
 	//======INNNER CLASS=====//
+	//for method above
 	class State {
 		int xpos, ypos, moves;
 		Tile t;
@@ -314,17 +337,33 @@ public class Board {
 		}
 	}
 
-	//5) unitMovableTiles - this method returns a list of all tiles a selected unit can move to
-	//within a given range based on the specified position
+	/**
+	 * 
+	 * @param xpos
+	 * @param ypos
+	 * @param moveRange
+	 * @return this method returns a list of all tiles a selected unit can move to
+		within a given range based on the specified position
+	 */
+	
 	public ArrayList<Tile> unitMovableTiles (int xpos, int ypos, int moveRange ){
+		Player p = this.getTile(xpos, ypos).getUnitOnTile().getOwner();
 		ArrayList <Tile> tileList = this.reachableTiles(xpos, ypos, moveRange);
 		tileList.removeIf(t -> !(t.getFreeStatus()));
 
 		return tileList;
 	}
+	
+	/**
+	 * 
+	 * @param xpos
+	 * @param ypos
+	 * @param moveRange
+	 * @returnall tiles a unit can reach based on position and movement range of unit
+		includes both occupied and unoccupied tiles
+	 */
 
-	//5A) this method returns all tiles a unit can reach based on position and movement range of unit
-	//includes both occupied and unoccupied tiles
+	
 	public ArrayList<Tile> reachableTiles (int xpos, int ypos, int moveRange){
 		ArrayList<Tile> reachTile = new ArrayList<Tile>();
 
@@ -335,23 +374,28 @@ public class Board {
 				// Check if indices are within limits of the board
 				if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 
 
-					// System.out.println("i,j: " + i + "," + j);
-
 					// Check each tile index combination is adds up to the range 
 					// (abs(i -x) is the distance the current index is away from the monster position)
 					if ( (Math.abs(i - xpos) + Math.abs(j - ypos)) <=moveRange) {
 						reachTile.add(this.getTile(i, j));
-						//System.out.println(this.getTile(i,j));
 					}
 				}
 			}  
 		}
 		return reachTile;
 	}
-	//====================ATTACK RANGE METHOD=====================//
+	//====================ATTACK RANGE METHOD SECTION=====================//
 
-	//6) unitAttackableTiles - returns a set of all tiles that a unit located at xpos and ypos can attack based on its attack and move range
-	//the result is returned as a set to eliminate duplicate values within the set
+	/**
+	 * 
+	 * @param xpos
+	 * @param ypos
+	 * @param attackRange
+	 * @param moveRange
+	 * @return set of all tiles that a unit located at xpos and ypos can attack based on its attack and move range
+		the result is returned as a set to eliminate duplicate values within the set
+	 */
+	
 	public ArrayList<Tile> unitAttackableTiles (int xpos, int ypos, int attackRange, int moveRange ){
 		Player p = this.getTile(xpos, ypos).getUnitOnTile().getOwner();
 		
@@ -370,7 +414,7 @@ public class Board {
 		//iterate over the list of tiles that can be reached 
 		//if the tile has an enemy unit it is added to the set (no duplicate values)
 		for (Tile t : reachTiles) {
-			//System.out.println(t + " x ");
+	
 			if (!(t.getFreeStatus()) && t.getUnitOnTile().getOwner()!=p) tileList.add(t);
 		}
 
@@ -382,14 +426,23 @@ public class Board {
 		//the attack range (with that tile as origin) is calculated as a set 
 		//the set is added to the set to returned (no duplicated values)
 		for(Tile t : reachTiles) {
-			//System.out.println(t);
+			
 			HashSet <Tile> attRange = calcAttackRange(t.getTilex(), t.getTiley(), attackRange, p);
 			tileList.addAll(attRange);
 		}	
 		ArrayList<Tile> list = new ArrayList<Tile>(tileList);
 		return list;	
 	}		  
-	//6A) 
+
+	/**
+	 * 
+	 * @param xpos
+	 * @param ypos
+	 * @param attackRange
+	 * @param p
+	 * @return set of all tiles containing an enemy unit within a specified range
+	 */
+	
 	public HashSet<Tile> calcAttackRange(int xpos, int ypos, int attackRange, Player p){
 		HashSet<Tile> tileList = new HashSet<Tile>();
 
@@ -400,7 +453,7 @@ public class Board {
 				
 				// Check if indices are within limits of the board
 				if ( (i <= (this.X - 1) && i >= 0) && (j <= (this.Y - 1) && j >= 0)) { 
-					// System.out.println("i,j: " + i + "," + j);
+					
 
 					 // This gets all tiles in a square around the centre Monster, up to a width-length of the attack range
 				    if(this.getTile(i, j).getUnitOnTile() != null && this.getTile(i, j).getUnitOnTile().getOwner() != p) {
@@ -412,12 +465,15 @@ public class Board {
 		}
 		return tileList;
 	}
-	//===============accessors methods==========================//
-
-	//this method returns a list of all monsters (including avatars) on the board which have onCooldow == true
-	//this variable signal that the monster cannot attack/move in the current turn (right after summoning)
+	//====================accessors methods==========================//
 
 
+	/**
+	 * 
+	 * @param player p
+	 * @return list of all monsters (including avatars) on the board which have onCooldow == true
+		this variable signal that the monster cannot attack/move in the current turn (right after summoning)
+	 */
 	public ArrayList<Monster> coolDownCheck (Player p){
 		ArrayList<Monster> monsterList = new ArrayList<Monster>();
 
@@ -435,17 +491,27 @@ public class Board {
 
 	}
 		
-		public ArrayList<Monster> friendlyUnitList (Player p){
-			ArrayList<Monster> monsterList = new ArrayList<Monster>();
-			for (int i = 0; i <gameBoard.length; i++) {
-				for (int k =0; k<gameBoard[0].length; k++) {
-					if (gameBoard[i][k].getUnitOnTile() != null && gameBoard[i][k].getUnitOnTile().getOwner()==p) 							{
-						monsterList.add(gameBoard[i][k].getUnitOnTile());
-					}
-				}	
-			}
-			return monsterList;
+	/**
+	 * 
+	 * @param Player p
+	 * @return list of all friendly units on the board returned as monster reference
+	 */
+	public ArrayList<Monster> friendlyUnitList (Player p){
+		ArrayList<Monster> monsterList = new ArrayList<Monster>();
+		for (int i = 0; i <gameBoard.length; i++) {
+			for (int k =0; k<gameBoard[0].length; k++) {
+				if (gameBoard[i][k].getUnitOnTile() != null && gameBoard[i][k].getUnitOnTile().getOwner()==p) 							{
+					monsterList.add(gameBoard[i][k].getUnitOnTile());
+				}
+			}	
 		}
+		return monsterList;
+	}
+		
+	/**
+	 * 
+	 * @return all free tiles on the board
+	 */
 	
 	public ArrayList<Tile> allFreeTiles(){
 		ArrayList<Tile> freeTilesList = new ArrayList<Tile>();

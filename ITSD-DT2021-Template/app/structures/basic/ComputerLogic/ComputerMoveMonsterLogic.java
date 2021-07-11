@@ -41,6 +41,7 @@ public class ComputerMoveMonsterLogic {
 				
 				ArrayList<MonsterTileOption> listofMTO = this.getMonstersOptions(movableMonsters, gameBoard);
 				
+				
 				return this.matchMonsterAndTile(listofMTO);
 			}
 			
@@ -100,7 +101,7 @@ public class ComputerMoveMonsterLogic {
 				for (MonsterTileOption mto: optionList) {
 					//for each MLT the top tile is retrieved (k=0)
 					//this is the tile with the highest score
-					if (mto.getList().isEmpty() || mto.getList() == null) continue;
+					if (mto.getList().isEmpty() || mto.getList() == null || mto.getList().get(k).getScore() < 0) continue;
 					
 					Tile t = mto.getList().get(k);
 				
@@ -256,11 +257,9 @@ public class ComputerMoveMonsterLogic {
 					}
 					int score = deltaOne + deltaTwo;
 					
-					if ((m.getOwner().getHealth() <= ((ComputerPlayer) m.getOwner()).getHPBenchMark()|| m instanceof Avatar ) 
-							&& (currTile.getTilex() - targetTile.getTilex())>0){ 
-						score--;
-			
-					
+					if (currTile.getTilex() > targetTile.getTilex()){ 
+						if (m instanceof Avatar) score--;
+						else score++;
 					}
 					
 					targetTile.setScore(score);
