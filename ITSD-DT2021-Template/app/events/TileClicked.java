@@ -96,12 +96,7 @@ public class TileClicked implements EventProcessor{
 		 * E.g. CardSelectedState deals with the previous user input of a Card click and generates a new Unit state 
 		 * based on what the user has currently clicked (a unit or empty tile) 
 		 */
-		gameplayContext.executeAndCreateUnitStates();
-		
-		
-		// Update stats after any action 
-		GeneralCommandSets.redrawAllUnitStats(out, gameState);
-		
+		gameplayContext.executeAndCreateUnitStates();	
 		
 	}
 
