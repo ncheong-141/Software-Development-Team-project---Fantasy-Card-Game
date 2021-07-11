@@ -54,6 +54,7 @@ public class CardClicked implements EventProcessor{
 
 			// Boolean switch to check if the ability is applicable 
 			boolean outputted = false; 
+			if(gameState.getTurnOwner().getMana() - clickedCard.getManacost() >= 0) {
 			if(clickedCard.getAssociatedClass()==Monster.class){
 			if(clickedCard.hasAbility()) {			
 				for(Ability a: clickedCard.getAbilityList()) {
@@ -104,5 +105,6 @@ public class CardClicked implements EventProcessor{
 						BasicCommands.drawTile(out,display,1);						
 						}
 			}
+	}
 	}
 }
