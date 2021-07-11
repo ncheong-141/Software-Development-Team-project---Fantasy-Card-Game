@@ -22,11 +22,9 @@ public class ComputerPlayerTurn {
 		ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
 		ComputerPlayer compPlayer = pl2;
 		AIUnitStateController controller = new AIUnitStateController(out, g);
-		compPlayer.setMana(9);
 		compPlayer.setHPBenchMark(10);
 		
 		
-		g.getComputerAvatar().setMovesLeft(2);
 		g.getComputerAvatar().setName("bob");
 		
 		
