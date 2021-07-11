@@ -73,6 +73,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			/***	Condition here for combined substate executing, which requires selection is maintained	***/
 			if(!(context.getCombinedActive())) {
 				
+				// Update stats after any action 
+				GeneralCommandSets.redrawAllUnitStats(context.out, context.getGameStateRef());
+				
 				/** Reset entity selection and board **/  
 				// Deselect after action finished *if* not in the middle of move-attack action
 				context.deselectAllAfterActionPerformed();
