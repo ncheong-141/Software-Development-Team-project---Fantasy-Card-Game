@@ -66,7 +66,7 @@ public class AIUnitStateController {
 		else {
 			
 			// Current unit must move to enemy target first
-			unitState = new UnitCombinedActionState(currentTile, targetTile);	
+			unitState = new UnitCombinedActionState(currentTile, targetTile, context);	
 		}
 		
 		// Execute state
