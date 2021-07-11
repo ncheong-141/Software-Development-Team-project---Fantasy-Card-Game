@@ -29,7 +29,9 @@ public class Player {
 		int newMana = mana + addMana;
 		if(newMana > 9) {
 			this.mana = 9;
-		}	
+		}	else {
+			this.mana = newMana;
+		}
 	}
 	
 	//delete Mana , when use cards
