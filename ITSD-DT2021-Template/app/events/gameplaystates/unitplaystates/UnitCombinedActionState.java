@@ -1,10 +1,13 @@
 package events.gameplaystates.unitplaystates;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.tileplaystates.ITilePlayStates;
+import structures.GameState;
 import structures.basic.*;
 import structures.basic.abilities.*;
 
@@ -27,8 +30,6 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		this.currentTile = currentTile; 
 		this.destination = null;
 		this.enemyTarget = targetTile; 
-		
-		System.out.println(targetTile);
 	}
 	
 	
@@ -47,7 +48,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 					System.out.println("Selected unit is a ranged attacker, can attack without moving.");
 					IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
 					UnitAttackState.execute(context);
-					return;
+					break;
 				}
 			}
 		}
@@ -64,35 +65,61 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		// Find and set a tile destination for selected unit movement
 		unitDestinationSet(context); 
 		
-		// Execute selected unit movement
-		IUnitPlayStates unitMoveState = new UnitMoveActionState(currentTile, destination);	
-		System.out.println("Calling MoveAction from CombinedAction...");
-		unitMoveState.execute(context);
-		
-		// Update clicked tile context references (moved here for use of attack, not required anymore for move since inputted tile) 
-		// Update clicked Tile context references for attack state
-		// context.setClickedTile(destination); // Not required anymore since the decouple
-		
-		// System.out.println("Context clicked values are x: " + context.getClickedTile().getTilex() + " and y: " + context.getClickedTile().getTiley());
-		
-		System.out.println("Calling AttackAction from CombinedAction...");
-		// Execute attack between units
-		IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
-		UnitAttackState.execute(context);
-		
-		// Finish combined State execution
-		context.setCombinedActive(false);
-		
-		
-		/** Reset entity selection and board **/  
-		// Deselect after combined action
-		context.deselectAllAfterActionPerformed();
-		
-		// Reset board visual (highlighted tiles)
-		GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
-
+	
+		//  Executing unit states on a different thread as the time between them is reliant on Unit Stopped (which runs on the same thread as the back end) 
+		Thread thread = new Thread(new ExecuteUnitStatesOnDifferentThread(context, currentTile, destination, enemyTarget));
+		thread.start();
+		//Thread.yield();
 	}
 
+
+	public class ExecuteUnitStatesOnDifferentThread implements Runnable{
+		
+		// Class attributes
+		private GameplayContext context; 
+		private Tile currentTile;
+		private Tile destination;
+		private Tile enemyTarget;
+		
+		
+		public ExecuteUnitStatesOnDifferentThread(GameplayContext context, Tile currentTile, Tile destination, Tile enemyTile) {
+			this.context = context; 
+			this.currentTile = currentTile;
+			this.destination = destination; 
+			this.enemyTarget = enemyTile;
+		}
+		
+		public void run() {
+			
+			// Execute unit states 
+			IUnitPlayStates unitMoveState = new UnitMoveActionState(currentTile, destination);	
+			System.out.println("Calling MoveAction from CombinedAction...");
+			unitMoveState.execute(context);
+			
+			// Wait for the Front end to give back a message (unit stopped)
+			while (!context.getGameStateRef().canInteract) {
+				GeneralCommandSets.threadSleep();		
+			} 
+
+			// Execute attack state
+			System.out.println("Calling AttackAction from CombinedAction...");
+			// Execute attack between units
+			IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
+			UnitAttackState.execute(context);
+			
+			// Finish combined State execution
+			context.setCombinedActive(false);
+			
+			/** Reset entity selection and board **/  
+			// Deselect after combined action
+			context.deselectAllAfterActionPerformed();
+			
+			// Reset board visual (highlighted tiles)
+			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+		}
+	}
+	
+	
 	private boolean unitDestinationSet(GameplayContext context) {
 				
 		// Retrieve frequently used data
@@ -127,27 +154,10 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		}
 		
 		/***	Find and set destination tile relative to enemy target	***/
-		// Establish tiles adjacent to enemy that are within movement range
 		
-		 // Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
-		// Get a movement range from enemy's position (encompasses attack range) -- needs to just be an adjacent Board method
-		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
-		ArrayList <Tile> options = new ArrayList<Tile>(); 
-		for(Tile t : temp) {
-			// If tile is adjacent to enemy
-			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) <= 1) && (Math.abs(enemyTarget.getTiley() - t.getTiley()) <= 1)) {
-				// && If adjacent tile is in selected unit's movement range
-				if(moveRange.contains(t)) {
-					options.add(t);
-					System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
-				}
-			}
-		}
-
 		// Establish tiles adjacent to enemy that are within movement range
-		// ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
+		ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
 		
-		// Select a destination tile from options - prefer cardinal (NESW) direction over diagonal
 		// Check for cardinal and remove redundant tiles
 		for(Tile t : options) {
 			
@@ -175,5 +185,8 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			return false;
 		}
 	}
-	
 }
+
+
+
+
