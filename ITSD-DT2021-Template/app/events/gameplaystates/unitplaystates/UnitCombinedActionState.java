@@ -98,7 +98,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			unitMoveState.execute(context);
 			
 			// Wait for the Front end to give back a message (unit stopped)
-			while (!context.getGameStateRef().getUnitMovingFlag()) {
+			while (context.getGameStateRef().getUnitMovingFlag()) {
 				GeneralCommandSets.threadSleep();		
 			} 
 
@@ -117,6 +117,11 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			
 			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
+			
+			// Unlock after the attack/counter attack
+			/**===========================================**/
+			context.getGameStateRef().userinteractionUnlock();
+			/**===========================================**/
 		}
 	}
 	
