@@ -66,27 +66,20 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		unitDestinationSet(context); 
 		
 	
-		//  Executing unit states on a different thread as the time between them is reliant on Unit Stopped (which runs on the same thread as the back end) 
-		Thread thread = new Thread(new ExecuteUnitStatesOnDifferentThread(context, currentTile, destination, enemyTarget));
+		// Executing unit states on a different thread as the time between them is reliant on Unit Stopped (which runs on the same thread as the back end) 
+		// Cant ask main thread to wait either since it will block front end signals and need Unit stopped
+		Thread thread = new Thread(new ExecuteUnitStatesOnDifferentThread(context));
 		thread.start();
-		//Thread.yield();
 	}
 
 
 	public class ExecuteUnitStatesOnDifferentThread implements Runnable{
 		
 		// Class attributes
-		private GameplayContext context; 
-		private Tile currentTile;
-		private Tile destination;
-		private Tile enemyTarget;
-		
-		
-		public ExecuteUnitStatesOnDifferentThread(GameplayContext context, Tile currentTile, Tile destination, Tile enemyTile) {
+		GameplayContext context;
+
+		public ExecuteUnitStatesOnDifferentThread(GameplayContext context) {
 			this.context = context; 
-			this.currentTile = currentTile;
-			this.destination = destination; 
-			this.enemyTarget = enemyTile;
 		}
 		
 		public void run() {
@@ -119,9 +112,8 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		}
 	}
 	
-	
 	private boolean unitDestinationSet(GameplayContext context) {
-				
+		
 		// Retrieve frequently used data
 		Tile currentLocation = currentTile;
 		// context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
@@ -154,10 +146,27 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		}
 		
 		/***	Find and set destination tile relative to enemy target	***/
-		
 		// Establish tiles adjacent to enemy that are within movement range
-		ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
 		
+		 // Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
+		// Get a movement range from enemy's position (encompasses attack range) -- needs to just be an adjacent Board method
+		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
+		ArrayList <Tile> options = new ArrayList<Tile>(); 
+		for(Tile t : temp) {
+			// If tile is adjacent to enemy
+			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) <= 1) && (Math.abs(enemyTarget.getTiley() - t.getTiley()) <= 1)) {
+				// && If adjacent tile is in selected unit's movement range
+				if(moveRange.contains(t)) {
+					options.add(t);
+					System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
+				}
+			}
+		}
+
+		// Establish tiles adjacent to enemy that are within movement range
+		// ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
+		
+		// Select a destination tile from options - prefer cardinal (NESW) direction over diagonal
 		// Check for cardinal and remove redundant tiles
 		for(Tile t : options) {
 			
