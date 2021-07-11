@@ -109,10 +109,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 	}
 	
 	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
-
-		g.getPlayerOne().setMana(2);
-		g.getPlayerTwo().setMana(9);
-
+	
+		// Set mana for first turn
+		g.giveMana();
 		
 		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
 		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
