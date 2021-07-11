@@ -101,25 +101,13 @@ public class GameActor extends AbstractActor {
 	 */
 	@SuppressWarnings({"deprecation"})
 	public void processMessage(String messageType, JsonNode message) throws Exception{
-
+		
 		EventProcessor processor = eventProcessors.get(messageType);
 		if (processor==null) {
 			// Unknown event type received
 			System.err.println("GameActor: Recieved unknown event type "+messageType);
 		} else {
-			
-			if (gameState.userinteractionLocked()) {
-				// Dont execute CardClicked if the UI is locked as this breaks the game
-				if (processor instanceof CardClicked) {
-				}	
-				else {
-					processor.processEvent(out, gameState, message); // process the event
-				}
-			}
-			else {
-				processor.processEvent(out, gameState, message); // process the event
-			}
-	
+			processor.processEvent(out, gameState, message); // process the event
 		}
 	}
 	
