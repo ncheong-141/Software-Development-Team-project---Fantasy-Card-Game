@@ -22,12 +22,13 @@ import akka.actor.ActorRef;
 
 public class GeneralCommandSets {
 	
-
+	/** Thread sleep times to keep it consistent accross the application **/ 
 	private static final int threadSleepTime = 30; 
 	private static final int threadSleepTimeLong = 100; 
-	private static final int bufferSize = 16; 
+	private static final int bufferSize = 15;					// Buffer size 16 but using 15 for robustness 			
 	
-	// Draw tiles to the board
+	
+	// Draw tiles to the board while considering the buffer limit. Thread sleep before the buffer is reached to allow it to empty
 	public static void drawBoardTiles(ActorRef out, ArrayList<Tile> tilesToDraw, int tileColour) {
 
 		// Iterate over tiles
@@ -39,13 +40,13 @@ public class GeneralCommandSets {
 			try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}	
 		}
 		else { 
-			
+
 			// Calculate how many batches you need approximately
 			int batchSize = (tilesToDraw.size()/bufferSize) + 1; 	// Integer division floors (does not include remainder) so assume + 1 always
-			
+
 			// Iterate over batches (bNum starts at 1 as multiplying 
 			for (int bNum = 0; bNum < batchSize; bNum++) {
-			
+
 				// If batch number is not the final batch
 				if (bNum < batchSize -1 ) {
 					for (int i = bNum*bufferSize; i < (bNum+1)*bufferSize; i++) {
@@ -61,13 +62,11 @@ public class GeneralCommandSets {
 					}
 					try {Thread.sleep(threadSleepTime);} catch (InterruptedException e) {e.printStackTrace();}
 				}
-				
-				// Long sleep to allow for buffer to empty properly...
-				//threadSleepOverride(1000); 
 			}
 		}
 	}
 
+	
 	// Verbose board reset method for code clarity
 	public static void boardVisualReset(ActorRef out, GameState gameState) {
 		
@@ -75,15 +74,18 @@ public class GeneralCommandSets {
 	}
 
 	
-	// Draw a unit with stats if a Monster
+	// Draw a unit with stats 
 	public static void drawUnitWithStats(ActorRef out, Unit unit, Tile onTile) {
 		
-	
+		// Draw the unit on the tiles
 		BasicCommands.drawUnit(out, unit, onTile);
 		GeneralCommandSets.threadSleep(); 
+		
+		// Set animation to idle
 		BasicCommands.playUnitAnimation(out, unit, UnitAnimationType.idle);
 		GeneralCommandSets.threadSleep(); 
 		
+		// If unit is a monster or avatar
 		if (unit.getClass() == Monster.class || unit.getClass() == Avatar.class) {
 			
 			// Cast reference to Monster (Avatar extends Monster so works for this class too)
@@ -98,7 +100,7 @@ public class GeneralCommandSets {
 	}
 	
 	
-	/// Redraw all Unit stats general command
+	// Redraw all Unit stats general command
 	public static void redrawAllUnitStats(ActorRef out, GameState gameState) {
 		
 		System.out.println("In redrawAllUnitStats"); 
@@ -113,6 +115,7 @@ public class GeneralCommandSets {
 			threadSleep();
 		}
 		
+		// Loop over enemies
 		for (Tile t : gameState.getBoard().enemyTile(gameState.getPlayerOne())) {
 			
 			// Redraw stats
@@ -132,8 +135,8 @@ public class GeneralCommandSets {
 		threadSleep();
 		BasicCommands.setUnitHealth(out, gameState.getComputerAvatar(), gameState.getComputerAvatar().getHP());
 		threadSleep();
-		
 	}
+	
 	
 	// Reset tiles covering a given unit's range
 	public static void drawUnitDeselect(ActorRef out, GameState gameState, Unit unit) {
@@ -147,13 +150,12 @@ public class GeneralCommandSets {
 			BasicCommands.drawTile(out, location, 0);
 			
 			// Get Monster range
-			ArrayList <Tile> actRange = new ArrayList <Tile> (gameState.getBoard().unitAttackableTiles(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley(), mUnit.getAttackRange(), mUnit.getMovesLeft()));
+			ArrayList <Tile> actRange = gameState.getBoard().unitAttackableTiles(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley(), mUnit.getAttackRange(), mUnit.getMovesLeft());
 			actRange.addAll(gameState.getBoard().unitMovableTiles(mUnit.getPosition().getTilex(), mUnit.getPosition().getTiley(), mUnit.getMovesLeft()));
 			
+			// Dehighlight tiles 
 			drawBoardTiles(out, actRange, 0);
-			
 		}
-		
 	}
 	
 	
@@ -172,25 +174,17 @@ public class GeneralCommandSets {
 		GeneralCommandSets.threadSleep(); 
 		BasicCommands.setPlayer2Mana(out, gameState.getPlayerTwo());
 		GeneralCommandSets.threadSleep(); 
-
 	}
+	
 	
 	// Show entire Hand 
 	public static void drawCardsInHand(ActorRef out, GameState gameState, int oldHandSize, ArrayList<Card> cardsInHand) {
-
 
 		// Delete/hide all cards in the UI
 		for (int i = 0; i < oldHandSize; i++) {
 			BasicCommands.deleteCard(out, i);
 			GeneralCommandSets.threadSleep(); 
 		}
-
-//		if(gameState.isTwoPlayerMode() ) {// Delete/hide all cards in the UI
-//			for (int i = 0; i < oldHandSize; i++) {
-//				BasicCommands.deleteCard(out, i);
-//			}
-//			GeneralCommandSets.threadSleep(); 
-//		}
 		 
 		// Show all the cards in the UI in new positions 
 		int i = 0;	
@@ -200,7 +194,6 @@ public class GeneralCommandSets {
 			GeneralCommandSets.threadSleep(); 
 		}
 	}
-	
 	
 	
 	// General thread commands

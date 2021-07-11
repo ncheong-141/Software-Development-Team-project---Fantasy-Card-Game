@@ -69,7 +69,7 @@ public class UnitMoveActionState implements IUnitPlayStates {
 	private void unitMove(GameplayContext context) {
 		
 		// Get frequently used objects
-		Monster mSelected = context.getGameStateRef().getBoard().getUnitSelected();
+		Monster mSelected = (Monster) context.getLoadedUnit();
 		ArrayList <Tile> actRange; 
 		ArrayList <Tile> moveRange = new ArrayList<Tile>();
 		

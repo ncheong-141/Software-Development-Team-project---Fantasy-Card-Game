@@ -1,10 +1,9 @@
 package events.gameplaystates.tileplaystates;
-
 import events.gameplaystates.GameplayContext;
 
-/*
- * Interface class for all types of gameplay states.
- * States should be independent from each other
+/**
+ * Interface class for Tile states. 
+ * Ensures tile states have an execute method and can be polymorphically references where required.
  */
 public interface ITilePlayStates {
 

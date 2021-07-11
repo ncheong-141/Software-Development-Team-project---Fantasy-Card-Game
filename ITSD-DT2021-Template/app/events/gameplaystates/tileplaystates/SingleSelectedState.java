@@ -1,17 +1,20 @@
 package events.gameplaystates.tileplaystates;
-
 import events.gameplaystates.GameplayContext;
 import events.gameplaystates.unitplaystates.IUnitPlayStates;
 import events.gameplaystates.unitplaystates.UnitDisplayActionsState;
 import structures.basic.Tile;
 
+/**
+ * This state is for when a unit has been selected without any valid previous input such as 
+ * another previously selected unit OR card. It is used for displaying Unit actions primarily.
+**/
 public class SingleSelectedState implements ITilePlayStates{
 
-	// State attributes
-	IUnitPlayStates unitState; 
-	Tile currentTile; 
+	/** State attributes **/
+	IUnitPlayStates unitState; 	// Unit state class reference
+	Tile currentTile; 			// Current tile the unit selected is on
 
-	// State constructor 
+	/** State constructor **/ 
 	public SingleSelectedState() {	
 		unitState = null; 
 		currentTile = null; 
@@ -43,18 +46,18 @@ public class SingleSelectedState implements ITilePlayStates{
 			
 			case("empty"): {
 				System.out.println("Nice empty tile click buddy.");
-				return; 
+				break; 
 			}
 			
 			case("default"):{
 				System.out.println("Hit default case in SingleSelectedState.");
-				return;
+				break;
 			}
 			
 		}
+			
+		/** Execute sub-state **/
 		
-		
-		// Execute sub-state
 		if (unitState != null) {
 			unitState.execute(context);
 		}

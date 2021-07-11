@@ -11,7 +11,8 @@ import akka.actor.ActorRef;
 
 
 /* 
- * Purpose of this class is to encapuslate all control of UnitState classes into one object which makes it safe for an external class (such as the AI) to use. 
+ *  Purpose of this class is to encapuslate all control of UnitState classes into one object which 
+ *  makes it safe for an external class (such as the AI) to use. 
  */
 
 /**
@@ -24,7 +25,6 @@ import akka.actor.ActorRef;
  */
 public class AIUnitStateController {
 
-	
 	// Attributes
 	GameplayContext context; 
 
@@ -75,6 +75,7 @@ public class AIUnitStateController {
 		}
 	}
 	
+	
 	// Unit Move
 	public void unitMove(Tile currentTile, Tile targetTile) {
 		
@@ -88,6 +89,7 @@ public class AIUnitStateController {
 		unitState.execute(context);
 	}
 	
+	
 	// Summon Monster
 	public void summonMonster(Card monsterToSummon, Tile targetTile) {
 		
@@ -97,7 +99,9 @@ public class AIUnitStateController {
 				context.getGameStateRef().getTurnOwner().getHand().setSelectedCard(monsterToSummon);
 				context.getGameStateRef().getTurnOwner().getHand().setSelCarPos(i);
 			}
-			if(i == 6 && context.getGameStateRef().getTurnOwner().getHand().getSelectedCard() == null) {	System.out.println("Selected card not set in AI Controller");	}
+			if(i == 6 && context.getGameStateRef().getTurnOwner().getHand().getSelectedCard() == null) {	
+				System.out.println("Selected card not set in AI Controller");	
+			}
 		}
 		
 		// Load relevant data into gameplay context for use in Unit state
@@ -142,6 +146,7 @@ public class AIUnitStateController {
 		// Execute state
 		unitState.execute(context);
 	}
+	
 	
 	// Helper to check whether input Unit is a Ranged attacker (i.e. does not need to move to
 	// attack)
