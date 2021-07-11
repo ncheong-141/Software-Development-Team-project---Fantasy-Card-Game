@@ -172,7 +172,9 @@ public class CastSpellState implements IUnitPlayStates {
 					System.out.println("After casting a spell my HP is: " + f.getHP() + " and attack is " + f.getAttackValue());
 					
 					// Play animation + update stats
-					BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					if (a.getEffectAnimation() != null) {
+						BasicCommands.playEffectAnimation(context.out, a.getEffectAnimation(), f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					}
 					BasicCommands.playUnitAnimation(context.out, f, UnitAnimationType.channel);
 					GeneralCommandSets.threadSleep();
 					GeneralCommandSets.drawUnitWithStats(context.out, f, f.getPosition().getTile(context.getGameStateRef().getBoard()));
