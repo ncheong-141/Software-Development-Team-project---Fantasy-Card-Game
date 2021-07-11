@@ -34,6 +34,7 @@ public class CardClicked implements EventProcessor{
 
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
+		commands.GeneralCommandSets.drawCardsInHand(out, gameState, gameState.getTurnOwner().getHand().getCurr(), gameState.getTurnOwner().getHand().getHandList());
 		 // Reset entity selection and board
         GeneralCommandSets.boardVisualReset(out, gameState);
         gameState.deselectAllEntities();
@@ -54,8 +55,8 @@ public class CardClicked implements EventProcessor{
 
 			// Boolean switch to check if the ability is applicable 
 			boolean outputted = false; 
-			if(gameState.getTurnOwner().getMana() - clickedCard.getManacost() >= 0) {
-			if(clickedCard.getAssociatedClass()==Monster.class){
+			if(gameState.getTurnOwner().getMana() - clickedCard.getManacost() >= 0) {//checks card playable with present mana
+			if(clickedCard.getAssociatedClass()==Monster.class){//checks if card is related to a monster
 			if(clickedCard.hasAbility()) {			
 				for(Ability a: clickedCard.getAbilityList()) {
 

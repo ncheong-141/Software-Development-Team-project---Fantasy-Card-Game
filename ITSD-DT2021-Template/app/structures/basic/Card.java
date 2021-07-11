@@ -92,15 +92,6 @@ public class Card implements Comparable<Card> {
 		return false;
 	}
 	
-	//method to return integer value of unit ability effect 
-	//i.e if ability is +2 damage, the method would return 2
-//	public int getAbilityEffect() {
-//		int resultOne;
-//		for(Ability a: this.abilityList) {
-//			a.
-//		}
-//		return resultOne;
-//	}
 	
 	@Override
 	//compares mana cost of two cards for ai logic
@@ -164,5 +155,3 @@ public class Card implements Comparable<Card> {
 		this.associatedClass = associatedUnitClass;
 	}
 }
-
-
