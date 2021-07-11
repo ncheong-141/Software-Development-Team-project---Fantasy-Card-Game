@@ -287,9 +287,11 @@ public class GameState {
 		// Deck instantiations 
 		Deck deckPlayerOne = new Deck(); 
 		deckPlayerOne.deckOne();
+		deckPlayerOne.shuffleDeck();
 		
 		Deck deckPlayerTwo = new Deck();
 		deckPlayerTwo.deckTwo();
+		deckPlayerTwo.shuffleDeck();
 				
 		playerOne.setDeck(deckPlayerOne);
 		playerTwo.setDeck(deckPlayerTwo);
