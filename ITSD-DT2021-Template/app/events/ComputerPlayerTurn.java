@@ -9,6 +9,7 @@ import events.gameplaystates.unitplaystates.AIUnitStateController;
 import structures.basic.ComputerLogic.*;
 import structures.basic.ComputerPlayer;
 import structures.basic.Player;
+import structures.basic.Spell;
 import structures.basic.Tile;
 
 public class ComputerPlayerTurn {
@@ -39,11 +40,14 @@ public class ComputerPlayerTurn {
 			
 			for (ComputerInstruction cI : cardsToPlay) {
 				System.out.println(cI);
-				if (cI.getCard() == null || cI.getTargetTile() == null) continue;
 				
-			//card get class 
-			controller.summonMonster(cI.getCard(), cI.getTargetTile());
-			 
+				  if (cI.getCard() == null || cI.getTargetTile() == null) continue; else { if
+				  (cI.getCard().getClass() == Spell.class) controller.spellCast(cI.getCard(),
+				  cI.getTargetTile()); else { controller.summonMonster(cI.getCard(),
+				  cI.getTargetTile());
+				  try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();} } }
+				 
+
 			}
 		
 		}
@@ -59,6 +63,7 @@ public class ComputerPlayerTurn {
 				
 				Tile currTile = g.getBoard().getTile(cI.getActor().getPosition().getTilex(), cI.getActor().getPosition().getTiley());
 				controller.unitAttack(currTile, cI.getTargetTile());
+				try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 			}
 		}
 		
@@ -79,6 +84,7 @@ public class ComputerPlayerTurn {
 				
 			Tile currTile = cI.getActor().getPosition().getTile(g.getBoard());
 			controller.unitMove(currTile, cI.getTargetTile());
+			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
 			}
 		}
 		else System.out.println("no moves to make");
