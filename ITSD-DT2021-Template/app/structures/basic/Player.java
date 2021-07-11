@@ -92,7 +92,6 @@ public class Player {
 	
 	public void setDeck(Deck d){
 		this.deck = d;
-		this.deck.deckOne();
 	}
 
 	public Hand getHand() {
@@ -102,6 +101,7 @@ public class Player {
 	public void setHand(Hand h) {
 		this.hand = h;
 	}
+
 
 }
 
