@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
+import structures.basic.Avatar;
 import structures.basic.Board;
 import structures.basic.ComputerPlayer;
 import structures.basic.Monster;
@@ -169,14 +170,16 @@ public class ComputerMoveMonsterLogic {
 			static class MonsterTileOption implements Comparable<MonsterTileOption> {
 				Monster m; 
 				ArrayList<Tile> list;
+				
 				double score;
-				private static  int inRangeScore = - 1;
-				private static  int bringsEnemyInRange = 2; 
+				//private int inRangeScore = -1;
+				//private int bringsEnemyInRange = 2; 
 				MonsterTileOption(Monster m, Board b){
 					this.m = m;
 					this.list = b.unitMovableTiles(m.getPosition().getTilex(), m.getPosition().getTiley(), m.getMovesLeft());
 					//System.out.println("number of movabale tiles (line 161) : " + list.size());
 					if(list != null && !(list.isEmpty())) {
+						
 						for (Tile t : list) {
 							this.calcTileMoveScore(m,b,t);
 							//System.out.println(" tile ( "+t.getTilex() + " - " + t.getTiley() + " ) score: " + t.getScore());
@@ -221,10 +224,9 @@ public class ComputerMoveMonsterLogic {
 					//get all tiles that this monster could attack from its current tile (with enemies on them)
 					HashSet<Tile> currAttackable = b.calcAttackRange(currTile.getTilex(), currTile.getTiley(), m.getAttackRange(), m.getOwner());
 				
-					//System.out.println(wBAttackable.size() + "  " + currAttackable.size());
-
-					if (wBAttackable.size() > currAttackable.size()) targetTile.setScore(bringsEnemyInRange);
-				
+					int deltaOne =  wBAttackable.size() - currAttackable.size();
+					//if deltaOne is pos means that new tile would increase num of enemies attackable
+					
 					//all tiles on the board with an enemy unit on it
 					ArrayList <Tile> enemyTilesOnBoard = b.enemyTile(m.getOwner());
 				
@@ -241,9 +243,26 @@ public class ComputerMoveMonsterLogic {
 						if (tilesEnemyCanAttack.contains(targetTile)) wBAttackableByEnemy++;
 						if (tilesEnemyCanAttack.contains(currTile)) currAttackableByEnemy ++;
 					}
-
-					if (wBAttackableByEnemy > currAttackableByEnemy) targetTile.setScore(inRangeScore);
-			
+					
+					int deltaTwo =   currAttackableByEnemy - wBAttackableByEnemy;
+					//if delta two is positive it means that the new tile would make the unit attackable by less enemies 
+					
+					
+					
+					if (m.getOwner().getHealth() <= ((ComputerPlayer) m.getOwner()).getHPBenchMark()) {
+						deltaTwo *= 2;
+					} else {
+						deltaOne *= 2;
+					}
+					int score = deltaOne + deltaTwo;
+					
+					if ((m.getOwner().getHealth() <= ((ComputerPlayer) m.getOwner()).getHPBenchMark()|| m.getClass() == Avatar.class) && (currTile.getTilex() - targetTile.getTilex())>0){ {
+						score--;
+					}
+						
+					}
+					
+					targetTile.setScore(score);
 				}
 				
 				
