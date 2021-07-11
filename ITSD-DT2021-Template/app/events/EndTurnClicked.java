@@ -103,16 +103,18 @@ public class EndTurnClicked implements EventProcessor{
 			gameState.endTurnStaticChange();
 
 		}	
-	}
-//		// Debug mode
+
+		
+
+	}	
+// Debug mode
+
 //		if (gameState.isTwoPlayerMode()) {
 //			// redraw hand to humanplayer
 //			int oldCardListSize = gameState.getEnemyPlayer().getHand().getHandList().size(); 
 //
 //			GeneralCommandSets.drawCardsInHand(out, gameState, oldCardListSize, gameState.getTurnOwner().getHand().getHandList());
 //		}	
-
-
 
 
 
