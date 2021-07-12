@@ -71,7 +71,7 @@ public class Monster extends Unit{
 	
 	/* Move unit
 	 * Attack unit
-	 * Counter attack (specialised attack, works even onCooldown)
+	 * Counter attack (transparently named attack-value retrieval, works even onCooldown)
 	 * Defend (HP reduction from any source) 
 	 * Use ability (applicable to some)
 	 */
@@ -91,10 +91,7 @@ public class Monster extends Unit{
 			this.setPositionByTile(t);
 			
 		} else {	return false;	}
-		
-		if(this.movesLeft == 0 && this.attacksLeft == 0) {	// this should check attack range == 0 really
-			this.toggleCooldown();
-		}
+
 		return true;
 	}
 	
@@ -120,7 +117,7 @@ public class Monster extends Unit{
 	}
 	
 	// Defend (receive damage)
-	// Returns outcome of receiving damage (successful defence or death) and updates health
+	// Returns outcome of receiving damage (death if false) and updates health
 	public boolean defend(int d) {
 		if(this.HP - d <= 0) {
 			this.HP = 0;
@@ -149,7 +146,9 @@ public class Monster extends Unit{
 	}
 	
 	
-	/* Getters and setters */ 
+	
+	
+	/**		Getters and setters		**/ 
 	
 	public String getName() {
 		return name;
@@ -167,12 +166,12 @@ public class Monster extends Unit{
 		HP = hP;
 	}
 
-	public int getAttackValue() {
-		return attackValue;
+	public int getMaxHP() {
+		return maxHP;
 	}
-
-	public void setAttackValue(int attackValue) {
-		this.attackValue = attackValue;
+	
+	public void setMaxHP(int h) {
+		this.maxHP = h;
 	}
 	
 	public Player getOwner() {
@@ -183,13 +182,8 @@ public class Monster extends Unit{
 		owner = p;
 	}
 	
-	public int getMaxHP() {
-		return maxHP;
-	}
 	
-	public void setMaxHP(int h) {
-		this.maxHP = h;
-	}
+	// Moves-related
 	
 	public int getMovesLeft() {
 		return movesLeft;
@@ -205,6 +199,17 @@ public class Monster extends Unit{
 	
 	public void setMovesMax(int mmx) {
 		this.movesMax = mmx;
+	}
+	
+	
+	// Attack-related
+	
+	public int getAttackValue() {
+		return attackValue;
+	}
+
+	public void setAttackValue(int attackValue) {
+		this.attackValue = attackValue;
 	}
 	
 	public int getAttacksLeft() {
@@ -231,24 +236,26 @@ public class Monster extends Unit{
 		this.attackRange = a;
 	}
 	
+	
+	// Cooldown management
+	
 	// Indicates a Monster can no longer move & attack (if true)
 	public boolean getOnCooldown() {
 		return onCooldown;
 	}
 
-	// temporary for testing
+	// Mostly used only in testing
 	public void setCooldown(boolean b) {
 		this.onCooldown = b;
-		this.actionSet();	// don't really want to use a hard setter
 	}
 	
-	// Switches cooldown status and dependent variables
+	// Switches cooldown status and related action variables
 	public void toggleCooldown() {
 		this.onCooldown = !onCooldown;
 		this.actionSet();
 	}
 	
-	// Helper method for cooldown management
+	// Helper for cooldown management
 	private void actionSet() {
 		if(onCooldown) {
 			this.movesLeft = 0;
@@ -258,6 +265,9 @@ public class Monster extends Unit{
 			this.attacksLeft = this.attacksMax;
 		}
 	}
+	
+	
+	// Abilities & Animations
 	
 	public boolean hasAbility() {
 		if(this.abilities != null) {
@@ -285,16 +295,23 @@ public class Monster extends Unit{
 		this.abAnimation = e;
 	}
 	
-	public void toggleProvoked() {
-		this.provoked = !provoked;
+	
+	// Provoked status and range impairment
+	
+	public boolean isProvoked() {
+		return this.provoked;
 	}
 	
 	public void setProvoked(boolean value) {
 		provoked = value;
 	}
 	
+	public void toggleProvoked() {
+		this.provoked = !provoked;
+	}
+	
+	// Flag to indicate movement/attack range is impaired by an ability (if true)
 	public boolean hasActionRangeImpaired() {
-
 		// Switch vairable
 		boolean impariedActionRangeFlag = false; 
 		
@@ -302,7 +319,6 @@ public class Monster extends Unit{
 		if (provoked) {
 			impariedActionRangeFlag = true; 
 		}
-		
 		return impariedActionRangeFlag;
 	}
 
