@@ -59,7 +59,12 @@ public class CastSpellState implements IUnitPlayStates {
 		if (context.getGameStateRef().getTurnOwner().getMana() - context.getLoadedCard().getManacost() >= 0) {
 			
 			// Cast spell and return a flag to indicate if worked
-			successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+			if (targetTile.getUnitOnTile() != null) {
+				successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+			}
+			else {
+				successfulFlag = false;
+			}
 		}
 		
 		// Apply changes to gamestate if successful cast	
