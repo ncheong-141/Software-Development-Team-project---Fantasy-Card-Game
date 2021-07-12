@@ -57,7 +57,6 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, newlySelectedUnit) 
 				&& context.getGameStateRef().useAdjustedMonsterActRange()) {
 			 
-			System.out.println("Using Ability version of highlighting tiles.");
 			unitPlayable = abilityAdjustedDisplay(context,newlySelectedUnit);
 			
 		}

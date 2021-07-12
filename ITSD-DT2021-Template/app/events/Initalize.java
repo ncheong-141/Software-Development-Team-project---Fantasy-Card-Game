@@ -52,11 +52,9 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		/**===========================**/
 
 
-		// Initialising ability to unit linkage data to reference whenever loading units. 
-		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
-
 		boardAvatarSetUp(out,gameState,message);
 		playerCardSetUp(out, gameState, message);
+		
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();
@@ -128,74 +126,6 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 			i++;
 		}
 	}
-	
-
-
-
-	private static void boardPrintAllMethods(ActorRef out, GameState gameState) {
-//		
-//		
-//		Board board = gameState.getBoard();
-//		
-//		for (int i = 0; i<board.getGameBoard().length; i++) {
-//			for (int k = 0; k<board.getGameBoard()[0].length; k++) {
-//				BasicCommands.drawTile(out, board.getGameBoard()[i][k], 0);
-//			}
-//			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-//		}
-//		
-//		
-//		Tile currentTile = gameState.getBoard().getTile(5, 3);
-//		
-//		Card como = BasicObjectBuilders.loadCard(StaticConfFiles.c_comodo_charger, StaticConfFiles.u_comodo_charger, 154, Card.class);
-//		Monster u_como = BasicObjectBuilders.loadMonsterUnit(como.getConfigFile(), como, (Player) gameState.getPlayerOne(), Monster.class);
-//		
-//		u_como.toggleCooldown();
-//		currentTile.addUnit(u_como);
-//		u_como.setPositionByTile(currentTile);
-//		
-//		
-//		BasicCommands.addPlayer1Notification(out, "All free tiles", 4);
-//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().allFreeTiles(), 2);
-//		GeneralCommandSets.threadSleepOverride(4000);
-//		GeneralCommandSets.boardVisualReset(out, gameState);
-//		
-//		BasicCommands.addPlayer1Notification(out, "adjTiles", 4);
-//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().adjTiles(currentTile) , 2);
-//		GeneralCommandSets.threadSleepOverride(4000);
-//		GeneralCommandSets.boardVisualReset(out, gameState);
-//
-//		
-//		BasicCommands.addPlayer1Notification(out, "cardinally adjacent", 4);
-//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().cardinallyAdjTiles(currentTile) , 2);
-//		GeneralCommandSets.threadSleepOverride(4000);
-//		GeneralCommandSets.boardVisualReset(out, gameState);
-//
-//		
-//		BasicCommands.addPlayer1Notification(out, "Actionable tiles", 4);
-//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitAllActionableTiles(5, 3, u_como.getAttackRange(), u_como.getMovesLeft()) , 2);
-//		GeneralCommandSets.threadSleepOverride(4000);
-//		GeneralCommandSets.boardVisualReset(out, gameState);
-//
-//		
-//		BasicCommands.addPlayer1Notification(out, "Attackable tiles", 4);
-//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitAttackableTiles(5, 3, u_como.getAttackRange(), u_como.getMovesLeft()) , 2);
-//		GeneralCommandSets.threadSleepOverride(4000);
-//		GeneralCommandSets.boardVisualReset(out, gameState);
-//
-//		
-//		BasicCommands.addPlayer1Notification(out, "Moveable tiles", 4);
-//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().unitMovableTiles(5, 3, u_como.getMovesLeft()), 2);
-//		GeneralCommandSets.threadSleepOverride(4000);
-//		GeneralCommandSets.boardVisualReset(out, gameState);
-//		
-//		BasicCommands.addPlayer1Notification(out, "Reachable tiles", 4);
-//		GeneralCommandSets.drawBoardTiles(out,gameState.getBoard().reachableTiles(5, 3, u_como.getMovesLeft()), 2);
-//		GeneralCommandSets.threadSleepOverride(4000);
-//		GeneralCommandSets.boardVisualReset(out, gameState);
-//				
-	}
-
 }
 
 

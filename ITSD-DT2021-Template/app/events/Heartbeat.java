@@ -3,6 +3,8 @@ package events;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import akka.actor.ActorRef;
+import commands.BasicCommands;
+import commands.GeneralCommandSets;
 import structures.GameState;
 
 /**
@@ -23,6 +25,9 @@ public class Heartbeat implements EventProcessor{
 	@Override
 	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		
+		// Constantly update
+		GeneralCommandSets.redrawAllUnitStats(out, gameState);
+		GeneralCommandSets.updatePlayerStats(out, gameState);
 	}
 
 }

@@ -130,7 +130,6 @@ public class SummonMonsterState implements IUnitPlayStates {
 	public void summonMonster(GameplayContext context, ActorRef out, String u_configFile, Card statsRef, Tile summonTile) {
 		
 		// Mana cost application due to summon monster
-		BasicCommands.addPlayer1Notification(out, "Player mana cost", 2);
 		context.getGameStateRef().getTurnOwner().loseMana(statsRef.getManacost());
 		GeneralCommandSets.updatePlayerStats(out, context.getGameStateRef());
 		
