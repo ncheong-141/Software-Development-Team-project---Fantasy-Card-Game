@@ -58,7 +58,7 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 				&& context.getGameStateRef().useAdjustedMonsterActRange()) {
 			 
 			System.out.println("Using Ability version of highlighting tiles.");
-			abilityAdjustedDisplay(context,newlySelectedUnit);
+			unitPlayable = abilityAdjustedDisplay(context,newlySelectedUnit);
 			
 		}
 		else {
@@ -154,9 +154,9 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 					newlySelectedUnit.toggleProvoked();
 				}
 			}
-			return true;
 		}
-
+		
+		return true; 
 	}
 	
 }
