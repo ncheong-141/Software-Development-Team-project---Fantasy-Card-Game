@@ -199,7 +199,7 @@ public class CastSpellState implements IUnitPlayStates {
 			// For each ally of Avatar a
 			for(Monster m : friendlies) {
 				
-				if(m.hasAbility()) {
+				if(!(m.hasAbility())) {
 					continue; 
 				}
 				

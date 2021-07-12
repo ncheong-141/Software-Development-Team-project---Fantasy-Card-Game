@@ -34,9 +34,11 @@ public class A_S_SundropElixir implements Ability {
 		int healthIncreaseValue = 5;
 		
 		// Check if the +5 HP is greater than max hp, if so make monster HP = max (done in .heal() method)
-		targetMonster.heal(healthIncreaseValue);
-
-		return true; 
+		// If Monster is full health .heal() returns false and execution fails (return false)
+		if(targetMonster.heal(healthIncreaseValue)) {
+			return true; 
+		}
+		return false;
 	}
 	// ================================================================================
 	
