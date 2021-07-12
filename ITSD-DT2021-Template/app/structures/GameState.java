@@ -211,11 +211,11 @@ public class GameState {
 
 		if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
 			this.turnCount +=1;
-			playerOne.addMana(this.turnCount);
+			playerOne.addMana(this.turnCount + 1);
 			System.out.println("player 1 mana is " + playerOne.getMana());
 		}
 		else {
-			playerTwo.addMana(this.turnCount);
+			playerTwo.addMana(this.turnCount + 1);
 			System.out.println("player 2 mana is " + playerTwo.getMana());
 		}  
 	}
