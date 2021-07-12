@@ -54,15 +54,14 @@ public class UnitAttackActionState implements IUnitPlayStates {
 		
 		
 		System.out.println("In UnitAttackActionSubState.");
-		context.debugPrint();
-		
+
 		// Gather attacker and defender
 		attacker = (Monster) context.getLoadedUnit();
 		defender = targetTile.getUnitOnTile();
 		
 		// Build attacker/defender attackRanges for checks (omitting movement range which has been completed previously)
-		attackerAttackRange  = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(currentTile.getTilex(), currentTile.getTiley(), attacker.getAttackRange(), 0));
-		defenderCounterRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(targetTile.getTilex(), targetTile.getTiley(), defender.getAttackRange(), 0));
+		attackerAttackRange  = context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), 0);
+		defenderCounterRange = context.getGameStateRef().getBoard().unitAttackableTiles(defender.getPosition().getTilex(), defender.getPosition().getTiley(), defender.getAttackRange(), 0);
 		
 		
 		// Check target is in attack range for attacker
@@ -106,7 +105,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 	private void unitAttack(GameplayContext context) {
 				
 		// Build generic actionRange for dehighlight reference
-		ArrayList <Tile> actRange = new ArrayList <Tile> (context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft()));
+		ArrayList <Tile> actRange = context.getGameStateRef().getBoard().unitAttackableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getAttackRange(), attacker.getMovesLeft());
 		actRange.addAll(context.getGameStateRef().getBoard().unitMovableTiles(attacker.getPosition().getTilex(), attacker.getPosition().getTiley(), attacker.getMovesLeft()));
 		
 		// Stores interaction outcomes
@@ -160,7 +159,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 					}
 					// Unit dies
 					else {
-						BasicCommands.deleteUnit(context.out, targetTile.getUnitOnTile());
+						BasicCommands.deleteUnit(context.out, defender);
 						unitDeath(context, targetTile);
 						GeneralCommandSets.threadSleep();
 					}	
@@ -211,7 +210,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 						}
 						// Unit dies
 						else {
-							BasicCommands.deleteUnit(context.out, currentTile.getUnitOnTile());
+							BasicCommands.deleteUnit(context.out, attacker);
 							unitDeath(context, currentTile);
 							GeneralCommandSets.threadSleep();
 						}	

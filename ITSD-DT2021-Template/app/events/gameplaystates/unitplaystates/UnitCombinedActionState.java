@@ -61,9 +61,8 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		context.setCombinedActive(true);
 		
 		// Build reference variables
-		destination = null;
 		if(destination == null && (enemyTarget != null)) {		
-			System.out.println("Successful. enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	
+			System.out.println("enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	
 		}
 		
 		// Find and set a tile destination for selected unit movement
@@ -104,6 +103,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 
 			// Execute attack state
 			System.out.println("Calling AttackAction from CombinedAction...");
+			System.out.println("Destination " + destination);
 			// Execute attack between units
 			IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
 			UnitAttackState.execute(context);
@@ -129,7 +129,6 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		
 		// Retrieve frequently used data
 		Tile currentLocation = currentTile;
-		// context.getGameStateRef().getBoard().getTile(context.getLoadedUnit().getPosition().getTilex(),context.getLoadedUnit().getPosition().getTiley());
 		
 		// Selected unit's ranges
 		ArrayList <Tile> actRange; 
@@ -161,18 +160,14 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		/***	Find and set destination tile relative to enemy target	***/
 		// Establish tiles adjacent to enemy that are within movement range
 		
-		 // Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
+		// Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
 		// Get a movement range from enemy's position (encompasses attack range) -- needs to just be an adjacent Board method
-		ArrayList <Tile> temp = context.getGameStateRef().getBoard().unitMovableTiles(enemyTarget.getTilex(), enemyTarget.getTiley(), 2);
-		ArrayList <Tile> options = new ArrayList<Tile>(); 
+		ArrayList <Tile> temp = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
+		ArrayList <Tile> options = new ArrayList<Tile>(10); 
 		for(Tile t : temp) {
-			// If tile is adjacent to enemy
-			if((Math.abs(enemyTarget.getTilex() - t.getTilex()) <= 1) && (Math.abs(enemyTarget.getTiley() - t.getTiley()) <= 1)) {
-				// && If adjacent tile is in selected unit's movement range
-				if(moveRange.contains(t)) {
-					options.add(t);
-					System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
-				}
+			if(moveRange.contains(t)) {
+				options.add(t);
+				System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
 			}
 		}
 
@@ -188,17 +183,17 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 				options.remove(t); 
 			}
 			else {
-				// If total index difference of option and enemy is 1, tile is in cardinal direction relative to enemy
-				if((Math.abs(enemyTarget.getTilex() - t.getTilex()) + (Math.abs(enemyTarget.getTiley() - t.getTiley()))) == 1) {
-					destination = t;
-					break;
-				}
+//				// If total index difference of option and enemy is 1, tile is in cardinal direction relative to enemy
+//				if((Math.abs(enemyTarget.getTilex() - t.getTilex()) + (Math.abs(enemyTarget.getTiley() - t.getTiley()))) == 1) {
+//					destination = t;
+//					break;
+//				}
 			}
 		}
 		
 		
 		// Otherwise, choose first option available and check if there is an option
-		if(destination == null && options.size() > 0) {
+		if(options.size() > 0) {
 			destination = options.get(0);
 			return true;
 		}

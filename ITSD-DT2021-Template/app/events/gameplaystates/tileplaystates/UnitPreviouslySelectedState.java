@@ -76,7 +76,7 @@ public class UnitPreviouslySelectedState implements ITilePlayStates {
 				
 				// Move & Attack in a combined state as unit is out of range
 				System.out.println("Creating CombinedAction substate...");
-				unitState = new UnitCombinedActionState(currentTile, targetTile, context);
+				unitState = new UnitCombinedActionState(currentTile, targetTile);
 				break;
 			}
 			
