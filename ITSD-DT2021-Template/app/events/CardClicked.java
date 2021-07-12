@@ -40,7 +40,7 @@ public class CardClicked implements EventProcessor{
 			return;
 		}
 
-		// Lock user interaction during action
+				// Lock user interaction during action
 		/**===========================**/
 		gameState.userinteractionLock();
 		/**===========================**/
@@ -109,8 +109,13 @@ public class CardClicked implements EventProcessor{
 					
 					Tile display= gameState.getBoard().enemyAvatarTile(gameState.getTurnOwner(), gameState);
 					BasicCommands.drawTile(out,display,2);
-					
-				}	//for spell targeting friendly unit
+				}	
+				else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==null && clickedCard.targetEnemy()==true) {
+					ArrayList<Tile> display= gameState.getBoard().enemyTile(gameState.getTurnOwner());
+					display.add(gameState.getBoard().enemyAvatarTile(gameState.getTurnOwner(), gameState));
+					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+				}
+				//for spell targeting friendly unit
 				else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class && clickedCard.targetEnemy()==false){
 					
 					ArrayList<Tile> display= gameState.getBoard().friendlyTile(gameState.getTurnOwner());

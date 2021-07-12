@@ -120,6 +120,9 @@ public class UnitAttackActionState implements IUnitPlayStates {
 			System.out.println("Unit cannot attack.");
 			return;
 		}
+		
+		// Verbose output
+		BasicCommands.addPlayer1Notification(context.out, "Attack!", 2);
 
 		System.out.println("Attack successful. " + attacker.getName() + " has " + attacker.getAttacksLeft() + " attacks left");
 
@@ -347,7 +350,7 @@ public class UnitAttackActionState implements IUnitPlayStates {
 							BasicCommands.playUnitAnimation(context.out, m, UnitAnimationType.channel);
 							BasicCommands.playEffectAnimation(context.out, BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff), m.getPosition().getTile(context.getGameStateRef().getBoard()));
 							GeneralCommandSets.threadSleep();
-							GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
+							GeneralCommandSets.redrawAllUnitStats(context.out, context.getGameStateRef());
 						}
 						
 					}

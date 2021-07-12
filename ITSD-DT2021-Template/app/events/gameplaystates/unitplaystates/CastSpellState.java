@@ -70,6 +70,9 @@ public class CastSpellState implements IUnitPlayStates {
 		// Apply changes to gamestate if successful cast	
 		if (successfulFlag) {
 			
+			// Verbose output
+			BasicCommands.addPlayer1Notification(context.out, "Spell executing!", 2);
+			
 			System.out.println("Successfully cast spell.");
 						
 			// Play effect animation associated with ability (if present)
@@ -181,7 +184,7 @@ public class CastSpellState implements IUnitPlayStates {
 					}
 					BasicCommands.playUnitAnimation(context.out, f, UnitAnimationType.channel);
 					GeneralCommandSets.threadSleep();
-					GeneralCommandSets.drawUnitWithStats(context.out, f, f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					GeneralCommandSets.redrawAllUnitStats(context.out, context.getGameStateRef());
 				}
 			}
 		}	
@@ -225,7 +228,7 @@ public class CastSpellState implements IUnitPlayStates {
 							BasicCommands.playEffectAnimation(context.out, abi.getEffectAnimation(), m.getPosition().getTile(context.getGameStateRef().getBoard()));
 						}
 						GeneralCommandSets.threadSleep();
-						GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
+						GeneralCommandSets.redrawAllUnitStats(context.out,context.getGameStateRef());
 					}
 				}
 			}

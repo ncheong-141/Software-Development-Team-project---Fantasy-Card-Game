@@ -31,7 +31,7 @@ public class AbilityToUnitLinkage {
 		
 		/*** Spells ***/
 		// Deck 1
-		UnitAbility.put("Truestrike", 			constructArrayListAbility(	new A_S_Truestrike(true,Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation))))); 	
+		UnitAbility.put("Truestrike", 			constructArrayListAbility(	new A_S_Truestrike(true,null, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation))))); 	
 		UnitAbility.put("Sundrop Elixir", 		constructArrayListAbility(	new A_S_SundropElixir(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 		// Deck 2
 		UnitAbility.put("Staff of Y'Kir'", 		constructArrayListAbility(	new A_S_StaffofYkir(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));	

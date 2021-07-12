@@ -46,6 +46,8 @@ public class EndTurnClicked implements EventProcessor{
 			GeneralCommandSets.updatePlayerStats(out, gameState);
 		}
 
+		// Verbose output
+		BasicCommands.addPlayer1Notification(out,gameState.getTurnOwner().toString() + "'s turn!", 2);
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();

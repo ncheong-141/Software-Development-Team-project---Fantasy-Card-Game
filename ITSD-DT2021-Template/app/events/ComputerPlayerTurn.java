@@ -3,9 +3,12 @@ package events;
 
 
 import akka.actor.ActorRef;
+import commands.BasicCommands;
 import commands.GeneralCommandSets;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
+
 import structures.GameState;
 import events.gameplaystates.unitplaystates.AIUnitStateController;
 import structures.basic.ComputerLogic.*;
@@ -45,7 +48,7 @@ public class ComputerPlayerTurn {
 
 	/** Inner class **/
 	public static class RunComputerTurnOnThread implements Runnable {
-
+		
 		// Attributes
 		GameState g; 
 		ActorRef out;
@@ -59,6 +62,9 @@ public class ComputerPlayerTurn {
 		// Thread run
 		public void run() {
 
+			ReentrantLock counterLock = new ReentrantLock();
+			counterLock.lock();
+			
 			ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
 			ComputerPlayer compPlayer = pl2;
 			AIUnitStateController controller = new AIUnitStateController(out, g);
@@ -145,6 +151,9 @@ public class ComputerPlayerTurn {
 			
 			// End turn
 			g.computerEnd();
+			BasicCommands.addPlayer1Notification(out,g.getTurnOwner().toString() + "'s turn!", 2);
+
+			counterLock.unlock();
 		}
 
 		/** Helper methods **/
