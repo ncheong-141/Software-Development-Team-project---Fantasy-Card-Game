@@ -30,7 +30,7 @@ public class A_S_EntropicDecay implements Ability {
 	// Reduce non-avatar entity HP to 0
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		if (!(targetMonster instanceof Avatar)) {
+		if (targetMonster.getClass() == targetType) {
 			targetMonster.defend(targetMonster.getMaxHP());
 			return true; 
 		}

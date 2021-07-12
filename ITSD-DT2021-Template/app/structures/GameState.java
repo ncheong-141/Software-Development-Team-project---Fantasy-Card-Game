@@ -116,6 +116,15 @@ public class GameState {
 			playerTwo.setDeck(deckPlayerTwo);
 			deckPlayerTwo.shuffleDeck();
 			
+			
+			for (Card c : deckPlayerOne.getCardList()) {
+				System.out.println(c.getCardname());
+			}
+			
+			for (Card c: deckPlayerTwo.getCardList() ) {
+				System.out.println(c.getCardname());
+			}
+			
 			// Set hands
 			Hand handPlayerOne = new Hand();
 			playerOne.setHand(handPlayerOne);
