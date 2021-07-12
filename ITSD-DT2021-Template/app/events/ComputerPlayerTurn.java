@@ -92,6 +92,8 @@ public class ComputerPlayerTurn {
 				// Wait between action types
 				waitForActionsToComplete();
 
+				try {Thread.sleep(15000);} catch (InterruptedException e) {e.printStackTrace();}
+
 				
 				attacksToPerform = compPlayer.performAttacks(g.getBoard());
 
@@ -116,6 +118,8 @@ public class ComputerPlayerTurn {
 
 				// Wait between action types
 				waitForActionsToComplete();
+				
+				try {Thread.sleep(15000);} catch (InterruptedException e) {e.printStackTrace();}
 
 				monstersToMove = compPlayer.moveMonsters(g.getBoard());
 
@@ -137,6 +141,8 @@ public class ComputerPlayerTurn {
 
 				// Wait between action types
 				waitForActionsToComplete();
+				
+				try {Thread.sleep(15000);} catch (InterruptedException e) {e.printStackTrace();}
 
 				g.computerEnd();
 			}
