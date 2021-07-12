@@ -38,18 +38,12 @@ public class EndTurnClicked implements EventProcessor{
 		endTurnStateChange(out, gameState);
 		
 		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
-<<<<<<< HEAD
-			ComputerPlayerTurn compTurn = new ComputerPlayerTurn();
-			compTurn.processComputerActions(out, gameState);
+			ComputerPlayerTurn compTurn = new ComputerPlayerTurn(out, gameState);
+			compTurn.processComputerActions();
 			// Update player stats on new human player turn
 			System.out.println("About to update the player stats after comp player turn");
 			GeneralCommandSets.updatePlayerStats(out, gameState);
 			System.out.println(gameState.getTurnOwner() + " has " + gameState.getTurnOwner().getMana() + "mana");
-
-=======
-			ComputerPlayerTurn compTurn = new ComputerPlayerTurn(out, gameState);
-			compTurn.processComputerActions();
->>>>>>> ce9f658ededa65a165b2e217e0b7caefb7ce9d99
 		}
 
 		
