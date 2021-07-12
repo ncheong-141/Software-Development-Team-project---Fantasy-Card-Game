@@ -101,13 +101,13 @@ public class EndTurnClicked implements EventProcessor{
 		}	
 	}
 
-//	//display all cards after new one added
-//	private void showNewCard(ActorRef out, GameState gameState) {
-//		ArrayList<Card> card = gameState.getTurnOwner().getDeck().getCardList();
-//		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
-//		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
-//	}
-//	
+	//display all cards after new one added
+	private void showNewCard(ActorRef out, GameState gameState) {
+		ArrayList<Card> card = gameState.getTurnOwner().getDeck().getCardList();
+		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
+		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
+	}
+	
 }
 
 
