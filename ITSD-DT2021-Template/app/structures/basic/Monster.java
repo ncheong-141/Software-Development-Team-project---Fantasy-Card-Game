@@ -129,14 +129,16 @@ public class Monster extends Unit{
 	}
 	
 	// Heal (adjust health)
-	// Updates HP from a heal action
-	public void heal(int h) {
+	// Returns outcome of attempting to heal and updates health
+	public boolean heal(int h) {
+		if(this.HP == this.maxHP)	{	return false;	}	
 		if(this.HP + h > this.maxHP) {
 			this.HP = this.maxHP;
 		}
 		else {
 			this.HP += h;
 		}
+		return true;
 	}
 	
 	// Buff (adjust attack)
