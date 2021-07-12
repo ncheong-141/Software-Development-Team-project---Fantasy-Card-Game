@@ -1,6 +1,5 @@
 package events;
 import structures.basic.*;
-import java.util.ArrayList;
 import com.fasterxml.jackson.databind.JsonNode;
 import akka.actor.ActorRef;
 import structures.GameState;
@@ -52,8 +51,9 @@ public class EndTurnClicked implements EventProcessor{
 			BasicCommands.addPlayer1Notification(out, "Your move!", 2);
 			GeneralCommandSets.threadSleep();
 
+			// Verbose output
+			BasicCommands.addPlayer1Notification(out,gameState.getTurnOwner().toString() + "'s turn!", 2);
 		}
-		
 		/**===========================**/
 		gameState.userinteractionUnlock();
 		/**===========================**/
@@ -97,6 +97,7 @@ public class EndTurnClicked implements EventProcessor{
 		GeneralCommandSets.updatePlayerStats(out, gameState);	// Update player states
 		GeneralCommandSets.threadSleep();
 		gameState.setMonsterCooldown(false);					// Set all monster cooldowns to false
+
 		GeneralCommandSets.threadSleep();
 		
 		// Debug mode
@@ -113,7 +114,6 @@ public class EndTurnClicked implements EventProcessor{
 //			showNewCard(out,gameState);
 //			gameState.endTurnStaticChange();
 //		}
-		
 		
 	}
 

@@ -58,7 +58,7 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 				&& context.getGameStateRef().useAdjustedMonsterActRange()) {
 			 
 			System.out.println("Using Ability version of highlighting tiles.");
-			abilityAdjustedDisplay(context,newlySelectedUnit);
+			unitPlayable = abilityAdjustedDisplay(context,newlySelectedUnit);
 			
 		}
 		else {
@@ -146,14 +146,17 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		GeneralCommandSets.drawBoardTiles(context.out, displayAttackableTiles, 2);
 
 		// Apply flags due to external factors
-		for (Ability a : newlySelectedUnit.getMonsterAbility()) {
-	
-			// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
-			if (a instanceof A_U_Provoke) {
-				newlySelectedUnit.toggleProvoked();
+		if (newlySelectedUnit.hasAbility()) {
+			for (Ability a : newlySelectedUnit.getMonsterAbility()) {
+				
+				// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
+				if (a instanceof A_U_Provoke) {
+					newlySelectedUnit.toggleProvoked();
+				}
 			}
 		}
-		return true;
+		
+		return true; 
 	}
 	
 }

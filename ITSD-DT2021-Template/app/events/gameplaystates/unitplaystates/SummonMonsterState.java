@@ -67,10 +67,13 @@ public class SummonMonsterState implements IUnitPlayStates {
 		// Target tile within summon range && sufficient player mana check
 		if(tileInSummonRange() && sufficientMana(context.getGameStateRef().getTurnOwner(), context.getLoadedCard())) {
 			
+			// Verbose output
+			BasicCommands.addPlayer1Notification(context.out, "Monster summoned!", 2);
 			
 			// Execute summon method
 			summonMonster(context, context.out, context.getLoadedCard().getConfigFile(), context.getLoadedCard(), this.targetTile);
-					
+			
+
 			// Update board counter for num Monsters
 			context.getGameStateRef().getBoard().updateUnitCount(1);
 

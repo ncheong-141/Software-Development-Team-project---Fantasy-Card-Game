@@ -59,11 +59,19 @@ public class CastSpellState implements IUnitPlayStates {
 		if (context.getGameStateRef().getTurnOwner().getMana() - context.getLoadedCard().getManacost() >= 0) {
 			
 			// Cast spell and return a flag to indicate if worked
-			successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+			if (targetTile.getUnitOnTile() != null) {
+				successfulFlag = spellToCast.getAbility().execute(targetTile.getUnitOnTile() , context.getGameStateRef());
+			}
+			else {
+				successfulFlag = false;
+			}
 		}
 		
 		// Apply changes to gamestate if successful cast	
 		if (successfulFlag) {
+			
+			// Verbose output
+			BasicCommands.addPlayer1Notification(context.out, "Spell executing!", 2);
 			
 			System.out.println("Successfully cast spell.");
 						
@@ -85,7 +93,7 @@ public class CastSpellState implements IUnitPlayStates {
 
 			// Remove card
 			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
-			GeneralCommandSets.drawUnitWithStats(context.out, targetTile.getUnitOnTile(), targetTile.getUnitOnTile().getPosition().getTile(context.getGameStateRef().getBoard()));
+			GeneralCommandSets.redrawAllUnitStats(context.out, context.getGameStateRef());
 
 
 			// Only update Hand for Human player
@@ -176,7 +184,7 @@ public class CastSpellState implements IUnitPlayStates {
 					}
 					BasicCommands.playUnitAnimation(context.out, f, UnitAnimationType.channel);
 					GeneralCommandSets.threadSleep();
-					GeneralCommandSets.drawUnitWithStats(context.out, f, f.getPosition().getTile(context.getGameStateRef().getBoard()));
+					GeneralCommandSets.redrawAllUnitStats(context.out, context.getGameStateRef());
 				}
 			}
 		}	
@@ -220,7 +228,7 @@ public class CastSpellState implements IUnitPlayStates {
 							BasicCommands.playEffectAnimation(context.out, abi.getEffectAnimation(), m.getPosition().getTile(context.getGameStateRef().getBoard()));
 						}
 						GeneralCommandSets.threadSleep();
-						GeneralCommandSets.drawUnitWithStats(context.out, m, m.getPosition().getTile(context.getGameStateRef().getBoard()));
+						GeneralCommandSets.redrawAllUnitStats(context.out,context.getGameStateRef());
 					}
 				}
 			}

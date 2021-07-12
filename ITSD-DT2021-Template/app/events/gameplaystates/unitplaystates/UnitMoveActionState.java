@@ -105,6 +105,9 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		// If target tile is in movement range
 		if((!moveRange.isEmpty()) && moveRange.contains(targetTile)) {
 			
+			// Verbose output
+			BasicCommands.addPlayer1Notification(context.out, "Monster moving!", 2);
+			
 			// If Monster move method is successful, per internal object checks
 			if (mSelected.move(targetTile)) {
 				System.out.println("MovesLeft: " + mSelected.getMovesLeft());

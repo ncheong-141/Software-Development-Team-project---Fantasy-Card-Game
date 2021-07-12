@@ -40,7 +40,7 @@ public class CardClicked implements EventProcessor{
 			return;
 		}
 
-		// Lock user interaction during action
+				// Lock user interaction during action
 		/**===========================**/
 		gameState.userinteractionLock();
 		/**===========================**/
@@ -52,12 +52,12 @@ public class CardClicked implements EventProcessor{
 
 		// Hand position the user has clicked 
 		int handPosition = message.get("position").asInt();
-
-		// Check incase the UI is to slow to update and you click a UI Card before it is removed
+		
+		// Stop the user from going out of bounds
 		if (handPosition >= gameState.getTurnOwner().getHand().getCurr()) {
-			handPosition = gameState.getTurnOwner().getHand().getCurr() - 1;
+		handPosition = gameState.getTurnOwner().getHand().getCurr() - 1;
 		}
-
+		
 		//creates a placeholder for the clicked card
 		Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
 
@@ -109,8 +109,13 @@ public class CardClicked implements EventProcessor{
 					
 					Tile display= gameState.getBoard().enemyAvatarTile(gameState.getTurnOwner(), gameState);
 					BasicCommands.drawTile(out,display,2);
-					
-				}	//for spell targeting friendly unit
+				}	
+				else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==null && clickedCard.targetEnemy()==true) {
+					ArrayList<Tile> display= gameState.getBoard().enemyTile(gameState.getTurnOwner());
+					display.add(gameState.getBoard().enemyAvatarTile(gameState.getTurnOwner(), gameState));
+					GeneralCommandSets.drawBoardTiles(out, display, 2);	
+				}
+				//for spell targeting friendly unit
 				else if (AbilityToUnitLinkage.UnitAbility.get(""+clickedCard.getCardname()).get(0).getTargetType()==Monster.class && clickedCard.targetEnemy()==false){
 					
 					ArrayList<Tile> display= gameState.getBoard().friendlyTile(gameState.getTurnOwner());
