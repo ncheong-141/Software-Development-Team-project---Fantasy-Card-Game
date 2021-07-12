@@ -215,8 +215,8 @@ public class BasicObjectBuilders {
 			if(p instanceof HumanPlayer) {
 				unit.setName("Human Avatar");
 			} else {
-				unit.setName("AI Avatar");
-				unit.setCooldown(true);
+				unit.setName("Bob");
+				unit.toggleCooldown();
 			}
 			
 			return unit;
