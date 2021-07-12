@@ -141,9 +141,10 @@ public class ComputerPlayerTurn {
 				// Wait between action types
 				waitForActionsToComplete();
 
-				g.computerEnd();
 			}
-
+			
+			// End turn
+			g.computerEnd();
 		}
 
 		/** Helper methods **/
