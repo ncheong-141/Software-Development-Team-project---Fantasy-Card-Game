@@ -40,6 +40,10 @@ public class EndTurnClicked implements EventProcessor{
 		if (gameState.getTurnOwner() == gameState.getPlayerTwo()) {
 			ComputerPlayerTurn compTurn = new ComputerPlayerTurn(out, gameState);
 			compTurn.processComputerActions();
+			// Update player stats on new human player turn
+			System.out.println("About to update the player stats after comp player turn");
+			GeneralCommandSets.updatePlayerStats(out, gameState);
+			System.out.println(gameState.getTurnOwner() + " has " + gameState.getTurnOwner().getMana() + "mana");
 		}
 
 		
@@ -54,6 +58,8 @@ public class EndTurnClicked implements EventProcessor{
 
 
 		gameState.emptyMana(); 										// Empty mana for player who ends the turn
+		GeneralCommandSets.updatePlayerStats(out, gameState);
+		System.out.println(gameState.getTurnOwner() + " has " + gameState.getTurnOwner().getMana() + "mana");
 		gameState.deselectAllEntities();								// Deselect all entities
 		GeneralCommandSets.boardVisualReset(out, gameState);  	// Visual rest
 
@@ -76,6 +82,8 @@ public class EndTurnClicked implements EventProcessor{
 		gameState.setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
 		gameState.turnChange(); 				// turnOwner exchanged	
 		gameState.giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
+		GeneralCommandSets.updatePlayerStats(out, gameState);
+		System.out.println(gameState.getTurnOwner() + " has " + gameState.getTurnOwner().getMana() + "mana");
 		//gameState.toCoolDown(); 				// Switch avatars status for current turnOwner
 		gameState.setMonsterCooldown(false);
 
@@ -100,10 +108,7 @@ public class EndTurnClicked implements EventProcessor{
 			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
 			showNewCard(out,gameState);
 			gameState.endTurnStaticChange();
-
-	
 		}	
-
 		
 	
 	
@@ -123,6 +128,7 @@ public class EndTurnClicked implements EventProcessor{
 		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
 		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
 	}
+	
 }
 
 
