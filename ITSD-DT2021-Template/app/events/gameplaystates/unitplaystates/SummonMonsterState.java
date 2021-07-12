@@ -82,7 +82,11 @@ public class SummonMonsterState implements IUnitPlayStates {
 			int oldHandSize =  context.getGameStateRef().getTurnOwner().getHand().getHandList().size(); 	// How many UI cards to delete
 
 			// Remove card
+			System.out.println("Removing card: " + context.getGameStateRef().getTurnOwner().getHand().getCardFromHand(cardIndexInHand).getCardname());
 			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
+			for(Card c : context.getGameStateRef().getTurnOwner().getHand().getHandList()) {
+				System.out.println("id: " + c.getId() + " name " + c.getCardname());
+			}
 			
 			// Only update Hand for Human player
 			if (context.getGameStateRef().getTurnOwner() instanceof HumanPlayer) {
