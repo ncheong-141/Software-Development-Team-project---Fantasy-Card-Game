@@ -64,9 +64,6 @@ public class ComputerPlayerTurn {
 			AIUnitStateController controller = new AIUnitStateController(out, g);
 			compPlayer.setHPBenchMark(10);
 
-			
-			g.getComputerAvatar().setName("bob");
-
 
 			ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
 
