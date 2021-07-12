@@ -31,46 +31,14 @@ public class ComputerPlayerTurn {
 
 		this.AIthread = new Thread(new RunComputerTurnOnThread(out, g)); 
 	}
-	
+
 	
 	public void processComputerActions() {
-
-<<<<<<< HEAD
-	public void processComputerActions(ActorRef out, GameState g) {
-		
-		ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
-		ComputerPlayer compPlayer = pl2;
-		AIUnitStateController controller = new AIUnitStateController(out, g);
-		compPlayer.setHPBenchMark(10);
-		
-		
-		g.getComputerAvatar().setName("bob");
-		
-		
-		
-		ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
-		
-		System.out.println("=====================AI turn: computing cards=======================");
-		cardsToPlay = compPlayer.playCards(g.getBoard());
-		
-		if (!cardsToPlay.isEmpty() && cardsToPlay != null) {
-			
-			for (ComputerInstruction cI : cardsToPlay) {
-				System.out.println(cI);
-				
-				  if (cI.getCard() == null || cI.getTargetTile() == null) continue; 
-				  else { 
-					  System.out.println("get class: " + cI.getCard().getClass().getName());
-					  System.out.println("get associated class: " + cI.getCard().getAssociatedClass().getName());
-					  if  (cI.getCard().getAssociatedClass() == Spell.class) controller.spellCast(cI.getCard(), cI.getTargetTile()); 
-					  else { controller.summonMonster(cI.getCard(), cI.getTargetTile());
-				  try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();} } }
-				 
-=======
+	
 		/** Run AI on thread to allow for waiting for executions to finish **/
 		AIthread.start();
 	}
->>>>>>> ce9f658ededa65a165b2e217e0b7caefb7ce9d99
+
 
 
 	/** Inner class **/
