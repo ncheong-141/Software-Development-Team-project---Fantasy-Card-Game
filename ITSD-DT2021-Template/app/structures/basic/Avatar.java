@@ -39,13 +39,28 @@ public class Avatar extends Monster {
 	public boolean defend(int d) {
 		if(this.HP - d <= 0) {
 			this.HP = 0;
-			this.getOwner().loseHealth(this.HP);
+			this.getOwner().setHealth(this.HP);
 			return false;
 		} else {
 			this.HP -= d;
-			this.getOwner().loseHealth(this.HP);
+			this.getOwner().setHealth(this.HP);
 			return true;
 		}
+	}
+	
+	// Override monster heal
+	@Override
+	public boolean heal(int h) {
+		if(this.HP == this.maxHP)	{	return false;	}	
+		if(this.HP + h > this.maxHP) {
+			this.HP = this.maxHP;
+			this.getOwner().setHealth(h);
+		}
+		else {
+			this.HP += h;
+			this.getOwner().setHealth(h);
+		}
+		return true;
 	}
 	
 }
