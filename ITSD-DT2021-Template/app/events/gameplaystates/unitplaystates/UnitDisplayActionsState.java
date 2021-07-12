@@ -127,6 +127,7 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 			
 	}
 
+	// Handles the display of action tiles for a unit impaired by ability activations
 	private boolean abilityAdjustedDisplay(GameplayContext context, Monster newlySelectedUnit) {
 		// Draw out only playable tiles due to external factors such as abilities
 		ArrayList<Tile> displayMoveableTiles = new ArrayList<Tile>(10); 
