@@ -36,11 +36,11 @@ public class Avatar extends Monster {
 	public boolean defend(int d) {
 		if(this.HP - d <= 0) {
 			this.HP = 0;
-			this.getOwner().setHealth(this.HP);
+			this.getOwner().loseHealth(this.HP);
 			return false;
 		} else {
 			this.HP -= d;
-			this.getOwner().setHealth(this.HP);
+			this.getOwner().loseHealth(this.HP);
 			return true;
 		}
 	}
