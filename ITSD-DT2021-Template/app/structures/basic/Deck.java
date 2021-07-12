@@ -7,18 +7,24 @@ import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
 public class Deck{//class used to create and manage player and ai decks
+
+
 	private ArrayList<Card> cardList;// array of card objects that comprise the deck
-	
+
 	public Deck() { //constructor for deck
 		this.cardList = new ArrayList<Card>();
 	}
-	
+
+	// Intialise deck for player 1
 	public void deckOne() {// creates an instance of the human player deck
+
+		// Card reference container 
 		Card card;
-		Unit unit;
-		int start=2;//takes into account 0,1 being reserved for avatar ids
-		
-		
+
+		// Takes into account 0,1 being reserved for avatar ids
+		int start=2;
+
+
 		String[] cardConfigNames = {// list of cards in player deck
 				StaticConfFiles.c_azure_herald,
 				StaticConfFiles.c_azurite_lion,
@@ -39,29 +45,36 @@ public class Deck{//class used to create and manage player and ai decks
 				StaticConfFiles.u_ironcliff_guardian,
 				StaticConfFiles.u_pureblade_enforcer,
 				StaticConfFiles.u_silverguard_knight};
+
+		// Number of monsters and spells in the deck
 		int monsters= unitConfigNames.length;
 		int spells= cardConfigNames.length-unitConfigNames.length;
-		
-		
-		for (int i=0;i< cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
+
+		// Cycles through the list and creates two instances of each card
+		for (int i=0;i< cardConfigNames.length-spells; i++) {
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+monsters+start, Card.class);
 			cardList.add(card);
-			}
-		for(int j=cardConfigNames.length-spells; j<cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
+		}
+		// Cycles through spells in list and creates cards for each
+		for(int j=cardConfigNames.length-spells; j<cardConfigNames.length; j++) {
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+monsters+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+monsters+spells+start, Card.class);
 			cardList.add(card);
 		}
-		}
-		
+	}
+
+	// Initalise deck for player 2
 	public void deckTwo() {// creates AI player deck
+
+		// Card reference container 
 		Card card;
-		Unit unit;
-		int start=2;//takes into account 0,1 being reserved for avatar ids
-		
+
+		// Takes into account 0,1 being reserved for avatar ids
+		int start=2;
+
 		String[] cardConfigNames= {//list of cards in AI player deck
 				StaticConfFiles.c_blaze_hound,
 				StaticConfFiles.c_bloodshard_golem,
@@ -85,28 +98,28 @@ public class Deck{//class used to create and manage player and ai decks
 		int monsters= unitConfigNames.length;
 		int spells= cardConfigNames.length-unitConfigNames.length;
 		int deckLength= cardConfigNames.length*2;
-		
+
 		for (int i=0; i<cardConfigNames.length-spells; i++) {// cycles through the list and creates two instances of each card
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i], i+deckLength+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[i], unitConfigNames[i],i+deckLength+monsters+start, Card.class);
 			cardList.add(card);
-			}
+		}
 		for(int j=cardConfigNames.length-spells; j<cardConfigNames.length; j++) {//cycles through spells in list and creates cards for each
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+deckLength+monsters+start, Card.class);
 			cardList.add(card);
 			card = BasicObjectBuilders.loadCard(cardConfigNames[j],j+deckLength+monsters+spells+start, Card.class);
 			cardList.add(card);
 		}
-		
-		}
-		
-	public void delCard(int i){// removes card from the deck and corresponding unit
-		cardList.remove(i);
-		//unitDeck.remove(i);
+
 	}
-	
-	
+
+	// removes card from the deck and corresponding unit
+	public void delCard(int i){
+		cardList.remove(i);
+	}
+
+	// Shuffles deck
 	public void shuffleDeck() {
 		Collections.shuffle(cardList);
 	}

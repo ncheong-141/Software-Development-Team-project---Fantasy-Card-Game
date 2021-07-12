@@ -63,73 +63,70 @@ public void processEvent(ActorRef out, GameState gameState, JsonNode message) {
 		/**===========================**/			
 	}
 	
-	private static void boardAvatarSetUp(ActorRef out, GameState g, JsonNode message) {
+	private static void boardAvatarSetUp(ActorRef out, GameState gameState, JsonNode message) {
 
+		// Set board reference
+		Board board = gameState.getBoard();
 		
-		Board board = g.getBoard();
-		
+		// Draw the board
 		for (int i = 0; i<board.getGameBoard().length; i++) {
 			for (int k = 0; k<board.getGameBoard()[0].length; k++) {
 				BasicCommands.drawTile(out, board.getGameBoard()[i][k], 0);
 			}
-			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+			GeneralCommandSets.threadSleep();
 		}
+		GeneralCommandSets.threadSleep();
 		
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		Avatar humanAvatar = g.getHumanAvatar();
-		Avatar computerAvatar = g.getComputerAvatar();
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		// Set up avatar references
+		Avatar humanAvatar = gameState.getHumanAvatar();
+		Avatar computerAvatar = gameState.getComputerAvatar();
+		GeneralCommandSets.threadSleep();
 		
 	
-		//setting avatars' starting position
-		Tile tOne = g.getBoard().getTile(1, 2);
-		Tile tTwo = g.getBoard().getTile(7, 2);
+		// Setting avatars' starting position
+		Tile tOne = gameState.getBoard().getTile(1, 2);
+		Tile tTwo = gameState.getBoard().getTile(7, 2);
 		humanAvatar.setPositionByTile(tOne);
 		computerAvatar.setPositionByTile(tTwo);
 
-		//drawing avatarts on the board
+		// Drawing avatarts on the board
 		BasicCommands.drawUnit(out, humanAvatar, tOne);
 		tOne.addUnit(humanAvatar);
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep();
 		BasicCommands.setUnitAttack(out, humanAvatar, humanAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, humanAvatar, humanAvatar.getHP());
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}				
+		GeneralCommandSets.threadSleep();
 				
 		BasicCommands.drawUnit(out, computerAvatar, tTwo);	
 		tTwo.addUnit(computerAvatar);
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		GeneralCommandSets.threadSleep();
 		BasicCommands.setUnitAttack(out, computerAvatar, computerAvatar.getAttackValue());
 		BasicCommands.setUnitHealth(out, computerAvatar, computerAvatar.getHP());
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}	
-		
+		GeneralCommandSets.threadSleep();		
 	}
 	
-	private static void playerCardSetUp(ActorRef out, GameState g, JsonNode message) {
+	private static void playerCardSetUp(ActorRef out, GameState gameState, JsonNode message) {
 	
 		// Set mana for first turn
-		g.giveMana();
+		gameState.giveMana();
 		
-		BasicCommands.setPlayer1Health(out, g.getPlayerOne());
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		// Set player stats
+		BasicCommands.setPlayer1Health(out, gameState.getPlayerOne());
+		GeneralCommandSets.threadSleep();
+		BasicCommands.setPlayer1Mana(out, gameState.getPlayerOne());
+		GeneralCommandSets.threadSleep();
 		
-		BasicCommands.setPlayer1Mana(out, g.getPlayerOne());
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		BasicCommands.setPlayer2Health(out, g.getPlayerTwo());
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
-		
-		BasicCommands.setPlayer2Mana(out, g.getPlayerTwo());
-		try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+		BasicCommands.setPlayer2Health(out, gameState.getPlayerTwo());
+		GeneralCommandSets.threadSleep();	
+		BasicCommands.setPlayer2Mana(out, gameState.getPlayerTwo());
+		GeneralCommandSets.threadSleep();
 		
 		int i = 0;
-		
 		//showing human player's hand
-		for (Card c : g.getTurnOwner().getHand().getHandList()) {
+		for (Card c : gameState.getTurnOwner().getHand().getHandList()) {
 			BasicCommands.drawCard(out, c, i, 0);
 			i++;
 		}
-
 	}
 	
 

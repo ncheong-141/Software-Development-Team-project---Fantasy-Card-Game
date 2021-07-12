@@ -9,7 +9,7 @@ import structures.basic.Monster;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-/*
+/**
  * This class holds the information about the relationship between Units (Monsters) and Spells and what abilities they possess. 
  * Containing data here as dont want to edit the JSON files. 
  */
@@ -27,7 +27,7 @@ public class AbilityToUnitLinkage {
 		/* Initiailising abilities with String name keys*/
 		// Can maybe grab this info from a file instead if dont want to hard code it in. 
 		
-		// For Abilities constructor (execution targets enemies?, Class type of target, EffectAnimation)
+		// For Abilities constructor (execution targets enemies, Class type of target, EffectAnimation)
 		
 		
 		/*** Spells ***/

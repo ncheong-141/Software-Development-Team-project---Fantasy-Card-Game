@@ -32,6 +32,7 @@ public class GameplayContext {
 	private boolean						combinedActive;		// Variable to indicate multiple Unit states will be processed
 	public ActorRef 					out; 				// Front end reference			
 	
+	
 	// Constructor
 	public GameplayContext(GameState gameState, ActorRef out) {
 		
