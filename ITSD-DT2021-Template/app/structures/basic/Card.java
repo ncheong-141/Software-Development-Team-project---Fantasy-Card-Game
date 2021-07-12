@@ -46,7 +46,7 @@ public class Card implements Comparable<Card> {
 
 
 	// Shortcut methods for ability access
-	//checks whether card targets spell or enemy
+	// checks whether card targets spell or enemy
 	public boolean targetEnemy() {
 		boolean result=false;
 		for (Ability a: this.abilityList) {
