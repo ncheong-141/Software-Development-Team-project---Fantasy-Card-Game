@@ -11,7 +11,7 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 	
 	/*
 	 * 		State class for handling combined move and attack actions. Manages the flow of
-	 * 		accessing states sequentially and required unit and action checks.
+	 * 		accessing states sequentially, changes in tile destination, and required unit and action checks.
 	 */
 	
 	
