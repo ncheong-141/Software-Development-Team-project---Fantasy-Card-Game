@@ -82,7 +82,7 @@ public class GameState {
 	public GameState() {
 
 		/* Set attributes */ 
-		turnCount = 0;											// Turn count 
+		turnCount = 1;											// Turn count 
 		playerDead = false;										// Set boolean for checking if game should still be played
 		tileAdjustedRangeContainer = new ArrayList<Tile>(); 	// AdjustedRange container to allow for external factors such as Abilities to affect movement/attack range
 
@@ -278,7 +278,6 @@ public class GameState {
 
 		if (isDeckEmpty()) { 
 			gameOver(); 
-			return;
 		}
 
 		// If there are cards left in deck, get a card from deck (back end)
@@ -291,11 +290,17 @@ public class GameState {
 	public void endTurnStaticChange() {
 
 		emptyMana(); 				// Empty mana for player who ends the turn
+		GeneralCommandSets.threadSleep();
 		deselectAllEntities();		// Deselect all entities
+		GeneralCommandSets.threadSleep();
 		setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
+		GeneralCommandSets.threadSleep();
 		turnChange(); 				// turnOwner exchanged	
+		GeneralCommandSets.threadSleep();
 		giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
+		GeneralCommandSets.threadSleep();
 		setMonsterCooldown(false);
+		GeneralCommandSets.threadSleep();
 
 	}
 
