@@ -21,6 +21,7 @@ Major development choices
 
 -Event states
 -Explain AI partitioning
+-Lock/unlock mechanisms
 
 Assumptions made in code
 
