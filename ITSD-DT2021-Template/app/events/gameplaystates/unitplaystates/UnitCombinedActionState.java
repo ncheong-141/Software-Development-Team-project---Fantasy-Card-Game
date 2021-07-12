@@ -33,11 +33,13 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		this.enemyTarget = targetTile; 
 	}
 	
+	/*** State method ***/
 	
 	public void execute(GameplayContext context) {
 	
 		System.out.println("In UnitCombinedActionSubState.");
-		
+				
+		// Lock the user out of interfering interaction whilst state activity occurs
 		/**===========================================**/
 		context.getGameStateRef().userinteractionLock();
 		/**===========================================**/
