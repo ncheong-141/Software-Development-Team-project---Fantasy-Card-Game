@@ -15,14 +15,16 @@
 ### Yufen Chen
     2502089C@student.gla.ac.uk
 
-Brief overview of game
+#### Brief overview of game
 
-Major development choices
+
+
+#### Major development choices
 
 -Event states
 -Explain AI partitioning
 -Lock/unlock mechanisms
 
-Assumptions made in code
+#### Assumptions made in code
 
-- Pureblade Enforcer spellthief on enemy activation clarification
+- Areas of the specification documents make reference to an ability ("SpellThief") that activates upon spell cast - but have stated in separate instances they activate on generic spell cast or only enemy spell cast. 
