@@ -90,7 +90,7 @@ public class CastSpellState implements IUnitPlayStates {
 
 			// Remove card
 			context.getGameStateRef().getTurnOwner().getHand().removeCard(cardIndexInHand);
-			GeneralCommandSets.drawUnitWithStats(context.out, targetTile.getUnitOnTile(), targetTile.getUnitOnTile().getPosition().getTile(context.getGameStateRef().getBoard()));
+			GeneralCommandSets.redrawAllUnitStats(context.out, context.getGameStateRef());
 
 
 			// Only update Hand for Human player

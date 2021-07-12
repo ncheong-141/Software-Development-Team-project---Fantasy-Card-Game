@@ -78,6 +78,8 @@ public class GeneralCommandSets {
 	public static void drawUnitWithStats(ActorRef out, Unit unit, Tile onTile) {
 		
 		// Draw the unit on the tiles
+		BasicCommands.deleteUnit(out, unit);
+		GeneralCommandSets.threadSleep(); 
 		BasicCommands.drawUnit(out, unit, onTile);
 		GeneralCommandSets.threadSleep(); 
 		

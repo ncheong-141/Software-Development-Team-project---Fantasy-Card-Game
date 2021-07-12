@@ -150,7 +150,7 @@ public class ComputerPlayerTurn {
 		public void waitForActionsToComplete() {
 
 			// Wait between action types
-			while (g.getUnitMovingFlag() && g.userinteractionLocked()) {
+			while (g.getUnitMovingFlag() || g.userinteractionLocked()) {
 				GeneralCommandSets.threadSleepLong();
 			}
 		}

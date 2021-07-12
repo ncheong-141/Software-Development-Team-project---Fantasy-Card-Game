@@ -53,11 +53,6 @@ public class CardClicked implements EventProcessor{
 		// Hand position the user has clicked 
 		int handPosition = message.get("position").asInt();
 
-		// Check incase the UI is to slow to update and you click a UI Card before it is removed
-		if (handPosition >= gameState.getTurnOwner().getHand().getCurr()) {
-			handPosition = gameState.getTurnOwner().getHand().getCurr() - 1;
-		}
-
 		//creates a placeholder for the clicked card
 		Card clickedCard = gameState.getTurnOwner().getHand().getCardFromHand(handPosition);
 

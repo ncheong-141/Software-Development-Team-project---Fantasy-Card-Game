@@ -86,20 +86,20 @@ public class EndTurnClicked implements EventProcessor{
 		gameState.setMonsterCooldown(false);					// Set all monster cooldowns to false
 
 
-//		// If there are cards left in deck, get a card from deck (back end)
-//		if(gameState.isHumanCard()) {
-//			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
-//			showNewCard(out,gameState);
-//			gameState.endTurnStaticChange();
-//		}	
+		// If there are cards left in deck, get a card from deck (back end)
+		if(gameState.isHumanCard()) {
+			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
+			showNewCard(out,gameState);
+			gameState.endTurnStaticChange();
+		}	
 	}
 
 	//display all cards after new one added
-//	private void showNewCard(ActorRef out, GameState gameState) {
-//		ArrayList<Card> card = gameState.getTurnOwner().getDeck().getCardList();
-//		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
-//		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
-//	}
+	private void showNewCard(ActorRef out, GameState gameState) {
+		ArrayList<Card> card = gameState.getTurnOwner().getDeck().getCardList();
+		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
+		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
+	}
 	
 }
 
