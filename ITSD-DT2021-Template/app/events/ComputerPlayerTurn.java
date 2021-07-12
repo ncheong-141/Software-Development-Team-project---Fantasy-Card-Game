@@ -27,6 +27,8 @@ public class ComputerPlayerTurn {
 	// Attribute
 	Thread AIthread = new Thread(); 
 
+	
+	// Constructor
 	public ComputerPlayerTurn(ActorRef out, GameState g) {
 
 		this.AIthread = new Thread(new RunComputerTurnOnThread(out, g)); 
