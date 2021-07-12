@@ -50,11 +50,11 @@ public class BasicObjectBuilders {
 	
 	// ObjectBuilder for Monster Unit cards; mapper uses the cardConfig file to make the Card,
 	// and the resulting Card object stores the unitConfig file for later use in summoning
-	public static Card loadCard(String cardConfigFile, String unitConfig, int id, Class<? extends Card> classtype) {
+	public static Card loadCard(String cardConfigFile, String unitConfigFile, int id, Class<? extends Card> classtype) {
 		try {
 			Card card = mapper.readValue(new File(cardConfigFile), classtype);
 			card.setId(id);
-			card.setConfigFile(unitConfig);
+			card.setConfigFile(unitConfigFile);
 			
 			// Set ability data to be held in card for reference from AI etc
 			if(AbilityToUnitLinkage.UnitAbility.containsKey(card.getCardname())) {
@@ -73,7 +73,7 @@ public class BasicObjectBuilders {
 	}
 	
 	// Alternative Builder for non-unit cards, overloaded method signature for easy use
-	// Config file here stores the card's config file (for Spell card use)
+	// Config file here stores the card's config file (for Spell casting use)
 	public static Card loadCard(String cardConfigFile, int id, Class<? extends Card> classtype) {
 		try {
 			Card card = mapper.readValue(new File(cardConfigFile), classtype);
@@ -85,7 +85,7 @@ public class BasicObjectBuilders {
 				card.setAbilityList(AbilityToUnitLinkage.UnitAbility.get(card.getCardname()));
 			}
 			
-			// Set associated class type - Spell only for this Builder
+			// Set associated class type -- Spell only for this Builder
 			card.setAssociatedClass(Spell.class);
 			
 			return card;
@@ -143,11 +143,12 @@ public class BasicObjectBuilders {
 			
 			// Set monster attributes from reference Card info
 			mUnit.setId(statsRef.getId());
-			mUnit.setName(statsRef.getCardname());				// Check mapper doesn't do this?
+			mUnit.setName(statsRef.getCardname());				
 			mUnit.setHP(statsRef.getBigCard().getHealth());
 			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
 			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
 
+			// Set Player owner
 			mUnit.setOwner(p);
 			
 			System.out.println("mUnit has name " + mUnit.getName());
@@ -176,35 +177,7 @@ public class BasicObjectBuilders {
 		return null;
 	}
 	
-	// Alt method signature with no Player, currently in place for easier development (final submission will use Player signature)
-	public static Monster loadMonsterUnit(String configFile, Card statsRef, Class<? extends Monster> classType) {
-
-		try {
-			Monster mUnit = mapper.readValue(new File(configFile), classType);
-			
-			// Set monster attributes from reference Card
-			mUnit.setId(statsRef.getId());
-			
-			mUnit.setName(statsRef.getCardname());
-			mUnit.setHP(statsRef.getBigCard().getHealth());
-			mUnit.setMaxHP(statsRef.getBigCard().getHealth());
-			mUnit.setAttackValue(statsRef.getBigCard().getAttack());
-			
-//			mUnit.setOwner(p);
-			
-			System.out.println("mUnit has ID " + mUnit.getId());
-			
-			return mUnit; 
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		
-		}
-		
-		return null;
-	}
-	
-	
+	// Adjusted Avatar ObjectBuilder to set ID/Name/Owner immediately after constructor/during construction
 	public static Avatar loadAvatar(String configFile, int id, Player p, Class<? extends Avatar> classType) {
 		
 		try {
@@ -215,7 +188,7 @@ public class BasicObjectBuilders {
 			if(p instanceof HumanPlayer) {
 				unit.setName("Human Avatar");
 			} else {
-				unit.setName("Bob");
+				unit.setName("Bob");	// AI Avatar
 				unit.toggleCooldown();
 			}
 			
