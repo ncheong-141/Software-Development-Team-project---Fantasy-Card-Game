@@ -42,10 +42,17 @@ public class EndTurnClicked implements EventProcessor{
 			ComputerPlayerTurn compTurn = new ComputerPlayerTurn(out, gameState);
 			compTurn.processComputerActions();
 			
-			// Update player stats on new human player turn
-			GeneralCommandSets.updatePlayerStats(out, gameState);
-		}
+			if(gameState.getTurnOwner().getDeck().getCardList().isEmpty() && gameState.getTurnOwner() == gameState.getPlayerTwo()) {
+				System.out.println("Computer lose");
+				BasicCommands.addPlayer1Notification(out, "You win!", 2);
+				gameState.gameOver();
+				return;
+			}
+			
+			BasicCommands.addPlayer1Notification(out, "Your move!", 2);
+			GeneralCommandSets.threadSleep();
 
+		}
 		
 		/**===========================**/
 		gameState.userinteractionUnlock();
@@ -58,7 +65,9 @@ public class EndTurnClicked implements EventProcessor{
 
 		/** End turn procedure **/
 		gameState.emptyMana(); 										// Empty mana for player who ends the turn
+		GeneralCommandSets.threadSleep();
 		GeneralCommandSets.updatePlayerStats(out, gameState);		// Update player stats
+		GeneralCommandSets.threadSleep();
 		gameState.deselectAllEntities();							// Deselect all entities
 		GeneralCommandSets.boardVisualReset(out, gameState);  		// Visual rest of the board
 
@@ -80,11 +89,16 @@ public class EndTurnClicked implements EventProcessor{
 		}
 
 		gameState.setMonsterCooldown(true);						// Hard set all monsters on turn enders turn to cooldown
+		GeneralCommandSets.threadSleep();
 		gameState.turnChange(); 								// turnOwner exchanged	
+		GeneralCommandSets.threadSleep();
 		gameState.giveMana();			 						// Give turnCount mana to the player in the beginning of new turn
+		GeneralCommandSets.threadSleep();
 		GeneralCommandSets.updatePlayerStats(out, gameState);	// Update player states
+		GeneralCommandSets.threadSleep();
 		gameState.setMonsterCooldown(false);					// Set all monster cooldowns to false
-
+		GeneralCommandSets.threadSleep();
+		
 		// Debug mode
 		if (gameState.isTwoPlayerMode()) {
 			// redraw hand to humanplayer
@@ -93,21 +107,23 @@ public class EndTurnClicked implements EventProcessor{
 			GeneralCommandSets.drawCardsInHand(out, gameState, oldCardListSize, gameState.getTurnOwner().getHand().getHandList());
 		}
 			 
-		// If there are cards left in deck, get a card from deck (back end)
-		if(gameState.isHumanCard()) {
-			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
-			showNewCard(out,gameState);
-			gameState.endTurnStaticChange();
-		}	
+//		// If there are cards left in deck, get a card from deck (back end)
+//		if(gameState.isHumanCard()) {
+//			gameState.getTurnOwner().getHand().drawCard(gameState.getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
+//			showNewCard(out,gameState);
+//			gameState.endTurnStaticChange();
+//		}
+		
+		
 	}
 
-	//display all cards after new one added
-	private void showNewCard(ActorRef out, GameState gameState) {
-		ArrayList<Card> card = gameState.getTurnOwner().getDeck().getCardList();
-		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
-		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
-	}
-	
+//	//display all cards after new one added
+//	private void showNewCard(ActorRef out, GameState gameState) {
+//		ArrayList<Card> card = gameState.getTurnOwner().getDeck().getCardList();
+//		int oldCardSize = (gameState.getTurnOwner().getHand().getHandList().size()) -1; //after get new one, get current handsize -1 for old size 
+//		GeneralCommandSets.drawCardsInHand(out, gameState, oldCardSize, card); //refresh hand ,show with one card added	
+//	}
+//	
 }
 
 
