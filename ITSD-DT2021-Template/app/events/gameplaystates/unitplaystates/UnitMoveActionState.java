@@ -2,23 +2,25 @@ package events.gameplaystates.unitplaystates;
 
 import java.util.ArrayList;
 
-import akka.actor.ActorRef;
-import commands.BasicCommands;
-import commands.GeneralCommandSets;
-import events.UnitMoving;
-import events.UnitStopped;
+import commands.*;
+import structures.basic.*;
 import events.gameplaystates.GameplayContext;
-import events.gameplaystates.tileplaystates.ITilePlayStates;
-import structures.GameState;
-import structures.basic.Monster;
-import structures.basic.Tile;
-import structures.basic.UnitAnimationType;
+
 
 public class UnitMoveActionState implements IUnitPlayStates {
 
+	/*
+	 * 		State class for handling unit movement from one tile to the other.
+	 * 		Manages checks for movement, ability activations, and updating internal
+	 * 		game locational info.
+	 */
+	
+	
 	/*** State attributes ***/
+	
 	private Tile currentTile; 
 	private Tile targetTile; 
+	
 	
 	/*** State constructor ***/
 	/* 
@@ -37,15 +39,17 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		
 		System.out.println("In UnitMoveActionSubState.");
 		
-
+		
+		// Lock the user out of interfering interaction whilst state activity occurs
 		/**===========================================**/
 		context.getGameStateRef().userinteractionLock();
 		/**===========================================**/
 		
+		// Load unit in context
 		context.setLoadedUnit(currentTile.getUnitOnTile());
 		if(context.getLoadedUnit() == null) {	System.out.println("Error, current tile has no unit.");	}
 		
-		// Perform unit move function
+		// Perform unit move method
 		System.out.println("Target tile is:" + targetTile);
 		unitMove(context); 
 		
@@ -57,6 +61,7 @@ public class UnitMoveActionState implements IUnitPlayStates {
 			//  Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 			
+			// Unlock after state activity complete
 			/**===========================================**/
 			context.getGameStateRef().userinteractionUnlock();
 			/**===========================================**/
@@ -64,8 +69,8 @@ public class UnitMoveActionState implements IUnitPlayStates {
 	}
 
 
-	// Helper method
 	
+	// Handles the process flow of movement checks between target tiles 
 	private void unitMove(GameplayContext context) {
 		
 		// Get frequently used objects
@@ -73,10 +78,8 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		ArrayList <Tile> actRange; 
 		ArrayList <Tile> moveRange = new ArrayList<Tile>();
 		
-		// Account for movement impairing debuffs
+		/***		Check for impaired movement range due to abilities (i.e. Provoke)		***/
 		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
-			
-			System.out.print("Here");
 			
 			// Act range calculate by abilities etc (external factors)
 			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
@@ -98,21 +101,16 @@ public class UnitMoveActionState implements IUnitPlayStates {
 		}
 
 		
-		System.out.println("Movement target tile is x: " + targetTile.getTilex() + ", y: " + targetTile.getTiley());
-
-		// If target tile is in movement range && monster can move, move there
-		System.out.println("MovesLeft: " + mSelected.getMovesLeft());
-		System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
-		
-
-		System.out.println("moveRange.contains(targetTile): " +  moveRange.contains(targetTile));
+		/***		Carry out movement and final checks		***/	
+		// If target tile is in movement range
 		if((!moveRange.isEmpty()) && moveRange.contains(targetTile)) {
 			
+			// If Monster move method is successful, per internal object checks
 			if (mSelected.move(targetTile)) {
 				System.out.println("MovesLeft: " + mSelected.getMovesLeft());
 				System.out.println("Monster on cooldown: " + mSelected.getOnCooldown());
 				
-				// Deselect movement range --- implement specific visual path display later
+				// Deselect movement range
 				GeneralCommandSets.drawBoardTiles(context.out, actRange, 0);
 				GeneralCommandSets.threadSleep();
 				// Redraw selected tile visual
@@ -124,10 +122,10 @@ public class UnitMoveActionState implements IUnitPlayStates {
 				targetTile.addUnit(mSelected);
 				mSelected.setPositionByTile(targetTile);
 				
-				// Loop until moveStopped trigger
+				// Set moving flag for tracking when movement is complete
 				context.getGameStateRef().setUnitMovingFlag(true);
 				
-				// Update front end, UnitAnimations could be moved to UnitMoving/Stopped
+				// Update front end
 				// Initiate move
 				BasicCommands.moveUnitToTile(context.out, mSelected, targetTile);
 				GeneralCommandSets.threadSleep();	

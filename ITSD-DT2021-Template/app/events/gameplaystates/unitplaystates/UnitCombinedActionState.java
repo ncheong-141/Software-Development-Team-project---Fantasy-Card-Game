@@ -1,17 +1,18 @@
 package events.gameplaystates.unitplaystates;
 
 import java.util.ArrayList;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 import commands.GeneralCommandSets;
 import events.gameplaystates.GameplayContext;
-import events.gameplaystates.tileplaystates.ITilePlayStates;
-import structures.GameState;
 import structures.basic.*;
 import structures.basic.abilities.*;
 
 public class UnitCombinedActionState implements IUnitPlayStates {
+	
+	/*
+	 * 		State class for handling combined move and attack actions. Manages the flow of
+	 * 		accessing states sequentially, changes in tile destination, and required unit and action checks.
+	 */
 	
 	
 	/*** State attributes ***/
@@ -32,51 +33,52 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		this.enemyTarget = targetTile; 
 	}
 	
+	/*** State method ***/
 	
 	public void execute(GameplayContext context) {
 	
 		System.out.println("In UnitCombinedActionSubState.");
-		
+				
+		// Lock the user out of interfering interaction whilst state activity occurs
 		/**===========================================**/
 		context.getGameStateRef().userinteractionLock();
 		/**===========================================**/
 		
-		// Check for selected unit abilities that do not require adjacency for attack
+		// Check for unit abilities that do not require adjacency to attack
 		if(currentTile.getUnitOnTile().getMonsterAbility() != null) {
 			for(Ability a : currentTile.getUnitOnTile().getMonsterAbility()) {
+				
+				// If attacking monster is a ranged attacker
 				if(a instanceof A_U_RangedAttacker) {
-					
 					// Attack from current tile
 					destination = currentTile; 
 					
-					System.out.println("Selected unit is a ranged attacker, can attack without moving.");
+					// Execute Attack state
 					IUnitPlayStates UnitAttackState = new UnitAttackActionState(destination, enemyTarget);
+					System.out.println("Ranged Attacker, calling AttackAction from header of CombinedAction...");
+					System.out.println("Destination " + destination);
 					UnitAttackState.execute(context);
 					break;
 				}
 			}
 		}
 			
-		// CombinedAction state controls state flow
+		// CombinedAction state controls state flow when active
 		context.setCombinedActive(true);
 		
-		// Build reference variables
+		// Build state reference variables
 		if(destination == null && (enemyTarget != null)) {		
 			System.out.println("enemyTarget is tile x: " + enemyTarget.getTilex() + ", y: " + enemyTarget.getTiley());	
 		}
 		
-		// Find and set a tile destination for selected unit movement
+		// Select a destination for moving consistently with method
 		unitDestinationSet(context); 
-		
 	
-		// Executing unit states on a different thread as the time between them is reliant on Unit Stopped (which runs on the same thread as the back end) 
-		// Cant ask main thread to wait either since it will block front end signals and need Unit stopped
+		// Executing unit states on a different thread as the time between them is reliant on UnitStopped (which runs on the same thread as the back end) 
+		// Can't ask main thread to wait since it will block front end signals and need UnitStopped message
 		Thread thread = new Thread(new ExecuteUnitStatesOnDifferentThread(context));
 		thread.start();
 		
-		/**=============================================**/
-		// No unlock as this is done by UnitStopped class
-		/**=============================================**/
 	}
 
 
@@ -91,12 +93,13 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 		
 		public void run() {
 			
-			// Execute unit states 
+			// Execute move state
 			IUnitPlayStates unitMoveState = new UnitMoveActionState(currentTile, destination);	
 			System.out.println("Calling MoveAction from CombinedAction...");
+			System.out.println("Destination " + destination);
 			unitMoveState.execute(context);
 			
-			// Wait for the Front end to give back a message (unit stopped)
+			// Wait for the Front end to finish (UnitStopped) before continuing
 			while (context.getGameStateRef().getUnitMovingFlag()) {
 				GeneralCommandSets.threadSleep();		
 			} 
@@ -118,31 +121,33 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			// Reset board visual (highlighted tiles)
 			GeneralCommandSets.boardVisualReset(context.out, context.getGameStateRef());
 			
-			// Unlock after the attack/counter attack
+			// Unlock after state activity complete
 			/**===========================================**/
 			context.getGameStateRef().userinteractionUnlock();
 			/**===========================================**/
 		}
 	}
 	
+	/* Method for selecting a destination tile for attacking unit to move to.
+	 * If no destination found, return false (boolean return for developer clarity).	*/
 	private boolean unitDestinationSet(GameplayContext context) {
+		
+		/***	Establish unit's available actions		***/
 		
 		// Retrieve frequently used data
 		Tile currentLocation = currentTile;
 		
-		// Selected unit's ranges
+		// Selected unit's movement and collective action ranges
 		ArrayList <Tile> actRange; 
 		ArrayList <Tile> moveRange = new ArrayList<Tile>();
 		
-		// Account for movement impairing debuffs
+		// Account for movement impairing debuffs (i.e. Provoke)
 		if (context.getGameStateRef().useAdjustedMonsterActRange()) {
 			
 			actRange = context.getGameStateRef().getTileAdjustedRangeContainer();
 			
 			for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
-				if (t.getUnitOnTile() == null) {
-					moveRange.add(t);
-				}
+				if (t.getUnitOnTile() == null) {	moveRange.add(t);	}
 			}
 		}
 		else {
@@ -151,48 +156,41 @@ public class UnitCombinedActionState implements IUnitPlayStates {
 			actRange.addAll(moveRange);
 		}
 
-		// Check enemy is in attack range (enemies are retrieved only in attack range of total actRange)
+		// Check enemy is in attack range (all action tiles are attackable)
 		if(!(actRange.contains(enemyTarget))) {	
 			System.out.println("Enemy is not in range.");
 			return false;
 		}
 		
 		/***	Find and set destination tile relative to enemy target	***/
-		// Establish tiles adjacent to enemy that are within movement range
 		
-		// Two tiles are adjacent when: tile1x - tile2x <=1 && tile1y - tile2y <= 1
-		// Get a movement range from enemy's position (encompasses attack range) -- needs to just be an adjacent Board method
+		// Get potential destination tiles adjacent to enemy && within movement range
 		ArrayList <Tile> temp = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
 		ArrayList <Tile> options = new ArrayList<Tile>(10); 
 		for(Tile t : temp) {
 			if(moveRange.contains(t)) {
 				options.add(t);
-				System.out.println("Option added: tile " + t.getTilex() + "," + t.getTiley());
 			}
 		}
-
-		// Establish tiles adjacent to enemy that are within movement range
-		// ArrayList <Tile> options = context.getGameStateRef().getBoard().adjTiles(enemyTarget);
 		
-		// Select a destination tile from options - prefer cardinal (NESW) direction over diagonal
+		// Select destination from options | first preference = cardinal direction from enemy (NESW)
 		// Check for cardinal and remove redundant tiles
 		for(Tile t : options) {
 			
-			// Check if there is a unit on any of the tiles 
+			// Remove if tile not available 
 			if (t.getUnitOnTile() != null) {
 				options.remove(t); 
 			}
 			else {
-//				// If total index difference of option and enemy is 1, tile is in cardinal direction relative to enemy
-//				if((Math.abs(enemyTarget.getTilex() - t.getTilex()) + (Math.abs(enemyTarget.getTiley() - t.getTiley()))) == 1) {
-//					destination = t;
-//					break;
-//				}
+				// If available tile is cardinal, designate it
+				if((Math.abs(enemyTarget.getTilex() - t.getTilex()) + (Math.abs(enemyTarget.getTiley() - t.getTiley()))) == 1) {
+					destination = t;
+					break;
+				}
 			}
 		}
 		
-		
-		// Otherwise, choose first option available and check if there is an option
+		// If no cardinals available, choose any first option available
 		if(options.size() > 0) {
 			destination = options.get(0);
 			return true;
