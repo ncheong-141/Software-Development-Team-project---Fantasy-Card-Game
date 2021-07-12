@@ -29,10 +29,17 @@ public class A_S_Truestrike implements Ability {
 	// Deal 2 damage to  an enemy Unit
 	public boolean execute(Monster targetMonster, GameState gameState) {
 		
-		// Reduce Monster HP by 2
-		targetMonster.defend(2);
-		
-		return true; 
+		// Check if the monster inputted is the correct type (Monster)
+		if (targetMonster.getClass() == targetType) {
+			// Reduce Monster HP by 2
+			targetMonster.defend(2);
+			
+			return true; 
+		}
+		else {
+			return false;
+		}
+
 	}
 	// ================================================================================
 	
