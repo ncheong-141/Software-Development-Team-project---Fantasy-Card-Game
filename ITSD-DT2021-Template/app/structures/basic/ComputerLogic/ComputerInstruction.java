@@ -39,7 +39,7 @@ public class ComputerInstruction {
 	
 	
 	public String toString() {
-		if (this.card == null) return "monster: " + actor.getName() + "at tile: (" + actor.getPosition().getTilex() + " - " + actor.getPosition().getTiley() + ") to tile " + targetTile;
-		else return "play card " + this.card.getCardname() + " on tile " + this.targetTile;
+		if (this.card == null) return "id:" + actor.getId() + "monster: " + actor.getName() + "at tile: (" + actor.getPosition().getTilex() + " - " + actor.getPosition().getTiley() + ") to tile " + targetTile;
+		else return "play card " +  " id: " + this.card.getId() + " " + this.card.getCardname() + " on tile " + this.targetTile;
 	}
 }

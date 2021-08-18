@@ -31,8 +31,10 @@ public class A_S_Truestrike implements Ability {
 		
 		// Reduce Monster HP by 2
 		targetMonster.defend(2);
-		
+
 		return true; 
+	
+
 	}
 	// ================================================================================
 	

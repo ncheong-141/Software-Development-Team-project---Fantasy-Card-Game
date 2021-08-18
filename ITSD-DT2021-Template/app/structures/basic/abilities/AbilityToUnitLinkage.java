@@ -4,35 +4,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import structures.basic.Avatar;
-import structures.basic.EffectAnimation;
 import structures.basic.Monster;
 import utils.BasicObjectBuilders;
 import utils.StaticConfFiles;
 
-/*
+/**
  * This class holds the information about the relationship between Units (Monsters) and Spells and what abilities they possess. 
- * Containing data here as dont want to edit the JSON files. 
+ * Containing data here as don't want to edit the JSON files. 
  */
 
 public class AbilityToUnitLinkage {
 
-	// Attributes. Hash map which contains a String for a key (Unit name, list of abilities the unit has) 
+	// HashMap contains a String for a key (Unit name, list of abilities the unit has) 
 	public static HashMap<String, ArrayList<Ability>> UnitAbility = new HashMap<String, ArrayList<Ability>>(); 
 
-	// Initialise the linkage data between Units and abilities 
-	// If can read a full list of abilities from json, can automate this. 
+	
+	// Initialise the linkage data between Unit names and their abilities 
 	public static void initialiseUnitAbilityLinkageData() {
 		
 
-		/* Initiailising abilities with String name keys*/
-		// Can maybe grab this info from a file instead if dont want to hard code it in. 
+		/* Initialising abilities with String name keys*/
+		// Can maybe grab this info from a file instead if don't want to hard code it in. 
 		
-		// For Abilities constructor (execution targets enemies?, Class type of target, EffectAnimation)
+		// For Abilities constructor (execution targets enemies, Class type of target, EffectAnimation)
 		
 		
 		/*** Spells ***/
 		// Deck 1
-		UnitAbility.put("Truestrike", 			constructArrayListAbility(	new A_S_Truestrike(true,Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation))))); 	
+		UnitAbility.put("Truestrike", 			constructArrayListAbility(	new A_S_Truestrike(true,null, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_inmolation))))); 	
 		UnitAbility.put("Sundrop Elixir", 		constructArrayListAbility(	new A_S_SundropElixir(false, Monster.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));
 		// Deck 2
 		UnitAbility.put("Staff of Y'Kir'", 		constructArrayListAbility(	new A_S_StaffofYkir(false, Avatar.class, (BasicObjectBuilders.loadEffect(StaticConfFiles.f1_buff)))));	
@@ -71,9 +70,9 @@ public class AbilityToUnitLinkage {
 	/* Helper methods */
 	
 	// For constructing an array list to input into the HashMap 	
-	private static ArrayList<Ability> constructArrayListAbility(Ability ... args){
+	private static ArrayList<Ability> constructArrayListAbility(Ability ... abs){
 		ArrayList<Ability> abilityContainer = new ArrayList<Ability>();
-		for(Ability a : args) {
+		for(Ability a : abs) {
 			abilityContainer.add(a);
 		}
 		return abilityContainer; 

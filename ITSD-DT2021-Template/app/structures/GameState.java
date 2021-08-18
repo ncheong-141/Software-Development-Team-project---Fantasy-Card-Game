@@ -41,21 +41,21 @@ public class GameState {
 	private int			 	turnCount;			// Tracker variable for the current number of turns 
 	private static boolean 	playerDead;			// Boolean variable which is set when either avatar is defeated
 	private Player 			turnOwner;			// The current turn owner of the game, refered to for certain checks such as having permission to click (the human player should not be able to select anything during the AI turn) 
-	
+
 	private ArrayList<Tile> tileAdjustedRangeContainer;		// Container array of tiles which store tiles to be highlight due to Abilities or anything else that requires distinct highlighting
 
-	private boolean 		locked;
-	private boolean			unitMovingFlag; 
+	private boolean 		locked;				// User interface lock flag to control how the UI is interacted with
+	private boolean			unitMovingFlag; 	// Unit moving flag to stop unit attacking while moving
 
-	
-	private Deck deckPlayerOne;
-	private Deck deckPlayerTwo;	
-	
+	private Deck 			deckPlayerOne;		// Player 1 deck		
+	private Deck 			deckPlayerTwo;		// player 2 deck
+
 	/* Debug/two player mode */
 	private boolean 		twoPlayerMode;
 
+
 	/*
-	 * GameState methods:
+	 * 		GameState methods:
 	 * 		GameState()
 	 * 		getTurnCount()	/ setTurnCount()
 	 * 		isPlayerDead()	/ setPlayerDead()
@@ -80,34 +80,32 @@ public class GameState {
 
 	/** Constructor **/
 	public GameState() {
-				
-		/* Set attributes */ 
-		turnCount = 1;
-		playerDead = false;
 
-		
-		tileAdjustedRangeContainer = new ArrayList<Tile>(); 
-		
-		// Flags
-		locked = true; 
+		/* Set attributes */ 
+		turnCount = 1;											// Turn count 
+		playerDead = false;										// Set boolean for checking if game should still be played
+		tileAdjustedRangeContainer = new ArrayList<Tile>(); 	// AdjustedRange container to allow for external factors such as Abilities to affect movement/attack range
+
+		// Conditional flags
+		locked = false; 				 
 		unitMovingFlag = false; 
-		
+
 		// Initialising ability to unit linkage data to reference whenever loading units. 
 		AbilityToUnitLinkage.initialiseUnitAbilityLinkageData();
 
-
+		
 		/* two player mode (comment or uncomment */
 		//twoPlayerMode(); 
-		
+
 		if (twoPlayerMode != true) {
-			
+
 			// Deck instantiations 
 			Deck deckPlayerOne = new Deck(); 
 			deckPlayerOne.deckOne();
-			
+
 			Deck deckPlayerTwo = new Deck();
 			deckPlayerTwo.deckTwo();
-					
+
 			// Instantiate players 								
 			playerOne = new HumanPlayer();
 			playerOne.setDeck(deckPlayerOne);
@@ -115,7 +113,7 @@ public class GameState {
 			playerTwo = new ComputerPlayer();
 			playerTwo.setDeck(deckPlayerTwo);
 			deckPlayerTwo.shuffleDeck();
-			
+
 			// Set hands
 			Hand handPlayerOne = new Hand();
 			playerOne.setHand(handPlayerOne);
@@ -126,13 +124,12 @@ public class GameState {
 			handPlayerTwo.initialHand(deckPlayerTwo);
 		}
 
-		
 		// Set turn owner
 		this.setTurnOwner(playerOne);
-		
-		// Board instantiation (Change Avatars to be instantiated in initialise methods and remove Avatar from gameState) 
+
+		// Board instantiation 
 		gameBoard = new Board();
-		
+
 		// Avatar instantiation
 		humanAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.humanAvatar, 0, playerOne, Avatar.class);
 		computerAvatar = BasicObjectBuilders.loadAvatar(StaticConfFiles.aiAvatar, 1, playerTwo, Avatar.class);
@@ -142,9 +139,239 @@ public class GameState {
 		System.out.println("human avatar owner : " + this.humanAvatar.getOwner());
 		System.out.println();
 		System.out.println("Computer avatar owner : " + this.computerAvatar.getOwner() );
-
-		
 	}
+
+	
+	
+	/** User interaction control methods
+	 * Controls how the user can interact with the UI through locking and unlocking 
+	 */
+	public void userinteractionLock() {
+		System.out.println("User Interaction locked.");
+		locked = true;
+	}
+
+	public void userinteractionUnlock() {
+		System.out.println("User Interaction unlocked.");
+		locked = false; 
+	}
+
+	public boolean userinteractionLocked() {
+		if (locked) {
+			System.out.println("User Interaction is currently locked during action.");
+		}
+		return locked;
+	}
+
+	
+
+	/** Unit moving flag * 
+	 */
+	public boolean getUnitMovingFlag() {
+		return unitMovingFlag;
+	}
+
+	public void setUnitMovingFlag(boolean flag) {
+		unitMovingFlag = flag; 
+	}
+
+
+
+	/** Entity selection helper methods **/
+
+	// Deselects Card and Unit (if selected)
+	public void deselectAllEntities() { 
+
+		// If there is a selected unit
+		if(this.getBoard().getUnitSelected() != null) {
+			this.getBoard().getUnitSelected().setProvoked(false);
+			this.getBoard().setUnitSelected(null);
+
+		}
+
+		// If there is a card selected in turn owner hand
+		if(this.getTurnOwner().getHand().getSelectedCard() != null) {
+			this.getTurnOwner().getHand().setSelectedCard(null);
+		}
+
+		// Clear the temp TileRange container between actions 
+		tileAdjustedRangeContainer.clear(); 
+	}
+
+	
+	
+	
+
+	/** 
+	 * End turn/ gamestate reset methods
+	 */
+	
+	//give turnCount mana to the player just in the beginning of new turn	
+	public void giveMana() {  
+
+		if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
+			this.turnCount +=1;
+			playerOne.addMana(this.turnCount);
+			System.out.println("player 1 mana is " + playerOne.getMana());
+		}
+		else {
+			playerTwo.addMana(this.turnCount);
+			System.out.println("player 2 mana is " + playerTwo.getMana());
+		}  
+	}
+
+	//empty mana for player who ends the turn
+	public void emptyMana() {
+		getTurnOwner().setMana(0);
+	}
+
+
+	// check if players decks are are empty 
+	public boolean isDeckEmpty() {
+		ArrayList<Card> turnOwnerDeck = getTurnOwner().getDeck().getCardList();
+		int deckCardLeft = turnOwnerDeck.size();
+		if(deckCardLeft < 1) {
+			return true;
+		}
+		return false;
+	}
+
+
+	// Cooldown monsters  ---Can be deleted?
+	public void toCoolDown() {
+		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());	
+
+		// Add avatars 
+		if (this.getTurnOwner() == playerOne) {
+			toCool.add(this.getHumanAvatar());
+		}
+		else {
+			toCool.add(this.getComputerAvatar());
+		}
+
+		for(Monster m : toCool){
+			m.toggleCooldown();				
+		}
+	}
+
+	public void setMonsterCooldown(boolean value) {
+		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());
+
+		// Add avatars 
+		if (this.getTurnOwner() == playerOne) {
+			toCool.add(this.getHumanAvatar());
+		}
+		else {
+			toCool.add(this.getComputerAvatar());
+		}
+
+		// Set cooldowns
+		for(Monster m : toCool){
+			if(m.getOnCooldown() != value) {
+				m.toggleCooldown();	
+			}
+		}
+	}
+
+
+	public void computerEnd() {
+
+		if (isDeckEmpty()) { 
+			gameOver(); 
+		}
+
+		// If there are cards left in deck, get a card from deck (back end)
+		if(!isHumanCard()) {
+			getTurnOwner().getHand().drawCard(getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
+			endTurnStaticChange();
+		}	
+	}
+
+	public void endTurnStaticChange() {
+
+		emptyMana(); 				// Empty mana for player who ends the turn
+		GeneralCommandSets.threadSleep();
+		deselectAllEntities();		// Deselect all entities
+		GeneralCommandSets.threadSleep();
+		setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
+		GeneralCommandSets.threadSleep();
+		turnChange(); 				// turnOwner exchanged	
+		GeneralCommandSets.threadSleep();
+		giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
+		GeneralCommandSets.threadSleep();
+		setMonsterCooldown(false);
+		GeneralCommandSets.threadSleep();
+
+	}
+
+
+	public boolean isHumanCard() {
+		if(getTurnOwner() == playerOne) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+	/** Generalised method for finding if any monsters require their ability to be executed.
+	 * 	Called in relevant places
+	 ***/
+	public boolean checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
+
+		boolean abilityFound = false; 
+
+		// Loop over all tiles
+		for (Tile tile : this.getBoard().getAllTilesList()) {
+
+			// Container for containing all executable abilities
+			ArrayList<Ability> abilityContainer = new ArrayList<Ability>(2); 
+
+			//Check if a unit is on the tile
+			if (tile.getUnitOnTile() != null) {
+
+				// Check if the unit has abilities
+				if (tile.getUnitOnTile().getMonsterAbility() != null) {
+
+					// Loop over abilities and get executing ones
+					for (Ability ability : tile.getUnitOnTile().getMonsterAbility()) {
+
+						if (ability.getCallID() == callID) {
+							abilityContainer.add(ability);
+							abilityFound = true;
+						}
+					}
+
+					// Execute all contstruction abilities first
+					for (Ability ability : abilityContainer) {
+
+						if (ability.getCallID() == Call_IDs.construction) {
+							ability.execute(targetMonster, this); 
+							abilityContainer.remove(ability);		// Remove this ability to not execute twice
+							System.out.println("Executing ability:" + ability);
+						}
+					}
+
+					// Execute the rest 
+					for (Ability ability : abilityContainer) {
+						ability.execute(targetMonster, this);
+						System.out.println("Executing ability:" + ability);
+					}
+				}
+
+			}
+
+		}
+		return abilityFound; 
+	}
+
+	// Check if an Ability/external factor was used to alter unit move/attack range
+	public boolean useAdjustedMonsterActRange() { 
+		return !this.getTileAdjustedRangeContainer().isEmpty(); 
+	}
+
+	
 
 	/** GameState methods: Getters and setters + some helper methods**/
 
@@ -173,7 +400,7 @@ public class GameState {
 	public Player getPlayerTwo() {
 		return  playerTwo;
 	}
-	
+
 	public Player getTurnOwner() {
 		return turnOwner;
 	}
@@ -181,20 +408,19 @@ public class GameState {
 	public void setTurnOwner(Player turnOwner) {
 		this.turnOwner = turnOwner;
 	}
-	
+
 	public void turnChange() {
 		if (turnOwner == playerOne) {
-				turnOwner = playerTwo;
+			turnOwner = playerTwo;
 		}
 		else {
 			turnOwner = playerOne;
 		}
 
-		turnCount++;
 	}
-	
+
 	public Player getEnemyPlayer() {
-		
+
 		// Check if the turn owner is instance of human player, if so return the computer player
 		if (this.getTurnOwner() == this.playerOne) {
 			return this.getPlayerTwo(); 
@@ -226,46 +452,70 @@ public class GameState {
 	public Board getBoard() {
 		return gameBoard; 
 	}
-	
+
 	public ArrayList<Tile> getTileAdjustedRangeContainer() {
 		return tileAdjustedRangeContainer; 
 	}
-	
+
 	public void setTileAdjustedRangeContainer(ArrayList<Tile> tilesToHighlight) {
 		tileAdjustedRangeContainer = tilesToHighlight;
 	}
 
+	/** Debug **/
+	private void twoPlayerMode() {
 
-	/** User interaction control methods **/
-	public void userinteractionLock() {
-		System.out.println("User Interaction locked.");
-		locked = true;
-	}
-	
-	public void userinteractionUnlock() {
-		System.out.println("User Interaction unlocked.");
-		locked = false; 
-	}
-	
-	public boolean userinteractionLocked() {
-		if (locked) {
-			System.out.println("User Interaction is currently locked during action.");
+		// Set switch
+		twoPlayerMode = true; 
+
+		// Instantite players 
+		playerOne = new HumanPlayer();
+		playerTwo= new HumanPlayer(); 
+
+		// Deck instantiations 
+		Deck deckPlayerOne = new Deck(); 
+		deckPlayerOne.deckOne();
+		System.out.println(deckPlayerOne.getCardList().get(0));
+		//			deckPlayerOne.shuffleDeck();
+		System.out.println(deckPlayerOne.getCardList().get(0));
+
+		Deck deckPlayerTwo = new Deck();
+		deckPlayerTwo.deckTwo();
+		System.out.println(deckPlayerTwo.getCardList().get(0));
+		//			deckPlayerTwo.shuffleDeck();
+		System.out.println(deckPlayerTwo.getCardList().get(0));
+
+		playerOne.setDeck(deckPlayerOne);
+		playerTwo.setDeck(deckPlayerTwo);
+
+		playerOne.setHand(new Hand());
+		playerTwo.setHand(new Hand());
+
+		/* Card and Hand setting */
+		// Variables to shorten access
+		ArrayList<Card> drawDeck1 = this.getPlayerOne().getDeck().getCardList();
+		ArrayList<Card> drawDeck2 = this.getPlayerTwo().getDeck().getCardList();
+
+
+		// Cards you want from deck 1 (max 5)
+		int[] cardIDList1 = {6,7,8};
+
+		for (int i = 0; i < cardIDList1.length; i++) {
+			this.getPlayerOne().getHand().getHandList().add(drawDeck1.get(cardIDList1[i]));
+			playerOne.getDeck().delCard(cardIDList1[i]);
 		}
-		return locked;
+		playerOne.getHand().setCurr(cardIDList1.length);
+
+
+		// Cards you want to start with from deck 2 (max 5)
+		int[] cardIDList2 = {6,7,8};
+
+		for (int i = 0; i < cardIDList2.length; i++) {
+			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(cardIDList2[i]));
+			playerTwo.getDeck().delCard(cardIDList2[i]);
+		}
+		playerTwo.getHand().setCurr(cardIDList2.length);
 	}
-	
-	
-	/** Unit moving flag * 
-	 */
-	public boolean getUnitMovingFlag() {
-		return unitMovingFlag;
-	}
-	
-	public void setUnitMovingFlag(boolean flag) {
-		unitMovingFlag = flag; 
-	}
-	
-	
+
 
 	/** Two player mode methods (used for debugging) **/
 
@@ -276,285 +526,6 @@ public class GameState {
 	public void setTwoPlayerMode(boolean twoPlayerMode) {
 		this.twoPlayerMode = twoPlayerMode;
 	}
-		
-	private void twoPlayerMode() {
-		
-		// Set switch
-		twoPlayerMode = true; 
-		
-		// Instantite players 
-		playerOne = new HumanPlayer();
-		playerTwo= new HumanPlayer(); 
 
-		// Deck instantiations 
-		Deck deckPlayerOne = new Deck(); 
-		deckPlayerOne.deckOne();
-		System.out.println(deckPlayerOne.getCardList().get(0));
-//		deckPlayerOne.shuffleDeck();
-		System.out.println(deckPlayerOne.getCardList().get(0));
-		
-		Deck deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
-		System.out.println(deckPlayerTwo.getCardList().get(0));
-//		deckPlayerTwo.shuffleDeck();
-		System.out.println(deckPlayerTwo.getCardList().get(0));
-				
-		playerOne.setDeck(deckPlayerOne);
-		playerTwo.setDeck(deckPlayerTwo);
-		
-		playerOne.setHand(new Hand());
-		playerTwo.setHand(new Hand());
-	
-		/* Card and Hand setting */
-		// Variables to shorten access
-		ArrayList<Card> drawDeck1 = this.getPlayerOne().getDeck().getCardList();
-		ArrayList<Card> drawDeck2 = this.getPlayerTwo().getDeck().getCardList();
-
-		
-		// Cards you want from deck 1 (max 5)
-		int[] cardIDList1 = {6,7,8};
-		
-		for (int i = 0; i < cardIDList1.length; i++) {
-			this.getPlayerOne().getHand().getHandList().add(drawDeck1.get(cardIDList1[i]));
-			playerOne.getDeck().delCard(cardIDList1[i]);
-		}
-		playerOne.getHand().setCurr(cardIDList1.length);
-
-		
-		// Cards you want to start with from deck 2 (max 5)
-		int[] cardIDList2 = {6,7,8};
-
-		for (int i = 0; i < cardIDList2.length; i++) {
-			this.getPlayerTwo().getHand().getHandList().add(drawDeck2.get(cardIDList2[i]));
-			playerTwo.getDeck().delCard(cardIDList2[i]);
-		}
-		playerTwo.getHand().setCurr(cardIDList2.length);
-	}
-		
-
-	
-	/** Entity selection helper methods **/
-
-	// Deselects Card and Unit (if selected)
-	public void deselectAllEntities() { 
-
-		// If there is a selected unit
-		if(this.getBoard().getUnitSelected() != null) {
-			this.getBoard().getUnitSelected().setProvoked(false);
-			this.getBoard().setUnitSelected(null);
-
-		}
-
-		// If there is a card selected in turn owner hand
-		if(this.getTurnOwner().getHand().getSelectedCard() != null) {
-			this.getTurnOwner().getHand().setSelectedCard(null);
-		}
-		
-		// Clear the temp TileRange container between actions 
-		tileAdjustedRangeContainer.clear(); 
-	}
-	
-
-
-	
-	//give turnCount mana to the player just in the beginning of new turn	
-	public void giveMana() {  
-
-			if ( getTurnCount() >= 9) {				//if it is the 9th turn or more than 9, setMan to 9 for both players
-					getTurnOwner().setMana(9);
-			}else {		
-				if(getTurnOwner() == playerOne) {	//turncount +1 only when Human player start the new round of game 
-					this.turnCount = getTurnCount()+1;
-					getTurnOwner().setMana(this.turnCount);
-				}
-				else {
-					getTurnOwner().setMana(this.turnCount);
-				}  
-			}
-	}
-	
-	//empty mana for player who ends the turn
-	public void emptyMana() {
-		getTurnOwner().setMana(0);
-	}
-	
-
-	// check if players decks are are empty 
-	public boolean isDeckEmpty() {
-		ArrayList<Card> turnOwnerDeck = getTurnOwner().getDeck().getCardList();
-		int deckCardLeft = turnOwnerDeck.size();
-		if(deckCardLeft < 1) {
-			return true;
-		}
-		return false;
-	}
-	
-	
-	// Cooldown monsters  ---Can be deleted?
-	public void toCoolDown() {
-		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());	
-		
-		// Add avatars 
-		if (this.getTurnOwner() == playerOne) {
-			toCool.add(this.getHumanAvatar());
-		}
-		else {
-			toCool.add(this.getComputerAvatar());
-		}
-		
-		for(Monster m : toCool){
-				m.toggleCooldown();				
-		}
-	}
-	
-	public void setMonsterCooldown(boolean value) {
-		ArrayList<Monster> toCool = getBoard().friendlyUnitList(this.getTurnOwner());
-		
-		// Add avatars 
-		if (this.getTurnOwner() == playerOne) {
-			toCool.add(this.getHumanAvatar());
-		}
-		else {
-			toCool.add(this.getComputerAvatar());
-		}
-		
-		// Set cooldowns
-		for(Monster m : toCool){
-			if(m.getOnCooldown() != value) {
-				m.toggleCooldown();	
-			}
-		}
-	}
-	
-		
-	
-	public void setDeckForStart() {	
-		deckPlayerOne = new Deck();
-		deckPlayerOne.deckOne();
-		playerOne.setDeck(deckPlayerOne);
-		
-		deckPlayerTwo = new Deck();
-		deckPlayerTwo.deckTwo();
-		playerOne.setDeck(deckPlayerTwo);
-	
-	}
-
-	
-	public void computerEnd() {
-
-		if (isDeckEmpty()) { 
-			gameOver(); 
-			return;
-		}
-			 
-		// If there are cards left in deck, get a card from deck (back end)
-		if(!isHumanCard()) {
-			getTurnOwner().getHand().drawCard(getTurnOwner().getDeck());//if it is human player getting a new card, re-display all card in hand after drawing 
-			endTurnStaticChange();
-		}	
-	}
-		
-	public void endTurnStaticChange() {
-	
-		emptyMana(); 										// Empty mana for player who ends the turn
-		deselectAllEntities();								// Deselect all entities
-		setMonsterCooldown(true);	// Hard set all monsters on turn enders turn to cooldown
-		turnChange(); 				// turnOwner exchanged	
-		giveMana();			 		// Give turnCount mana to the player in the beginning of new turn
-		setMonsterCooldown(false);
-
-	}
-	
-
-	public boolean isHumanCard() {
-		if(getTurnOwner() == playerOne) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
-		
-	/** Generalised method for finding if any monsters require their ability to be executed.
-	 * 	Called in relevant places
-	 ***/
-	public boolean checkMonsterAbilityActivation(Call_IDs callID, Monster targetMonster) {
-
-		boolean abilityFound = false; 
-		
-		// Loop over all tiles
-		for (Tile tile : this.getBoard().getAllTilesList()) {
-
-			// Container for containing all executable abilities
-			ArrayList<Ability> abilityContainer = new ArrayList<Ability>(2); 
-
-			//Check if a unit is on the tile
-			if (tile.getUnitOnTile() != null) {
-				
-				// Check if the unit has abilities
-				if (tile.getUnitOnTile().getMonsterAbility() != null) {
-					
-					// Loop over abilities and get executing ones
-					for (Ability ability : tile.getUnitOnTile().getMonsterAbility()) {
-
-						if (ability.getCallID() == callID) {
-							abilityContainer.add(ability);
-							abilityFound = true;
-						}
-					}
-
-					// Execute all contstruction abilities first
-					for (Ability ability : abilityContainer) {
-
-						if (ability.getCallID() == Call_IDs.construction) {
-							ability.execute(targetMonster, this); 
-							abilityContainer.remove(ability);		// Remove this ability to not execute twice
-							System.out.println("Executing ability:" + ability);
-						}
-					}
-
-					// Execute the rest 
-					for (Ability ability : abilityContainer) {
-						ability.execute(targetMonster, this);
-						System.out.println("Executing ability:" + ability);
-					}
-				}
-
-			}
-
-		}
-		
-		return abilityFound; 
-	}
-	
-	
-
-
-	/*
-	 * // Check if the deck is empty, if so then gameover if (this.isDeckEmpty()) {
-	 * //check if current player has enough card in deck left to be added into hand
-	 * gameOver(); } else { // If holds enough card, get card from deck
-	 * this.turnOwner.getHand().drawCard(this.turnOwner.getDeck());
-	 * 
-	 * // Draw the card on last index Card card =
-	 * this.turnOwner.getDeck().getCardList().get(0); int handPos =
-	 * this.turnOwner.getHand().getHandList().size()-1;
-	 * GeneralCommandSets.threadSleepLong(); }
-	 * 
-	 * this.setMonsterCooldown(true); // Hard set all monsters on turn enders turn
-	 * to cooldown this.turnChange(); // turnOwner exchanged this.giveMana(); //
-	 * Give turnCount mana to the player in the beginning of new turn
-	 * //gameState.toCoolDown(); // Switch avatars status for current turnOwner
-	 * this.setMonsterCooldown(false);
-	 * 
-	 * 
-	 * }
-	 */
-
-
-
-	 public boolean useAdjustedMonsterActRange() { return
-	 !this.getTileAdjustedRangeContainer().isEmpty(); }
 
 }

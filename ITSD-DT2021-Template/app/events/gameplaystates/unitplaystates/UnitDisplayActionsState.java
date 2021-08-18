@@ -1,23 +1,21 @@
 package events.gameplaystates.unitplaystates;
 
 import structures.GameState;
-import structures.basic.Monster;
-import structures.basic.Tile;
-import structures.basic.Unit;
-import structures.basic.abilities.A_U_Provoke;
-import structures.basic.abilities.Ability;
-import structures.basic.abilities.Call_IDs;
+import structures.basic.*;
+import structures.basic.abilities.*;
 
 import java.util.ArrayList;
 import akka.actor.ActorRef;
 import commands.*;
 import events.gameplaystates.GameplayContext;
-import events.gameplaystates.tileplaystates.ITilePlayStates; 
-
-
 
 public class UnitDisplayActionsState implements IUnitPlayStates{
 
+	/*
+	 * 		State class for handling initial display of the potential-actions range
+	 * 		of a unit when selected on the board. Manages front-end tile highlight display.
+	 */
+	
 
 	/*** State attributes ***/
 	
@@ -27,12 +25,14 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 	/*** State constructor ***/
 	/* 
 	 * Changed constructor to input current and target tiles to decouple Unit states from TileClicked
-	 * Previously Unit states had tilex, tiley be used from context which were variables recieved from TileClicked. 
+	 * Previously Unit states had tilex, tiley be used from context which were variables received from TileClicked. 
 	 * Decoupling required to use unit States from the ComputerPlayer. */
 	
 	public UnitDisplayActionsState(Tile currentTile) {
 		this.currentTile = currentTile;
 	}
+	
+	
 	
 	
 	/*** State method ***/
@@ -41,7 +41,7 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		
 		System.out.println("In UnitDisplayActionsState.");
 		
-		
+		// Lock the user out of interfering interaction whilst state activity occurs
 		/**===========================================**/
 		context.getGameStateRef().userinteractionLock();
 		/**===========================================**/
@@ -49,49 +49,26 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 		// Get the newly selected unit
 		Monster newlySelectedUnit = currentTile.getUnitOnTile();
 		
+		
+		// Tracks outcome of either display method
 		boolean unitPlayable = false; 
 		
-		// Check for skills which can affect where unit can move and if it was successful (i.e. tile container not empty)
+		// If selected unit has an ability affecting its action range, adjust display accordingly
 		if (context.getGameStateRef().checkMonsterAbilityActivation(Call_IDs.onUnitSelection, newlySelectedUnit) 
 				&& context.getGameStateRef().useAdjustedMonsterActRange()) {
 			 
-			System.out.println("Using Ability version of highlighting tiles.");
-
-			// Draw out only playable tiles due to external factors such as abilities
-			ArrayList<Tile> displayMoveableTiles = new ArrayList<Tile>(10); 
-			ArrayList<Tile> displayAttackableTiles = new ArrayList<Tile>(10);
+			unitPlayable = abilityAdjustedDisplay(context,newlySelectedUnit);
 			
-			for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
-				if (t.getUnitOnTile() != null) {
-					displayAttackableTiles.add(t);
-				}
-				else { 
-					displayMoveableTiles.add(t);
-				}
-			}
-			GeneralCommandSets.drawBoardTiles(context.out, displayMoveableTiles, 1);
-			GeneralCommandSets.drawBoardTiles(context.out, displayAttackableTiles, 2);
-
-			// Set boolean to control unit selected
-			unitPlayable = true;
-
-			// Apply flags due to external factors
-			for (Ability a : newlySelectedUnit.getMonsterAbility()) {
-		
-				// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
-				if (a instanceof A_U_Provoke) {
-					newlySelectedUnit.toggleProvoked();
-				}
-			}
 		}
 		else {
-			// Display unit selected actions
+			
+			// Display selected unit actions as normal
 			unitPlayable = unitSelectedActions(newlySelectedUnit, context.getGameStateRef(), currentTile.getTilex(), currentTile.getTiley(), context.out, newlySelectedUnit.getClass());
+			
 		}
 
-		// If the selected unit is playable
+		// If display happened successfully
 		if(unitPlayable) {
-			//context.deselectAllAfterActionPerformed();
 			context.getGameStateRef().getBoard().setUnitSelected((Monster) newlySelectedUnit);
 		} 
 		
@@ -102,37 +79,32 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 	}
 	
 	
-	// unitSelectedActions is for selecting + movement & attack
-	private boolean unitSelectedActions(Unit unit, GameState g, int tilex, int tiley, ActorRef o, Class<? extends Unit> classtype) {
+	// Handles the display of movement and attack tiles around a unit and updates selected status
+	private boolean unitSelectedActions(Monster unit, GameState gameState, int tilex, int tiley, ActorRef o, Class<? extends Unit> classtype) {
 		
-			// Cast unit to a Monster (note, only works if a monster is actually inputted) 
+			// Cast unit to Monster (in the case of Avatars)
 			Monster m = (Monster) unit; 
 			
-			// Monster is actionable
+			// Monster is able to complete actions, per its own internal variables
 			if (!(m.getOnCooldown())) {
-				System.out.println("You own this monster");
 				
-				// Select monster + apply visual
-				//m.toggleSelect();
-				g.getBoard().setUnitSelected(m);
+				// Update GameState Board reference of selected unit
+				gameState.getBoard().setUnitSelected(m);
 
-				BasicCommands.drawTile(o, g.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
-				System.out.println("Selected monster on Tile " + m.getPosition().getTilex() + "," + m.getPosition().getTiley());
-				//System.out.println("Monster selected: " + m.isSelected());
+				// Select the tile under Monster for user feedback regardless of range output
+				System.out.println("Selected monster on Tile " + m.getPosition().getTile(gameState.getBoard()));
+				BasicCommands.drawTile(o, gameState.getBoard().getTile((m.getPosition()).getTilex(), (m.getPosition()).getTiley()), 1);
 				GeneralCommandSets.threadSleep();
 
-				// Display movement + attack range tiles
-				// Get ranges
-				System.out.println("Moves left for windshrike dude: " +  m.getMovesLeft());
-				ArrayList <Tile> mRange = g.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
-				ArrayList <Tile> aRange = new ArrayList <Tile> (g.getBoard().unitAttackableTiles(tilex, tiley, m.getAttackRange(), m.getMovesLeft()));
-				ArrayList <Tile> actRange = mRange;		
-				actRange.addAll(aRange);
+				// Get combined action range from various Board methods
+				ArrayList <Tile> mRange = gameState.getBoard().unitMovableTiles(tilex,tiley,m.getMovesLeft());
+				ArrayList <Tile> attRange = gameState.getBoard().unitAttackableTiles(tilex, tiley, m.getAttackRange(), m.getMovesLeft());
+				ArrayList <Tile> actRange = mRange;			actRange.addAll(attRange);
 				
-				// Change GeneralCommandSets thing to account for multiple ranges later
+				// Draw tile display
 				for(Tile t : actRange) {
-					// If aRange contains t = draw as attack tile
-					if(aRange.contains(t)) {
+					// If attackRange contains t = draw as attack tile
+					if(attRange.contains(t)) {
 						BasicCommands.drawTile(o, t, 2);
 						GeneralCommandSets.threadSleep();
 					}
@@ -142,28 +114,49 @@ public class UnitDisplayActionsState implements IUnitPlayStates{
 						GeneralCommandSets.threadSleep();
 					}
 				}
-				
-				
-				System.out.println("Finished highlighting tiles.");
 				return true;
 					
 			} 
 			
-			// Monster not actionable
+			// Monster is unavailable for action
 			else {
-				// Monster is not owned by Player --- Don't think this is needed anymore
-//				if(m.getOwner() != g.getTurnOwner()) {
-//					System.out.println("You do not own this monster");
-//					return false;
-//				}
-				// Monster doesn't have moves/attacks left
-//				else {
-					System.out.println("Can't select this monster.");
-					return false;
-//				}
+				System.out.println("Can't select this monster.");
+				return false;
 			}
 			
 	}
 
+	// Handles the display of action tiles for a unit impaired by ability activations
+	private boolean abilityAdjustedDisplay(GameplayContext context, Monster newlySelectedUnit) {
+		// Draw out only playable tiles due to external factors such as abilities
+		ArrayList<Tile> displayMoveableTiles = new ArrayList<Tile>(10); 
+		ArrayList<Tile> displayAttackableTiles = new ArrayList<Tile>(10);
+		
+		for (Tile t : context.getGameStateRef().getTileAdjustedRangeContainer()) {
+			if (t.getUnitOnTile() != null) {
+				displayAttackableTiles.add(t);
+			}
+			else { 
+				displayMoveableTiles.add(t);
+			}
+		}
+		// Draw tiles per range type
+		GeneralCommandSets.drawBoardTiles(context.out, displayMoveableTiles, 1);
+		GeneralCommandSets.drawBoardTiles(context.out, displayAttackableTiles, 2);
+
+		// Apply flags due to external factors
+		if (newlySelectedUnit.hasAbility()) {
+			for (Ability a : newlySelectedUnit.getMonsterAbility()) {
+				
+				// Switch monster to provoked (use tileAdjustedRangeContainer in move or attack state)
+				if (a instanceof A_U_Provoke) {
+					newlySelectedUnit.toggleProvoked();
+				}
+			}
+		}
+		
+		return true; 
+	}
+	
 }
 

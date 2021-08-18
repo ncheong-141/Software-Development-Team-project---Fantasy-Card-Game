@@ -3,9 +3,12 @@ package events;
 
 
 import akka.actor.ActorRef;
+import commands.BasicCommands;
 import commands.GeneralCommandSets;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
+
 import structures.GameState;
 import events.gameplaystates.unitplaystates.AIUnitStateController;
 import structures.basic.ComputerLogic.*;
@@ -27,22 +30,25 @@ public class ComputerPlayerTurn {
 	// Attribute
 	Thread AIthread = new Thread(); 
 
+	
+	// Constructor
 	public ComputerPlayerTurn(ActorRef out, GameState g) {
 
 		this.AIthread = new Thread(new RunComputerTurnOnThread(out, g)); 
 	}
-	
+
 	
 	public void processComputerActions() {
-
+	
 		/** Run AI on thread to allow for waiting for executions to finish **/
 		AIthread.start();
 	}
 
 
+
 	/** Inner class **/
 	public static class RunComputerTurnOnThread implements Runnable {
-
+		
 		// Attributes
 		GameState g; 
 		ActorRef out;
@@ -56,13 +62,13 @@ public class ComputerPlayerTurn {
 		// Thread run
 		public void run() {
 
+			ReentrantLock counterLock = new ReentrantLock();
+			counterLock.lock();
+			
 			ComputerPlayer pl2 = (ComputerPlayer) g.getPlayerTwo();
 			ComputerPlayer compPlayer = pl2;
 			AIUnitStateController controller = new AIUnitStateController(out, g);
 			compPlayer.setHPBenchMark(10);
-
-			
-			g.getComputerAvatar().setName("bob");
 
 
 			ArrayList<structures.basic.ComputerLogic.ComputerInstruction> cardsToPlay, monstersToMove, attacksToPerform;
@@ -92,6 +98,8 @@ public class ComputerPlayerTurn {
 				// Wait between action types
 				waitForActionsToComplete();
 
+				try {Thread.sleep(15000);} catch (InterruptedException e) {e.printStackTrace();}
+
 				
 				attacksToPerform = compPlayer.performAttacks(g.getBoard());
 
@@ -116,6 +124,8 @@ public class ComputerPlayerTurn {
 
 				// Wait between action types
 				waitForActionsToComplete();
+				
+				try {Thread.sleep(15000);} catch (InterruptedException e) {e.printStackTrace();}
 
 				monstersToMove = compPlayer.moveMonsters(g.getBoard());
 
@@ -137,10 +147,16 @@ public class ComputerPlayerTurn {
 
 				// Wait between action types
 				waitForActionsToComplete();
+				
+				try {Thread.sleep(15000);} catch (InterruptedException e) {e.printStackTrace();}
 
-				g.computerEnd();
 			}
+			
+			// End turn
+			g.computerEnd();
+			BasicCommands.addPlayer1Notification(out,g.getTurnOwner().toString() + "'s turn!", 2);
 
+			counterLock.unlock();
 		}
 
 		/** Helper methods **/

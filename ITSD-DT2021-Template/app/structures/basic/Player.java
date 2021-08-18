@@ -16,26 +16,27 @@ public class Player {
 	protected Hand hand;
 	protected Deck deck;
 	
-	
-	private int test =1;
 
 	public Player() {
 		this.health = 20;
 		this.mana = 0;
 	}
 
-	//add Mana and check maximum	
+	
+	
+	// Add Mana and make sure maximum not exceeded
 	public void addMana(int addMana) {
 		int newMana = mana + addMana;
 		if(newMana > 9) {
 			this.mana = 9;
-		}	
+		}	else {
+			this.mana = newMana;
+		}
 	}
 	
 	//delete Mana , when use cards
-	
 	public void loseMana(int loseMana) {
-		mana = mana - loseMana;
+		this.mana = mana - loseMana;
 	}	
 	
 
@@ -55,7 +56,8 @@ public class Player {
 		int newHealth = health - loseHealth;
 		if(newHealth <= 0) {
 			this.health = 0;
-			GameState.gameOver(); 
+		} else {
+			this.health = newHealth;
 		}
 	}
 	
@@ -65,10 +67,13 @@ public class Player {
 		if (this.health > 20) this.health = 20;
 		if (this.health<=0 ) {
 			this.health=0;
-			GameState.gameOver();
 		}
 	}
 
+	
+	
+	/**		Getters / Setters		**/
+	
 	public int getHealth() {
 		return health;
 	}

@@ -18,21 +18,20 @@ import utils.BasicObjectBuilders;
  *
  */
 public class Card implements Comparable<Card> {
-	
-	private int id;//unique identifier for each card
-	
-	private String cardname;//name of card
-	private int manacost;//mana cost to play associated unit
-	
-	private MiniCard miniCard;//display element for unselected cards
-	private BigCard bigCard;//display element for selected card
-	
-	private String configFile;
-	private ArrayList<Ability> abilityList;
-	private Class<?> associatedClass;
-	
+
+	/** Class attributes **/
+	private int 		id;				//unique identifier for each card
+	private String 		cardname;		//name of card
+	private int 		manacost;		//mana cost to play associated unit
+	private MiniCard 	miniCard;		//display element for unselected cards
+	private BigCard 	bigCard;		//display element for selected card
+	private String 		configFile;		// Config file reference to pass to constructors
+	private ArrayList<Ability> abilityList;	// Ability list reference to pass to constructors and referenced 
+	private Class<?> 	associatedClass;	// Associated class of the card for reference
+
+	/** Constructors **/
 	public Card() {};
-	
+
 	public Card(int id, String cardname, int manacost, MiniCard miniCard, BigCard bigCard) {
 		super();
 		this.id = id;
@@ -44,11 +43,10 @@ public class Card implements Comparable<Card> {
 		this.abilityList=new ArrayList<Ability>();
 		this.associatedClass = Card.class;
 	}
-	
-	
-	//shortcut methods for ability access
-	
-	//checks whether card targets spell or enemy
+
+
+	// Shortcut methods for ability access
+	// checks whether card targets spell or enemy
 	public boolean targetEnemy() {
 		boolean result=false;
 		for (Ability a: this.abilityList) {
@@ -61,15 +59,15 @@ public class Card implements Comparable<Card> {
 		}
 		return result;
 	}
-	
+
 	//checks that monster/spell associated with card has an ability
 	public boolean hasAbility(){
 		boolean result= false;
-			if(this.abilityList!=null) {
-				result=true;
-			}
-		return result;
+		if(this.abilityList!=null) {
+			result=true;
 		}
+		return result;
+	}
 
 	//special getter methods to aid with ai logic decisions getting card(if monster) health and attack
 	public int getCardHP(){
@@ -78,21 +76,21 @@ public class Card implements Comparable<Card> {
 	public int getCardAttack() {
 		return this.getBigCard().getAttack();
 	}
-	
-	
+
+
 	//helper method to show where card is playable
 	public boolean playableAnywhere() {
 		if(hasAbility()) {
 			for(Ability a: this.abilityList) {
-			if(a.getClass()==A_U_SummonAnywhere.class) {
-				return true;
-			}
+				if(a.getClass()==A_U_SummonAnywhere.class) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
-	
-	
+
+
 	@Override
 	//compares mana cost of two cards for ai logic
 	public int compareTo(Card o) {
@@ -101,10 +99,10 @@ public class Card implements Comparable<Card> {
 		}else if(this.manacost<o.getManacost()){
 			return -1;
 		}else {
-		return 0;
+			return 0;
 		}
 	}
-	
+
 	//getters and setters
 	public int getId() {
 		return id;

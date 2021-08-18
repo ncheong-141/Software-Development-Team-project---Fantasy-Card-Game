@@ -10,14 +10,16 @@ package structures.basic;
 
 public class Avatar extends Monster {
 	
-	//constructor
+	// Constructor
 	public Avatar() {
 		super();
 		this.avatarSetUp();
 	}
 
-	//setting up all stats for avatar
+	// Setting up all stats for avatar
 	public void avatarSetUp() {
+		
+		// Initialise avatar with these stats
 		this.HP = 20;
 		this.maxHP = 20;
 		this.attackValue = 2;
@@ -32,7 +34,8 @@ public class Avatar extends Monster {
 		this.owner = p;
 	}
 
-	
+	// Overide monster defend
+	@Override
 	public boolean defend(int d) {
 		if(this.HP - d <= 0) {
 			this.HP = 0;
@@ -43,6 +46,21 @@ public class Avatar extends Monster {
 			this.getOwner().setHealth(this.HP);
 			return true;
 		}
+	}
+	
+	// Override monster heal
+	@Override
+	public boolean heal(int h) {
+		if(this.HP == this.maxHP)	{	return false;	}	
+		if(this.HP + h > this.maxHP) {
+			this.HP = this.maxHP;
+			this.getOwner().setHealth(h);
+		}
+		else {
+			this.HP += h;
+			this.getOwner().setHealth(h);
+		}
+		return true;
 	}
 	
 }
